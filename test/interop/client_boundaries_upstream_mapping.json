@@ -1,0 +1,414 @@
+{
+  "generatedFrom": "tool/upstream_tests.json",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "ownedFiles": [
+    "test/interop/client_boundaries_upstream_test.dart",
+    "test/interop/client_boundaries_upstream_mapping.json"
+  ],
+  "caseCount": 29,
+  "implementedCount": 29,
+  "failingCount": 0,
+  "verification": {
+    "command": "dart test test/interop/client_boundaries_upstream_test.dart --reporter json",
+    "result": "29 passed; generation-final-results.jsonl includes these 29 plus 198 generation cases"
+  },
+  "failingSummary": [],
+  "cases": [
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should create AbortController and pass signal to adapter",
+      "upstreamTitle": "should create AbortController and pass signal to adapter",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should create AbortController and pass signal to adapter",
+      "status": "implemented",
+      "actualAssertions": [
+        "connection receives a non-null CancellationSignal",
+        "signal.isCancelled and signal.isAborted are false while streaming"
+      ],
+      "dartAdaptation": "Upstream AbortController/AbortSignal maps to Dart CancellationController/CancellationSignal. append() receives an AssistantTurn instead of a UIMessage object literal."
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should abort request when stop() is called",
+      "upstreamTitle": "should abort request when stop() is called",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should abort request when stop() is called",
+      "status": "implemented",
+      "actualAssertions": [
+        "stop() cancels the captured signal",
+        "append() settles",
+        "isLoading is false"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should preserve partial content when aborted",
+      "upstreamTitle": "should preserve partial content when aborted",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should preserve partial content when aborted",
+      "status": "implemented",
+      "actualAssertions": [
+        "onChunk received at least one chunk before abort",
+        "message list is non-empty",
+        "isLoading is false"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should handle abort gracefully without throwing error",
+      "upstreamTitle": "should handle abort gracefully without throwing error",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should handle abort gracefully without throwing error",
+      "status": "implemented",
+      "actualAssertions": [
+        "onError is not called",
+        "getError() is null"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should set isLoading to false after abort",
+      "upstreamTitle": "should set isLoading to false after abort",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should set isLoading to false after abort",
+      "status": "implemented",
+      "actualAssertions": [
+        "isLoading is true immediately after append starts",
+        "isLoading is false after stop()/append settles"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should create new AbortController for each request",
+      "upstreamTitle": "should create new AbortController for each request",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should create new AbortController for each request",
+      "status": "implemented",
+      "actualAssertions": [
+        "two requests capture two signals",
+        "signals are distinct instances",
+        "neither signal is cancelled"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should resolve cleanly when stop() is called during onResponse",
+      "upstreamTitle": "should resolve cleanly when stop() is called during onResponse",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should resolve cleanly when stop() is called during onResponse",
+      "status": "implemented",
+      "actualAssertions": [
+        "connect is never called",
+        "onError is not called",
+        "getError() is null",
+        "isLoading is false"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should resolve cleanly when reload() supersedes the stream during onResponse",
+      "upstreamTitle": "should resolve cleanly when reload() supersedes the stream during onResponse",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient abort signal handling should resolve cleanly when reload() supersedes the stream during onResponse",
+      "status": "implemented",
+      "actualAssertions": [
+        "exactly one signal reaches connect",
+        "that signal is not cancelled",
+        "onError is not called",
+        "getError() is null"
+      ]
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation resolves",
+      "upstreamTitle": "cancels a generation response on early return when cancellation resolves",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation resolves",
+      "status": "implemented",
+      "actualAssertions": [
+        "body is listened to",
+        "generate() settles after stop()",
+        "onCancel called exactly once",
+        "listener released",
+        "isLoading false"
+      ],
+      "dartAdaptation": "Upstream early `break` maps to `client.stop()` after the response body listener attaches."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation throws",
+      "upstreamTitle": "cancels a generation response on early return when cancellation throws",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation throws",
+      "status": "implemented",
+      "actualAssertions": [
+        "body is listened to",
+        "a throwing onCancel does not hang generation",
+        "onCancel called exactly once",
+        "listener released",
+        "isLoading false"
+      ],
+      "dartAdaptation": "upstream cancellation -> `onCancel` throw; Dart stop() must still settle."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation rejects",
+      "upstreamTitle": "cancels a generation response on early return when cancellation rejects",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation rejects",
+      "status": "implemented",
+      "actualAssertions": [
+        "body is listened to",
+        "a rejecting onCancel does not hang generation",
+        "onCancel called exactly once",
+        "listener released",
+        "isLoading false"
+      ],
+      "dartAdaptation": "upstream cancellation -> `onCancel` rejected future; Dart stop() must still settle."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation never settles",
+      "upstreamTitle": "cancels a generation response on early return when cancellation never settles",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation never settles",
+      "status": "implemented",
+      "actualAssertions": [
+        "body is listened to",
+        "a never-settling onCancel cannot hang stop()/generate()",
+        "onCancel called exactly once",
+        "listener released",
+        "isLoading false"
+      ],
+      "dartAdaptation": "upstream cancellation -> `onCancel` never-settling future; Dart generate is bounded by a 2s timeout to prove it cannot deadlock."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "reports a generation error without waiting for custom cancellation",
+      "upstreamTitle": "reports a generation error without waiting for custom cancellation",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup reports a generation error without waiting for custom cancellation",
+      "status": "implemented",
+      "actualAssertions": [
+        "generation error message contains \"generation failed\"",
+        "isLoading false",
+        "onCancel called once",
+        "listener released"
+      ]
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "preserves generation reader errors and releases the lock",
+      "upstreamTitle": "preserves generation reader errors and releases the lock",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup preserves generation reader errors and releases the lock",
+      "status": "implemented",
+      "actualAssertions": [
+        "reader error message contains \"response reader failed\"",
+        "isLoading false",
+        "listener released"
+      ]
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "upstreamTitle": "drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "status": "implemented",
+      "actualAssertions": [
+        "body is listened to exactly once",
+        "a RUN_FINISHED chunk reaches onChunk (malformed JSON and [DONE] skipped)",
+        "status is success",
+        "error is null",
+        "isLoading false",
+        "onCancel is not called"
+      ],
+      "dartAdaptation": "Dart StreamController.onCancel also runs after natural EOF; assert one normal teardown and detached listener, successful terminal frame, no error/loading. JS reader.cancel count zero is not directly representable by onCancel."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA through getMessages",
+      "upstreamTitle": "surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA through getMessages",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA through getMessages",
+      "status": "implemented",
+      "actualAssertions": [
+        "activity id is act-1",
+        "part type is activity",
+        "activityType is SEARCH",
+        "content deep-equals {query: tanstack, hits: 3}",
+        "an assistant message exists",
+        "onMessagesChange saw an activity message"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages does not send activity messages as model input on the next turn",
+      "upstreamTitle": "does not send activity messages as model input on the next turn",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages does not send activity messages as model input on the next turn",
+      "status": "implemented",
+      "actualAssertions": [
+        "activity message remains in client.getMessages()",
+        "second connection request contains no role=activity message"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages keeps an appended activity message without starting a run",
+      "upstreamTitle": "keeps an appended activity message without starting a run",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages keeps an appended activity message without starting a run",
+      "status": "implemented",
+      "actualAssertions": [
+        "connect is not called",
+        "message role is activity",
+        "message id is act-1",
+        "part deep-equals {type: activity, activityType: PLAN, content: {steps: []}}"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages exposes initial activity messages",
+      "upstreamTitle": "exposes initial activity messages",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages exposes initial activity messages",
+      "status": "implemented",
+      "actualAssertions": [
+        "first initial message role is activity",
+        "id is act-1"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages hydrates a mixed transcript from persistence and omits activity on send",
+      "upstreamTitle": "hydrates a mixed transcript from persistence and omits activity on send",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages hydrates a mixed transcript from persistence and omits activity on send",
+      "status": "implemented",
+      "actualAssertions": [
+        "roles are [user, activity, assistant]",
+        "activity id is act-1",
+        "activity part deep-equals {type: activity, activityType: SEARCH, content: {query: tanstack}}",
+        "send request omits activity"
+      ],
+      "dartAdaptation": "Uses a canonical ChatClientPersistence adapter with ChatPersistedState(messages, resume)."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages keeps persisted activity when a later MESSAGES_SNAPSHOT omits it",
+      "upstreamTitle": "keeps persisted activity when a later MESSAGES_SNAPSHOT omits it",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages keeps persisted activity when a later MESSAGES_SNAPSHOT omits it",
+      "status": "implemented",
+      "actualAssertions": [
+        "activity message with id act-1 is retained",
+        "activity part type is activity",
+        "content deep-equals {query: keep-me}"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage",
+      "upstreamTitle": "hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient activity messages hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage",
+      "status": "implemented",
+      "actualAssertions": [
+        "activity id is act-1",
+        "part type is activity",
+        "activityType is SEARCH",
+        "content deep-equals {query: tanstack}"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with image content",
+      "upstreamTitle": "should send a multimodal message with image content",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient multimodal sendMessage should send a multimodal message with image content",
+      "status": "implemented",
+      "actualAssertions": [
+        "wire parts deep-equal [text, image {source:{type:url,value:https://example.com/cat.jpg}}]"
+      ],
+      "dartAdaptation": "Asserts the parts actually passed to ConnectionAdapter, not only getMessages()."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with audio content",
+      "upstreamTitle": "should send a multimodal message with audio content",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient multimodal sendMessage should send a multimodal message with audio content",
+      "status": "implemented",
+      "actualAssertions": [
+        "wire parts deep-equal [text, audio {source:{type:data,value:base64AudioData,mimeType:audio/mp3}}]"
+      ],
+      "dartAdaptation": "Asserts the parts actually passed to ConnectionAdapter."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with video content",
+      "upstreamTitle": "should send a multimodal message with video content",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient multimodal sendMessage should send a multimodal message with video content",
+      "status": "implemented",
+      "actualAssertions": [
+        "wire parts deep-equal [text, video {source:{type:url,value:https://example.com/video.mp4}}]"
+      ],
+      "dartAdaptation": "Asserts the parts actually passed to ConnectionAdapter."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with document content",
+      "upstreamTitle": "should send a multimodal message with document content",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient multimodal sendMessage should send a multimodal message with document content",
+      "status": "implemented",
+      "actualAssertions": [
+        "wire parts deep-equal [text, document {source:{type:data,value:base64PdfData,mimeType:application/pdf}}]"
+      ],
+      "dartAdaptation": "Asserts the parts actually passed to ConnectionAdapter."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should append a UIMessage",
+      "upstreamTitle": "should append a UIMessage",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient append should append a UIMessage",
+      "status": "implemented",
+      "actualAssertions": [
+        "first message id is user-1",
+        "createdAt is preserved"
+      ],
+      "dartAdaptation": "Uses the canonical Map UIMessage shape accepted by append(Object)."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should convert and append a ModelMessage",
+      "upstreamTitle": "should convert and append a ModelMessage",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient append should convert and append a ModelMessage",
+      "status": "implemented",
+      "actualAssertions": [
+        "first message role is user",
+        "first part deep-equals {type:text, content:Hello from model}",
+        "generated id is non-empty",
+        "createdAt is non-null"
+      ],
+      "dartAdaptation": "Passes an actual ModelMessage map {role: user, content: text}, exercising modelMessagesToUIMessages."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should generate id and createdAt if missing",
+      "upstreamTitle": "should generate id and createdAt if missing",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "ChatClient append should generate id and createdAt if missing",
+      "status": "implemented",
+      "actualAssertions": [
+        "message id is non-empty after append",
+        "createdAt is non-null"
+      ]
+    }
+  ]
+}

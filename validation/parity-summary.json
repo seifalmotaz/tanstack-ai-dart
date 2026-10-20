@@ -1,0 +1,23 @@
+{
+  "upstreamVersion": "0.40.0",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamPassed": 1011,
+  "dartPassed": 2406,
+  "verifiedRuntime": 967,
+  "mappedRuntime": 1011,
+  "uncovered": 44,
+  "unmapped": 0,
+  "mappedButFailed": 0,
+  "mappedButMissing": 0,
+  "mappedButSkipped": 0,
+  "mappedButAmbiguous": 0,
+  "notImplemented": 1,
+  "mappingStatusConflicts": 0,
+  "compileCases": 46,
+  "adaptations": 128,
+  "notRepresentable": 25,
+  "titleOnlyReviewCandidates": 0,
+  "orphanMappings": 0,
+  "notice": "Only an explicit mapping to a Dart test that actually passed counts as verified. Titles, test counts, fixtures, and mapping status alone are not coverage.",
+  "knownGap": "GenerationClient mutable Map result snapshots are not frozen; one faithful regression is intentionally skipped."
+}

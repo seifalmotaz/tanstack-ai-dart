@@ -1,0 +1,131 @@
+{
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "cases": [
+    {
+      "upstreamFile": "activity-types.test.ts",
+      "upstreamName": "client UIMessage activity surface UIMessage.role includes activity",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart stores extensible roles as String; literal role unions are not inferred.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "activity-types.test.ts",
+      "upstreamName": "client UIMessage activity surface ActivityPart is a MessagePart",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Activity selector exposes typed activityType and Object content; JSON map shape is validated by the consumer, unlike TS Record.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 round-trip identity resolves to Array<UIMessage<TTools>> for a populated tools tuple",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 round-trip identity resolves to Array<UIMessage<readonly []>> when no tools are present",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 round-trip identity produces `never` when given a non-options input",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 round-trip identity preserves tools tuple when options are constructed manually",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 tool input types propagate to tool-call parts narrows tool-call `name` to the literal tool names",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 tool input types propagate to tool-call parts narrows tool-call `input` based on `name` discriminator",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 tool output types propagate to tool-call parts narrows tool-call `output` based on `name` discriminator",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 tool output types propagate to tool-call parts output is `undefined | TOutput` until the tool resolves",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 untyped fallback default `UIMessage` (without tool generic) accepts any tool-call shape",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 approval gating exposes `approval` only on tools declared with `needsApproval: true`",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "not-representable",
+      "adaptation": "Dart cannot derive conditional message unions, literal tool names or approval availability from a heterogeneous tool tuple. Explicit ClientTool<TInput,TOutput> selectors retain input/output generics instead.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 approval gating supports a generic handler via `in` narrowing on the typed union",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamName": "InferChatMessages \u2014 approval gating supports a generic handler typed against the base ToolCallPart",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit ClientTool<TInput,TOutput> and selectToolPart preserve typed nullable inputs/outputs. The base AssistantPart remains extensible; schema-to-field and name-discriminated TS inference is replaced with explicit model types and selector checks.",
+      "negativeFixture": "test/types/ui_types_negative.dart",
+      "verificationCommand": "dart run tool/verify_types.dart"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "cases": [
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter rejects invalid reconnect bounds (non-finite maxAttempts / delayMs)",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "rejects invalid reconnect bounds (negative maxAttempts / delay)",
+      "status": "implemented",
+      "actualAssertions": [
+        "Negative maxAttempts and delay reject before a request."
+      ],
+      "dartAdaptation": "Non-finite inputs are statically rejected by int/Duration in test/types/connections_types_negative.dart (three negative analyzer checks)."
+    },
+    {
+      "upstreamFile": "reconstruct-speech.test.ts",
+      "upstreamName": "reconstructSpeechResult rebuilds a TTSResult that surfaces the durable url via artifacts",
+      "dartFile": "test/generation/generation_reconstruct_test.dart",
+      "dartTestName": "reconstructSpeechResult rebuilds a TTSResult that surfaces the durable url via artifacts",
+      "status": "implemented",
+      "actualAssertions": [
+        "Durable artifact URL, empty audio bytes, content type and derived format; empty/missing URL returns null."
+      ]
+    },
+    {
+      "upstreamFile": "reconstruct-speech.test.ts",
+      "upstreamName": "reconstructSpeechResult returns null when no audio output artifact carries a url",
+      "dartFile": "test/generation/generation_reconstruct_test.dart",
+      "dartTestName": "reconstructSpeechResult returns null when no audio output artifact carries a url",
+      "status": "implemented",
+      "actualAssertions": [
+        "Durable artifact URL, empty audio bytes, content type and derived format; empty/missing URL returns null."
+      ]
+    }
+  ]
+}
