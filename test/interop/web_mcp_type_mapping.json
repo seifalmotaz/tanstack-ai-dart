@@ -1,0 +1,114 @@
+{
+  "source": "packages/ai-client/tests/web-mcp-tools-types.test.ts",
+  "upstream_version": "0.40.0",
+  "dart_surface": "lib/src/platform/web_mcp_tools.dart",
+  "fixtures": {
+    "positive": "test/types/web_mcp_positive.dart",
+    "negative": "test/types/web_mcp_negative.dart",
+    "verifier": "tool/verify_types.dart"
+  },
+  "cases": [
+    {
+      "upstream": "requires a lifecycle signal",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["MISSING_REQUIRED_ARGUMENT"],
+      "notes": "RegisterWebMCPToolsOptions.signal is a required CancellationSignal."
+    },
+    {
+      "upstream": "signal is an abort signal, not an arbitrary value",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "notes": "Passing a String for signal is rejected by the analyzer."
+    },
+    {
+      "upstream": "keys per-tool options by inferred tool names",
+      "status": "not_representable",
+      "fixture": null,
+      "assertions": [],
+      "notes": "Dart exposes toolOptions as Map<String, WebMcpToolOptions>. Neither Map nor List<ClientTool> can statically infer a key union from the tool list.",
+      "runtime_alternative": "registerWebMCPTools looks up toolOptions[tool.name]. There is no validation that toolOptions keys belong to the tool list; unknown keys are silently ignored."
+    },
+    {
+      "upstream": "per-tool options values are WebMCPToolOptions",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["MAP_VALUE_TYPE_NOT_ASSIGNABLE"],
+      "notes": "The Map<String, WebMcpToolOptions> value type is enforced by the analyzer."
+    },
+    {
+      "upstream": "unknown tool option keys are rejected",
+      "status": "not_representable",
+      "fixture": null,
+      "assertions": [],
+      "notes": "A Dart Map<String, WebMcpToolOptions> accepts any String key. The analyzer cannot reject unknown_tool, so this case is intentionally not faked.",
+      "runtime_alternative": "No existing runtime validation. registerWebMCPTools reads only keys matching tool.name; unknown keys do not fail registration."
+    },
+    {
+      "upstream": "annotations are WebMCPToolAnnotations with boolean hints",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "notes": "readOnlyHint and untrustedContentHint are bool?; a String is rejected."
+    },
+    {
+      "upstream": "tool option and annotation objects expose only documented fields",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["UNDEFINED_NAMED_PARAMETER"],
+      "notes": "WebMcpToolOptions accepts title/annotations; WebMcpToolAnnotations accepts readOnlyHint/untrustedContentHint. Unknown named parameters are rejected."
+    },
+    {
+      "upstream": "requires the runtime context inferred from contextual tools",
+      "status": "not_representable",
+      "fixture": null,
+      "assertions": [],
+      "notes": "RegisterWebMCPToolsOptions.context is Object?. Dart cannot infer a required context shape from ClientTool.execute or require it at registration.",
+      "runtime_alternative": "No existing runtime validation. options.context is passed through to ToolCallContext.context when the registered tool executes."
+    },
+    {
+      "upstream": "context must satisfy every contextual tool",
+      "status": "not_representable",
+      "fixture": null,
+      "assertions": [],
+      "notes": "With context typed as Object?, any value is accepted statically. A positive fixture shows a tenant map, but mismatch cannot be rejected by the analyzer.",
+      "runtime_alternative": "No existing validation. The tool execute callback receives the supplied context and may fail when it reads missing fields."
+    },
+    {
+      "upstream": "does not expose cross-origin registration options",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["UNDEFINED_NAMED_PARAMETER"],
+      "notes": "RegisterWebMCPToolsOptions has no exposedTo parameter."
+    },
+    {
+      "upstream": "tool list argument is typed",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "notes": "registerWebMCPTools takes List<ClientTool>, not List<Object>."
+    },
+    {
+      "upstream": "registration options are required",
+      "status": "representable",
+      "fixture": "test/types/web_mcp_negative.dart",
+      "assertions": ["NOT_ENOUGH_POSITIONAL_ARGUMENTS"],
+      "notes": "registerWebMCPTools expects two positional arguments (tools, options); calling with only tools is rejected."
+    }
+  ],
+  "existing_runtime_validation": {
+    "validated_by_registerWebMCPTools": [
+      "tool name matches ^[A-Za-z0-9_.-]{1,128}$",
+      "duplicate tool names are rejected",
+      "empty descriptions are rejected",
+      "missing execute handlers are rejected",
+      "needsApproval: true tools are rejected",
+      "non-object top-level input schemas are rejected"
+    ],
+    "not_validated": [
+      "toolOptions keys outside the registered tool list",
+      "context shape against contextual tools"
+    ]
+  }
+}

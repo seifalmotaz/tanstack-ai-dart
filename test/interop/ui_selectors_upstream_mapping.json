@@ -1,0 +1,145 @@
+{
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "cases": [
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI matches results and partitions interrupts",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI matches results and partitions interrupts",
+      "status": "implemented",
+      "actualAssertions": [
+        "Tool call links the same approval object and result; generic interrupt remains in list; component keys preserve order."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI uses camel-case component keys",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI uses camel-case component keys",
+      "status": "implemented",
+      "actualAssertions": [
+        "Hyphenated part types map to expected camel case keys."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI exposes activity parts on activity messages",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI exposes activity parts on activity messages",
+      "status": "implemented",
+      "actualAssertions": [
+        "Activity message role, part key and activity type are exposed."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI keeps unmatched tool-result parts",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI keeps unmatched tool-result parts",
+      "status": "implemented",
+      "actualAssertions": [
+        "An orphan result stays unmatched and retains call ID."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI keeps orphan approvals in the interrupt list",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI keeps orphan approvals in the interrupt list",
+      "status": "implemented",
+      "actualAssertions": [
+        "An unmatched approval remains listed."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI attaches list-placement approvals to the call and keeps them in the list",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI attaches list-placement approvals to the call and keeps them in the list",
+      "status": "implemented",
+      "actualAssertions": [
+        "List approval links to its call and remains listed."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI hides inline approvals from the interrupt list when a call matches",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI hides inline approvals from the interrupt list when a call matches",
+      "status": "implemented",
+      "actualAssertions": [
+        "Matched inline approval disappears from list; generic remains."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI treats mapped tools as inline unless the interrupt map puts them in the list",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI treats mapped tools as inline unless the interrupt map puts them in the list",
+      "status": "implemented",
+      "actualAssertions": [
+        "Default inline tool names are collected; explicit interrupt mapping overrides placement."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI preserves empty arrays",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI preserves empty arrays",
+      "status": "implemented",
+      "actualAssertions": [
+        "Empty message and interrupt arrays stay empty."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI preserves message and part order across every part key",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI preserves message and part order across every part key",
+      "status": "implemented",
+      "actualAssertions": [
+        "Ten part keys remain in original order, including tool/result/resource."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "selectChatUI keeps unbound and registered generic interrupts in the list",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "selectChatUI keeps unbound and registered generic interrupts in the list",
+      "status": "implemented",
+      "actualAssertions": [
+        "Generic and unbound interrupts preserve order."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "resolveInterruptComponent resolves a registered generic interrupt from generic[id]",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "resolveInterruptComponent resolves a registered generic interrupt from generic[id]",
+      "status": "implemented",
+      "actualAssertions": [
+        "Registered generic ID returns the exact configured component object."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "resolveInterruptComponent resolves unbound through generic.fallback",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "resolveInterruptComponent resolves unbound through generic.fallback",
+      "status": "implemented",
+      "actualAssertions": [
+        "Unbound interrupt returns the exact fallback component object."
+      ]
+    },
+    {
+      "upstreamFile": "ui-selectors.test.ts",
+      "upstreamName": "resolveInterruptComponent resolves a tool approval from tools[name]",
+      "dartFile": "test/chat/ui_selectors_test.dart",
+      "dartTestName": "resolveInterruptComponent resolves a tool approval from tools[name]",
+      "status": "implemented",
+      "actualAssertions": [
+        "Tool name returns the exact configured approval component object."
+      ]
+    }
+  ]
+}

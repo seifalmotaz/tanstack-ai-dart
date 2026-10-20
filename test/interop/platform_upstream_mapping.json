@@ -1,0 +1,3636 @@
+{
+  "schemaVersion": "platform-upstream-mapping/v1",
+  "generatedFrom": "tool/upstream_tests.json",
+  "upstreamPackage": "@tanstack/ai-client",
+  "upstreamVersion": "0.40.0",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "inventory": {
+    "files": 69,
+    "runtimeCases": 1011,
+    "sha256": "sha256:1cc1ac6ac75ca032d928860cefc96de579840ebd86eea0d82412015cf4632f49"
+  },
+  "reviewMethod": "Read each paired Dart test body and recorded its actual expect/expectLater/expectEmit statements; titles were used only to locate candidates. Compile-adapted cases run dart analyze on temporary fixtures under .dart_tool/platform_type_fixtures.",
+  "mainImplementationHashes": {
+    "lib/platform.dart": "sha256:8bb2d61cba10878ec9dec3fa0c9b344ba0b6c83580fce7ef63c2ad94e2037bdd",
+    "lib/src/cancellation.dart": "sha256:569dac447b74a04351ff03588a95352dc49ab96d1a6630835f4d0a8cd3b18a44",
+    "lib/src/crypto/keyring_crypto.dart": "sha256:e5008010435f255ecc1fd43469a728b388ca1b2ff41d8a9b7179e092411fef06",
+    "lib/src/crypto/passkey_crypto.dart": "sha256:2702ad17503ff519985be59697ae9099326aefa4369695c2eb2a214d243aa117",
+    "lib/src/platform/audio_recorder.dart": "sha256:5446a77793e952a40caf93327a1c88dcc0d4949d3ef694fda969c82a6e1e3bbc",
+    "lib/src/platform/byok/byok.dart": "sha256:cad37ca0ccb78358442391a8c4fe772c986d2ea31f5a8bc68b991ee8f9fd00fc",
+    "lib/src/platform/byok/client.dart": "sha256:547c823981104b3b336829f455b6d94c190ba1e04a1738767f5d3ceec3fff8bf",
+    "lib/src/platform/byok/errors.dart": "sha256:7a95ecbac766bfa177b7ab052ba115cad5a7aff85da8755e89935f27217582c4",
+    "lib/src/platform/byok/passkey.dart": "sha256:b948d32a5d00c93d3ac68ebb669b2e8977a9b63cae97b26cb8211db032214c02",
+    "lib/src/platform/byok/providers.dart": "sha256:cebe147cda39dfb7668128e709799aa31f12ac69a876659ef26854896f464169",
+    "lib/src/platform/byok/resolve.dart": "sha256:3ec4e870da6e155197cc2b1961a0d9f44c124a9f166f95b62aedcecfad0b87aa",
+    "lib/src/platform/byok/storage.dart": "sha256:f097acc6f05c71374258126bd2f850738de74a0a4f72903e0e51e84e00362605",
+    "lib/src/platform/client_persistor.dart": "sha256:a625f7c13e9bbf9265dfbe0d292d5f18116a7142731bc1bbb119cdb3626f955e",
+    "lib/src/platform/events.dart": "sha256:c42b35e8615ab87f72b8917f86a90837194ae608ed43d911aa7ce22a0b48e637",
+    "lib/src/platform/interrupt_schema.dart": "sha256:ec265b9f5b122876792eb7977c6fde45e6e9b7496e7a1e5b8ce934f1aea31d08",
+    "lib/src/platform/mcp_app_bridge.dart": "sha256:6f0ae2308126c3b09b239ad7c264673584af01dffb756d47346ec7d7c39c84c1",
+    "lib/src/platform/message_date_normalizer.dart": "sha256:4b6977cba4881567c1267b4fbd6612c7a124f74d250a0dbbd7d07c8a4b14b38b",
+    "lib/src/platform/persistence_types.dart": "sha256:5f590e642585f2f23d67ab424460968b354fa80f1113908fa1489a5d58431b8b",
+    "lib/src/platform/realtime_client.dart": "sha256:2be4742ede37d037452cdcc7b3de3aefd73018cee29871ac37a2d8b28bfdd231",
+    "lib/src/platform/realtime_types.dart": "sha256:5c9b7e3383f449b40e3645620d8dfa286128d67e5c35a196cd21e8a92ccd81bf",
+    "lib/src/platform/snapshot_atom.dart": "sha256:b1de922167ce210e93dc5594269391feab67c23007c2bdbc52a45bf82424e7ad",
+    "lib/src/platform/storage_adapters.dart": "sha256:ca62711e1f4bee40c6102474e64563b430545578be6cd8804eebfc430cd76b79",
+    "lib/src/platform/tool_types.dart": "sha256:09ba7c22e4dfcbddbe06fdb85a718283ab12c48aac96afc767d43eb1985f2ae7",
+    "lib/src/platform/web_mcp_tools.dart": "sha256:a00518ea75edfc2c45f394707cef63cc9bb8c6f1daa539a3537a974d7ec234c8"
+  },
+  "scope": {
+    "platformDomainFiles": [
+      "audio-recorder.test.ts",
+      "byok-chat-client.test.ts",
+      "byok-client.test.ts",
+      "byok-generation-client.test.ts",
+      "byok-headers.test.ts",
+      "byok-passkey-ceremony.test.ts",
+      "byok-passkey.test.ts",
+      "byok-video-generation-client.test.ts",
+      "client-persistor.test.ts",
+      "client-snapshots.test.ts",
+      "events.test.ts",
+      "mcp-app-bridge.test.ts",
+      "page-web-mcp-tools.test.ts",
+      "snapshot-atom.test.ts",
+      "storage-adapters.test.ts",
+      "tool-types.test.ts",
+      "web-mcp-tools-types.test.ts",
+      "web-mcp-tools.test.ts"
+    ],
+    "caseCount": 242,
+    "domains": [
+      "audio-recorder",
+      "byok-client",
+      "byok-flow",
+      "byok-prepare",
+      "client-persistor",
+      "events",
+      "mcp-app-bridge",
+      "passkey-crypto-keyring",
+      "session-generating",
+      "session-snapshots",
+      "snapshot-atom",
+      "storage-adapters",
+      "tool-typing",
+      "web-mcp-tools-types"
+    ],
+    "notes": "Includes platform-owned files plus BYOK flow files and the sessionGenerating slice of chat-client.test.ts because the requested platform domain names them. tool-types.test.ts and byok-headers.test.ts are included as honest missing cases."
+  },
+  "summary": {
+    "totalCases": 242,
+    "implemented": 217,
+    "compileAdapted": 4,
+    "missing": 7,
+    "runtime": 224,
+    "static": 18,
+    "notRepresentable": 14
+  },
+  "cases": [
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder uses Set subscription behavior and reports repeated states",
+      "upstreamTitle": "uses Set subscription behavior and reports repeated states",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "uses Set subscription behavior and reports repeated states",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(recorder.start(), throwsA(isA<StateError>()))",
+        "expect(calls, 1)",
+        "expectLater(recorder.start(), throwsA(isA<StateError>()))",
+        "expect(calls, 1)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder isSupported() is true when media APIs exist",
+      "upstreamTitle": "isSupported() is true when media APIs exist",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "isSupported() is true when media APIs exist",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(AudioRecorder(platform: _FakePlatform()).isSupported, isTrue)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder isSupported() is false when MediaRecorder is missing",
+      "upstreamTitle": "isSupported() is false when MediaRecorder is missing",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "isSupported() is false when MediaRecorder is missing",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( AudioRecorder(platform: _FakePlatform(supported: false)).isSupported, isFalse, )",
+        "expect(AudioRecorder().isSupported, isFalse)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder records start->stop and produces base64 + a ready audio part",
+      "upstreamTitle": "records start->stop and produces base64 + a ready audio part",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "records start->stop and produces base64 + a ready audio part",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(recorder.state, AudioRecorderState.recording)",
+        "expect(platform.lastConstraints, {'audio': true})",
+        "expect(recording.mimeType, 'audio/webm')",
+        "expect(recording.base64, 'AQID')",
+        "expect(recording.part, { 'type': 'audio', 'source': {'type': 'data', 'value': 'AQID', 'mimeType': 'audio/webm'}, })",
+        "expect(recording.durationMs, isA<int>())",
+        "expect(recorder.state, AudioRecorderState.idle)",
+        "expect(states, contains(AudioRecorderState.recording))",
+        "expect(states, contains(AudioRecorderState.idle))"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder a throwing listener does not skip others or strand stop()",
+      "upstreamTitle": "a throwing listener does not skip others or strand stop()",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "a throwing listener does not skip others or strand stop()",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(recording.base64, 'AQID')",
+        "expect(states, [ AudioRecorderState.recording, AudioRecorderState.stopping, AudioRecorderState.idle, ])",
+        "expect(recorder.state, AudioRecorderState.idle)",
+        "expect(errors, isNotEmpty)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder stops microphone tracks on stop",
+      "upstreamTitle": "stops microphone tracks on stop",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "stops microphone tracks on stop",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(platform.lastStream!.stops, 1)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder routes getUserMedia rejection to onError and rethrows",
+      "upstreamTitle": "routes getUserMedia rejection to onError and rethrows",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "routes getUserMedia rejection to onError and rethrows",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(recorder.start(), throwsA(isA<StateError>()))",
+        "expect(reported, isNotNull)",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder cancel() releases the mic and produces no recording",
+      "upstreamTitle": "cancel() releases the mic and produces no recording",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "cancel() releases the mic and produces no recording",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(platform.lastStream!.stops, 1)",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder rejects stop() when not recording",
+      "upstreamTitle": "rejects stop() when not recording",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "rejects stop() when not recording",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(recorder.stop(), throwsA(isA<StateError>()))"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder honors a supported custom mimeType",
+      "upstreamTitle": "honors a supported custom mimeType",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "honors a supported custom mimeType",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(platform.lastRecorder?.requestedMimeType, 'audio/mp4')"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder onerror preserves the underlying error detail",
+      "upstreamTitle": "onerror preserves the underlying error detail",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "onerror preserves the underlying error detail",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(reported, isNotNull)",
+        "expect('$reported', contains('NotAllowedError'))",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder cancel during finalize settles stop() exactly once",
+      "upstreamTitle": "cancel during finalize settles stop() exactly once",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "cancel during finalize settles stop() exactly once",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(rejected, 1)",
+        "expect(resolved, 0)",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder routes a finalize failure to onError and rejects stop()",
+      "upstreamTitle": "routes a finalize failure to onError and rejects stop()",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "routes a finalize failure to onError and rejects stop()",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(recorder.stop(), throwsA(isA<StateError>()))",
+        "expect('$reported', contains('decode failed'))",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder a throwing onError still rejects the pending stop() promise",
+      "upstreamTitle": "a throwing onError still rejects the pending stop() promise",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "a throwing onError still rejects the pending stop() promise",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(recorder.stop(), throwsA(isA<StateError>()))",
+        "expect(onErrorCalls, 1)",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder stop() watchdog recovers buffered audio when onstop never fires",
+      "upstreamTitle": "stop() watchdog recovers buffered audio when onstop never fires",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "stop() watchdog recovers buffered audio when onstop never fires",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(recording.base64, 'AQID')",
+        "expect(recording.mimeType, 'audio/webm')",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder stop() watchdog rejects when no audio was captured",
+      "upstreamTitle": "stop() watchdog rejects when no audio was captured",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "stop() watchdog rejects when no audio was captured",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(resolved, isFalse)",
+        "expect(capturedError, isA<StateError>())",
+        "expect('$capturedError', contains('timed out'))",
+        "expect(recorder.state, AudioRecorderState.idle)"
+      ]
+    },
+    {
+      "domain": "audio-recorder",
+      "upstreamFile": "audio-recorder.test.ts",
+      "upstreamName": "AudioRecorder cancel() during a pending start() releases the mic and never records",
+      "upstreamTitle": "cancel() during a pending start() releases the mic and never records",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "cancel() during a pending start() releases the mic and never records",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(stream.stops, 1)",
+        "expect(recorder.state, AudioRecorderState.idle)",
+        "expect(recorder.state, AudioRecorderState.recording)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps x-byok headers and keeps the key out of the body",
+      "upstreamTitle": "stamps x-byok headers and keeps the key out of the body",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps x-byok headers and keeps the key out of the body",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(connection.headers.single, <String, String>{'x-byok-openai': key})",
+        "expect(connection.data.single, <String, dynamic>{'provider': 'openai', 'model': 'gpt-5.5'})",
+        "expect(jsonEncode(connection.data.single), isNot(contains(key)))"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps only the resolved provider when the ring has multiple keys",
+      "upstreamTitle": "stamps only the resolved provider when the ring has multiple keys",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps only the resolved provider when the ring has multiple keys",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(connection.headers.single, <String, String>{'x-byok-openai': key})",
+        "expect(connection.headers.single, isNot(contains('x-byok-anthropic')))"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps BYOK headers for per-call body.provider",
+      "upstreamTitle": "stamps BYOK headers for per-call body.provider",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps BYOK headers for per-call body.provider",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(connection.headers.single, <String, String>{'x-byok-anthropic': 'sk-anthropic-secret'})",
+        "expect(connection.headers.single, isNot(contains('x-byok-openai')))",
+        "expect(connection.data.single, <String, dynamic>{'provider': 'anthropic', 'model': 'gpt-5.5'})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps the only saved key when no provider slug is passed",
+      "upstreamTitle": "stamps the only saved key when no provider slug is passed",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps the only saved key when no provider slug is passed",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(connection.headers.single, <String, String>{'x-byok-openai': key})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok prompts for the only registered provider when no key is saved",
+      "upstreamTitle": "prompts for the only registered provider when no key is saved",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "prompts for the only registered provider when no key is saved",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(byok.getSnapshot().prompt?.reason, 'missing')",
+        "expect(connection.connects, 0)",
+        "expect(client.getStatus(), 'error')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok throws and does not connect when no provider slug resolves",
+      "upstreamTitle": "throws and does not connect when no provider slug resolves",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "sets an error and does not connect when no provider slug resolves",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), 'error')",
+        "expect(client.getError(), contains('no provider slug'))",
+        "expect(connection.connects, 0)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok throws when forwardedProps.provider is not a slug",
+      "upstreamTitle": "throws when forwardedProps.provider is not a slug",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects forwardedProps.provider that is not a slug without connecting",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), 'error')",
+        "expect(connection.connects, 0)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps headers for slugs outside the old first-party list",
+      "upstreamTitle": "stamps headers for slugs outside the old first-party list",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps headers for slugs outside the old first-party list",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(connection.headers.single, <String, String>{'x-byok-bedrock': key})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok rejects ByokBlockedError and does not connect when the provider is empty",
+      "upstreamTitle": "rejects ByokBlockedError and does not connect when the provider is empty",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects ByokBlockedError and does not connect when the provider is empty",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), 'error')",
+        "expect(client.getError(), contains('Missing openai'))",
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(byok.getSnapshot().prompt?.reason, 'missing')",
+        "expect(connection.connects, 0)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok rejects ByokMissingError from connect and sets the missing prompt",
+      "upstreamTitle": "rejects ByokMissingError from connect and sets the missing prompt",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects ByokMissingError from connect and sets the missing prompt",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), 'error')",
+        "expect(client.getError(), contains('ByokMissingError'))",
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(byok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok does not persist the raw key or x-byok headers",
+      "upstreamTitle": "does not persist the raw key or x-byok headers",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "does not persist the raw key or x-byok headers",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(serialized, isNotEmpty)",
+        "expect(serialized, isNot(contains(key)))",
+        "expect(serialized, isNot(contains('x-byok-')))"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory isolates and freezes nested snapshot state",
+      "upstreamTitle": "isolates and freezes nested snapshot state",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "isolates and freezes nested snapshot state",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(snapshot.status, isA<Map<String, KeyStatus>>())",
+        "expect( () => (snapshot.status as Map)['openai'] = const KeyStatus( state: KeyStatusState.set, masked: 'leak', ), throwsA(isA<UnsupportedError>()), )",
+        "expect(byok.getSnapshot().status['openai']?.state, KeyStatusState.set)",
+        "expect(byok.getSnapshot().status['openai']?.masked, 'ghij')"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory uses Set subscription behavior",
+      "upstreamTitle": "uses Set subscription behavior",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "uses Set subscription behavior",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 1)",
+        "expect(calls, 1)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory a throwing listener does not skip the next listener",
+      "upstreamTitle": "a throwing listener does not skip the next listener",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "a throwing listener does not skip the next listener",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 1)",
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(errors, hasLength(1))"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory updates and snapshots without exposing the raw key",
+      "upstreamTitle": "updates and snapshots without exposing the raw key",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "updates and snapshots without exposing the raw key",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(snapshot.status['openai']?.state, KeyStatusState.set)",
+        "expect(snapshot.status['openai']?.masked, 'ghij')",
+        "expect(jsonEncode(snapshot.status.map((k, v) => MapEntry(k, v.toJson()))), isNot(contains('sk-abcdefghij')))",
+        "expect(byok.headers('openai'), {'x-byok-openai': 'sk-abcdefghij'})",
+        "expect(byok.headers('anthropic'), isEmpty)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory sends and prepares companion credentials with the provider",
+      "upstreamTitle": "sends and prepares companion credentials with the provider",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "sends and prepares companion credentials with the provider",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.prepare('acme'), throwsA(isA<ByokBlockedError>()), )",
+        "expect(byok.getSnapshot().prompt?.provider, 'acme-account')",
+        "expect(byok.getSnapshot().prompt?.reason, 'missing')",
+        "expect(byok.headers('acme'), { 'x-byok-acme': 'tok-abcdefghij', 'x-byok-acme-account': 'acct-1', })"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory update(key) throws when prompt is null",
+      "upstreamTitle": "update(key) throws when prompt is null",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "update(key) throws when prompt is null",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.update('sk-abcdefghij'), throwsA(predicate((error) => '$error'.contains('prompt is null'))), )"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory rejects empty or whitespace keys",
+      "upstreamTitle": "rejects empty or whitespace keys",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "rejects empty or whitespace keys",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.update('openai', ' '), throwsA(predicate((error) => '$error'.contains('non-empty'))), )",
+        "expect(byok.getSnapshot().status['openai'], isNull)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory update(key) writes the prompted provider",
+      "upstreamTitle": "update(key) writes the prompted provider",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "update(key) writes the prompted provider",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().status['anthropic']?.state, KeyStatusState.set)",
+        "expect(byok.getSnapshot().prompt, isNull)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory clear removes one key or all keys",
+      "upstreamTitle": "clear removes one key or all keys",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "clear removes one key or all keys",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().status['openai'], isNull)",
+        "expect(byok.getSnapshot().status['grok']?.state, KeyStatusState.set)",
+        "expect(byok.getSnapshot().status['grok'], isNull)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory prepare throws ByokBlockedError when the provider is empty and uncovered",
+      "upstreamTitle": "prepare throws ByokBlockedError when the provider is empty and uncovered",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "prepare throws ByokBlockedError when the provider is empty and uncovered",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.prepare('openai'), throwsA(isA<ByokBlockedError>()), )",
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(byok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory prepare does not throw when server coverage is set",
+      "upstreamTitle": "prepare does not throw when server coverage is set",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "prepare does not throw when server coverage is set",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(byok.prepare('openai'), completes)",
+        "expect(byok.getSnapshot().prompt, isNull)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory prepare does not throw when server coverage is true for any slug",
+      "upstreamTitle": "prepare does not throw when server coverage is true for any slug",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "prepare does not throw when server coverage is true for any slug",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(byok.prepare('bedrock'), completes)",
+        "expectLater(byok.prepare('my-llm'), completes)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory accepts slugs that are not first-party adapter names",
+      "upstreamTitle": "accepts slugs that are not first-party adapter names",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "accepts slugs that are not first-party adapter names",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().status['bedrock']?.masked, '-key')",
+        "expect(byok.headers('bedrock'), {'x-byok-bedrock': 'sk-bedrock-key'})"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory rejects invalid provider ids",
+      "upstreamTitle": "rejects invalid provider ids",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "rejects invalid provider ids",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.update('OpenAI', 'sk-abcdefghij'), throwsA( predicate((error) => '$error'.contains('Invalid BYOK provider id')), ), )",
+        "expect( () => byok.headers('OpenAI'), throwsA( predicate((error) => '$error'.contains('Invalid BYOK provider id')), ), )"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory prepare skips the empty check when no provider is given",
+      "upstreamTitle": "prepare skips the empty check when no provider is given",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "prepare skips the empty check when no provider is given",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(byok.prepare(), completes)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory headers() without a provider emits every present key",
+      "upstreamTitle": "headers() without a provider emits every present key",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "headers() without a provider emits every present key",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.headers(), { 'x-byok-openai': 'sk-aaaaaaaaaa', 'x-byok-grok': 'xai-bbbbbbbb', })"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory subscribe fires on update",
+      "upstreamTitle": "subscribe fires on update",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "subscribe fires on update",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, greaterThan(0))"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok memory getSnapshot returns the same object until state changes",
+      "upstreamTitle": "getSnapshot returns the same object until state changes",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "getSnapshot returns the same object until state changes",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(identical(byok.getSnapshot(), first), isTrue)",
+        "expect(identical(afterRequest, first), isFalse)",
+        "expect(identical(byok.getSnapshot(), afterRequest), isTrue)",
+        "expect(identical(afterUpdate, afterRequest), isFalse)",
+        "expect(identical(byok.getSnapshot(), afterUpdate), isTrue)",
+        "expect(identical(afterClear, afterUpdate), isFalse)",
+        "expect(identical(byok.getSnapshot(), afterClear), isTrue)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok unlockable update/clear update loads the locked ring so other providers survive",
+      "upstreamTitle": "update loads the locked ring so other providers survive",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "update loads the locked ring so other providers survive",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(saved?['openai'], 'sk-openai-new')",
+        "expect(saved?['anthropic'], 'sk-anthropic-keep')"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok unlockable update/clear clear(provider) loads the locked ring so other providers survive",
+      "upstreamTitle": "clear(provider) loads the locked ring so other providers survive",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "clear(provider) loads the locked ring so other providers survive",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(saved?['anthropic'], 'sk-anthropic-keep')",
+        "expect(saved?.containsKey('openai'), isFalse)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok persist-then-emit does not mark a key saved when storage.save throws",
+      "upstreamTitle": "does not mark a key saved when storage.save throws",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "does not mark a key saved when storage.save throws",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.update('openai', 'sk-abcdefghij'), throwsA(predicate((error) => '$error'.contains('quota'))), )",
+        "expect(byok.headers('openai'), isEmpty)",
+        "expect(byok.getSnapshot().status['openai']?.state, KeyStatusState.error)",
+        "expect(byok.getSnapshot().status['openai']?.masked, 'ghij')",
+        "expect(byok.getSnapshot().status['openai']?.message, 'quota')",
+        "expect( jsonEncode( byok.getSnapshot().status.map((k, v) => MapEntry(k, v.toJson()))), isNot(contains('sk-abcdefghij')), )"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok persist-then-emit does not clear keys when storage.clear throws",
+      "upstreamTitle": "does not clear keys when storage.clear throws",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "does not clear keys when storage.clear throws",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( byok.clear(), throwsA(predicate((error) => '$error'.contains('idb blocked'))), )",
+        "expect(byok.headers('openai'), { 'x-byok-openai': 'sk-abcdefghij', })"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok locked snapshot peeks last-4 as locked and omits headers until unlock",
+      "upstreamTitle": "peeks last-4 as locked and omits headers until unlock",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "peeks last-4 as locked and omits headers until unlock",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().locked, isTrue)",
+        "expect(byok.getSnapshot().status['openai']?.state, KeyStatusState.locked)",
+        "expect(byok.getSnapshot().status['openai']?.masked, 'ghij')",
+        "expect(byok.headers('openai'), isEmpty)",
+        "expect(byok.getSnapshot().locked, isFalse)",
+        "expect(byok.headers('openai'), {'x-byok-openai': 'sk-abcdefghij'})"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok locked snapshot maps a cancelled unlock to ByokBlockedError locked",
+      "upstreamTitle": "maps a cancelled unlock to ByokBlockedError locked",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "maps a cancelled unlock to ByokBlockedError locked",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(byok.unlock(), throwsA(isA<ByokBlockedError>()))",
+        "expect(byok.getSnapshot().prompt?.provider, 'openai')",
+        "expect(byok.getSnapshot().prompt?.reason, 'locked')",
+        "expect(byok.getSnapshot().locked, isTrue)",
+        "expect(byok.headers('openai'), isEmpty)"
+      ]
+    },
+    {
+      "domain": "byok-client",
+      "upstreamFile": "byok-client.test.ts",
+      "upstreamName": "defineByok locked snapshot records peek failures on the snapshot",
+      "upstreamTitle": "records peek failures on the snapshot",
+      "dartFile": "test/platform/byok_client_test.dart",
+      "dartTestName": "records peek failures on the snapshot",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(byok.getSnapshot().storageError, contains('IndexedDB blocked'))",
+        "expect(byok.getSnapshot().locked, isTrue)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "upstreamTitle": "passes elevenlabs headers to the fetcher after updateOptions",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "passes elevenlabs headers to the fetcher after updateOptions",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls.single['input'], {'prompt': 'hello'})",
+        "expect(calls.single['headers'], { 'x-byok-elevenlabs': elevenLabsKey, })"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stamps headers on the connection runContext",
+      "upstreamTitle": "stamps headers on the connection runContext",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "stamps headers on the connection runContext",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(context?.headers, {'x-byok-elevenlabs': elevenLabsKey})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "upstreamTitle": "requests a missing key when the fetcher throws ByokMissingError",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "requests a missing key when the fetcher throws ByokMissingError",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')",
+        "expect(client.getError(), isA<byok.ByokMissingError>())"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "upstreamTitle": "stops the failed run when the BYOK request subscriber stops",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "stops the failed run when the BYOK request subscriber stops",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), GenerationClientState.idle)",
+        "expect(client.getError(), isNull)",
+        "expect(errors.whereType<Object>(), isEmpty)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "upstreamTitle": "does not let a failed BYOK run overwrite a replacement",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "does not let a failed BYOK run overwrite a replacement",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), GenerationClientState.generating)",
+        "expect(client.getError(), isNull)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "upstreamTitle": "requests a missing key when the fetcher returns a byokMissing Response",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "requests a missing key when the fetcher returns a byokMissing Response",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not call the fetcher when the provider key is missing",
+      "upstreamTitle": "does not call the fetcher when the provider key is missing",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "does not call the fetcher when the provider key is missing",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 0)",
+        "expect(client.getError(), isA<byok.ByokBlockedError>())",
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stamps the only saved key when no provider slug is passed",
+      "upstreamTitle": "stamps the only saved key when no provider slug is passed",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "stamps the only saved key when no provider slug is passed",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls.single, {'x-byok-elevenlabs': elevenLabsKey})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not send every stored key when no provider resolves",
+      "upstreamTitle": "does not send every stored key when no provider resolves",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "does not send every stored key when no provider resolves",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 0)",
+        "expect(client.getError(), isA<byok.ByokUnresolvedProviderError>())"
+      ]
+    },
+    {
+      "domain": "byok-prepare",
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers merges BYOK headers onto the fetch request",
+      "upstreamTitle": "merges BYOK headers onto the fetch request",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "domain": "byok-prepare",
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers passes headers into a ChatFetcher",
+      "upstreamTitle": "passes headers into a ChatFetcher",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "domain": "byok-prepare",
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers does not throw when a custom connect ignores headers",
+      "upstreamTitle": "does not throw when a custom connect ignores headers",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects a saved-key unlock without activation before opening a ceremony",
+      "upstreamTitle": "rejects a saved-key unlock without activation before opening a ceremony",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects a saved-key unlock without activation before opening a ceremony",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( passkeyStorage(platform).load(), throwsA(predicate((error) => '$error'.contains('fresh user action'))), )",
+        "expect(platform.evaluateCalls, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "allows the PRF follow-up after registration consumes activation",
+      "upstreamTitle": "allows the PRF follow-up after registration consumes activation",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "allows the PRF follow-up after registration consumes activation",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(platform.registerCalls, 1)",
+        "expect(platform.evaluateCalls, 1)",
+        "expect(platform.store.puts, 1)",
+        "expect(record, isNotNull)",
+        "expect( await passkeyStorage(unlockA).load(), {'openai': 'sk-test-secret'}, )",
+        "expect( await passkeyStorage(unlockB).load(), {'openai': 'sk-test-secret'}, )"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "saves array PRF bytes and unlocks with native bytes (registration result: true)",
+      "upstreamTitle": "saves array PRF bytes and unlocks with native bytes (registration result: true)",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "saves array PRF bytes and unlocks with native bytes (registration result: true)",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(record, isNotNull)",
+        "expect(await passkeyStorage(unlockA).load(), {\"openai\": \"sk-test-secret\"})",
+        "expect(await passkeyStorage(unlockB).load(), {\"openai\": \"sk-test-secret\"})"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "saves array PRF bytes and unlocks with native bytes (registration result: false)",
+      "upstreamTitle": "saves array PRF bytes and unlocks with native bytes (registration result: false)",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "saves array PRF bytes and unlocks with native bytes (registration result: false)",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(record, isNotNull)",
+        "expect(await passkeyStorage(unlockA).load(), {\"openai\": \"sk-test-secret\"})",
+        "expect(await passkeyStorage(unlockB).load(), {\"openai\": \"sk-test-secret\"})"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 0 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 0 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 0 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 1 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 1 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 1 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 2 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 2 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 2 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 3 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 3 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 3 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 4 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 4 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 4 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 5 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 5 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 5 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 6 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 6 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 6 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 7 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 7 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 7 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey-ceremony.test.ts",
+      "upstreamName": "rejects invalid array PRF output 8 before saving",
+      "upstreamTitle": "rejects invalid array PRF output 8 before saving",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "rejects invalid array PRF output 8 before saving",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(storage.save(...), throwsA(predicate(error contains 'Invalid passkey PRF byte array')))",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey.test.ts",
+      "upstreamName": "passkey crypto round-trips a keyring through AES-256-GCM",
+      "upstreamTitle": "round-trips a keyring through AES-256-GCM",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "round-trips a keyring through AES-256-GCM",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( await decryptKeyring(key, encrypted.iv, encrypted.ciphertext), keys, )",
+        "expectLater( storage.save({'openai': 'sk-test-secret'}), throwsA( predicate( (error) => '$error'.contains('Invalid passkey PRF byte array'), ), ), )",
+        "expect(dynamicPlatform.store.puts, 0)"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey.test.ts",
+      "upstreamName": "isPasskeyStorageSupported returns a boolean",
+      "upstreamTitle": "returns a boolean",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "returns a boolean",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(isPasskeyStorageSupported(null), isFalse)",
+        "expect( isPasskeyStorageSupported(FakePasskeyPlatform(supported: true)), isTrue, )"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey.test.ts",
+      "upstreamName": "defaultByokStorage returns memory storage with a warning when passkeys are unavailable",
+      "upstreamTitle": "returns memory storage with a warning when passkeys are unavailable",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "returns memory storage with a warning when passkeys are unavailable",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(store.id, 'memory')",
+        "expect(store.warning, contains('memory for this tab only'))"
+      ]
+    },
+    {
+      "domain": "passkey-crypto-keyring",
+      "upstreamFile": "byok-passkey.test.ts",
+      "upstreamName": "defineByok unlockable storage prepare loads the locked keyring before attaching headers",
+      "upstreamTitle": "prepare loads the locked keyring before attaching headers",
+      "dartFile": "test/platform/byok_passkey_test.dart",
+      "dartTestName": "prepare loads the locked keyring before attaching headers",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(loadCalls, greaterThan(0))",
+        "expect(byok.headers('openai'), {'x-byok-openai': 'sk-abcdefghij'})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "upstreamTitle": "passes elevenlabs headers to the fetcher after updateOptions",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "passes elevenlabs headers to the fetcher after updateOptions",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls.single, {'x-byok-elevenlabs': elevenLabsKey})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok stamps headers on the connection runContext",
+      "upstreamTitle": "stamps headers on the connection runContext",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "stamps headers on the connection runContext",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(context?.headers, {'x-byok-elevenlabs': elevenLabsKey})"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "upstreamTitle": "requests a missing key when the fetcher throws ByokMissingError",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "requests a missing key when the fetcher throws ByokMissingError",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')",
+        "expect(client.getError(), isA<byok.ByokMissingError>())"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "upstreamTitle": "stops the failed run when the BYOK request subscriber stops",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "stops the failed run when the BYOK request subscriber stops",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), GenerationClientState.idle)",
+        "expect(client.getError(), isNull)",
+        "expect(errors.whereType<Object>(), isEmpty)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "upstreamTitle": "does not let a failed BYOK run overwrite a replacement",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "does not let a failed BYOK run overwrite a replacement",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getStatus(), GenerationClientState.generating)",
+        "expect(client.getError(), isNull)"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "upstreamTitle": "requests a missing key when the fetcher returns a byokMissing Response",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "requests a missing key when the fetcher returns a byokMissing Response",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not call the fetcher when the provider key is missing",
+      "upstreamTitle": "does not call the fetcher when the provider key is missing",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "does not call the fetcher when the provider key is missing",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 0)",
+        "expect(client.getError(), isA<byok.ByokBlockedError>())",
+        "expect(clientByok.getSnapshot().prompt?.provider, 'elevenlabs')",
+        "expect(clientByok.getSnapshot().prompt?.reason, 'missing')"
+      ]
+    },
+    {
+      "domain": "byok-flow",
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not send every stored key when no provider resolves",
+      "upstreamTitle": "does not send every stored key when no provider resolves",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "does not send every stored key when no provider resolves",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 0)",
+        "expect(client.getError(), isA<byok.ByokUnresolvedProviderError>())"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor readInitial returns the stored messages from a synchronous getItem",
+      "upstreamTitle": "returns the stored messages from a synchronous getItem",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "returns the stored messages from a synchronous getItem",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(initial, isA<ChatPersistedState>())",
+        "expect((initial as ChatPersistedState).messages, stored)",
+        "expect(adapter.getItemCalls, 1)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor readInitial round-trips a mixed transcript that includes activity",
+      "upstreamTitle": "round-trips a mixed transcript that includes activity",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "round-trips a mixed transcript that includes activity",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(initial.messages, mixed)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor readInitial returns the promise from an asynchronous getItem",
+      "upstreamTitle": "returns the promise from an asynchronous getItem",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "returns the promise from an asynchronous getItem",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.readInitial(), isA<Future>())"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor readInitial swallows a throwing getItem and returns undefined",
+      "upstreamTitle": "swallows a throwing getItem and returns undefined",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "swallows a throwing getItem and returns undefined",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.readInitial(), isNull)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor hydrateAsync applies messages once the promise resolves to a record",
+      "upstreamTitle": "applies messages once the promise resolves to a record",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "applies messages once the promise resolves to a record",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.applied, [stored])"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor hydrateAsync does not apply when the promise resolves to undefined",
+      "upstreamTitle": "does not apply when the promise resolves to undefined",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "does not apply when the promise resolves to undefined",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.applied, isEmpty)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor hydrateAsync does nothing for a synchronous (non-promise) value",
+      "upstreamTitle": "does nothing for a synchronous (non-promise) value",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "does nothing for a synchronous (non-promise) value",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.applied, isEmpty)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor hydrateAsync does not apply if messages changed before hydration resolves",
+      "upstreamTitle": "does not apply if messages changed before hydration resolves",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "does not apply if messages changed before hydration resolves",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.applied, isEmpty)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor hydrateAsync swallows a rejected hydration promise",
+      "upstreamTitle": "swallows a rejected hydration promise",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "swallows a rejected hydration promise",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.applied, isEmpty)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged persists the messages on change",
+      "upstreamTitle": "persists the messages on change",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "persists the messages on change",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(state.messages, messages)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged persists a snapshot, not the live array reference",
+      "upstreamTitle": "persists a snapshot, not the live array reference",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "persists a snapshot, not the live array reference",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(persisted.messages, hasLength(1))"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged skips exactly one write after beginClear, then resumes",
+      "upstreamTitle": "skips exactly one write after beginClear, then resumes",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "skips exactly one write after beginClear, then resumes",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(adapter.setItemCalls, 2)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged swallows a synchronous setItem error",
+      "upstreamTitle": "swallows a synchronous setItem error",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "swallows a synchronous setItem error",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( () => created.persistor.notifyMessagesChanged([uiMessage('m-1')]), returnsNormally, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged runs async writes sequentially (FIFO, no overlap)",
+      "upstreamTitle": "runs async writes sequentially (FIFO, no overlap)",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "runs async writes sequentially (FIFO, no overlap)",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(adapter.setItemCalls, 1)",
+        "expect(adapter.setItemCalls, 2)",
+        "expect(adapter.setStates[1].messages, [uiMessage('b')])"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor notifyMessagesChanged keeps writing after an async write rejects",
+      "upstreamTitle": "keeps writing after an async write rejects",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "keeps writing after an async write rejects",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(adapter.setItemCalls, 2)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor remove removes the persisted conversation",
+      "upstreamTitle": "removes the persisted conversation",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "removes the persisted conversation",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(adapter.removeItemCalls, 1)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor remove swallows a synchronous removeItem error",
+      "upstreamTitle": "swallows a synchronous removeItem error",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "swallows a synchronous removeItem error",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(() => created.persistor.remove(), returnsNormally)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor remove invalidates a queued write that a removal supersedes",
+      "upstreamTitle": "invalidates a queued write that a removal supersedes",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "invalidates a queued write that a removal supersedes",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(adapter.setItemCalls, 1)",
+        "expect(adapter.removeItemCalls, 1)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression does not ignore chunks before a clear",
+      "upstreamTitle": "does not ignore chunks before a clear",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "does not ignore chunks before a clear",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-1')), isFalse)",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('msg-1')), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores chunks for a message id captured at clear time",
+      "upstreamTitle": "ignores chunks for a message id captured at clear time",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores chunks for a message id captured at clear time",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(textContent('msg-1')), isTrue)",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('msg-other')), isFalse, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores a RUN_STARTED for an active run captured at clear time",
+      "upstreamTitle": "ignores a RUN_STARTED for an active run captured at clear time",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores a RUN_STARTED for an active run captured at clear time",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-1')), isTrue)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores the in-flight currentRunId captured at clear time",
+      "upstreamTitle": "ignores the in-flight currentRunId captured at clear time",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores the in-flight currentRunId captured at clear time",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-current')), isTrue, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores runless content chunks belonging to a cleared run",
+      "upstreamTitle": "ignores runless content chunks belonging to a cleared run",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores runless content chunks belonging to a cleared run",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.shouldIgnoreChunk(textContent('late-msg')), isTrue)",
+        "expect(created.persistor.shouldIgnoreChunk(messagesSnapshot()), isTrue)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores a runless 'TEXT_MESSAGE_CHUNK' belonging to a cleared run",
+      "upstreamTitle": "ignores a runless 'TEXT_MESSAGE_CHUNK' belonging to a cleared run",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores a runless 'TEXT_MESSAGE_CHUNK' belonging to a cleared run",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk({ 'type': 'TEXT_MESSAGE_CHUNK', 'messageId': 'late-msg', 'delta': 'hi', 'timestamp': 1, }), isTrue, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores a runless 'TOOL_CALL_CHUNK' belonging to a cleared run",
+      "upstreamTitle": "ignores a runless 'TOOL_CALL_CHUNK' belonging to a cleared run",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores a runless 'TOOL_CALL_CHUNK' belonging to a cleared run",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk({ 'type': 'TOOL_CALL_CHUNK', 'toolCallId': 'tc-late', 'toolCallName': 'x', 'timestamp': 1, }), isTrue, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor clear-during-stream suppression ignores tool chunks by cleared parentMessageId and remembers the toolCallId",
+      "upstreamTitle": "ignores tool chunks by cleared parentMessageId and remembers the toolCallId",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "ignores tool chunks by cleared parentMessageId and remembers the toolCallId",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor .shouldIgnoreChunk(toolCallStart('tc-1', 'parent-msg')), isTrue, )",
+        "expect( created.persistor.shouldIgnoreChunk(toolCallStart('tc-1')), isTrue, )"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks forgets a settled run so a later run with the same id is not ignored",
+      "upstreamTitle": "forgets a settled run so a later run with the same id is not ignored",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "forgets a settled run so a later run with the same id is not ignored",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-1')), isTrue)",
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-1')), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks stops ignoring runless chunks after a session-level run error",
+      "upstreamTitle": "stops ignoring runless chunks after a session-level run error",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "stops ignoring runless chunks after a session-level run error",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(textContent('late-1')), isTrue)",
+        "expect(created.persistor.shouldIgnoreChunk(textContent('late-2')), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks takeRunlessRunId returns and clears the current runless run, then null",
+      "upstreamTitle": "takeRunlessRunId returns and clears the current runless run, then null",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "takeRunlessRunId returns and clears the current runless run, then null",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.takeRunlessRunId(), 'run-1')",
+        "expect(created.persistor.takeRunlessRunId(), isNull)",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('late')), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks resetIgnored only clears active-run markers, not cleared ids",
+      "upstreamTitle": "resetIgnored only clears active-run markers, not cleared ids",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "resetIgnored only clears active-run markers, not cleared ids",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runStarted('run-1')), isTrue)",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('msg-1')), isTrue)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks does not ignore an unrelated runId-less run error",
+      "upstreamTitle": "does not ignore an unrelated runId-less run error",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "does not ignore an unrelated runId-less run error",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.shouldIgnoreChunk(runError()), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks onRunStarted for a non-cleared run does not suppress runless chunks",
+      "upstreamTitle": "onRunStarted for a non-cleared run does not suppress runless chunks",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "onRunStarted for a non-cleared run does not suppress runless chunks",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.shouldIgnoreChunk(textContent('content')), isFalse)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks advances the runless pointer when the active run finishes",
+      "upstreamTitle": "advances the runless pointer when the active run finishes",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "advances the runless pointer when the active run finishes",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( created.persistor.shouldIgnoreChunk(runFinished('run-2')), isFalse)",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('late')), isTrue)"
+      ]
+    },
+    {
+      "domain": "client-persistor",
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor run lifecycle hooks keeps suppressing a second cleared run after the first drains via a runless error",
+      "upstreamTitle": "keeps suppressing a second cleared run after the first drains via a runless error",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "keeps suppressing a second cleared run after the first drains via a runless error",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(created.persistor.takeRunlessRunId(), 'run-2')",
+        "expect( created.persistor.shouldIgnoreChunk(textContent('late-from-run-1')), isTrue, )"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots publishes and clears the active generation run id",
+      "upstreamTitle": "publishes and clears the active generation run id",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
+      "upstreamTitle": "GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots a throwing generation subscriber does not stick isLoading",
+      "upstreamTitle": "a throwing generation subscriber does not stick isLoading",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots a throwing chat snapshot subscriber does not stick isLoading",
+      "upstreamTitle": "a throwing chat snapshot subscriber does not stick isLoading",
+      "dartFile": "test/chat/chat_client_stream_processing_test.dart",
+      "dartTestName": "a throwing listener does not break stream processing or other listeners",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(second, greaterThan(0))",
+        "expect(client.getMessages().last.answer, 'ok')"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots VideoGenerationClient snapshot includes job fields",
+      "upstreamTitle": "VideoGenerationClient snapshot includes job fields",
+      "dartFile": null,
+      "dartTestName": null,
+      "status": "missing",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [],
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots AudioRecorder getSnapshot matches state",
+      "upstreamTitle": "AudioRecorder getSnapshot matches state",
+      "dartFile": "test/platform/audio_recorder_test.dart",
+      "dartTestName": "AudioRecorder getSnapshot matches state",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(recorder.getSnapshot(), AudioRecorderState.idle)",
+        "expect(recorder.getSnapshot(), recorder.state)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient subscribe fires when connect fails",
+      "upstreamTitle": "RealtimeClient subscribe fires when connect fails",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "subscribe fires when connect fails",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(snapshot.status, RealtimeStatus.idle)",
+        "expect(identical(client.getSnapshot(), snapshot), isTrue)",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(calls, greaterThan(0))",
+        "expect(client.getSnapshot().status, RealtimeStatus.error)",
+        "expect(identical(client.getSnapshot(), snapshot), isFalse)",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(calls, count)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient does not read connection control from its public snapshot",
+      "upstreamTitle": "RealtimeClient does not read connection control from its public snapshot",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "does not read connection control from its public snapshot",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getSnapshot().status, RealtimeStatus.idle)",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(tokenCalls, 1)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient isolates connection control from state change callbacks",
+      "upstreamTitle": "RealtimeClient isolates connection control from state change callbacks",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "isolates connection control from state change callbacks",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(state.status, isNot(RealtimeStatus.connected))",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(tokenCalls, 2)",
+        "expect(connectCalls, 2)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots keeps the transcript when connect fails and clears it after a later success",
+      "upstreamTitle": "keeps the transcript when connect fails and clears it after a later success",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "keeps the transcript when connect fails and clears it after a later success",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getSnapshot().messages, hasLength(1))",
+        "expect(client.getSnapshot().messages, hasLength(1))",
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(client.getSnapshot().status, RealtimeStatus.error)",
+        "expect(client.getSnapshot().messages, hasLength(1))",
+        "expect(client.getSnapshot().status, RealtimeStatus.connected)",
+        "expect(client.getSnapshot().messages, isEmpty)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient keeps a transcript that arrives while audio capture starts",
+      "upstreamTitle": "RealtimeClient keeps a transcript that arrives while audio capture starts",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "keeps a transcript that arrives while audio capture starts",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.getSnapshot().status, RealtimeStatus.connected)",
+        "expect(client.getSnapshot().pendingAssistantTranscript, 'Hello')"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient state change callbacks are isolated from a throwing one",
+      "upstreamTitle": "RealtimeClient state change callbacks are isolated from a throwing one",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "state change callbacks are isolated from a throwing one",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater(client.connect(), throwsA(isA<StateError>()))",
+        "expect(seen, [RealtimeStatus.connecting, RealtimeStatus.error])",
+        "expect(errors, isNotEmpty)"
+      ]
+    },
+    {
+      "domain": "session-snapshots",
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient keeps the identity of unchanged messages across snapshots",
+      "upstreamTitle": "RealtimeClient keeps the identity of unchanged messages across snapshots",
+      "dartFile": "test/platform/realtime_client_test.dart",
+      "dartTestName": "keeps the identity of unchanged messages across snapshots",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(messages, hasLength(2))",
+        "expect(identical(messages[0], first), isTrue)",
+        "expect(() => messages.add(first), throwsA(isA<UnsupportedError>()))",
+        "expect(client.getSnapshot().mode, RealtimeMode.idle)",
+        "expect(identical(client.getSnapshot().messages, messages), isTrue)"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:created with client-state envelope fields",
+      "upstreamTitle": "emits client:created with client-state envelope fields",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:created with client-state envelope fields",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:created', { 'initialMessageCount': 5, ...expectedEnvelope('client:created'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:loading:changed with client-state envelope fields",
+      "upstreamTitle": "emits client:loading:changed with client-state envelope fields",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:loading:changed with client-state envelope fields",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:loading:changed', { 'isLoading': true, ...expectedEnvelope('client:loading:changed'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:error:changed with null",
+      "upstreamTitle": "emits client:error:changed with null",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:error:changed with null",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:error:changed', { 'error': null, ...expectedEnvelope('client:error:changed'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:error:changed with an error string",
+      "upstreamTitle": "emits client:error:changed with an error string",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:error:changed with an error string",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:error:changed', { 'error': 'Something went wrong', ...expectedEnvelope('client:error:changed'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits text:chunk:content with user-visible envelope and run context",
+      "upstreamTitle": "emits text:chunk:content with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits text:chunk:content with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'text:chunk:content', { 'streamId': 'stream-1', 'messageId': 'msg-1', 'content': 'Hello world', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('text:chunk:content', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits text:chunk:thinking with user-visible envelope and run context",
+      "upstreamTitle": "emits text:chunk:thinking with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits text:chunk:thinking with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'text:chunk:thinking', { 'streamId': 'stream-1', 'messageId': 'msg-1', 'content': 'reasoning', 'delta': 'ing', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('text:chunk:thinking', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits tools:call:updated with user-visible envelope and run context",
+      "upstreamTitle": "emits tools:call:updated with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits tools:call:updated with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'tools:call:updated', { 'streamId': 'stream-1', 'messageId': 'msg-1', 'toolCallId': 'call-1', 'toolName': 'get_weather', 'state': 'input-complete', 'arguments': '{\"city\": \"NYC\"}', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:call:updated', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits tools:approval:requested with user-visible envelope and run context",
+      "upstreamTitle": "emits tools:approval:requested with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits tools:approval:requested with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'tools:approval:requested', { 'streamId': 'stream-1', 'messageId': 'msg-1', 'toolCallId': 'call-1', 'toolName': 'get_weather', 'input': {'city': 'NYC'}, 'approvalId': 'approval-1', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:approval:requested', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits text:message:created with full content and run context",
+      "upstreamTitle": "emits text:message:created with full content and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits text:message:created with full content and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'text:message:created', { 'streamId': 'stream-1', 'messageId': 'msg-1', 'role': 'user', 'content': 'Hello World', 'parts': uiMessage['parts'], 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('text:message:created', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter handles a message with no text parts",
+      "upstreamTitle": "handles a message with no text parts",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "handles a message with no text parts",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'text:message:created', { 'messageId': 'msg-1', 'role': 'assistant', 'content': '', 'parts': uiMessage['parts'], ...expectedEnvelope('text:message:created', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits text:message:created and text:message:user for sent messages",
+      "upstreamTitle": "emits text:message:created and text:message:user for sent messages",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits text:message:created and text:message:user for sent messages",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(client.events, hasLength(2))",
+        "expectEmit(0, 'text:message:created', { 'messageId': 'msg-1', 'role': 'user', 'content': 'Hello world', ...expectedEnvelope('text:message:created', 'user-visible'), })",
+        "expectEmit(1, 'text:message:user', { 'messageId': 'msg-1', 'role': 'user', 'content': 'Hello world', ...expectedEnvelope('text:message:user', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:reloaded with client-state envelope fields",
+      "upstreamTitle": "emits client:reloaded with client-state envelope fields",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:reloaded with client-state envelope fields",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:reloaded', { 'fromMessageIndex': 3, ...expectedEnvelope('client:reloaded'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:stopped with client-state envelope fields",
+      "upstreamTitle": "emits client:stopped with client-state envelope fields",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:stopped with client-state envelope fields",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:stopped', { ...expectedEnvelope('client:stopped'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits client:messages:cleared with client-state envelope fields",
+      "upstreamTitle": "emits client:messages:cleared with client-state envelope fields",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits client:messages:cleared with client-state envelope fields",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'client:messages:cleared', { ...expectedEnvelope('client:messages:cleared'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits tools:result:added with user-visible envelope and run context",
+      "upstreamTitle": "emits tools:result:added with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits tools:result:added with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'tools:result:added', { 'toolCallId': 'call-1', 'toolName': 'get_weather', 'output': {'temp': 72}, 'state': 'output-available', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:result:added', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits tools:approval:responded with user-visible envelope and run context",
+      "upstreamTitle": "emits tools:approval:responded with user-visible envelope and run context",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits tools:approval:responded with user-visible envelope and run context",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'tools:approval:responded', { 'approvalId': 'approval-1', 'toolCallId': 'call-1', 'approved': true, 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:approval:responded', 'user-visible'), })"
+      ]
+    },
+    {
+      "domain": "events",
+      "upstreamFile": "events.test.ts",
+      "upstreamName": "events DefaultChatClientEventEmitter emits devtools:tool-fixture:applied with a user-visible envelope",
+      "upstreamTitle": "emits devtools:tool-fixture:applied with a user-visible envelope",
+      "dartFile": "test/platform/events_test.dart",
+      "dartTestName": "emits devtools:tool-fixture:applied with a user-visible envelope",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectEmit(0, 'devtools:tool-fixture:applied', { 'threadId': 'thread-1', 'runId': 'run-1', 'toolName': 'get_weather', 'input': {'city': 'NYC'}, 'output': {'temp': 72}, 'messageId': 'msg-fixture', 'toolCallId': 'call-fixture', ...expectedEnvelope( 'devtools:tool-fixture:applied', 'user-visible', ), })"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool POSTs to callEndpoint with correct body and returns result",
+      "upstreamTitle": "POSTs to callEndpoint with correct body and returns result",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "POSTs to callEndpoint with correct body and returns result",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(result, {'price': 1999})",
+        "expect(created.requests, hasLength(1))",
+        "expect(request.url.toString(), callEndpoint)",
+        "expect(request.method, 'POST')",
+        "expect(request.headers['content-type'], 'application/json')",
+        "expect(jsonDecode(request.body), { 'threadId': threadId, 'serverId': 'server-1', 'toolName': 'getPrice', 'args': {'productId': 'abc'}, 'messageId': 'msg-42', })"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool omits undefined optional fields when not provided",
+      "upstreamTitle": "omits undefined optional fields when not provided",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "omits undefined optional fields when not provided",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(body, containsPair('threadId', threadId))",
+        "expect(body, containsPair('toolName', 'ping'))",
+        "expect(body.containsKey('serverId'), isFalse)",
+        "expect(body.containsKey('args'), isFalse)",
+        "expect(body.containsKey('messageId'), isFalse)"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool throws when response ok is false",
+      "upstreamTitle": "throws when response ok is false",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "throws when response ok is false",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( created.bridge.callTool(toolName: 'missing'), throwsA(predicate((error) => '$error'.contains('tool not found'))), )"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool throws fallback message when ok is false and no error string",
+      "upstreamTitle": "throws fallback message when ok is false and no error string",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "throws fallback message when ok is false and no error string",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( created.bridge.callTool(toolName: 'broken'), throwsA( predicate((error) => '$error'.contains('MCP app tool call failed')), ), )"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool throws when HTTP response is non-2xx (e.g. 500)",
+      "upstreamTitle": "throws when HTTP response is non-2xx (e.g. 500)",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "throws when HTTP response is non-2xx (e.g. 500)",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( created.bridge.callTool(toolName: 'boom'), throwsA(predicate((error) => '$error'.contains('HTTP 500'))), )"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge callTool uses global fetch when fetchImpl is omitted",
+      "upstreamTitle": "uses global fetch when fetchImpl is omitted",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "uses global fetch when fetchImpl is omitted",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(result, 42)",
+        "expect(received, containsPair('threadId', threadId))"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge sendPrompt forwards text to chat.sendMessage",
+      "upstreamTitle": "forwards text to chat.sendMessage",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "forwards text to chat.sendMessage",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(sent, 'hello from bridge')"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge sendPrompt returns void",
+      "upstreamTitle": "returns void",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "returns void",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(true, isTrue)"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink returns { isError: true } when onLink is not provided",
+      "upstreamTitle": "returns { isError: true } when onLink is not provided",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "returns { isError: true } when onLink is not provided",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(bridge.openLink('https://example.com'), const McpAppLinkResult(true))"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink emits a console.warn when onLink is not provided",
+      "upstreamTitle": "emits a console.warn when onLink is not provided",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "emits a console.warn when onLink is not provided",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(logs, [ '[mcp-app-bridge] openLink ignored: no onLink handler configured', ])"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink calls onLink and returns { isError: false } when onLink is provided",
+      "upstreamTitle": "calls onLink and returns { isError: false } when onLink is provided",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "calls onLink and returns { isError: false } when onLink is provided",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(result, const McpAppLinkResult(false))",
+        "expect(linked, ['https://example.com/page'])"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink does not call onLink when it is absent",
+      "upstreamTitle": "does not call onLink when it is absent",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "does not call onLink when it is absent",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(onLinkCalls, 0)",
+        "expect(onLink, isNotNull)"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink rejects an unsafe URL scheme without calling onLink",
+      "upstreamTitle": "rejects an unsafe URL scheme without calling onLink",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "rejects an unsafe URL scheme without calling onLink",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(bridge.openLink(bad), const McpAppLinkResult(true))",
+        "expect(linked, isEmpty)"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink allows mailto: links through to onLink",
+      "upstreamTitle": "allows mailto: links through to onLink",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "allows mailto: links through to onLink",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( bridge.openLink('mailto:a@b.com'), const McpAppLinkResult(false), )",
+        "expect(linked, ['mailto:a@b.com'])"
+      ]
+    },
+    {
+      "domain": "mcp-app-bridge",
+      "upstreamFile": "mcp-app-bridge.test.ts",
+      "upstreamName": "createMcpAppBridge openLink returns { isError: true } (fail-soft) when a provided onLink throws",
+      "upstreamTitle": "returns { isError: true } (fail-soft) when a provided onLink throws",
+      "dartFile": "test/platform/mcp_app_bridge_test.dart",
+      "dartTestName": "returns { isError: true } (fail-soft) when a provided onLink throws",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( bridge.openLink('https://example.com/page'), const McpAppLinkResult(true), )",
+        "expect(calls, 1)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools converts page tools to client tools that run through executeTool",
+      "upstreamTitle": "converts page tools to client tools that run through executeTool",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "converts page tools to client tools that run through executeTool",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(tool.name, 'get_weather')",
+        "expect(tool.description, 'Get the weather')",
+        "expect(tool.inputSchema?.jsonSchema, weather.inputSchema)",
+        "expect( await tool.execute?.call( {'city': 'Sarajevo'}, ToolCallContext( abortSignal: execution, )), {'temperature': 21}, )",
+        "expect(reader.executed, [weather])",
+        "expect(reader.inputs, [ {'city': 'Sarajevo'}, ])"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools returns a result that is not JSON as a string",
+      "upstreamTitle": "returns a result that is not JSON as a string",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "returns a result that is not JSON as a string",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(tool.inputSchema?.jsonSchema, {'type': 'object'})",
+        "expect( await tool.execute?.call({}, const ToolCallContext()), 'plain text')"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools skips tools that the filter rejects",
+      "upstreamTitle": "skips tools that the filter rejects",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "skips tools that the filter rejects",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(tools.map((tool) => tool.name), ['get_weather'])"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools returns an empty array without WebMCP",
+      "upstreamTitle": "returns an empty array without WebMCP",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "returns an empty array without WebMCP",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( await getWebMCPTools( const GetWebMCPToolsOptions(), const _UnavailableTestPlatform(), ), isEmpty, )",
+        "expect( await getWebMCPTools( const GetWebMCPToolsOptions(), FakePlatform(secure: false), ), isEmpty, )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools rejects duplicate names from different frames after filtering",
+      "upstreamTitle": "rejects duplicate names from different frames after filtering",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects duplicate names from different frames after filtering",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( getWebMCPTools( const GetWebMCPToolsOptions(), FakePlatform(reader: reader), ), throwsA(predicate( (error) => '$error'.contains('Duplicate WebMCP tool name \"get_weather\"'), )), )",
+        "expect(reader.executed, isEmpty)",
+        "expect(tools, hasLength(1))",
+        "expect(reader.executed, [parentTool])"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "getWebMCPTools rejects when getTools rejects",
+      "upstreamTitle": "rejects when getTools rejects",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects when getTools rejects",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( getWebMCPTools( const GetWebMCPToolsOptions(), FakePlatform(reader: reader), ), throwsA(predicate((error) => '$error'.contains('NotAllowedError'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "subscribeWebMCPTools reports duplicate names without replacing the last good list and recovers",
+      "upstreamTitle": "reports duplicate names without replacing the last good list and recovers",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "reports duplicate names without replacing the last good list and recovers",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(lists, hasLength(1))",
+        "expect(errors, hasLength(1))",
+        "expect('${errors.single}', contains('Duplicate WebMCP tool name'))",
+        "expect(lists, hasLength(1))",
+        "expect(lists, hasLength(2))",
+        "expect(lists.last.single.name, 'other_tool')"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "subscribeWebMCPTools sends the list now and after each toolchange until the signal aborts",
+      "upstreamTitle": "sends the list now and after each toolchange until the signal aborts",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "sends the list now and after each toolchange until the signal aborts",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(lists, hasLength(1))",
+        "expect(lists.last.map((tool) => tool.name), ['get_weather'])",
+        "expect(lists, hasLength(2))",
+        "expect(lists.last, hasLength(2))",
+        "expect(lists, hasLength(2))"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "subscribeWebMCPTools ignores a read that finishes after a newer read",
+      "upstreamTitle": "ignores a read that finishes after a newer read",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "ignores a read that finishes after a newer read",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(lists, hasLength(1))",
+        "expect(lists, hasLength(1))",
+        "expect(lists.last.single.name, 'other_tool')"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "subscribeWebMCPTools reports read errors to onError",
+      "upstreamTitle": "reports read errors to onError",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "reports read errors to onError",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(errors, hasLength(1))",
+        "expect(lists, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "page-web-mcp-tools.test.ts",
+      "upstreamName": "subscribeWebMCPTools sends an empty list once without WebMCP",
+      "upstreamTitle": "sends an empty list once without WebMCP",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "sends an empty list once without WebMCP",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(lists, hasLength(1))",
+        "expect(lists.single, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools registers, executes, and removes an executable client tool",
+      "upstreamTitle": "registers, executes, and removes an executable client tool",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "registers, executes, and removes an executable client tool",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(registered.name, 'echo')",
+        "expect(registered.title, 'Echo value')",
+        "expect(registered.description, 'Echo a value')",
+        "expect(registered.annotations?.readOnlyHint, isTrue)",
+        "expect(registered.annotations?.untrustedContentHint, isTrue)",
+        "expect(registered.inputSchema, { 'type': 'object', 'properties': { 'value': {'type': 'string'}, }, 'required': ['value'], })",
+        "expect( await registered.execute({'value': 'hello'}, execution), { 'value': 'hello', 'tenantId': 'tenant-1', 'aborted': true, 'hasToolCallId': false, }, )",
+        "expect(emitted, 1)",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools executes when the host omits the execution options argument",
+      "upstreamTitle": "executes when the host omits the execution options argument",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "executes when the host omits the execution options argument",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(await registered.execute({'value': 'ok'}), {'value': 'ok'})"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools validates Standard Schema input before execution",
+      "upstreamTitle": "validates Standard Schema input before execution",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "validates Standard Schema input before execution",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registered.execute({'value': 1}, CancellationSignal()), throwsA(predicate((error) => '$error'.contains('Validation failed'))), )",
+        "expect(executions, 0)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools validates Standard Schema output after execution",
+      "upstreamTitle": "validates Standard Schema output after execution",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "validates Standard Schema output after execution",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registered.execute({}, CancellationSignal()), throwsA(predicate((error) => '$error'.contains('Validation failed'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools passes transformed Standard Schema values through execution",
+      "upstreamTitle": "passes transformed Standard Schema values through execution",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "passes transformed Standard Schema values through execution",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( await registered.execute({'value': ' hello '}, CancellationSignal()), {'result': 'HELLO!'}, )",
+        "expect(received, [ {'value': 'hello'}, ])"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools uses the schemas captured during registration",
+      "upstreamTitle": "uses the schemas captured during registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "uses the schemas captured during registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( await registered.execute({'value': 'original'}, CancellationSignal()), {'value': 'original'}, )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools leaves raw JSON Schema validation to the client handler",
+      "upstreamTitle": "leaves raw JSON Schema validation to the client handler",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "leaves raw JSON Schema validation to the client handler",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect( await registered.execute({'value': 1}, CancellationSignal()), {'value': 1}, )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects a scalar top-level input schema",
+      "upstreamTitle": "rejects a scalar top-level input schema",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects a scalar top-level input schema",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA( predicate( (error) => '$error'.contains('input schema must accept an object'), ), ), )",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools resolves without registration when WebMCP is unavailable",
+      "upstreamTitle": "resolves without registration when WebMCP is unavailable",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "resolves without registration when WebMCP is unavailable",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "both registerWebMCPTools calls complete without throwing for unavailable/secure:false platforms"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools does not register tools for an already-aborted lifetime",
+      "upstreamTitle": "does not register tools for an already-aborted lifetime",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "does not register tools for an already-aborted lifetime",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(same(reason)), )",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools does not link the lifecycle signal for an empty tool list",
+      "upstreamTitle": "does not link the lifecycle signal for an empty tool list",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "does not link the lifecycle signal for an empty tool list",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(lifecycle.listenerAdds, 0)",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools removes partial registrations when registration fails",
+      "upstreamTitle": "removes partial registrations when registration fails",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "removes partial registrations when registration fails",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [first, second], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA( predicate((error) => '$error'.contains('second registration failed')), ), )",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects 'a missing execute handler' before registration",
+      "upstreamTitle": "rejects 'a missing execute handler' before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects 'a missing execute handler' before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('execute'))), )",
+        "expect(context.tools, isEmpty)"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects 'an approval tool' before registration",
+      "upstreamTitle": "rejects 'an approval tool' before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects 'an approval tool' before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('needsApproval'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects 'an invalid name' before registration",
+      "upstreamTitle": "rejects 'an invalid name' before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects 'an invalid name' before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('WebMCP tool name'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects 'a name longer than 128 characters' before registration",
+      "upstreamTitle": "rejects 'a name longer than 128 characters' before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects 'a name longer than 128 characters' before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('WebMCP tool name'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects 'an empty description' before registration",
+      "upstreamTitle": "rejects 'an empty description' before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects 'an empty description' before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('description'))), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools rejects duplicate names before registration",
+      "upstreamTitle": "rejects duplicate names before registration",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "rejects duplicate names before registration",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [first, duplicate], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA( predicate( (error) => '$error'.contains('Duplicate WebMCP tool name'), ), ), )"
+      ]
+    },
+    {
+      "domain": "web-mcp-tools-types",
+      "upstreamFile": "web-mcp-tools.test.ts",
+      "upstreamName": "registerWebMCPTools preserves a foreign registration with the same name",
+      "upstreamTitle": "preserves a foreign registration with the same name",
+      "dartFile": "test/platform/web_mcp_tools_test.dart",
+      "dartTestName": "preserves a foreign registration with the same name",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expectLater( registerWebMCPTools( [tool], RegisterWebMCPToolsOptions(signal: lifecycle), platform: FakePlatform(context: context), ), throwsA(predicate((error) => '$error'.contains('already registered'))), )",
+        "expect(identical(context.tools[foreign.name], foreign), isTrue)"
+      ]
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "web-mcp-tools-types.test.ts",
+      "upstreamName": "registerWebMCPTools types requires a lifecycle signal",
+      "upstreamTitle": "requires a lifecycle signal",
+      "dartFile": "test/platform/client_tool_typing_test.dart",
+      "dartTestName": "requires a lifecycle signal",
+      "status": "ported-static-adapted",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [
+        "dart analyze exit code is non-zero",
+        "diagnostic contains missing_required_argument"
+      ],
+      "adaptation": "TypeScript conditional/mapped type has no Dart equivalent. Compile fixture or typed runtime assertion is the language-equivalent; no runtime type equality is claimed."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "web-mcp-tools-types.test.ts",
+      "upstreamName": "registerWebMCPTools types keys per-tool options by inferred tool names",
+      "upstreamTitle": "keys per-tool options by inferred tool names",
+      "dartFile": "test/platform/web_mcp_types_test.dart",
+      "dartTestName": "keys per-tool options by inferred tool names",
+      "status": "ported-static-adapted",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [
+        "expect(options.toolOptions?[\"search_products\"]?.title, \"Search products\")",
+        "expect(annotations?.readOnlyHint, isTrue)",
+        "expect(annotations?.untrustedContentHint, isTrue)",
+        "expect(options.toolOptions?[\"add_to_cart\"]?.title, \"Add to cart\")"
+      ],
+      "adaptation": "TypeScript conditional/mapped type has no Dart equivalent. Compile fixture or typed runtime assertion is the language-equivalent; no runtime type equality is claimed."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "web-mcp-tools-types.test.ts",
+      "upstreamName": "registerWebMCPTools types requires the runtime context inferred from contextual tools",
+      "upstreamTitle": "requires the runtime context inferred from contextual tools",
+      "dartFile": "test/platform/web_mcp_types_test.dart",
+      "dartTestName": "requires the runtime context inferred from contextual tools",
+      "status": "ported-static-adapted",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [
+        "expect(contextual.name, \"contextual\")",
+        "expect(options.context, {\"tenantId\": \"tenant-1\"})"
+      ],
+      "adaptation": "TypeScript conditional/mapped type has no Dart equivalent. Compile fixture or typed runtime assertion is the language-equivalent; no runtime type equality is claimed."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "web-mcp-tools-types.test.ts",
+      "upstreamName": "registerWebMCPTools types does not expose cross-origin registration options",
+      "upstreamTitle": "does not expose cross-origin registration options",
+      "dartFile": "test/platform/client_tool_typing_test.dart",
+      "dartTestName": "does not expose cross-origin registration options",
+      "status": "ported-static-adapted",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [
+        "dart analyze exit code is non-zero",
+        "diagnostic contains named parameter exposedTo is not defined"
+      ],
+      "adaptation": "TypeScript conditional/mapped type has no Dart equivalent. Compile fixture or typed runtime assertion is the language-equivalent; no runtime type equality is claimed."
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom patchAtom freezes the patched snapshot and keeps identity without a change",
+      "upstreamTitle": "patchAtom freezes the patched snapshot and keeps identity without a change",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "patchAtom freezes the patched snapshot and keeps identity without a change",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(_isReadOnly(snapshot), isTrue)",
+        "expect(identical(atom.get(), snapshot), isTrue)"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom patchAtom skips notify when every field is unchanged",
+      "upstreamTitle": "patchAtom skips notify when every field is unchanged",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "patchAtom skips notify when every field is unchanged",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 0)",
+        "expect(atom.get(), {'count': 1, 'label': 'a'})",
+        "expect(calls, 1)",
+        "expect(atom.get(), {'count': 2, 'label': 'a'})"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom subscribeAtom adapts { unsubscribe } to a plain cleanup",
+      "upstreamTitle": "subscribeAtom adapts { unsubscribe } to a plain cleanup",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "subscribeAtom adapts { unsubscribe } to a plain cleanup",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 1)",
+        "expect(calls, 1)"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom isolates a throwing listener from the next subscriber",
+      "upstreamTitle": "isolates a throwing listener from the next subscriber",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "isolates a throwing listener from the next subscriber",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(second, 1)",
+        "expect(errors, hasLength(1))"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom subscribeAtom calls the listener again for a change made inside it",
+      "upstreamTitle": "subscribeAtom calls the listener again for a change made inside it",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "subscribeAtom calls the listener again for a change made inside it",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(seen, [true, false])"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom stops calling a listener that changes the atom on every call",
+      "upstreamTitle": "stops calling a listener that changes the atom on every call",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "stops calling a listener that changes the atom on every call",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(calls, 8)"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom reuses the frozen copy of an unchanged message and part",
+      "upstreamTitle": "reuses the frozen copy of an unchanged message and part",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "reuses the frozen copy of an unchanged message and part",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(identical(frozenSecond, frozenFirst), isFalse)",
+        "expect( identical(frozenSecond['parts'][1], frozenFirst['parts'][1]), isTrue)",
+        "expect(identical(frozenSecond['parts'][0], frozenFirst['parts'][0]), isFalse)",
+        "expect( identical(freezeSnapshotMessages(cache, [second]).first, frozenSecond), isTrue, )"
+      ]
+    },
+    {
+      "domain": "snapshot-atom",
+      "upstreamFile": "snapshot-atom.test.ts",
+      "upstreamName": "snapshot-atom cloneSnapshotValue copies plain values and keeps other objects",
+      "upstreamTitle": "cloneSnapshotValue copies plain values and keeps other objects",
+      "dartFile": "test/platform/snapshot_atom_test.dart",
+      "dartTestName": "cloneSnapshotValue copies plain values and keeps other objects",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(identical(cloneSnapshotValue(instance), instance), isTrue)",
+        "expect(identical(cloneSnapshotValue(map), map), isFalse)",
+        "expect(copy, plain)",
+        "expect(identical(copy, plain), isFalse)",
+        "expect(_isReadOnly(copy), isTrue)"
+      ]
+    },
+    {
+      "domain": "storage-adapters",
+      "upstreamFile": "storage-adapters.test.ts",
+      "upstreamName": "localStoragePersistence createdAt revival revives a JSON-string createdAt back into a Date",
+      "upstreamTitle": "revives a JSON-string createdAt back into a Date",
+      "dartFile": "test/platform/storage_adapters_test.dart",
+      "dartTestName": "revives a JSON-string createdAt back into a Date",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(raw, contains('\"createdAt\":\"2026-08-20T00:00:00.000Z\"'))",
+        "expect(state.messages[0]['createdAt'], createdAt)",
+        "expect(state.messages[0]['createdAt'], isA<DateTime>())"
+      ]
+    },
+    {
+      "domain": "storage-adapters",
+      "upstreamFile": "storage-adapters.test.ts",
+      "upstreamName": "localStoragePersistence createdAt revival round-trips role activity as a UIMessage with the same id and content",
+      "upstreamTitle": "round-trips role activity as a UIMessage with the same id and content",
+      "dartFile": "test/platform/storage_adapters_test.dart",
+      "dartTestName": "round-trips role activity as a UIMessage with the same id and content",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(raw, contains('\"role\":\"activity\"'))",
+        "expect(raw, contains('\"activityType\":\"SEARCH\"'))",
+        "expect(read.messages.map((message) => message['role']), [ 'user', 'activity', 'assistant', ])",
+        "expect(activity['id'], 'act-1')",
+        "expect((activity['parts'] as List).first, { 'type': 'activity', 'activityType': 'SEARCH', 'content': {'query': 'tanstack'}, })"
+      ]
+    },
+    {
+      "domain": "storage-adapters",
+      "upstreamFile": "storage-adapters.test.ts",
+      "upstreamName": "localStoragePersistence createdAt revival revives tool-result createdAt values inside message parts",
+      "upstreamTitle": "revives tool-result createdAt values inside message parts",
+      "dartFile": "test/platform/storage_adapters_test.dart",
+      "dartTestName": "revives tool-result createdAt values inside message parts",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(part['type'], 'tool-result')",
+        "expect(part['createdAt'], DateTime.parse('2026-08-20T00:00:00.000Z'))"
+      ]
+    },
+    {
+      "domain": "storage-adapters",
+      "upstreamFile": "storage-adapters.test.ts",
+      "upstreamName": "localStoragePersistence createdAt revival removes invalid createdAt values from messages and tool results",
+      "upstreamTitle": "removes invalid createdAt values from messages and tool results",
+      "dartFile": "test/platform/storage_adapters_test.dart",
+      "dartTestName": "removes invalid createdAt values from messages and tool results",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(read.messages[0].containsKey('createdAt'), isFalse)",
+        "expect(part.containsKey('createdAt'), isFalse)"
+      ]
+    },
+    {
+      "domain": "storage-adapters",
+      "upstreamFile": "storage-adapters.test.ts",
+      "upstreamName": "localStoragePersistence createdAt revival preserves createdAt fields inside stored metadata",
+      "upstreamTitle": "preserves createdAt fields inside stored metadata",
+      "dartFile": "test/platform/storage_adapters_test.dart",
+      "dartTestName": "preserves createdAt fields inside stored metadata",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "expect(read.messages[0]['metadata'], metadata)",
+        "expect(part['metadata'], partMetadata)"
+      ]
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing types ChatClient message APIs from registered tools",
+      "upstreamTitle": "types ChatClient message APIs from registered tools",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should correctly narrow part.name type",
+      "upstreamTitle": "should correctly narrow part.name type",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should correctly type ToolCallPart discriminated union",
+      "upstreamTitle": "should correctly type ToolCallPart discriminated union",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should narrow types in a realistic message rendering scenario",
+      "upstreamTitle": "should narrow types in a realistic message rendering scenario",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should work with createChatClientOptions and InferChatMessages",
+      "upstreamTitle": "should work with createChatClientOptions and InferChatMessages",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should narrow output type exactly like in the React example",
+      "upstreamTitle": "should narrow output type exactly like in the React example",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing types client tool runtime context from ChatClientOptions",
+      "upstreamTitle": "types client tool runtime context from ChatClientOptions",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing preserves client tool context constraints in ChatClient.updateOptions",
+      "upstreamTitle": "preserves client tool context constraints in ChatClient.updateOptions",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing allows ChatClient.updateOptions to clear optional client context",
+      "upstreamTitle": "allows ChatClient.updateOptions to clear optional client context",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context matching typed client tools",
+      "upstreamTitle": "requires context matching typed client tools",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing allows context omission when typed client tools accept undefined",
+      "upstreamTitle": "allows context omission when typed client tools accept undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context satisfying every typed client tool",
+      "upstreamTitle": "requires context satisfying every typed client tool",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context satisfying every typed client tool in widened arrays",
+      "upstreamTitle": "requires context satisfying every typed client tool in widened arrays",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "tool-typing",
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing handles optional typed client context in widened arrays",
+      "upstreamTitle": "handles optional typed client context in widened arrays",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartTestName": null,
+      "status": "not-representable",
+      "runtimeVsStatic": "static",
+      "actualAssertions": [],
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope.",
+      "adaptation": "Dart cannot infer message unions, literal names, or intersected/required context types from a heterogeneous tool list. Explicit ClientTool input/output generics and typed UI selectors are provided; caller context remains Object?. This TS assertion is not claimed as a Dart compile-time guarantee."
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should be false initially",
+      "upstreamTitle": "should be false initially",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating is false initially",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "existing explicit mapping assertions reviewed"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should flip to true on RUN_STARTED and false on RUN_FINISHED",
+      "upstreamTitle": "should flip to true on RUN_STARTED and false on RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating flips on RUN_STARTED and RUN_FINISHED",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "existing explicit mapping assertions reviewed"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should flip to false on RUN_ERROR",
+      "upstreamTitle": "should flip to false on RUN_ERROR",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating clears on RUN_ERROR",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "existing explicit mapping assertions reviewed"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "upstreamTitle": "should remain correct through subscribe/unsubscribe cycles",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating is false after the run",
+        "sessionGenerating stays false after unsubscribe"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on unsubscribe while generating",
+      "upstreamTitle": "should reset on unsubscribe while generating",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on unsubscribe while generating",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating is true while generating",
+        "sessionGenerating is false after unsubscribe",
+        "callbacks equal [true, false]"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on connection adapter replacement",
+      "upstreamTitle": "should reset on connection adapter replacement",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on connection adapter replacement",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating is true on adapter 1",
+        "sessionGenerating is false after updateOptions replaces the adapter",
+        "callbacks equal [true, false]"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "upstreamTitle": "should not emit duplicate callbacks on repeated same-state events",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "onSessionGeneratingChange equals [true, false] for duplicate RUN_STARTED/RUN_FINISHED events"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "upstreamTitle": "should handle interleaved multi-run events from durable subscription",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "first run callbacks equal [true, false]",
+        "second run callbacks equal [true, false, true, false]"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should stay true during concurrent runs until all finish",
+      "upstreamTitle": "should stay true during concurrent runs until all finish",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should stay true during concurrent runs until all finish",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating stays true after run-1 finishes",
+        "sessionGenerating is false after run-2 finishes",
+        "callbacks equal [true, false]"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should process future live subscription chunks after persistence clear",
+      "upstreamTitle": "should process future live subscription chunks after persistence clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should process future live subscription chunks after persistence clear",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "a later live TEXT_MESSAGE_CONTENT chunk appears in messages after clear"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "upstreamTitle": "should clear all runs on RUN_ERROR without runId",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating is false after a runless RUN_ERROR",
+        "callbacks equal [true, false]"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    },
+    {
+      "domain": "session-generating",
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on fatal subscription loop teardown",
+      "upstreamTitle": "should reset on fatal subscription loop teardown",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on fatal subscription loop teardown",
+      "status": "implemented",
+      "runtimeVsStatic": "runtime",
+      "actualAssertions": [
+        "sessionGenerating is false after the subscription throws",
+        "callbacks contain true",
+        "last callback is false"
+      ],
+      "reviewedFrom": "test/chat/upstream_mapping.json"
+    }
+  ],
+  "uncoveredPlatformDomainCases": [
+    {
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers merges BYOK headers onto the fetch request",
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers passes headers into a ChatFetcher",
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "upstreamFile": "byok-headers.test.ts",
+      "upstreamName": "runContext.headers does not throw when a custom connect ignores headers",
+      "missingReason": "Connection-adapter/ChatFetcher ownership. Platform only exposes prepareResolvedByokHeaders; no inspected Dart assertion covers the full upstream fetch/fetcher integration. Partial adjacent coverage: test/interop/http_roundtrip_test.dart checks x-byok-custom on a real POST."
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots publishes and clears the active generation run id",
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots a throwing generation subscriber does not stick isLoading",
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots VideoGenerationClient snapshot includes job fields",
+      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing types ChatClient message APIs from registered tools",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should correctly narrow part.name type",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should correctly type ToolCallPart discriminated union",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should narrow types in a realistic message rendering scenario",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should work with createChatClientOptions and InferChatMessages",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing should narrow output type exactly like in the React example",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing types client tool runtime context from ChatClientOptions",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing preserves client tool context constraints in ChatClient.updateOptions",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing allows ChatClient.updateOptions to clear optional client context",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context matching typed client tools",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing allows context omission when typed client tools accept undefined",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context satisfying every typed client tool",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing requires context satisfying every typed client tool in widened arrays",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    },
+    {
+      "upstreamFile": "tool-types.test.ts",
+      "upstreamName": "Tool Type Narrowing handles optional typed client context in widened arrays",
+      "missingReason": "Upstream checks generic ChatClient message/tool narrowing. Platform ClientTool<TInput,TOutput> fixtures cover only the callback contract, not ChatClient message APIs; no equivalent ChatClient type fixture was ported in this scope."
+    }
+  ]
+}

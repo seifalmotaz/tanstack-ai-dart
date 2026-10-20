@@ -1,0 +1,17 @@
+name: tanstack_ai_dart
+description: >-
+  Unofficial Dart client for TanStack AI chat and generation, including
+  streaming transports, client tools, interrupts, BYOK, and legacy compatibility.
+version: 0.1.0
+repository: https://github.com/seifalmotaz/tanstack-ai-dart
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  cryptography: ^2.9.0
+  http: ^1.6.0
+  web: ^1.1.1
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0
