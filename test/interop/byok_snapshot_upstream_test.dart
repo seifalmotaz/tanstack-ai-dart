@@ -2,10 +2,10 @@
 // - packages/ai-client/tests/byok-headers.test.ts
 // - packages/ai-client/tests/client-snapshots.test.ts (generation/video slice)
 //
-// One mutable generation-result snapshot regression is explicitly skipped. Dart adaptations:
+// Dart adaptations:
 //   * Headers are asserted on the real package:http request.
-//   * Dart snapshots are immutable typed objects; payloads that are immutable
-//     in Dart replace upstream's Object.isFrozen/Reflect.set mutation probe.
+//   * VideoStatusInfo is immutable in Dart, so its upstream mutation probe
+//     becomes an identity/value check.
 //   * A throwing subscriber is swallowed by the client's notifier without a
 //     console capture channel.
 import 'dart:async';
@@ -144,9 +144,7 @@ void main() {
       stop();
       await client.generate({'prompt': 'again'});
       expect(calls, callsBeforeStop);
-    },
-        skip:
-            'Known gap: generation result maps are not frozen; see NEXT_STEPS.md');
+    });
 
     test('a throwing generation subscriber does not stick isLoading', () async {
       final client = GenerationClient(

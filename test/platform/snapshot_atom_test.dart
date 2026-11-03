@@ -158,6 +158,43 @@ void main() {
       expect(identical(copy, plain), isFalse);
       expect(_isReadOnly(copy), isTrue);
     });
+
+    test('cloneSnapshotValue keeps cycles and aliases read-only', () {
+      final shared = <String, dynamic>{'count': 1};
+      final sharedList = <dynamic>[1];
+      final raw = <String, dynamic>{
+        'a': shared,
+        'b': shared,
+        'listA': sharedList,
+        'listB': sharedList,
+      };
+      raw['self'] = raw;
+      sharedList.add(raw);
+
+      final copy = cloneSnapshotValue(raw) as Map<String, dynamic>;
+      expect(identical(copy['self'], copy), isTrue);
+      expect(identical(copy['a'], copy['b']), isTrue);
+      expect(identical(copy['listA'], copy['listB']), isTrue);
+      expect(identical((copy['listA'] as List).last, copy), isTrue);
+      expect(() => (copy['a'] as Map)['count'] = 2, throwsUnsupportedError);
+      expect(() => (copy['listA'] as List).add(2), throwsUnsupportedError);
+      expect(shared['count'], 1);
+      expect(sharedList, hasLength(2));
+    });
+
+    test('cloneSnapshotResult needs a copier for non-JSON typed collections',
+        () {
+      expect(
+        () => cloneSnapshotResult(<int, int>{1: 2}),
+        throwsA(isA<SnapshotCopyException>()),
+      );
+
+      final copy = cloneSnapshotResult(
+        <String, int>{'a': 1},
+        copy: (value) => Map<String, int>.unmodifiable(value),
+      );
+      expect(() => copy['a'] = 2, throwsUnsupportedError);
+    });
   });
 }
 

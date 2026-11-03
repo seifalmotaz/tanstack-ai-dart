@@ -1,3 +1,6 @@
+@TestOn('vm')
+library;
+
 // Ported from
 // packages/ai-client/tests/mcp-app-bridge.test.ts
 import 'dart:convert';

@@ -1,3 +1,6 @@
+@TestOn('vm')
+library;
+
 // Typing counterparts for packages/ai-client/tests/web-mcp-tools-types.test.ts.
 //
 // Dart has no conditional mapped types. `ClientTool<TInput, TOutput>` and

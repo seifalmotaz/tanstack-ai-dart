@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 /// Ported from `packages/ai-client/src/snapshot-atom.ts`.
 ///
@@ -67,15 +68,98 @@ Atom<T> createAtom<T>(T initialValue) => Atom<T>(initialValue);
 
 bool _isPlainObject(Object? value) => value is Map;
 
-/// Shallow copy, then make read-only. Only maps and lists are copied.
-Object? cloneSnapshotValue(Object? value) {
+/// Copy plain JSON data recursively and make every collection read-only.
+/// Non-collection objects keep their identity.
+Object? cloneSnapshotValue(Object? value) =>
+    _cloneSnapshotValue(value, Map<Object, Object>.identity());
+
+Object? _cloneSnapshotValue(Object? value, Map<Object, Object> cache) {
   if (value is List) {
-    return List<Object?>.unmodifiable(List<Object?>.of(value));
+    final cached = cache[value];
+    if (cached != null) return cached;
+    final backing = <Object?>[];
+    final view = UnmodifiableListView<Object?>(backing);
+    cache[value] = view;
+    for (final item in value) {
+      backing.add(_cloneSnapshotValue(item, cache));
+    }
+    return view;
   }
   if (value is Map) {
-    return Map<Object?, Object?>.unmodifiable(Map<Object?, Object?>.of(value));
+    final cached = cache[value];
+    if (cached != null) return cached;
+    if (value.keys.every((key) => key is String)) {
+      final backing = <String, dynamic>{};
+      final view = UnmodifiableMapView<String, dynamic>(backing);
+      cache[value] = view;
+      for (final entry in value.entries) {
+        backing[entry.key as String] = _cloneSnapshotValue(entry.value, cache);
+      }
+      return view;
+    }
+    final backing = <Object?, Object?>{};
+    final view = UnmodifiableMapView<Object?, Object?>(backing);
+    cache[value] = view;
+    for (final entry in value.entries) {
+      backing[entry.key] = _cloneSnapshotValue(entry.value, cache);
+    }
+    return view;
   }
   return value;
+}
+
+typedef SnapshotResultCopier<T> = T Function(T value);
+
+/// Thrown when a typed collection cannot be rebuilt with its runtime type.
+///
+/// JSON containers and scalar-typed JSON collections are copied automatically.
+/// Other reified collection types need the client's `copySnapshotResult`
+/// callback to preserve their declared key/value types.
+class SnapshotCopyException implements Exception {
+  const SnapshotCopyException(this.resultType);
+
+  final Type resultType;
+
+  @override
+  String toString() =>
+      'Cannot publish a read-only $resultType snapshot without losing its '
+      'collection type. Provide copySnapshotResult for typed collections.';
+}
+
+/// Copy [value] for publication while preserving its static type.
+///
+/// Use [copy] for other typed collection shapes. It must return an isolated,
+/// read-only value. Opaque result objects keep their identity.
+T cloneSnapshotResult<T>(T value, {SnapshotResultCopier<T>? copy}) {
+  if (copy != null) return copy(value);
+  final cloned = cloneSnapshotValue(value);
+  if (cloned is T) return cloned;
+  for (final copier in _jsonScalarCopiers) {
+    final scalarCopy = copier(value);
+    if (scalarCopy != null && scalarCopy is T) return scalarCopy as T;
+  }
+  throw SnapshotCopyException(value.runtimeType);
+}
+
+// JSON scalar collections retain their reified Dart types without a caller copier.
+final _jsonScalarCopiers = <Object? Function(Object?)>[
+  _copyJsonScalars<Null>,
+  _copyJsonScalars<bool>,
+  _copyJsonScalars<int>,
+  _copyJsonScalars<double>,
+  _copyJsonScalars<num>,
+  _copyJsonScalars<String>,
+  _copyJsonScalars<bool?>,
+  _copyJsonScalars<int?>,
+  _copyJsonScalars<double?>,
+  _copyJsonScalars<num?>,
+  _copyJsonScalars<String?>,
+];
+
+Object? _copyJsonScalars<T>(Object? value) {
+  if (value is List<T>) return List<T>.unmodifiable(value);
+  if (value is Map<String, T>) return Map<String, T>.unmodifiable(value);
+  return null;
 }
 
 Object? _freezePlainData(Object? value) {

@@ -957,7 +957,14 @@ void main() {
       });
       await _waitFor(() {
         final part = _subagentPart('sub-1');
-        return part != null && part['status'] == 'running';
+        if (part == null || part['status'] != 'running') return false;
+        final messages = part['messages'];
+        if (messages is! List || messages.isEmpty) return false;
+        final parts = (messages.first as Map)['parts'];
+        return parts is List &&
+            parts.length == 1 &&
+            (parts.first as Map)['type'] == 'text' &&
+            (parts.first as Map)['content'] == 'notes';
       });
       final running = _subagentPart('sub-1');
       expect(running!['messages'], isNotEmpty);

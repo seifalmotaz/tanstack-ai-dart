@@ -49,7 +49,7 @@ class ChatClient {
   void Function()? onChanged;
 
   ChatClient({
-    ChatTransport? transport,
+    this.transport,
     ConnectionAdapter? connection,
     ChatFetcher? fetcher,
     List<AssistantTurn>? messages,
@@ -92,8 +92,7 @@ class ChatClient {
     void Function(ChatInterruptState state, String source)?
         onInterruptStateChange,
     void Function(Map<String, dynamic> event, Object? context)? onCustomEvent,
-  })  : transport = transport,
-        _processingScheduler =
+  })  : _processingScheduler =
             processingScheduler ?? StreamProcessingScheduler(),
         connection = _resolveConnection(connection ?? options?.connection,
             fetcher ?? options?.fetcher, transport),

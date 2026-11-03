@@ -14,8 +14,8 @@ inference is not claimed where Dart has no corresponding language feature.
 `tool/upstream_api.json` records exports. These manifests are the comparison
 baseline, not a claim that all Dart behavior already matches.
 
-Current checkpoint results: [VALIDATION.md](VALIDATION.md).
-Remaining work: [NEXT_STEPS.md](NEXT_STEPS.md).
+Executed validation: [VALIDATION.md](VALIDATION.md).
+Release/integration checklist: [NEXT_STEPS.md](NEXT_STEPS.md).
 
 ## Verification commands
 
@@ -27,7 +27,7 @@ dart analyze
 dart test --reporter json > .dart_tool/tests.jsonl
 dart run tool/verify_types.dart
 dart run tool/parity_audit.dart .dart_tool/tests.jsonl .dart_tool/parity.json
-dart test test/connections --platform chrome
+dart test --platform chrome
 dart run tool/verify_browser.dart
 dart pub publish --dry-run
 ```

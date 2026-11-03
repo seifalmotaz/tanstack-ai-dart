@@ -6,13 +6,13 @@
   "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
   "inventorySha256": "sha256:1cc1ac6ac75ca032d928860cefc96de579840ebd86eea0d82412015cf4632f49",
   "dartFile": "test/interop/byok_snapshot_upstream_test.dart",
-  "dartFileSha256": "sha256:6027be3b7a1f9ef175125363de856c59c719702b81513d79c73fb17a4c92f7d7",
+  "dartFileSha256": "sha256:fe65454c44e6ea9ed2ffb29625e7ab72673089a677b5991c066fd183d03d5894",
   "caseCount": 7,
-  "implementedCount": 6,
-  "missingCount": 1,
+  "implementedCount": 7,
+  "missingCount": 0,
   "verification": {
     "command": "dart test test/interop/byok_snapshot_upstream_test.dart",
-    "result": "Superseded by checkpoint validation; one known regression is intentionally skipped."
+    "result": "Faithful regression is enabled; current validation is recorded in VALIDATION.md."
   },
   "cases": [
     {
@@ -78,13 +78,12 @@
       "upstreamTitle": "GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
       "dartFile": "test/interop/byok_snapshot_upstream_test.dart",
       "dartTestName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
-      "status": "not-implemented",
+      "status": "implemented",
       "runtimeVsStatic": "runtime",
       "actualAssertions": [
-        "Skipped regression asserts that mutating published map throws, getResult remains unchanged, and subscription identity/lifecycle match upstream."
+        "Actual mutable JSON result is copied read-only; mutation throws; internal getResult is unchanged; snapshot identity and subscription notifications match upstream."
       ],
-      "dartAdaptation": "The faithful mutable Map assertion is intentionally skipped until snapshot freezing is implemented; opaque immutable models do not establish this behavior.",
-      "reason": "Opaque immutable model substitution hid mutable Map snapshot behavior. The faithful map-mutation test is skipped explicitly pending snapshot freezing."
+      "dartAdaptation": "Dart throws UnsupportedError on attempts to mutate a read-only snapshot instead of JavaScript Reflect.set returning false."
     },
     {
       "upstreamFile": "client-snapshots.test.ts",

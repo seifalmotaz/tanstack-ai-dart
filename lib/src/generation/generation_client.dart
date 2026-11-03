@@ -16,6 +16,7 @@ import '../connections/sse_utils.dart';
 import '../connections/types.dart';
 import '../connections/wire.dart';
 import '../platform/byok/byok.dart' as platform_byok;
+import '../platform/snapshot_atom.dart';
 import 'generation_devtools_port.dart';
 import 'generation_types.dart';
 
@@ -74,6 +75,7 @@ class GenerationClient<TInput, TResult, TOutput> {
   late final GenerationDevtoolsBridgePort _devtoolsBridge;
   final String? _persistenceScope;
   final _GenerationCallbacks<TResult, TOutput> _callbacks;
+  final SnapshotResultCopier<TOutput>? _copySnapshotResult;
 
   String _threadId;
   String _uniqueId;
@@ -113,6 +115,7 @@ class GenerationClient<TInput, TResult, TOutput> {
     JoinRunFunction? joinRun,
     GenerationDevtoolsMetadata? devtools,
     GenerationDevtoolsBridgePortFactory? devtoolsBridgeFactory,
+    SnapshotResultCopier<TOutput>? copySnapshotResult,
     GenerationTransformOutcome<TOutput> Function(TResult result)? onResult,
     void Function(Object error)? onError,
     void Function(num progress, String? message)? onProgress,
@@ -135,6 +138,7 @@ class GenerationClient<TInput, TResult, TOutput> {
         _byok = byok,
         _byokProvider = byokProvider,
         _serverDriven = persistence,
+        _copySnapshotResult = copySnapshotResult,
         _callbacks = _GenerationCallbacks<TResult, TOutput>() {
     _callbacks
       ..onResult = onResult
@@ -640,7 +644,11 @@ class GenerationClient<TInput, TResult, TOutput> {
 
   bool _publishResult([CancellationController? controller]) {
     final result = _result;
-    _patchSnapshot(result: result);
+    _patchSnapshot(
+      result: result == null
+          ? null
+          : cloneSnapshotResult<TOutput>(result, copy: _copySnapshotResult),
+    );
     return _whileOwned(
       () => _abortController,
       controller,

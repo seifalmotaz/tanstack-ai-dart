@@ -10,3 +10,6 @@ export 'src/generation/generation_devtools_port.dart';
 export 'src/generation/generation_reconstruct.dart';
 export 'src/generation/generation_types.dart';
 export 'src/generation/video_generation_client.dart';
+
+export 'src/platform/snapshot_atom.dart'
+    show SnapshotResultCopier, SnapshotCopyException;

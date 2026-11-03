@@ -1,4 +1,12 @@
-## Unreleased
+## 0.2.0
+
+- Freeze published generation and video snapshots, preserving internal results,
+  nested data, aliases, cycles and unchanged snapshot identity.
+- Add `copySnapshotResult` for other typed collection shapes and report
+  `SnapshotCopyException` instead of exposing mutable snapshot aliases.
+- Remove the quarantined generation snapshot regression.
+- Add public-export compatibility records, minimum/stable Dart CI and Chrome
+  test coverage. See VALIDATION.md for the exact checks.
 
 - Expand the client toward `@tanstack/ai-client` 0.40.0 / `@tanstack/ai` 0.70.0.
 - Add connection adapters, shared stream processing, client tools, interrupts,

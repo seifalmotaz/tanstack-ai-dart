@@ -59,7 +59,7 @@ class _ChunkPipe {
     }
 
     signal?.addListener(wake);
-    final iterable = (() async* {
+    Stream<StreamChunk> read() async* {
       try {
         while (!(signal?.isCancelled ?? false)) {
           if (_queue.isNotEmpty) {
@@ -79,8 +79,9 @@ class _ChunkPipe {
         signal?.removeListener(wake);
         onFinally();
       }
-    })();
-    stream = iterable;
+    }
+
+    stream = read();
   }
 
   late final Stream<StreamChunk> stream;

@@ -5,9 +5,9 @@ The compatibility target is `@tanstack/ai-client` **0.40.0** with
 `@tanstack/ai` **0.70.0**, pinned to upstream commit
 `7095ebbf1b59175f0cd339c1c477d6af55b312de`.
 
-This package is not maintained by TanStack. The expanded client is undergoing
-parity verification; see [PARITY.md](PARITY.md) for the baseline, verification
-commands, and platform boundaries. Do not infer parity from a test count.
+This package is not maintained by TanStack. It targets the pinned client version
+above, with explicit Dart language and host-platform adaptations. See
+[API_COMPATIBILITY.md](API_COMPATIBILITY.md) and [VALIDATION.md](VALIDATION.md).
 
 The endpoint, authentication, tenant rules, models, and provider keys remain
 caller-owned. No PinCRM URL or application credentials are embedded here.
@@ -79,10 +79,36 @@ string-key unions. Explicit generic parameters and runtime validation are used
 instead; the type mapping files record those differences. Unknown tool-option
 keys and arbitrary caller-context shapes are not statically inferred.
 
+## Generation snapshots
+
+`GenerationClient` and `VideoGenerationClient` publish isolated, read-only copies
+of JSON maps/lists and scalar-typed JSON collections such as `Map<String, int>`
+and `List<int>`. `getResult()` keeps the original result. Status updates preserve
+the identity of an unchanged published result.
+
+For other reified collection shapes, supply a copier that preserves their Dart
+types and freezes nested containers:
+
+```dart
+final client = GenerationClient<String, Map<String, List<int>>,
+    Map<String, List<int>>>(
+  fetcher: (input, options) async => {'scores': <int>[1, 2]},
+  copySnapshotResult: (value) => Map<String, List<int>>.unmodifiable({
+    for (final entry in value.entries)
+      entry.key: List<int>.unmodifiable(entry.value),
+  }),
+);
+```
+
+Without a compatible copier, these collection types report
+`SnapshotCopyException` through the client's error state. They never fall back
+to a mutable published alias. This replaces the earlier mutable-snapshot behavior.
+Opaque class instances keep their identity; use immutable result models or an
+explicit copier for mutable classes.
+
 ## Install
 
-This is a draft GitHub checkpoint, not a pub.dev release. See
-[NEXT_STEPS.md](NEXT_STEPS.md) for the remaining work.
+The package is available from GitHub. It has not been published to pub.dev.
 
 ```yaml
 dependencies:
@@ -92,7 +118,7 @@ dependencies:
       ref: feat/client-sdk
 ```
 
-Requires Dart `>=3.6.0 <4.0.0`.
+Requires Dart `>=3.6.2 <4.0.0`.
 
 ## Quick start (transport only)
 

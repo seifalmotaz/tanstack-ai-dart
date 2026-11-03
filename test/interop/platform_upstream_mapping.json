@@ -1873,12 +1873,13 @@
       "upstreamFile": "client-snapshots.test.ts",
       "upstreamName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
       "upstreamTitle": "GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
-      "dartFile": null,
-      "dartTestName": null,
-      "status": "missing",
+      "dartFile": "test/interop/byok_snapshot_upstream_test.dart",
+      "dartTestName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
+      "status": "implemented",
       "runtimeVsStatic": "runtime",
-      "actualAssertions": [],
-      "missingReason": "Generation/VideoGenerationClient snapshot ownership; no inspected equivalent Dart test for these four cases."
+      "actualAssertions": [
+        "Read-only copied mutable JSON result; unchanged internal result, snapshot identity and subscribe cleanup."
+      ]
     },
     {
       "domain": "session-snapshots",
