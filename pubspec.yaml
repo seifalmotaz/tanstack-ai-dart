@@ -4,6 +4,8 @@ description: >-
   streaming transports, client tools, interrupts, BYOK, and legacy compatibility.
 version: 0.3.0
 repository: https://github.com/seifalmotaz/tanstack-ai-dart
+documentation: https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/README.md
+issue_tracker: https://github.com/seifalmotaz/tanstack-ai-dart/issues
 environment:
   sdk: ">=3.6.2 <4.0.0"
 

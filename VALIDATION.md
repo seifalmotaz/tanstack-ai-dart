@@ -1,6 +1,8 @@
 # Validation
 
-Dart API revision 0.3.0 validated on 2026-11-03 on macOS arm64. The official
+Dart API revision 0.3.0 validated on 2026-11-03 on macOS arm64.
+The counts below record that API validation snapshot; subsequent documentation
+checks and examples are verified separately by CI. The official
 TanStack client baseline remains pinned; no CRM credentials or production calls
 are needed for these checks.
 

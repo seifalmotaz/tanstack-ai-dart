@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible, sanitized defect in the Dart SDK.
+title: "[bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. Do not include secrets, tokens, personal
+        data, customer payloads or production endpoints. Use a small local
+        reproduction and sanitize all logs.
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version or commit
+      description: The Dart package version and/or git commit you tested.
+      placeholder: 0.3.0 or a commit SHA from this Dart repository
+    validations:
+      required: true
+  - type: input
+    id: dart-version
+    attributes:
+      label: Dart version
+      description: Output of `dart --version`.
+      placeholder: Dart SDK version 3.x.x (stable) ...
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Dart VM (macOS)
+        - Dart VM (Linux)
+        - Dart VM (Windows)
+        - Web / Chrome
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal deterministic reproduction
+      description: Steps, code, fixtures and commands needed to reproduce locally. Remove credentials and production data.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and sanitized output
+      description: Include the relevant error or test result after removing secrets and personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks already run
+      description: List commands such as `dart analyze`, the VM test command, or the browser checks.
+      placeholder: |
+        dart analyze
+        dart test --platform vm --reporter json > .dart_tool/tests.jsonl
+    validations:
+      required: false
+  - type: checkboxes
+    id: sanitation
+    attributes:
+      label: Sanitization and scope
+      options:
+        - label: I removed secrets, tokens, personal data, customer payloads and production endpoints.
+          required: true
+        - label: The reproduction is deterministic and does not require live provider credentials.
+          required: true
+        - label: I searched existing open and closed issues for this problem.
+          required: true
