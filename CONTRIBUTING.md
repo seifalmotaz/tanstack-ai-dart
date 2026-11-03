@@ -3,6 +3,9 @@
 Contributions to the Dart client are welcome. Start with a small reproduction or
 a focused proposal in [GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).
 Search existing issues and pull requests before starting overlapping work.
+Use [Discussions](https://github.com/seifalmotaz/tanstack-ai-dart/discussions)
+for usage questions. Follow the [community guidelines](CODE_OF_CONDUCT.md), and
+use [private reporting](SECURITY.md) for vulnerabilities.
 
 ## Keep the API idiomatic Dart
 

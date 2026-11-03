@@ -6,3 +6,9 @@ contact_links:
   - name: Existing issues
     url: https://github.com/seifalmotaz/tanstack-ai-dart/issues
     about: Search open and closed issues for an existing report or discussion.
+  - name: Usage questions
+    url: https://github.com/seifalmotaz/tanstack-ai-dart/discussions
+    about: Ask questions about using the SDK and share integrations.
+  - name: Private vulnerability report
+    url: https://github.com/seifalmotaz/tanstack-ai-dart/security/advisories/new
+    about: Report security vulnerabilities privately without posting credentials.

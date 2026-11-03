@@ -115,6 +115,18 @@ const documentation = <(String, String, String, String)>[
     'Manual checks and publication responsibilities.',
     'Optional'
   ),
+  (
+    'CODE_OF_CONDUCT.md',
+    'Community guidelines',
+    'Respectful participation and moderation.',
+    'Optional'
+  ),
+  (
+    'SECURITY.md',
+    'Security reporting',
+    'Private vulnerability reports and supported release policy.',
+    'Optional'
+  ),
 ];
 
 final _example = RegExp(
@@ -279,7 +291,7 @@ Future<List<String>> processDocumentation(Directory root,
     output(path, expected);
   }
   final index = StringBuffer(
-      '# tanstack_ai_dart\n\n> Unofficial Dart client for TanStack AI chat and generation.\n\n$summary\n\nUse Dart constructors, enums, typed fetcher variants, and state streams.\nThe package is not published to pub.dev yet. Server/provider adapters and\nreal device host implementations are outside this client package.\n\n');
+      '# tanstack_ai_dart\n\n> Unofficial Dart client for TanStack AI chat and generation.\n\n$summary\n\nUse Dart constructors, enums, typed fetcher variants, and state streams.\nInstallation uses the GitHub source release. Hosted pub.dev availability is separate.\nServer/provider adapters and\nreal device host implementations are outside this client package.\n\n');
   for (final group in ['Guides', 'Compatibility', 'Optional']) {
     index.writeln('## $group\n');
     for (final (path, title, description, section) in documentation) {

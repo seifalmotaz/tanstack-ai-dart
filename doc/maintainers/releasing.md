@@ -1,7 +1,8 @@
 # Release the Dart package
 
 This guide is for maintainers publishing a reviewed Dart release. It does not
-publish anything automatically. The package is currently unpublished on pub.dev.
+publish anything automatically. GitHub source releases and pub.dev publication
+are separate steps.
 
 ## Prepare the release commit
 
@@ -23,11 +24,10 @@ dart doc
 dart pub publish --dry-run
 ```
 
-Before the final archive, replace pre-release status text in the README,
-`tool/docs.dart`, and this guide with neutral instructions for the target release.
-Do not publish an archive that describes its own version as unpublished. Regenerate
-the LLM files after that edit. Announce hosted availability only after publication
-has been confirmed.
+Keep installation instructions specific to the target release and regenerate
+LLM references when they change. Avoid time-sensitive publication claims in an
+archive that cannot be edited later. Announce hosted availability only after
+publication has been confirmed.
 
 Review the archive listing and warnings. Generated documentation, examples,
 license/notice files, and public guides should be included as intended. Local
@@ -61,9 +61,32 @@ dart pub publish
 Confirm the version, archive, license, and repository link on pub.dev. Only after
 that confirmation should release announcements claim hosted availability.
 
-## Record the source release
+## Create a GitHub source release
 
-Create the Dart version tag and GitHub release for the same source commit.
+A GitHub source release can precede publication to pub.dev. Keep those statuses
+separate in the README and release notes. Verify all CI checks on the immutable
+source commit before creating its tag. Write reviewed release notes to
+`.dart_tool/release-notes.md`, and set `release_commit` to that verified SHA.
+For the first source release:
+
+```sh
+release_tag=v0.3.0
+test -n "$release_commit" || exit 1
+git tag -a "$release_tag" "$release_commit" -m "tanstack_ai_dart $release_tag"
+git push origin "refs/tags/$release_tag"
+gh release create "$release_tag" llms.txt llms-full.txt --verify-tag --title "$release_tag" --notes-file .dart_tool/release-notes.md --latest
+```
+
+If a tag already exists, verify its target instead of overwriting it. Derive attached files from that exact source revision.
+For versioned LLM copies, rebase only this repository's GitHub/raw URL references
+from `main` to the release tag; preserve examples and compatibility data. Include
+checksums for attached files. A release's LLM text provides a versioned
+reference alongside GitHub's automatic source archives.
+
+## Record the release
+
+When publishing to pub.dev, use the same reviewed source commit as its GitHub
+release, or create a new release/version if the source changed.
 Include the Dart version, supported upstream versions/SHA, migration notes, and
 validation scope. Do not reuse an upstream npm tag as the Dart release tag.
 
