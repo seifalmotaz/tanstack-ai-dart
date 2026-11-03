@@ -17,7 +17,7 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       final calls = <Map<String, dynamic>>[];
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           calls.add({
             'input': input,
@@ -43,13 +43,13 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       RunAgentInputContext? context;
-      final connection = ConnectionAdapter(
+      final connection = ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           context = runContext;
           yield runFinished('run-1');
         },
       );
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         connection: connection,
         byok: clientByok,
         byokProvider: () => 'elevenlabs',
@@ -66,7 +66,7 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           throw byok.ByokMissingError('elevenlabs');
         },
@@ -89,7 +89,7 @@ void main() {
       await clientByok.update('elevenlabs', elevenLabsKey);
       final errors = <Object?>[];
       late GenerationClient client;
-      client = GenerationClient(
+      client = GenerationClient.legacy(
         fetcher: (input, options) async {
           throw byok.ByokMissingError('elevenlabs');
         },
@@ -116,7 +116,7 @@ void main() {
       final second = Deferred<Object?>();
       Future<void>? secondGenerate;
       var replaced = false;
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           if ((input as Map)['prompt'] == 'first') {
             throw byok.ByokMissingError('elevenlabs');
@@ -148,7 +148,7 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async =>
             GenerationResponse.byokMissing('elevenlabs'),
         byok: clientByok,
@@ -165,7 +165,7 @@ void main() {
         () async {
       final clientByok = byok.ByokClient();
       var calls = 0;
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           calls++;
           return <String, dynamic>{};
@@ -188,7 +188,7 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       final calls = <Map<String, String>?>[];
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           calls.add(options.headers);
           return {'ok': true};
@@ -208,7 +208,7 @@ void main() {
       await clientByok.update('openai', 'sk-live-secret');
       await clientByok.update('elevenlabs', elevenLabsKey);
       var calls = 0;
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async {
           calls++;
           return <String, dynamic>{};

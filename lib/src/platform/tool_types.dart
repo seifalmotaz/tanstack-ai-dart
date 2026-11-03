@@ -77,7 +77,6 @@ class StandardSchema extends ToolSchema {
 
 ToolSchema? asToolSchema(Object? schema) {
   if (schema == null || schema is ToolSchema) return schema as ToolSchema?;
-  if (schema is Map || schema is List) return RawJsonSchema(schema);
   return RawJsonSchema(schema);
 }
 
@@ -125,24 +124,25 @@ class ClientTool<TInput, TOutput> {
   final ToolSchema? inputSchema;
   final ToolSchema? outputSchema;
   final bool needsApproval;
+
+  /// Raw approval schema accepted by the interrupt/approval pipeline.
+  ///
+  /// Kept as a real field so legacy implementers such as `ChatClientTool` and
+  /// callers can read it without reflection or side tables.
+  final Object? approvalSchema;
   final Object? metadata;
   final ClientToolExecute<TInput, TOutput>? execute;
 
-  ClientTool({
+  const ClientTool({
     required this.name,
     this.description = '',
-    Object? inputSchema,
-    Object? outputSchema,
+    this.inputSchema,
+    this.outputSchema,
     this.needsApproval = false,
+    this.approvalSchema,
     this.metadata,
     this.execute,
-    Object? approvalSchema,
-  })  : inputSchema = asToolSchema(inputSchema),
-        outputSchema = asToolSchema(outputSchema) {
-    if (approvalSchema != null) {
-      _approvalSchemas[this] = approvalSchema;
-    }
-  }
+  });
 
   bool get hasExecute => execute != null;
 
@@ -156,30 +156,15 @@ class ClientTool<TInput, TOutput> {
   }
 }
 
-final Expando<Object> _approvalSchemas = Expando<Object>('approvalSchema');
-
-/// Approval schema for a [ClientTool].
-///
-/// Stored outside the class so implementing classes (including the legacy
-/// `ChatClientTool`) keep compiling; `ChatClientTool` can expose the same
-/// option when its owner adds it.
-extension ClientToolApprovalSchema on ClientTool<dynamic, dynamic> {
-  Object? get approvalSchema => _approvalSchemas[this];
-}
-
-/// Read an approval schema from any tool shape, including a legacy tool that
-/// declares its own `approvalSchema` member.
-Object? clientToolApprovalSchema(ClientTool<dynamic, dynamic> tool) {
-  try {
-    final dynamic value = (tool as dynamic).approvalSchema;
-    if (value != null) return value;
-  } catch (_) {
-    // Legacy classes do not declare the member; use the side table.
-  }
-  return _approvalSchemas[tool];
-}
+/// Read an approval schema from any [ClientTool].
+@Deprecated('Read ClientTool.approvalSchema directly.')
+Object? clientToolApprovalSchema(ClientTool<dynamic, dynamic> tool) =>
+    tool.approvalSchema;
 
 /// Build a tool list while retaining its explicit Dart element type.
-/// Dart uses a list argument in place of JavaScript's variadic tuple.
+///
+/// Plain Dart lists are the normal form; this helper only preserves the
+/// upstream symbol and an explicit element type at call sites.
+@Deprecated('Pass a plain List<ClientTool> instead.')
 List<TTool> clientTools<TTool extends ClientTool>(List<TTool> tools) =>
     List<TTool>.of(tools);

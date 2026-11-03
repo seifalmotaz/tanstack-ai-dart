@@ -14,9 +14,9 @@ void main() {
     test('forwards resume on a fetcher adapter', () async {
       ChatFetcherInput? seen;
       final adapter = fetcherToConnectionAdapter(
-        (input, {signal, headers}) async* {
+        (input, {signal, headers}) async {
           seen = input;
-          yield finishedChunk();
+          return ChatFetcherResult.stream(Stream.value(finishedChunk()));
         },
       );
       final controller = CancellationController();
@@ -58,13 +58,35 @@ void main() {
       expect(seen?.data, {'source': 'test'});
     });
 
+    test('parses a ChatFetcherResult.response as SSE', () async {
+      final controller = CancellationController();
+      final adapter = fetcherToConnectionAdapter(
+        (input, {signal, headers}) async => ChatFetcherResult.response(
+          rawResponse(sseData(jsonEncode(contentChunk('Hello')))),
+        ),
+      );
+
+      final chunks = await collect(
+        adapter.connect!(
+          [],
+          signal: controller.signal,
+          runContext: const RunAgentInputContext(
+            threadId: 'thread-1',
+            runId: 'run-1',
+          ),
+        ),
+      );
+
+      expect(chunks.single['delta'], 'Hello');
+    });
+
     group('fetchServerSentEvents', () {
       test('sends generic continuation on resume metadata, not state',
           () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final resume = [
           {
@@ -111,7 +133,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final chunks = await collect(
@@ -139,7 +161,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final chunks = await collect(
@@ -176,7 +198,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(body));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final chunks = await collect(
@@ -202,7 +224,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
           adapter.connect!([
@@ -218,7 +240,7 @@ void main() {
             FakeHttpClient((_) async => rawResponse('data: [DONE]\n\n'));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
           adapter.connect!([
@@ -234,7 +256,7 @@ void main() {
             FakeHttpClient((_) async => rawResponse('data: invalid json\n\n'));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         await expectLater(
@@ -255,7 +277,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         await expectLater(
@@ -276,7 +298,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: client,
             headers: {'Authorization': 'Bearer token'},
           ),
@@ -302,7 +324,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         await collect(
@@ -322,7 +344,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         await collect(
@@ -343,7 +365,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         await collect(
@@ -358,9 +380,9 @@ void main() {
 
       test('should resolve dynamic URL from function', () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
-        final adapter = fetchServerSentEvents(
-          () => '/api/dynamic',
-          FetchConnectionOptions(client: client),
+        final adapter = fetchServerSentEventsProvider(
+          url: () => '/api/dynamic',
+          options: () => FetchConnectionOptions(client: client),
         );
 
         await collect(adapter.connect!([]));
@@ -370,9 +392,9 @@ void main() {
 
       test('should resolve dynamic options from sync function', () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
-        final adapter = fetchServerSentEvents(
-          '/api/chat',
-          () => FetchConnectionOptions(
+        final adapter = fetchServerSentEventsProvider(
+          url: () => '/api/chat',
+          options: () => FetchConnectionOptions(
             client: client,
             headers: {'X-Custom': 'dynamic'},
           ),
@@ -388,9 +410,9 @@ void main() {
 
       test('should resolve dynamic options from async function', () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
-        final adapter = fetchServerSentEvents(
-          '/api/chat',
-          () async => FetchConnectionOptions(
+        final adapter = fetchServerSentEventsProvider(
+          url: () => '/api/chat',
+          options: () async => FetchConnectionOptions(
             client: client,
             headers: {'X-Async': 'token'},
           ),
@@ -409,7 +431,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: client,
             body: {'model': 'gpt-4o', 'provider': 'openai'},
           ),
@@ -450,7 +472,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(body));
         final adapter = fetchServerSentEvents(
           '/api/generate',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final chunks = await collect(
@@ -497,7 +519,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final error = await captureError(() => collect(adapter.connect!([])));
         expect(
@@ -512,7 +534,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: client,
             headers: {'Authorization': 'Bearer token'},
           ),
@@ -582,7 +604,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final result = await adapter.hydrate!('thread-1');
@@ -613,7 +635,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
           adapter.connect!([
@@ -628,7 +650,7 @@ void main() {
             FakeHttpClient((_) async => rawResponse('invalid json\n'));
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         await expectLater(
           collect(adapter.connect!([
@@ -648,7 +670,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         await expectLater(
           collect(adapter.connect!([
@@ -667,7 +689,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         await collect(adapter.connect!([]));
         expect(client.requests, hasLength(1));
@@ -677,7 +699,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: client,
             headers: {'Authorization': 'Bearer token'},
           ),
@@ -701,7 +723,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         await collect(
           adapter.connect!(
@@ -719,9 +741,9 @@ void main() {
 
       test('should resolve dynamic URL from function', () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
-        final adapter = fetchHttpStream(
-          () => '/api/dynamic',
-          FetchConnectionOptions(client: client),
+        final adapter = fetchHttpStreamProvider(
+          url: () => '/api/dynamic',
+          options: () => FetchConnectionOptions(client: client),
         );
         await collect(adapter.connect!([]));
         expect(client.requests.single.url.toString(), '/api/dynamic');
@@ -748,7 +770,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(body));
         final adapter = fetchHttpStream(
           '/api/generate',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
           adapter.connect!([], data: {'prompt': 'test'}),
@@ -857,44 +879,6 @@ void main() {
             predicate<Object>(
               (error) =>
                   error.toString().contains('Connection adapter is required'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw when subscribe/send are partially implemented', () {
-        final invalid = [
-          ConnectionAdapter(subscribe: ({signal}) => const Stream.empty()),
-          ConnectionAdapter(
-            send: (messages, {data, signal, runContext}) async {},
-          ),
-        ];
-
-        for (final adapter in invalid) {
-          expect(
-            () => normalizeConnectionAdapter(adapter),
-            throwsA(
-              predicate<Object>(
-                (error) => error
-                    .toString()
-                    .contains('either connect or both subscribe and send'),
-              ),
-            ),
-          );
-        }
-      });
-
-      test('should throw when both connection modes are provided', () {
-        final adapter = ConnectionAdapter(
-          connect: (messages, {data, signal, runContext}) async* {},
-          subscribe: ({signal}) => const Stream.empty(),
-          send: (messages, {data, signal, runContext}) async {},
-        );
-        expect(
-          () => normalizeConnectionAdapter(adapter),
-          throwsA(
-            predicate<Object>(
-              (error) => error.toString().contains('not both modes'),
             ),
           ),
         );
@@ -1060,7 +1044,7 @@ void main() {
         );
         final adapter = fetchServerSentEvents(
           '/api/generate',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final result = await adapter.hydrateGeneration!('t1');
@@ -1073,7 +1057,7 @@ void main() {
       test('treats a 200 carrying null as a genuine miss', () async {
         final adapter = fetchServerSentEvents(
           '/api/generate',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: FakeHttpClient((_) async => jsonResponse(null)),
           ),
         );
@@ -1087,7 +1071,7 @@ void main() {
           () async {
         final adapter = fetchServerSentEvents(
           '/api/generate',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: FakeHttpClient((_) async => jsonResponse('not json')),
           ),
         );
@@ -1102,7 +1086,7 @@ void main() {
 
         final arrayAdapter = fetchServerSentEvents(
           '/api/generate',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: FakeHttpClient((_) async => jsonResponse([])),
           ),
         );
@@ -1130,7 +1114,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final result = await adapter.hydrate!(
@@ -1156,7 +1140,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final result = await adapter.hydrate!('thread-1');
@@ -1181,7 +1165,7 @@ void main() {
         );
         final adapter = fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(client: client),
+          options: FetchConnectionOptions(client: client),
         );
 
         final result = await adapter.hydrate!('thread-1');
@@ -1197,7 +1181,7 @@ void main() {
         const hydration = ChatHydrationResult(messages: []);
         ChatHydrateOptions? seenOptions;
         final normalized = normalizeConnectionAdapter(
-          ConnectionAdapter(
+          ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {},
             hydrate: (threadId, {options}) async {
               seenOptions = options;

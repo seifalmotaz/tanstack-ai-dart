@@ -6,7 +6,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
 import '../identity.dart';
+import '../snapshot_stream.dart';
 
 import '../connections/cancellation.dart';
 import '../connections/connection_adapter.dart';
@@ -14,6 +16,7 @@ import '../connections/errors.dart' as connection_errors;
 import '../connections/hydration.dart';
 import '../connections/sse_utils.dart';
 import '../connections/types.dart';
+import '../connections/stream_connections.dart' as connections;
 import '../connections/wire.dart';
 import '../platform/byok/byok.dart' as platform_byok;
 import '../platform/snapshot_atom.dart';
@@ -68,7 +71,7 @@ class _GenerationCallbacks<TResult, TOutput> {
 /// (image, speech, transcription, summarize).
 class GenerationClient<TInput, TResult, TOutput> {
   final ConnectionAdapter? _connection;
-  final GenerationFetcher<TInput>? _fetcher;
+  final LegacyGenerationFetcher<TInput>? _fetcher;
   final HydrateGenerationFunction? _hydrateGenerationHandler;
   final JoinRunFunction? _joinRunHandler;
   final bool _serverDriven;
@@ -101,12 +104,123 @@ class GenerationClient<TInput, TResult, TOutput> {
 
   GenerationClientSnapshot<TOutput> _snapshot =
       const GenerationClientSnapshot.initial();
+  late final _stateEvents =
+      SnapshotStream<GenerationClientSnapshot<TOutput>>(() => _snapshot);
+
+  /// Current immutable result and lifecycle state.
+  GenerationClientSnapshot<TOutput> get snapshot => _snapshot;
+  Stream<GenerationClientSnapshot<TOutput>> get states => _stateEvents.stream;
+  TOutput? get result => _result;
+  bool get isLoading => _isLoading;
+  Object? get error => _error;
+  GenerationClientState get state => _status;
+  GenerationResumeSnapshot? get resumeSnapshot => getResumeSnapshot();
+
   final Set<void Function()> _listeners = <void Function()>{};
 
-  GenerationClient({
+  factory GenerationClient({
+    required ConnectionAdapter connection,
+    Map<String, dynamic>? body,
+    platform_byok.ByokClient? byok,
+    FutureOr<String?> Function()? byokProvider,
+    GenerationPersistenceOptions persistence =
+        const GenerationPersistenceOptions.ephemeral(),
+    HydrateGenerationFunction? hydrateGeneration,
+    JoinRunFunction? joinRun,
+    GenerationDevtoolsMetadata? devtools,
+    GenerationDevtoolsBridgePortFactory? devtoolsBridgeFactory,
+    SnapshotResultCopier<TOutput>? copySnapshotResult,
+    GenerationTransformOutcome<TOutput> Function(TResult result)? onResult,
+    void Function(Object error)? onError,
+    void Function(num progress, String? message)? onProgress,
+    void Function(StreamChunk chunk)? onChunk,
+    void Function(TOutput? result)? onResultChange,
+    void Function(bool isLoading)? onLoadingChange,
+    void Function(Object? error)? onErrorChange,
+    void Function(GenerationClientState status)? onStatusChange,
+    void Function(GenerationResumeSnapshot? snapshot)? onResumeSnapshotChange,
+    void Function(GenerationResumeState? state)? onResumeStateChange,
+    TResult? Function(GenerationRestoredResult restored)? reconstructResult,
+  }) =>
+      GenerationClient.legacy(
+        threadId: persistence.threadId,
+        connection: connection,
+        body: body,
+        byok: byok,
+        byokProvider: byokProvider,
+        persistence: persistence.persistence,
+        hydrateGeneration: hydrateGeneration,
+        joinRun: joinRun,
+        devtools: devtools,
+        devtoolsBridgeFactory: devtoolsBridgeFactory,
+        copySnapshotResult: copySnapshotResult,
+        onResult: onResult,
+        onError: onError,
+        onProgress: onProgress,
+        onChunk: onChunk,
+        onResultChange: onResultChange,
+        onLoadingChange: onLoadingChange,
+        onErrorChange: onErrorChange,
+        onStatusChange: onStatusChange,
+        onResumeSnapshotChange: onResumeSnapshotChange,
+        onResumeStateChange: onResumeStateChange,
+        reconstructResult: reconstructResult,
+      );
+
+  factory GenerationClient.fetcher({
+    required GenerationFetcher<TInput, TResult> fetcher,
+    Map<String, dynamic>? body,
+    platform_byok.ByokClient? byok,
+    FutureOr<String?> Function()? byokProvider,
+    GenerationPersistenceOptions persistence =
+        const GenerationPersistenceOptions.ephemeral(),
+    HydrateGenerationFunction? hydrateGeneration,
+    JoinRunFunction? joinRun,
+    GenerationDevtoolsMetadata? devtools,
+    GenerationDevtoolsBridgePortFactory? devtoolsBridgeFactory,
+    SnapshotResultCopier<TOutput>? copySnapshotResult,
+    GenerationTransformOutcome<TOutput> Function(TResult result)? onResult,
+    void Function(Object error)? onError,
+    void Function(num progress, String? message)? onProgress,
+    void Function(StreamChunk chunk)? onChunk,
+    void Function(TOutput? result)? onResultChange,
+    void Function(bool isLoading)? onLoadingChange,
+    void Function(Object? error)? onErrorChange,
+    void Function(GenerationClientState status)? onStatusChange,
+    void Function(GenerationResumeSnapshot? snapshot)? onResumeSnapshotChange,
+    void Function(GenerationResumeState? state)? onResumeStateChange,
+    TResult? Function(GenerationRestoredResult restored)? reconstructResult,
+  }) =>
+      GenerationClient.legacy(
+        threadId: persistence.threadId,
+        fetcher: (input, options) async => await fetcher(input, options),
+        body: body,
+        byok: byok,
+        byokProvider: byokProvider,
+        persistence: persistence.persistence,
+        hydrateGeneration: hydrateGeneration,
+        joinRun: joinRun,
+        devtools: devtools,
+        devtoolsBridgeFactory: devtoolsBridgeFactory,
+        copySnapshotResult: copySnapshotResult,
+        onResult: onResult,
+        onError: onError,
+        onProgress: onProgress,
+        onChunk: onChunk,
+        onResultChange: onResultChange,
+        onLoadingChange: onLoadingChange,
+        onErrorChange: onErrorChange,
+        onStatusChange: onStatusChange,
+        onResumeSnapshotChange: onResumeSnapshotChange,
+        onResumeStateChange: onResumeStateChange,
+        reconstructResult: reconstructResult,
+      );
+
+  /// Compatibility constructor for pre-0.3 fetcher response unions.
+  GenerationClient.legacy({
     String? threadId,
     ConnectionAdapter? connection,
-    GenerationFetcher<TInput>? fetcher,
+    LegacyGenerationFetcher<TInput>? fetcher,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -252,7 +366,20 @@ class GenerationClient<TInput, TResult, TOutput> {
           ),
         );
         if (!_ownsRun(_abortController, abortController)) return;
-        if (result is GenerationResponse || result is http.StreamedResponse) {
+        if (result is GenerationFetchedStream<TResult>) {
+          await _processStream(
+            connections.stream((_, data, signal) => result.stream).connect!(
+              const <WireMessage>[],
+              signal: signal,
+            ),
+            runId,
+            abortController,
+          );
+        } else if (result is GenerationFetchedResponse<TResult>) {
+          await _processResponse(
+              result.response, signal, runId, abortController);
+        } else if (result is GenerationResponse ||
+            result is http.StreamedResponse) {
           await _processResponse(
             result as Object,
             signal,
@@ -261,11 +388,17 @@ class GenerationClient<TInput, TResult, TOutput> {
           );
         } else {
           _devtoolsBridge.ensureRunStarted(runId);
-          if (!_setResult(result as TResult, abortController) ||
+          if (!_setResult(
+                  (result is GenerationFetchedValue<TResult>
+                      ? result.value
+                      : result as TResult),
+                  abortController) ||
               !_setStatus(GenerationClientState.success, abortController)) {
             return;
           }
-          _completePlainFetcherResumeSnapshot(result, abortController);
+          _completePlainFetcherResumeSnapshot(
+              result is GenerationFetchedValue<TResult> ? result.value : result,
+              abortController);
         }
       } else if (_connection != null && _connection.connect != null) {
         final mergedData = <String, dynamic>{
@@ -556,6 +689,7 @@ class GenerationClient<TInput, TResult, TOutput> {
     _serverHydrationStarted = false;
     _rejoinedRunId = null;
     _setIsLoading(false);
+    _stateEvents.close();
   }
 
   // ===========================
@@ -1046,6 +1180,7 @@ class GenerationClient<TInput, TResult, TOutput> {
       a.runId == b.runId;
 
   void _notify() {
+    if (!_disposed) _stateEvents.emit(_snapshot);
     for (final listener in List<void Function()>.of(_listeners)) {
       var spins = 0;
       late GenerationClientSnapshot<TOutput> seen;

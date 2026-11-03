@@ -1,5 +1,18 @@
 # Upstream API compatibility
 
+## Dart API revision 0.3
+
+The default API uses typed named parameters, enum state, replaying state streams,
+sealed fetcher results and read-only consumer message views. JavaScript-shaped
+constructors and getter/callback aliases are explicit compatibility paths rather
+than the recommended usage. See [MIGRATION.md](MIGRATION.md).
+
+All pinned upstream runtime exports remain reachable for compatibility. Two
+upstream runtime-invalid connection configuration cases are now verified by
+analyzer-negative fixtures: Dart constructors make those states unrepresentable.
+The wire protocol and valid run behavior are unchanged.
+
+
 This reference records the reviewed public exports and the Dart-specific type
 contract. Test results and supported toolchains are in [VALIDATION.md](VALIDATION.md).
 
@@ -37,10 +50,10 @@ Behavioral coverage remains tracked by the separate upstream-test mapping audit.
 
 | Surface | Upstream barrel | Runtime | Type | Total | Dart equivalent | Dart adapted | Platform interface | Language limitation | Server out of scope | Name collision |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `index` | `lib/tanstack_ai_dart.dart` | 50 | 135 | 185 | 88 | 74 | 7 | 15 | 0 | 1 |
+| `index` | `lib/tanstack_ai_dart.dart` | 50 | 135 | 185 | 77 | 85 | 7 | 15 | 0 | 1 |
 | `byok` | `lib/byok.dart` | 11 | 10 | 21 | 17 | 0 | 3 | 0 | 1 | 0 |
 | `ui` | `lib/ui.dart` | 6 | 35 | 41 | 13 | 8 | 0 | 20 | 0 | 0 |
-| **Total** | | **67** | **180** | **247** | **118** | **82** | **10** | **35** | **1** | **1** |
+| **Total** | | **67** | **180** | **247** | **107** | **93** | **10** | **35** | **1** | **1** |
 
 Status meanings:
 
@@ -60,7 +73,7 @@ Status meanings:
 
 No upstream runtime export is missing from the three public barrels: 67/67
 runtime exports are reachable. The JSON still records 35 language limitations
-and 1 name collision for type/semantic review.
+and 1 documented legacy name collision.
 
 ## Runtime exports
 
@@ -144,7 +157,7 @@ guarantee.
 upstream contract. Upstream `ChatTransport` is the 0.40 XOR union of
 `{ connection }` or `{ fetcher }`. The exported Dart `ChatTransport` is the
 legacy 0.42-era stream transport. The 0.40 contract is represented by
-`ChatClientOptions.connection` / `ChatClientOptions.fetcher` and
+`ChatClient(connection: ...)`, typed fetcher adapters, and
 `ConnectionAdapter`. Do not treat the Dart `ChatTransport` symbol as the
 upstream 0.40 union; see the gaps file.
 
@@ -173,8 +186,9 @@ representative runtime behavior (`partTypeToKey`, `collectInlineToolNames`,
 ## Compatibility decisions
 
 `ChatTransport` keeps its existing legacy stream-transport meaning for callers
-using the 0.42 protocol. Use `ChatClientOptions.connection` or `.fetcher` for the
-modern transport selection. The constructor rejects conflicting connection and
+using the 0.42 protocol. Use `ChatClient(connection: ...)` for the default Dart API.
+`ChatClientOptions` is only for `ChatClient.legacy`; custom fetchers become typed
+connection adapters through `fetcherToConnectionAdapter`. The constructor rejects conflicting connection and
 fetcher options at runtime. No alias claims to provide the TypeScript XOR type.
 
 Caller context remains `Object?` by design. A consuming application should

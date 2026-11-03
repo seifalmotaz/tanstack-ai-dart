@@ -304,7 +304,7 @@ void main() {
         () async {
       final events = dt.InMemoryAIDevtoolsEventClient();
       final client = gen.GenerationClient<Map<String, dynamic>,
-          Map<String, dynamic>, Map<String, dynamic>>(
+          Map<String, dynamic>, Map<String, dynamic>>.legacy(
         threadId: 'gen-client-live',
         fetcher: (input, options) async => <String, dynamic>{'text': 'done'},
         devtools: const gen.GenerationDevtoolsMetadata(
@@ -350,7 +350,7 @@ void main() {
 
     test('wires the real VideoGenerationClient onto video job state', () async {
       final events = dt.InMemoryAIDevtoolsEventClient();
-      final client = gen.VideoGenerationClient<gen.VideoGenerateResult>(
+      final client = gen.VideoGenerationClient<gen.VideoGenerateResult>.legacy(
         threadId: 'video-client-live',
         fetcher: (input, options) async => <String, dynamic>{
           'jobId': 'job-1',

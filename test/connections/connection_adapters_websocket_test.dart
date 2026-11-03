@@ -57,7 +57,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final received = <StreamChunk>[];
@@ -91,7 +92,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final received = <StreamChunk>[];
@@ -124,7 +126,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final received = <StreamChunk>[];
@@ -153,7 +156,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
 
@@ -191,7 +195,7 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(
+        options: const WebSocketConnectionOptions(
           socketFactory: fakeSocketFactory,
           reconnect: ReconnectOptions(delay: Duration.zero, maxAttempts: 5),
         ),
@@ -248,7 +252,7 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(
+        options: const WebSocketConnectionOptions(
           socketFactory: fakeSocketFactory,
           reconnect: ReconnectOptions(delay: Duration.zero, maxAttempts: 5),
         ),
@@ -312,7 +316,7 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(
+        options: const WebSocketConnectionOptions(
           socketFactory: fakeSocketFactory,
           reconnect: ReconnectOptions(delay: Duration.zero, maxAttempts: 5),
         ),
@@ -371,7 +375,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       await conn.send!(
@@ -404,7 +409,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final iterator = StreamIterator<StreamChunk>(
@@ -441,7 +447,7 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(
+        options: const WebSocketConnectionOptions(
           socketFactory: fakeSocketFactory,
           reconnect: ReconnectOptions(delay: Duration.zero, maxAttempts: 2),
         ),
@@ -492,7 +498,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final iterator = StreamIterator<StreamChunk>(
@@ -523,7 +530,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       final iterator = StreamIterator<StreamChunk>(
@@ -549,7 +557,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final iterator = StreamIterator<StreamChunk>(
         conn.joinRun!('run-j'),
@@ -576,7 +585,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final controller = CancellationController();
       await conn.send!(
@@ -613,7 +623,8 @@ void main() {
       FakeWebSocket.instances.clear();
       final conn = webSocket(
         'wss://x/api/chat',
-        const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
+        options:
+            const WebSocketConnectionOptions(socketFactory: fakeSocketFactory),
       );
       final joinController = CancellationController();
       unawaited(

@@ -155,6 +155,8 @@ class ByokClient {
     return () => _listeners.remove(listener);
   }
 
+  ByokSnapshot get snapshot => _snapshot;
+
   ByokSnapshot getSnapshot() => _snapshot;
 
   ByokSnapshot _buildSnapshot() => ByokSnapshot(

@@ -10,6 +10,8 @@ library;
 // rather than inferred from runtime equality.
 import 'dart:io';
 
+import '../../tool/analyzer_command.dart';
+
 import 'package:tanstack_ai_dart/platform.dart';
 import 'package:test/test.dart';
 
@@ -142,7 +144,7 @@ void main() {
         ..writeAsStringSync(source);
       return Process.runSync(
         Platform.resolvedExecutable,
-        ['analyze', '--no-fatal-warnings', file.path],
+        analyzerArguments(['--no-fatal-warnings', file.path]),
       );
     }
 

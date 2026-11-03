@@ -18,7 +18,7 @@ void main() {
   // Upstream: chat-client-context.test.ts, client-local context boundary.
   test('client-local tool context never enters an outbound request', () async {
     final transport = _CaptureTransport();
-    final client = ChatClient(
+    final client = ChatClient.legacy(
       transport: transport,
       context: {
         'localUserId': 'local',

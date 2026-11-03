@@ -332,7 +332,7 @@ void main() {
       final tool = ClientTool(
         name: 'pay',
         needsApproval: true,
-        inputSchema: rawInput,
+        inputSchema: RawJsonSchema(rawInput),
         approvalSchema: rawApprove,
       );
       final manager = InterruptManager(tools: <ClientTool>[tool]);
@@ -366,7 +366,7 @@ void main() {
         final tool = ClientTool(
           name: 'pay',
           needsApproval: true,
-          inputSchema: rawInput,
+          inputSchema: RawJsonSchema(rawInput),
           approvalSchema: rawApprove,
         );
         final manager = InterruptManager(tools: <ClientTool>[tool]);
@@ -394,7 +394,8 @@ void main() {
     }
 
     test('grants a client tool only when its output schema hash matches', () {
-      final tool = ClientTool(name: 'lookup', outputSchema: rawOutput);
+      final tool =
+          ClientTool(name: 'lookup', outputSchema: RawJsonSchema(rawOutput));
       final manager = InterruptManager(tools: <ClientTool>[tool]);
       manager.hydrate(
         ChatHydrationInterrupts(
@@ -438,7 +439,8 @@ void main() {
     });
 
     test('rejects a client tool with a mismatched output schema hash', () {
-      final tool = ClientTool(name: 'lookup', outputSchema: rawOutput);
+      final tool =
+          ClientTool(name: 'lookup', outputSchema: RawJsonSchema(rawOutput));
       final manager = InterruptManager(tools: <ClientTool>[tool]);
       final mismatched = binding(
         kind: 'client-tool-execution',
@@ -579,7 +581,7 @@ void main() {
       final tool = ClientTool(
         name: 'pay',
         needsApproval: true,
-        inputSchema: rawInput,
+        inputSchema: RawJsonSchema(rawInput),
       );
       final manager = InterruptManager(tools: <ClientTool>[tool]);
       manager.hydrate(

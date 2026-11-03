@@ -65,7 +65,7 @@ ChatClient _client({
   FutureOr<void> Function()? onResponse,
   bool realDevtools = true,
 }) {
-  return ChatClient(
+  return ChatClient.legacy(
     threadId: threadId,
     transport: transport ?? _FakeTransport(),
     tools: tools,
@@ -94,13 +94,13 @@ void main() {
 
   test('defaults to the no-op bridge', () async {
     final transport = _FakeTransport();
-    final client = ChatClient(
+    final client = ChatClient.legacy(
       transport: transport,
       devtools: const AIDevtoolsClientMetadata(hookName: 'useChat'),
     );
     addTearDown(client.dispose);
     client.mountDevtools();
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
     await transport.close();
     await pending;
@@ -140,7 +140,7 @@ void main() {
     expect(first['hookId'], startsWith('thread-'));
     expect(first['hookId'], first['threadId']);
 
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
     await (client.transport as _FakeTransport).close();
     await pending;
@@ -156,7 +156,7 @@ void main() {
     final client = _client(threadId: 'thread-run', transport: transport);
     addTearDown(client.dispose);
     client.mountDevtools();
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
 
     transport.emit(<String, dynamic>{
@@ -208,7 +208,7 @@ void main() {
     final client = _client(threadId: 'thread-stop', transport: transport);
     addTearDown(client.dispose);
     client.mountDevtools();
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
     transport.emit(<String, dynamic>{
       'type': 'RUN_STARTED',
@@ -328,7 +328,7 @@ void main() {
 
   test('emits snapshots for manual messages, hydration and reload', () async {
     final transport = _FakeTransport();
-    final client = ChatClient(
+    final client = ChatClient.legacy(
       threadId: 'thread-history',
       transport: transport,
       hydrate: (threadId, options) async => ChatHydrationResult(
@@ -381,10 +381,10 @@ void main() {
     final client = _client(threadId: 'thread-response', transport: transport);
     addTearDown(client.dispose);
 
-    client.updateOptions(onResponse: () async {
+    client.updateLegacyOptions(onResponse: () async {
       calls += 1;
     });
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
     await transport.close();
     await pending;
@@ -396,7 +396,7 @@ void main() {
     final transport = _FakeTransport();
     final client = _client(threadId: 'thread-dispose', transport: transport);
     client.mountDevtools();
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
     await transport.close();
     await pending;
@@ -419,7 +419,7 @@ void main() {
     );
     addTearDown(client.dispose);
     client.mountDevtools();
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await _pump();
 
     expect('${transport.bodies.single}',

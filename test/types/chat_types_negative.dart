@@ -42,11 +42,11 @@ void negativeCases() {
 
   // Upstream: byok is a ByokClient, never a raw key.
   // expect-error: argument_type_not_assignable (String to ByokClient?)
-  ChatClient(byokClient: 'sk-live-secret');
+  ChatClient.legacy(byokClient: 'sk-live-secret');
 
   // Upstream: onResponse takes no parameters and returns FutureOr<void>.
   // expect-error: argument_type_not_assignable (callback shape)
-  ChatClient(onResponse: (int code) {});
+  ChatClient.legacy(onResponse: (int code) {});
 
   // Upstream ChatFetcher receives ChatFetcherInput, not a raw string.
   final conn.ChatFetcher wrongInput =

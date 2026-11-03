@@ -5,6 +5,13 @@
 /// helpers take an explicit type argument (or bind it from a real
 /// [ClientTool]) and keep the result typed at the consumer. Runtime name/part
 /// checks prevent a typed view from being attached to the wrong part.
+///
+/// Cast contract: typed payload getters are projections of already-decoded
+/// wire values. A value that is present but not assignable to the requested
+/// type throws a [TypeError]; it is never silently replaced with `null`.
+/// Presence is tracked separately by `hasInput` / `hasOutput` / `hasData` /
+/// `hasPartial` / `hasPayload`, so an explicit wire `null` stays distinct from
+/// an absent value even when the type argument is non-nullable.
 library;
 
 import '../protocol.dart';
@@ -15,7 +22,8 @@ import 'ui_selectors.dart';
 ///
 /// `hasInput` / `hasOutput` preserve presence separately from a valid `null`
 /// value. A tool result part may be supplied when output lives on the separate
-/// `tool-result` part.
+/// `tool-result` part. Present values that do not match the requested type
+/// throw a [TypeError] rather than becoming `null`.
 class ChatTypedToolPart<TInput, TOutput> {
   final AssistantPart part;
   final AssistantPart? result;
@@ -42,8 +50,10 @@ class ChatTypedToolPart<TInput, TOutput> {
 /// Select a typed tool-call view by matching [AssistantPart.name] to [tool].
 ///
 /// Returns `null` for a different part type or tool name. Input/output casts
-/// use the supplied tool's generic parameters; a schema-invalid wire value
-/// throws instead of silently becoming `null`.
+/// use the supplied tool's generic parameters; a present value with the wrong
+/// runtime type throws a [TypeError] instead of silently becoming `null`.
+/// An explicit wire `null` is still reported through `hasInput` /
+/// `hasOutput`.
 ChatTypedToolPart<TInput, TOutput>? selectToolPart<TInput, TOutput>(
   AssistantPart part,
   ClientTool<TInput, TOutput> tool, {
@@ -73,6 +83,9 @@ ChatTypedToolPart<TInput, TOutput>? selectToolPart<TInput, TOutput>(
 }
 
 /// A typed `tool-result` view, including the upstream outcome discriminator.
+///
+/// [output] is a projection of the decoded result value and throws a
+/// [TypeError] when present with a different runtime type.
 class ChatTypedToolResult<TOutput> {
   final AssistantPart part;
   final TOutput? output;
@@ -103,6 +116,9 @@ ChatTypedToolResult<TOutput>? selectToolResult<TOutput>(AssistantPart part) {
 }
 
 /// A typed structured-output view.
+///
+/// [data] and [partial] are projections of the decoded values and throw a
+/// [TypeError] when present with a different runtime type.
 class ChatTypedStructuredPart<TData> {
   final AssistantPart part;
   final TData? data;
@@ -166,6 +182,9 @@ ChatTypedActivityPart? selectActivityPart(AssistantPart part) =>
 /// `definitionId` is the explicit equivalent of upstream's registered
 /// interrupt-key inference. When supplied, a different definition returns
 /// `null`; when omitted, any generic interrupt is accepted.
+///
+/// [payload] is a projection of the decoded interrupt payload and throws a
+/// [TypeError] when present with a different runtime type.
 class ChatTypedInterrupt<TPayload, TResponse> {
   final ChatInterrupt interrupt;
   final TPayload? payload;

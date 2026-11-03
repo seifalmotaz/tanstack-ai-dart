@@ -11,7 +11,7 @@ void main() {
   group('ChatClient snapshots', () {
     test('isolates nested message parts from callers and old snapshots', () {
       final input = <String, dynamic>{'id': 1};
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('copies tool input, approval, and subagent transcripts', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('keeps the identity of unchanged messages across snapshots', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           userMessage('u1', 'hello'),
@@ -113,7 +113,7 @@ void main() {
 
     test('isolates queue entries published by normal updates', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       final published = client.getSnapshot().queue;
@@ -130,7 +130,7 @@ void main() {
       final gate = Completer<ChatHydrationResult>();
       final seen = <({bool isHydrating, int messages})>[];
       late ChatClient client;
-      client = ChatClient(
+      client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -160,7 +160,7 @@ void main() {
     });
 
     test('turns off when the server hydrate fails', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -177,7 +177,7 @@ void main() {
         () async {
       final gate = Completer<ChatHydrationResult>();
       var calls = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -201,7 +201,7 @@ void main() {
         () async {
       final gate = Completer<ChatHydrationResult>();
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -226,7 +226,7 @@ void main() {
 
     test('turns off when clear() drops a pending load', () async {
       final gate = Completer<ChatHydrationResult>();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -242,14 +242,14 @@ void main() {
     });
 
     test('is always false without persistence', () async {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       await client.attach();
       expect(client.getIsHydrating(), isFalse);
     });
 
     test('clears the hydration error when a later load succeeds', () async {
       var attempt = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',

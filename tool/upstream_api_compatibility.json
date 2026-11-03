@@ -68,10 +68,10 @@
           "name": "ChatClient",
           "source": "./chat-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "ChatClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/client.dart:44",
+          "reason": "Typed connection construction, state streams, immutable transcript getters and enum states are the default Dart API. Pre-0.3 JS-shaped configuration remains explicitly available through ChatClient.legacy.",
+          "evidence": "lib/src/client.dart:40",
           "public": true
         },
         {
@@ -258,20 +258,20 @@
           "name": "GenerationClient",
           "source": "./generation-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "GenerationClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_client.dart:69",
+          "reason": "Typed connected/fetcher construction, state streams and getters; explicit legacy constructor preserves JS-shaped response handling.",
+          "evidence": "lib/src/generation/generation_client.dart:72",
           "public": true
         },
         {
           "name": "VideoGenerationClient",
           "source": "./video-generation-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "VideoGenerationClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/video_generation_client.dart:42",
+          "reason": "Typed connected/fetcher construction, state streams and getters; explicit legacy constructor preserves JS-shaped response handling.",
+          "evidence": "lib/src/generation/video_generation_client.dart:47",
           "public": true
         },
         {
@@ -381,7 +381,7 @@
           "status": "dart-equivalent",
           "dart": "SubagentHandle",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/client.dart:3238",
+          "evidence": "lib/src/client.dart:3373",
           "public": true
         },
         {
@@ -461,7 +461,7 @@
           "status": "dart-adapted",
           "dart": "ChatPersistenceOptions",
           "reason": "Dart class holds Object persistence plus threadId/history; upstream is a generic union of ephemeral/server/stored options.",
-          "evidence": "lib/src/chat/types.dart:475",
+          "evidence": "lib/src/chat/types.dart:494",
           "public": true
         },
         {
@@ -480,8 +480,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatClientOptions",
-          "reason": "Dart exposes concrete nullable fields and Object? context instead of conditional/mapped option types.",
-          "evidence": "lib/src/chat/types.dart:495",
+          "reason": "Compatibility configuration for ChatClient.legacy; the default Dart constructor uses named parameters and typed persistence.",
+          "evidence": "lib/src/chat/types.dart:514",
           "public": true
         },
         {
@@ -491,7 +491,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart exposes the resolved interrupt class; there is no separate pending alias.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -501,7 +501,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -511,7 +511,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -521,7 +521,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Upstream ChatInterrupt is a generic union of bound/generic/approval variants; Dart uses one concrete ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -531,7 +531,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterruptState",
           "reason": "Dart state class is concrete (List<ChatInterrupt>, List<Map> errors) and does not carry tool/interrupt generics.",
-          "evidence": "lib/src/chat/types.dart:353",
+          "evidence": "lib/src/chat/types.dart:363",
           "public": true
         },
         {
@@ -541,7 +541,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -551,7 +551,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -561,7 +561,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -571,7 +571,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -581,7 +581,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -591,7 +591,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterruptStatus",
           "reason": "Dart uses the ChatInterruptStatus enum with the same lifecycle values.",
-          "evidence": "lib/src/chat/types.dart:350",
+          "evidence": "lib/src/chat/types.dart:360",
           "public": true
         },
         {
@@ -601,7 +601,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -661,7 +661,7 @@
           "status": "dart-adapted",
           "dart": "ChatSnapshot",
           "reason": "Dart publishes ChatSnapshot from ChatClient.getSnapshot(); same fields with String status/connectionStatus.",
-          "evidence": "lib/src/chat/types.dart:414",
+          "evidence": "lib/src/chat/types.dart:424",
           "public": true
         },
         {
@@ -671,7 +671,7 @@
           "status": "dart-adapted",
           "dart": "ChatClientState",
           "reason": "Dart uses an enum with the same submitted/streaming/ready/error values.",
-          "evidence": "lib/src/chat/types.dart:21",
+          "evidence": "lib/src/chat/types.dart:28",
           "public": true
         },
         {
@@ -690,8 +690,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatFetcher",
-          "reason": "Dart typedef returns FutureOr<Object> (http.StreamedResponse or Stream<StreamChunk>) rather than Response|AsyncIterable.",
-          "evidence": "lib/src/connections/stream_connections.dart:89",
+          "reason": "Returns a sealed ChatFetcherResult.stream/response instead of a structural return union; cancellation and HTTP behavior are preserved.",
+          "evidence": "lib/src/connections/stream_connections.dart:122",
           "public": true
         },
         {
@@ -741,7 +741,7 @@
           "status": "dart-adapted",
           "dart": "ChatMessageInput",
           "reason": "Dart sendMessage accepts ChatMessageInput with dynamic content (String or content-part list).",
-          "evidence": "lib/src/chat/types.dart:462",
+          "evidence": "lib/src/chat/types.dart:474",
           "public": true
         },
         {
@@ -751,7 +751,7 @@
           "status": "dart-adapted",
           "dart": "QueuedMessage",
           "reason": "Dart content is dynamic (String or content-part list) and createdAt is DateTime.",
-          "evidence": "lib/src/chat/types.dart:116",
+          "evidence": "lib/src/chat/types.dart:125",
           "public": true
         },
         {
@@ -761,7 +761,7 @@
           "status": "dart-adapted",
           "dart": "QueueWhenBusy",
           "reason": "Dart uses the QueueWhenBusy enum with the same queue/drop/interrupt values.",
-          "evidence": "lib/src/chat/types.dart:25",
+          "evidence": "lib/src/chat/types.dart:34",
           "public": true
         },
         {
@@ -781,7 +781,7 @@
           "status": "dart-adapted",
           "dart": "ChatQueueConfig",
           "reason": "Dart exposes ChatQueueConfig with the same whenBusy/drain/maxSize/onOverflow fields.",
-          "evidence": "lib/src/chat/types.dart:34",
+          "evidence": "lib/src/chat/types.dart:43",
           "public": true
         },
         {
@@ -811,7 +811,7 @@
           "status": "dart-adapted",
           "dart": "ChatSendOptions",
           "reason": "Dart per-call overrides live on ChatSendOptions (whenBusy, body).",
-          "evidence": "lib/src/chat/types.dart:142",
+          "evidence": "lib/src/chat/types.dart:151",
           "public": true
         },
         {
@@ -841,7 +841,7 @@
           "status": "dart-equivalent",
           "dart": "GenerationClientSnapshot",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:40",
+          "evidence": "lib/src/generation/generation_types.dart:42",
           "public": true
         },
         {
@@ -851,7 +851,7 @@
           "status": "dart-adapted",
           "dart": "GenerationClientState",
           "reason": "Dart uses an enum with the same idle/generating/success/error values.",
-          "evidence": "lib/src/generation/generation_types.dart:20",
+          "evidence": "lib/src/generation/generation_types.dart:22",
           "public": true
         },
         {
@@ -861,7 +861,7 @@
           "status": "dart-equivalent",
           "dart": "VideoGenerationClientSnapshot",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:64",
+          "evidence": "lib/src/generation/generation_types.dart:66",
           "public": true
         },
         {
@@ -871,7 +871,7 @@
           "status": "dart-equivalent",
           "dart": "GenerationPersistenceOptions",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:478",
+          "evidence": "lib/src/generation/generation_types.dart:480",
           "public": true
         },
         {
@@ -890,8 +890,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "GenerationFetcher",
-          "reason": "Dart typedef returns Future<Object?>; callers may return a result, GenerationResponse, or http.StreamedResponse.",
-          "evidence": "lib/src/generation/generation_types.dart:509",
+          "reason": "Typed input/result parameters and sealed GenerationFetchResult.value/stream/response replace Object return unions.",
+          "evidence": "lib/src/generation/generation_types.dart:512",
           "public": true
         },
         {
@@ -901,7 +901,7 @@
           "status": "dart-equivalent",
           "dart": "GenerationFetcherOptions",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:497",
+          "evidence": "lib/src/generation/generation_types.dart:494",
           "public": true
         },
         {
@@ -931,7 +931,7 @@
           "status": "dart-equivalent",
           "dart": "VideoStatusInfo",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:541",
+          "evidence": "lib/src/generation/generation_types.dart:570",
           "public": true
         },
         {
@@ -941,7 +941,7 @@
           "status": "dart-equivalent",
           "dart": "VideoGenerateResult",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:589",
+          "evidence": "lib/src/generation/generation_types.dart:618",
           "public": true
         },
         {
@@ -951,7 +951,7 @@
           "status": "dart-adapted",
           "dart": "ImageGenerateInput",
           "reason": "Dart prompt is Object? (String or content-part list) rather than the MediaPrompt alias.",
-          "evidence": "lib/src/generation/generation_types.dart:652",
+          "evidence": "lib/src/generation/generation_types.dart:681",
           "public": true
         },
         {
@@ -1001,7 +1001,7 @@
           "status": "dart-adapted",
           "dart": "VideoGenerateInput",
           "reason": "Dart prompt is Object? (String or content-part list) rather than the MediaPrompt alias.",
-          "evidence": "lib/src/generation/generation_types.dart:629",
+          "evidence": "lib/src/generation/generation_types.dart:658",
           "public": true
         },
         {
@@ -1011,7 +1011,7 @@
           "status": "dart-equivalent",
           "dart": "GenerationRestoredResult",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:434",
+          "evidence": "lib/src/generation/generation_types.dart:436",
           "public": true
         },
         {
@@ -1088,9 +1088,9 @@
           "name": "clientTools",
           "source": "./types",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "clientTools",
-          "reason": "Exported from the root barrel via chat.dart -> src/chat/types.dart -> platform/tool_types.dart; the generic function is public.",
+          "reason": "Deprecated compatibility helper; ordinary typed Dart lists retain their element types without an inference wrapper.",
           "evidence": "lib/src/platform/tool_types.dart:184",
           "public": true
         },
@@ -1098,9 +1098,9 @@
           "name": "createChatClientOptions",
           "source": "./types",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "createChatClientOptions",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Identity compatibility helper retained for upstream users; ordinary Dart code uses constructor named parameters.",
           "evidence": "lib/src/chat/types.dart:577",
           "public": true
         },
@@ -1271,7 +1271,7 @@
           "status": "dart-adapted",
           "dart": "ClientTool",
           "reason": "Dart exposes the ClientTool<TInput,TOutput> base class; the untyped upstream alias maps to ClientTool<dynamic,dynamic> at use sites.",
-          "evidence": "lib/src/platform/tool_types.dart:122",
+          "evidence": "lib/src/platform/tool_types.dart:121",
           "public": true
         },
         {
@@ -1281,7 +1281,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart models the @tanstack/ai/client interrupt descriptor as ChatInterrupt (plus raw JSON maps in wire payloads).",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -1301,7 +1301,7 @@
           "status": "dart-adapted",
           "dart": "PersistedArtifactRef",
           "reason": "Dart role is String rather than a literal union and source is the PersistedArtifactSource class.",
-          "evidence": "lib/src/generation/generation_types.dart:195",
+          "evidence": "lib/src/generation/generation_types.dart:197",
           "public": true
         },
         {
@@ -1388,9 +1388,9 @@
           "name": "fetchServerSentEvents",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchServerSentEvents",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchServerSentEventsProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/fetch_connections.dart:44",
           "public": true
         },
@@ -1398,9 +1398,9 @@
           "name": "fetchHttpStream",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchHttpStream",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchHttpStreamProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/fetch_connections.dart:51",
           "public": true
         },
@@ -1408,9 +1408,9 @@
           "name": "fetchJson",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchJson",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchJsonProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/json_connection.dart:85",
           "public": true
         },
@@ -1418,9 +1418,9 @@
           "name": "xhrServerSentEvents",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "xhrServerSentEvents",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate xhrServerSentEventsProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/xhr_connections.dart:11",
           "public": true
         },
@@ -1428,9 +1428,9 @@
           "name": "xhrHttpStream",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "xhrHttpStream",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate xhrHttpStreamProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/xhr_connections.dart:18",
           "public": true
         },
@@ -1458,9 +1458,9 @@
           "name": "webSocket",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "webSocket",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate webSocketProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/web_socket.dart:113",
           "public": true
         },
@@ -1501,7 +1501,7 @@
           "status": "dart-adapted",
           "dart": "ConnectionAdapter",
           "reason": "Upstream ConnectConnectionAdapter is an alias of the connect-mode ConnectionAdapter; Dart uses the single ConnectionAdapter class.",
-          "evidence": "lib/src/connections/connection_adapter.dart:50",
+          "evidence": "lib/src/connections/connection_adapter.dart:55",
           "public": true
         },
         {
@@ -1510,8 +1510,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ConnectionAdapter",
-          "reason": "Dart class holds nullable connect/subscribe/send/joinRun/hydrate fields and validates the union at runtime.",
-          "evidence": "lib/src/connections/connection_adapter.dart:50",
+          "reason": "Required named connect/subscription constructors make partial or mixed modes fail static analysis.",
+          "evidence": "lib/src/connections/connection_adapter.dart:55",
           "public": true
         },
         {
@@ -1591,7 +1591,7 @@
           "status": "dart-equivalent",
           "dart": "SubscribeConnectionAdapter",
           "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/connections/connection_adapter.dart:69",
+          "evidence": "lib/src/connections/connection_adapter.dart:102",
           "public": true
         },
         {
@@ -2223,7 +2223,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart uses the concrete ChatInterrupt class for both approval and generic interrupts.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -2243,7 +2243,7 @@
           "status": "language-limitation",
           "dart": "ChatInterrupt",
           "reason": "Conditional type selecting an interrupt variant by name; Dart callers narrow the concrete ChatInterrupt at runtime.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -2463,7 +2463,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart uses ChatInterrupt with kind tool-approval.",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         },
         {
@@ -2503,7 +2503,7 @@
           "status": "dart-adapted",
           "dart": "ChatInterrupt",
           "reason": "Dart represents registered generic interrupts with ChatInterrupt (definitionId/key fields).",
-          "evidence": "lib/src/chat/types.dart:212",
+          "evidence": "lib/src/chat/types.dart:222",
           "public": true
         }
       ],
@@ -2532,5 +2532,6 @@
       "language-limitation": 20,
       "dart-adapted": 8
     }
-  }
+  },
+  "dartApiRevision": "0.3.0"
 }

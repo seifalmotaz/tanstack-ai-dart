@@ -15,7 +15,7 @@ void main() {
     final client = FakeHttpClient((_) async => rawResponse(body));
     final adapter = fetchServerSentEvents(
       '/api/chat',
-      FetchConnectionOptions(client: client),
+      options: FetchConnectionOptions(client: client),
     );
 
     final chunks = await collect(

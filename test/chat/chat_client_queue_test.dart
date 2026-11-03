@@ -59,7 +59,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final reports = <List<QueuedMessage>>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onQueueChange: reports.add,
       );
@@ -73,7 +73,7 @@ void main() {
 
     test('cancelQueued removes a queued item before it drains', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       final id = client.getQueue().single.id;
@@ -87,7 +87,7 @@ void main() {
 
     test("whenBusy: 'drop' ignores a mid-stream send", () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.drop),
       );
@@ -104,7 +104,7 @@ void main() {
   group('ChatClient queue drain', () {
     test('drains FIFO after the stream settles, in order', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.sendText('third');
@@ -127,7 +127,7 @@ void main() {
 
     test('batch drain merges string queued items with newlines', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
@@ -144,13 +144,13 @@ void main() {
 
     test('batch drain flattens multimodal queued items', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
       await client.sendText('first');
-      await client.sendMessage(
-        const ChatMessageInput(
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: <Map<String, dynamic>>[
             <String, dynamic>{'type': 'text', 'content': 'look'},
             <String, dynamic>{
@@ -179,7 +179,7 @@ void main() {
 
     test('flushes the queue on stop()', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.stop();
@@ -188,7 +188,7 @@ void main() {
 
     test('flushes the queue when the stream errors', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       transport.emit(<String, dynamic>{
@@ -202,7 +202,7 @@ void main() {
 
     test('flushes the queue on clear()', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.clear();
@@ -211,7 +211,7 @@ void main() {
 
     test('flushes the queue on reload()', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.reload();
@@ -221,7 +221,7 @@ void main() {
 
     test('flushes the queue on unsubscribe()', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.unsubscribe();
@@ -234,7 +234,7 @@ void main() {
         "whenBusy: 'interrupt' aborts the in-flight stream and sends immediately",
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.interrupt),
       );
@@ -253,7 +253,7 @@ void main() {
 
     test('per-call whenBusy override beats the client default', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.drop),
       );
@@ -268,7 +268,7 @@ void main() {
 
     test("maxSize + onOverflow: 'reject' drops the newest when full", () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(maxSize: 1),
       );
@@ -281,7 +281,7 @@ void main() {
 
     test("maxSize + onOverflow: 'drop-oldest' rotates the queue", () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(
           maxSize: 1,
@@ -297,7 +297,7 @@ void main() {
 
     test('maxSize: 0 never enqueues under drop-oldest', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(
           maxSize: 0,
@@ -313,7 +313,7 @@ void main() {
     test('QueueStrategy pending.id matches the enqueued item id', () async {
       final seen = <String>[];
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: ChatQueueConfig(
           strategy: (input) {
@@ -331,7 +331,7 @@ void main() {
 
     test('QueueStrategy drop and per-call whenBusy override', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: ChatQueueConfig(
           strategy: (_) => QueueWhenBusy.drop,
@@ -350,9 +350,9 @@ void main() {
 
     test('preserves per-message body through FIFO drain', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
-      await client.sendMessage(
+      await client.sendLegacyMessage(
         'second',
         body: <String, dynamic>{'model': 'gpt-5.5'},
       );
@@ -366,7 +366,7 @@ void main() {
 
     test('preserves sendOptions.body for queued sends', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText(
         'second',
@@ -384,7 +384,7 @@ void main() {
 
     test('error during FIFO drain flushes remaining queued items', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.sendText('third');
@@ -403,7 +403,7 @@ void main() {
     test('concurrent rapid sends do not strand user messages without streams',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await Future.wait(<Future<void>>[
         client.sendText('a'),
         client.sendText('b'),
@@ -431,7 +431,7 @@ void main() {
         'batch drain does not strand messages enqueued during the batch stream',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
@@ -461,7 +461,7 @@ void main() {
         'interrupt during FIFO drain keeps remaining items for after the interrupt',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.sendText('third');
@@ -489,16 +489,16 @@ void main() {
     test('preserves per-message body through FIFO drain and batch last-wins',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
       await client.sendText('first');
-      await client.sendMessage(
+      await client.sendLegacyMessage(
         'a',
         body: <String, dynamic>{'temperature': 0.1, 'keep': true},
       );
-      await client.sendMessage(
+      await client.sendLegacyMessage(
         'b',
         body: <String, dynamic>{'temperature': 0.9},
       );

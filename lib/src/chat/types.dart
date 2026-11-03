@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../protocol.dart';
 import '../connections/connection_adapter.dart';
-import '../connections/stream_connections.dart' show ChatFetcher;
+import '../connections/stream_connections.dart' show ChatFetcherInput;
 import '../platform/byok/client.dart' show ByokClient;
 import '../devtools/devtools_types.dart';
 import '../devtools/devtools_noop.dart' show ChatDevtoolsBridgeFactory;
@@ -17,8 +17,17 @@ export '../connections/hydration.dart'
 import '../platform/tool_types.dart';
 export '../platform/tool_types.dart';
 
+/// Pre-0.3 fetcher response union, accepted only by [ChatClient.legacy].
+typedef LegacyChatFetcher = FutureOr<Object> Function(
+  ChatFetcherInput input, {
+  CancellationSignal? signal,
+  Map<String, String>? headers,
+});
+
 /// Lifecycle state matching upstream `ChatClientState`.
 enum ChatClientState { submitted, streaming, ready, error }
+
+enum ChatConnectionState { idle, connecting, connected, disconnected, error }
 
 /// Request-local queue policy used when [ChatClient.sendText] arrives while a
 /// run is active. Mirrors upstream `whenBusy`.
@@ -165,6 +174,7 @@ class ChatClientTool implements ClientTool<dynamic, dynamic> {
   final ToolSchema? inputSchema;
   @override
   final ToolSchema? outputSchema;
+  @override
   final Object? approvalSchema;
   @override
   final Object? metadata;
@@ -414,7 +424,9 @@ class ChatHistoryConfig {
 class ChatSnapshot {
   final List<AssistantTurn> messages;
   final List<QueuedMessage> queue;
-  final String status;
+  final ChatClientState status;
+  ChatClientState get state => status;
+  ChatConnectionState get connectionState => connectionStatus;
   final bool isLoading;
   final bool isStreaming;
   final bool isHydrating;
@@ -422,7 +434,7 @@ class ChatSnapshot {
   final bool hasOlderMessages;
   final String? error;
   final bool isSubscribed;
-  final String connectionStatus;
+  final ChatConnectionState connectionStatus;
   final String? runId;
   final ChatInterruptState interruptState;
 
@@ -437,7 +449,7 @@ class ChatSnapshot {
     required this.hasOlderMessages,
     required this.error,
     this.isSubscribed = false,
-    this.connectionStatus = 'disconnected',
+    this.connectionStatus = ChatConnectionState.disconnected,
     this.runId,
     this.interruptState = ChatInterruptState.empty,
   });
@@ -460,11 +472,18 @@ class ChatPersistence {
 
 /// Content input accepted by [ChatClient.sendMessage].
 class ChatMessageInput {
-  final dynamic content;
+  /// Compatibility payload for the pre-0.3 message API. Prefer [text] or [parts].
+  final Object? content;
   final String? id;
   final Map<String, dynamic>? metadata;
 
-  const ChatMessageInput({
+  const ChatMessageInput.text(String text, {this.id, this.metadata})
+      : content = text;
+
+  ChatMessageInput.parts(List<AssistantPart> parts, {this.id, this.metadata})
+      : content = [for (final part in parts) part.toJson()];
+
+  const ChatMessageInput.legacy({
     required this.content,
     this.id,
     this.metadata,
@@ -494,7 +513,7 @@ class ChatPersistenceOptions {
 /// onChanged: ...)` constructor remains source-compatible.
 class ChatClientOptions {
   final ConnectionAdapter? connection;
-  final ChatFetcher? fetcher;
+  final LegacyChatFetcher? fetcher;
   final List<AssistantTurn>? initialMessages;
   final ChatResumeSnapshot? initialResumeSnapshot;
   final ChatPersistenceOptions? persistenceOptions;

@@ -18,7 +18,7 @@ void main() {
   group('ChatClient history paging', () {
     test('hydrate GET includes limit when history.pageSize is set', () async {
       final calls = <ChatHydrateOptions>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('loadOlderMessages prepends older ids in front', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -83,7 +83,7 @@ void main() {
     test('send with history.pageSize posts only the new turn', () async {
       final sentIds = <List<String>>[];
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -103,8 +103,8 @@ void main() {
       await client.attach();
       expect(ids(client.getMessages()), <String>['old-1', 'old-2']);
 
-      await client.sendMessage(
-        const ChatMessageInput(content: 'hello', id: 'new-user'),
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(content: 'hello', id: 'new-user'),
       );
       sentIds.add(bodyIds(transport.bodies.single));
 
@@ -114,7 +114,7 @@ void main() {
 
     test('send without history.pageSize posts the painted window', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -130,8 +130,8 @@ void main() {
         ),
       );
       await client.attach();
-      await client.sendMessage(
-        const ChatMessageInput(content: 'hello', id: 'new-user'),
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(content: 'hello', id: 'new-user'),
       );
       expect(bodyIds(transport.bodies.single), <String>[
         'old-1',
@@ -144,7 +144,7 @@ void main() {
     test('loadOlderMessages rejects on network fail and keeps painted messages',
         () async {
       var fail = false;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -173,7 +173,7 @@ void main() {
     test('loadOlderMessages no-ops while a page load is in flight', () async {
       final gate = Completer<void>();
       var calls = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -209,7 +209,7 @@ void main() {
     test('reload sends the last user so persistence can cut the stored tail',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -236,7 +236,7 @@ void main() {
         'resume after a paged hydrate posts from the last user through the assistant',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -281,7 +281,7 @@ void main() {
 
     test('send after Load older still posts only the new turn', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
@@ -311,8 +311,8 @@ void main() {
       );
       await client.attach();
       await client.loadOlderMessages();
-      await client.sendMessage(
-        const ChatMessageInput(content: 'hello', id: 'new-user'),
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(content: 'hello', id: 'new-user'),
       );
       expect(bodyIds(transport.bodies.single), <String>['new-user']);
       await client.stop();
@@ -321,7 +321,7 @@ void main() {
     test(
         'loadOlderMessages rejects an empty older page and keeps hasOlderMessages',
         () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -347,7 +347,7 @@ void main() {
 
     test('applies page state before prepend so the last page is not stuck',
         () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -373,7 +373,7 @@ void main() {
     test('clear resets older-page state and ignores a late older fetch',
         () async {
       final gate = Completer<void>();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',

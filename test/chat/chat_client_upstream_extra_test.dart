@@ -14,7 +14,7 @@ ChatClient persistedClient(
   ChatPersistence? persistence,
   String threadId = 't1',
 }) =>
-    ChatClient(
+    ChatClient.legacy(
       transport: transport,
       messages: initial,
       options: ChatClientOptions(
@@ -138,12 +138,12 @@ void main() {
         () {
       final initial = <AssistantTurn>[userMessage('i', 'Initial')];
       final client =
-          ChatClient(transport: FakeChatTransport(), messages: initial);
+          ChatClient.legacy(transport: FakeChatTransport(), messages: initial);
       expect(client.getMessages(), same(initial));
     });
 
     test('should throw if neither connection nor fetcher is provided', () {
-      expect(() => ChatClient(), throwsA(anything));
+      expect(() => ChatClient.legacy(), throwsA(anything));
     });
   });
 
@@ -151,7 +151,7 @@ void main() {
     test('should create and return assistant message from stream chunks',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('Hello');
       await emitAll(transport, textChunks('world'));
       await settle(transport);
@@ -164,7 +164,7 @@ void main() {
   group('ChatClient append', () {
     test('should generate id and createdAt if missing', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.append(
         AssistantTurn(
           id: 'given',
@@ -181,7 +181,7 @@ void main() {
         'keeps append pending through an intermediate tool_calls RUN_FINISHED until the interrupt',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.append(userMessage('u1', 'hi'));
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r1'},
@@ -232,7 +232,7 @@ void main() {
     test('should abort an in-flight stream when persistence is omitted',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await client.clear();
       expect(client.isStreaming, isFalse);
@@ -243,7 +243,7 @@ void main() {
         'should prevent delayed stream chunks from recreating messages after clear',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       final hold = transport.controllers.last;
       await client.clear();
@@ -301,7 +301,7 @@ void main() {
     test('should call onMessagesChange when messages update', () async {
       final transport = FakeChatTransport();
       var calls = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onMessagesChange: (_) => calls++,
       );
@@ -313,7 +313,7 @@ void main() {
     test('should call onLoadingChange when loading state changes', () async {
       final transport = FakeChatTransport();
       final seen = <bool>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onLoadingChange: seen.add,
       );
@@ -326,7 +326,7 @@ void main() {
     test('should call onFinish when stream completes', () async {
       final transport = FakeChatTransport();
       final finished = <Map<String, dynamic>>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onFinish: finished.add,
       );
@@ -339,7 +339,7 @@ void main() {
     test('should call onError when error occurs', () async {
       final transport = FakeChatTransport();
       final errors = <Object>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onError: (error, _) => errors.add(error),
       );
@@ -353,7 +353,7 @@ void main() {
   group('ChatClient tool calls', () {
     test('should handle tool calls from stream', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'},
@@ -384,7 +384,7 @@ void main() {
 
     test('does not continue a server-owned client tool input error', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'},
@@ -416,7 +416,7 @@ void main() {
 
     test('addToolResult should add tool result and update message', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -439,7 +439,7 @@ void main() {
   group('ChatClient error handling', () {
     test('should set error state on connection failure', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emitError(StateError('connection failed'));
       await pump();
@@ -450,9 +450,9 @@ void main() {
     test('should not hang when connection is updated during an active stream',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
-      client.updateOptions(body: <String, dynamic>{'model': 'new'});
+      client.updateLegacyOptions(body: <String, dynamic>{'model': 'new'});
       expect(client.isStreaming, isTrue);
       await client.stop();
     });
@@ -480,9 +480,9 @@ void main() {
       test('should send a multimodal message with ${entry.key} content',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
-        await client.sendMessage(
-          ChatMessageInput(
+        final client = ChatClient.legacy(transport: transport);
+        await client.sendLegacyMessage(
+          ChatMessageInput.legacy(
             content: <Map<String, dynamic>>[
               <String, dynamic>{'type': 'text', 'content': 'see'},
               entry.value,
@@ -501,9 +501,9 @@ void main() {
 
     test('should use custom message id when provided', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
-      await client.sendMessage(
-        const ChatMessageInput(content: 'hi', id: 'custom'),
+      final client = ChatClient.legacy(transport: transport);
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(content: 'hi', id: 'custom'),
       );
       expect(client.getMessages().first.id, 'custom');
       await client.stop();
@@ -511,7 +511,7 @@ void main() {
 
     test('should generate message id when not provided', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       expect(client.getMessages().first.id, isNotEmpty);
       await client.stop();
@@ -519,9 +519,9 @@ void main() {
 
     test('should allow empty content array', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
-      await client.sendMessage(
-        const ChatMessageInput(content: <Map<String, dynamic>>[]),
+      final client = ChatClient.legacy(transport: transport);
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(content: <Map<String, dynamic>>[]),
       );
       expect(client.getMessages().first.parts, isEmpty);
       await client.stop();
@@ -529,7 +529,7 @@ void main() {
 
     test('should send string content as simple text message', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('plain');
       final sent = (transport.bodies.single['messages'] as List).single as Map;
       expect((sent['parts'] as List).single, <String, dynamic>{
@@ -541,11 +541,11 @@ void main() {
 
     test('should merge per-message body with base body', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         body: <String, dynamic>{'base': 1},
       );
-      await client.sendMessage('x', body: <String, dynamic>{'extra': 2});
+      await client.sendLegacyMessage('x', body: <String, dynamic>{'extra': 2});
       final forwarded = transport.bodies.single['forwardedProps'] as Map;
       expect(forwarded['base'], 1);
       expect(forwarded['extra'], 2);
@@ -556,7 +556,7 @@ void main() {
         'should merge sendOptions.body into the request (hook-style per-call body)',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText(
         'x',
         options:
@@ -571,11 +571,11 @@ void main() {
 
     test('reload does not replay a previous per-call body', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[userMessage('u', 'hi')],
       );
-      await client.sendMessage('x', body: <String, dynamic>{'temp': 1});
+      await client.sendLegacyMessage('x', body: <String, dynamic>{'temp': 1});
       await client.reload();
       final second = transport.bodies[1]['forwardedProps'] as Map?;
       expect(second?['temp'], isNull);
@@ -585,7 +585,7 @@ void main() {
     test('should accept forwardedProps option and merge into request body',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         forwardedProps: <String, dynamic>{'fp': true},
       );
@@ -598,11 +598,11 @@ void main() {
         'updateOptions({ forwardedProps }) leaves a previously-set body intact',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         body: <String, dynamic>{'body': 1},
       );
-      client.updateOptions(forwardedProps: <String, dynamic>{'fp': 2});
+      client.updateLegacyOptions(forwardedProps: <String, dynamic>{'fp': 2});
       await client.sendText('x');
       final forwarded = transport.bodies.single['forwardedProps'] as Map;
       expect(forwarded['body'], 1);
@@ -614,11 +614,11 @@ void main() {
         'updateOptions({ body }) leaves a previously-set forwardedProps intact',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         forwardedProps: <String, dynamic>{'fp': 1},
       );
-      client.updateOptions(body: <String, dynamic>{'body': 2});
+      client.updateLegacyOptions(body: <String, dynamic>{'body': 2});
       await client.sendText('x');
       final forwarded = transport.bodies.single['forwardedProps'] as Map;
       expect(forwarded['fp'], 1);
@@ -629,7 +629,7 @@ void main() {
     test('should merge body and forwardedProps with forwardedProps winning',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         body: <String, dynamic>{'both': 'body', 'bodyOnly': 1},
         forwardedProps: <String, dynamic>{'both': 'fp', 'fpOnly': 2},
@@ -644,7 +644,7 @@ void main() {
 
     test('should not auto-emit conversationId in merged body', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       expect(transport.bodies.single.containsKey('conversationId'), isFalse);
       await client.stop();
@@ -653,7 +653,7 @@ void main() {
     test('should pass through user-set conversationId via forwardedProps',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         forwardedProps: <String, dynamic>{'conversationId': 'c1'},
       );
@@ -667,7 +667,7 @@ void main() {
 
     test('should clear per-message body after request', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x',
           options: const ChatSendOptions(
             body: <String, dynamic>{'once': 1},
@@ -682,9 +682,10 @@ void main() {
     test('should emit events with multimodal content', () async {
       final transport = FakeChatTransport();
       final chunks = <Map<String, dynamic>>[];
-      final client = ChatClient(transport: transport, onChunk: chunks.add);
-      await client.sendMessage(
-        const ChatMessageInput(
+      final client =
+          ChatClient.legacy(transport: transport, onChunk: chunks.add);
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: <Map<String, dynamic>>[
             <String, dynamic>{'type': 'text', 'content': 'x'},
             <String, dynamic>{
@@ -705,7 +706,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       Map<String, dynamic>? seen;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onCustomEvent: (event, _) => seen = event,
       );
@@ -723,7 +724,7 @@ void main() {
     test('should handle custom events with no data', () async {
       final transport = FakeChatTransport();
       var calls = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onCustomEvent: (_, __) => calls++,
       );
@@ -739,7 +740,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       var calls = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onCustomEvent: (_, __) => calls++,
       );
@@ -756,7 +757,7 @@ void main() {
 
     test('should work when onCustomEvent is not provided', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emit(<String, dynamic>{'type': 'CUSTOM', 'name': 'x'});
       await pump();
@@ -768,7 +769,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final names = <String>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onCustomEvent: (event, _) => names.add('${event['name']}'),
       );
@@ -787,7 +788,7 @@ void main() {
       final value = <String, dynamic>{
         'nested': <String, dynamic>{'n': 1}
       };
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onCustomEvent: (event, _) => seen = event,
       );
@@ -807,7 +808,7 @@ void main() {
     test('does not send activity messages as model input on the next turn',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn.activity(
@@ -831,7 +832,7 @@ void main() {
           AssistantPart(type: 'activity', activityType: 'SEARCH'),
         ],
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[activity],
       );
@@ -841,7 +842,7 @@ void main() {
     test('hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emit(<String, dynamic>{
         'type': 'MESSAGES_SNAPSHOT',
@@ -867,14 +868,14 @@ void main() {
 
   group('ChatClient subscribe/send connection mode', () {
     test('subscribe should be idempotent without restart', () {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       client.subscribe();
       client.subscribe();
       expect(client.getIsSubscribed(), isTrue);
     });
 
     test('unsubscribe should be idempotent', () async {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       client.subscribe();
       await client.unsubscribe();
       await client.unsubscribe();
@@ -882,21 +883,21 @@ void main() {
     });
 
     test('stop should not unsubscribe an active subscription', () async {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       client.subscribe();
       await client.stop();
       expect(client.getIsSubscribed(), isTrue);
     });
 
     test('sessionGenerating should be false initially', () {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       expect(client.getSessionGenerating(), isFalse);
     });
 
     test('should not re-subscribe on connection update when not subscribed',
         () {
-      final client = ChatClient(transport: FakeChatTransport());
-      client.updateOptions(body: <String, dynamic>{'x': 1});
+      final client = ChatClient.legacy(transport: FakeChatTransport());
+      client.updateLegacyOptions(body: <String, dynamic>{'x': 1});
       expect(client.getIsSubscribed(), isFalse);
     });
   });

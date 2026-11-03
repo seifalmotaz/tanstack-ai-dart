@@ -16,7 +16,7 @@ import 'package:tanstack_ai_dart/connections.dart' as conn;
 
 void positiveCases() {
   // Transport variants. Exactly one of connection/fetcher/transport is passed.
-  final connection = conn.ConnectionAdapter(
+  final connection = conn.ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       yield <String, dynamic>{
         'type': 'RUN_FINISHED',
@@ -26,8 +26,8 @@ void positiveCases() {
       };
     },
   );
-  final byConnection = ChatClient(connection: connection);
-  final byTransport = ChatClient(
+  final byConnection = ChatClient.legacy(connection: connection);
+  final byTransport = ChatClient.legacy(
       transport: SseChatTransport('https://x',
           headers: () => const <String, String>{}));
 
@@ -57,10 +57,17 @@ void positiveCases() {
   }) async =>
       http.StreamedResponse(const Stream<List<int>>.empty(), 200);
 
-  final conn.ChatFetcher chunkFetcher = chunkFetcherImpl;
-  final conn.ChatFetcher responseFetcher = responseFetcherImpl;
-  final byFetcher = ChatClient(fetcher: chunkFetcher);
-  final byResponseFetcher = ChatClient(fetcher: responseFetcher);
+  conn.ChatFetcherResult chunkFetcher(conn.ChatFetcherInput input,
+          {conn.CancellationSignal? signal, Map<String, String>? headers}) =>
+      conn.ChatFetcherResult.stream(
+          chunkFetcherImpl(input, signal: signal, headers: headers));
+  Future<conn.ChatFetcherResult> responseFetcher(conn.ChatFetcherInput input,
+          {conn.CancellationSignal? signal,
+          Map<String, String>? headers}) async =>
+      conn.ChatFetcherResult.response(
+          await responseFetcherImpl(input, signal: signal, headers: headers));
+  final byFetcher = ChatClient.legacy(fetcher: chunkFetcher);
+  final byResponseFetcher = ChatClient.legacy(fetcher: responseFetcher);
 
   final input = conn.ChatFetcherInput(
     messages: const <conn.WireMessage>[
@@ -90,7 +97,7 @@ void positiveCases() {
       ],
     ),
   );
-  final byokWired = ChatClient(
+  final byokWired = ChatClient.legacy(
     fetcher: chunkFetcher,
     byokClient: byok,
     byokProvider: () async => 'openai',
@@ -145,7 +152,7 @@ void positiveCases() {
     onInterruptStateChange: (state, source) {},
     onCustomEvent: (event, context) {},
   );
-  final configured = ChatClient(
+  final configured = ChatClient.legacy(
     transport:
         SseChatTransport('https://x', headers: () => const <String, String>{}),
     options: options,
@@ -153,19 +160,19 @@ void positiveCases() {
 
   final serverPersistence = ChatPersistenceOptions.server(
       threadId: 'support-42', history: const ChatHistoryConfig(pageSize: 50));
-  final typedServerClient =
-      ChatClient(connection: connection, persistenceOptions: serverPersistence);
-  final booleanServerClient = ChatClient(
+  final typedServerClient = ChatClient.legacy(
+      connection: connection, persistenceOptions: serverPersistence);
+  final booleanServerClient = ChatClient.legacy(
       options: ChatClientOptions(
           connection: connection, persistence: true, threadId: 'support-42'));
   assert(typedServerClient.threadId == booleanServerClient.threadId);
   final typedOptions = createChatClientOptions(ChatClientOptions(
       connection: connection, byok: byok, onResponse: () async {}));
-  final fromOptions = ChatClient(options: typedOptions);
+  final fromOptions = ChatClient.legacy(options: typedOptions);
   fromOptions.getSnapshot();
 
   // Runtime helpers keep their parameter contracts.
-  configured.updateOptions(
+  configured.updateLegacyOptions(
     context: null,
     body: const <String, dynamic>{'model': 'gpt'},
     forwardedProps: const <String, dynamic>{'provider': 'openai'},

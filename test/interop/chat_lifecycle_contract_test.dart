@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   test('connect drains events after intermediate and terminal run markers',
       () async {
-    final client = ChatClient(connection: conn.ConnectionAdapter(
+    final client = ChatClient.legacy(connection: conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
       yield {
         'type': 'RUN_STARTED',
@@ -39,7 +39,7 @@ void main() {
       yield {'type': 'TEXT_MESSAGE_END', 'messageId': 'late'};
     }));
     addTearDown(client.dispose);
-    await client.sendMessage('hello');
+    await client.sendLegacyMessage('hello');
     expect(client.getMessages().last.answer, 'Drained fully');
     expect(client.isLoading, isFalse);
   });
@@ -47,14 +47,14 @@ void main() {
   test('stop during awaited onResponse prevents the request', () async {
     final gate = Completer<void>();
     var requests = 0;
-    final client = ChatClient(
+    final client = ChatClient.legacy(
         onResponse: () => gate.future,
-        connection: conn.ConnectionAdapter(
+        connection: conn.ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
           requests++;
         }));
     addTearDown(client.dispose);
-    final pending = client.sendMessage('hello');
+    final pending = client.sendLegacyMessage('hello');
     await Future<void>.delayed(Duration.zero);
     await client.stop();
     gate.complete();
@@ -69,17 +69,17 @@ void main() {
     await keyring.update('openai', 'fake-openai-marker');
     await keyring.update('anthropic', 'fake-anthropic-marker');
     conn.RunAgentInputContext? captured;
-    final client = ChatClient(
+    final client = ChatClient.legacy(
         byokClient: keyring,
         byokProvider: () async => 'openai',
-        connection: conn.ConnectionAdapter(
+        connection: conn.ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
           captured = runContext;
           expect('$messages$data', isNot(contains('fake-openai-marker')));
           yield {'type': 'RUN_FINISHED', 'runId': runContext!.runId};
         }));
     addTearDown(client.dispose);
-    await client.sendMessage('hello');
+    await client.sendLegacyMessage('hello');
     expect(captured!.headers!.values.join(), contains('fake-openai-marker'));
     expect(captured!.headers!.values.join(),
         isNot(contains('fake-anthropic-marker')));

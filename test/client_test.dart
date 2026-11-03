@@ -8,10 +8,10 @@ void main() {
   group('ChatClient', () {
     test('sendText appends turns and reduces a stream to an answer', () async {
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
 
       await client.sendText('  How many leads?  ');
-      expect(client.status, ChatClientStatus.streaming);
+      expect(client.status, ChatClientState.streaming);
       expect(client.messages, hasLength(2));
       expect(client.messages.first.role, 'user');
       expect(client.messages.first.answer, 'How many leads?');
@@ -40,7 +40,7 @@ void main() {
       transport.emit({'type': 'TEXT_MESSAGE_END'});
       await transport.close();
 
-      expect(client.status, ChatClientStatus.idle);
+      expect(client.status, ChatClientState.ready);
       expect(client.error, isNull);
       expect(client.messages.last.answer, 'There are 4.');
       expect(client.messages.last.thoughts.single.content, 'Count them');
@@ -62,7 +62,7 @@ void main() {
         parts: [part],
       );
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport, messages: [turn]);
+      final client = ChatClient.legacy(transport: transport, messages: [turn]);
 
       await client.approve(part, true);
 
@@ -91,7 +91,7 @@ void main() {
           name: 'write',
           approval: AssistantApproval(id: 'approval'));
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport, messages: [
+      final client = ChatClient.legacy(transport: transport, messages: [
         AssistantTurn(id: 'a', role: 'assistant', parts: [part])
       ]);
       final stranger = AssistantPart.tool(
@@ -114,7 +114,7 @@ void main() {
           name: 'write',
           approval: AssistantApproval(id: 'approval'));
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport, messages: [
+      final client = ChatClient.legacy(transport: transport, messages: [
         AssistantTurn(id: 'a', role: 'assistant', parts: [part])
       ]);
       await client.approve(part, true);
@@ -141,7 +141,7 @@ void main() {
         parts: [part],
       );
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport, messages: [turn]);
+      final client = ChatClient.legacy(transport: transport, messages: [turn]);
 
       await client.approve(part, false);
 
@@ -155,7 +155,7 @@ void main() {
 
     test('custom bodyBuilder receives the current messages', () async {
       final transport = _FakeTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         bodyBuilder: (messages) => {
           'messages': assistantWireMessages(messages),
@@ -170,40 +170,40 @@ void main() {
 
     test('stop cancels promptly and resets streaming state', () async {
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
 
       await client.sendText('Hello');
-      final assistant = client.messages.last;
+      final assistant = client.getMessages().last;
       expect(assistant.streaming, isTrue);
 
       await client.stop();
 
-      expect(client.status, ChatClientStatus.idle);
+      expect(client.status, ChatClientState.ready);
       expect(assistant.streaming, isFalse);
       expect(transport.controllers.single.hasListener, isFalse);
     });
 
     test('stream error sets error status', () async {
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
 
       await client.sendText('Hello');
       transport.emitError(const FormatException('bad frame'));
       await Future<void>.delayed(Duration.zero);
 
-      expect(client.status, ChatClientStatus.error);
+      expect(client.status, ChatClientState.error);
       expect(client.error, contains('bad frame'));
     });
 
     test('RUN_ERROR event sets error status', () async {
       final transport = _FakeTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
 
       await client.sendText('Hello');
       transport.emit({'type': 'RUN_ERROR', 'message': 'provider failed'});
       await transport.close();
 
-      expect(client.status, ChatClientStatus.error);
+      expect(client.status, ChatClientState.error);
       expect(client.error, 'provider failed');
     });
   });

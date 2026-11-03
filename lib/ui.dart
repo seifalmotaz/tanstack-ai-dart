@@ -5,3 +5,5 @@ export 'src/chat/ui_selectors.dart';
 export 'src/chat/types.dart';
 export 'src/protocol.dart';
 export 'src/chat/typed_ui.dart';
+
+export 'src/chat/part_view.dart';

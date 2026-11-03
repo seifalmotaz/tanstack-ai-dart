@@ -9,7 +9,7 @@ void main() {
     test('a tool result arriving after stop does not start another run',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'run-1'},
@@ -52,7 +52,7 @@ void main() {
         approval: AssistantApproval(id: 'approval-1'),
       );
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(

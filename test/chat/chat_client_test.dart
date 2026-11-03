@@ -8,7 +8,7 @@ void main() {
   group('ChatClient', () {
     group('constructor', () {
       test('should create a client with default options', () {
-        final client = ChatClient(transport: FakeChatTransport());
+        final client = ChatClient.legacy(transport: FakeChatTransport());
         expect(client.getMessages(), isEmpty);
         expect(client.getIsLoading(), isFalse);
         expect(client.getIsSubscribed(), isFalse);
@@ -16,13 +16,13 @@ void main() {
       });
 
       test('exposes a UI snapshot that subscribeSnapshot notifies', () {
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: FakeChatTransport(),
           messages: <AssistantTurn>[userMessage('msg-1', 'Hello')],
         );
         final snapshot = client.getSnapshot();
         expect(snapshot.messages, hasLength(1));
-        expect(snapshot.status, 'ready');
+        expect(snapshot.status, ChatClientState.ready);
         expect(snapshot.isLoading, isFalse);
         expect(identical(client.getSnapshot(), snapshot), isTrue);
 
@@ -40,7 +40,7 @@ void main() {
 
       test('should initialize with provided messages', () {
         final initial = <AssistantTurn>[userMessage('m1', 'hello')];
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: FakeChatTransport(),
           messages: initial,
         );
@@ -49,7 +49,7 @@ void main() {
 
       test('should generate unique message ids', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('one');
         await client.stop();
         await client.sendText('two');
@@ -61,7 +61,7 @@ void main() {
     group('sendMessage', () {
       test('should send a message and append it', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('Hello');
         final messages = client.getMessages();
         expect(messages.first.role, 'user');
@@ -72,7 +72,7 @@ void main() {
       test('should create and return assistant message from stream chunks',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('Hello');
         await emitAll(transport, textChunks('Hello, world!'));
         await transport.close();
@@ -89,7 +89,7 @@ void main() {
 
       test('should not send empty messages', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('');
         await client.sendText('   ');
         expect(client.getMessages(), isEmpty);
@@ -100,7 +100,7 @@ void main() {
           'should queue (not send immediately) a message sent while loading, then auto-send it once the stream settles',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('First');
         await client.sendText('Second');
         expect(transport.bodies, hasLength(1));
@@ -123,7 +123,7 @@ void main() {
 
       test('isolates queue entries published by normal updates', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         final snapshots = <List<QueuedMessage>>[];
         await client.sendText('First');
         // Mutating the published list must not mutate the queue.
@@ -141,7 +141,7 @@ void main() {
       test('does not leak sendOptions.whenBusy onto the wire next to body',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText(
           'Hello',
           options: const ChatSendOptions(body: <String, dynamic>{'x': 1}),
@@ -156,9 +156,9 @@ void main() {
 
       test('multimodal sendMessage keeps text and media parts', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
-        await client.sendMessage(
-          const ChatMessageInput(
+        final client = ChatClient.legacy(transport: transport);
+        await client.sendLegacyMessage(
+          const ChatMessageInput.legacy(
             id: 'custom-id',
             content: <Map<String, dynamic>>[
               <String, dynamic>{'type': 'text', 'content': 'Describe'},
@@ -182,11 +182,11 @@ void main() {
       test('merged body: chat, positional, sendOptions; sendOptions wins',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           body: <String, dynamic>{'a': 'chat', 'b': 'chat'},
         );
-        await client.sendMessage(
+        await client.sendLegacyMessage(
           'hello',
           body: <String, dynamic>{'b': 'positional', 'c': 'positional'},
           sendOptions: const ChatSendOptions(
@@ -204,7 +204,7 @@ void main() {
     group('append', () {
       test('should append a UIMessage', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.append(userMessage('u1', 'hi'));
         expect(client.getMessages().first.id, 'u1');
         final body = transport.bodies.single;
@@ -214,7 +214,7 @@ void main() {
 
       test('skips system messages', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.append(
           AssistantTurn(
             id: 's1',
@@ -229,7 +229,7 @@ void main() {
       test('keeps an appended activity message without starting a run',
           () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.append(
           AssistantTurn.activity(
             id: 'act-1',
@@ -251,7 +251,7 @@ void main() {
     group('stop/clear/reload', () {
       test('should stop loading and abort request', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('Hello');
         expect(client.isStreaming, isTrue);
         await client.stop();
@@ -262,7 +262,7 @@ void main() {
 
       test('should clear all messages', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('Hello');
         await client.clear();
         expect(client.getMessages(), isEmpty);
@@ -273,7 +273,7 @@ void main() {
 
       test('should reload from last user message', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           messages: <AssistantTurn>[
             userMessage('u1', 'first'),
@@ -294,7 +294,7 @@ void main() {
 
       test('should do nothing if no user messages', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           messages: <AssistantTurn>[
             assistantMessage('a1', <AssistantPart>[AssistantPart.text('one')]),
@@ -309,7 +309,7 @@ void main() {
       test('should call onChunk for each chunk', () async {
         final transport = FakeChatTransport();
         final chunks = <Map<String, dynamic>>[];
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           onChunk: chunks.add,
         );
@@ -323,7 +323,7 @@ void main() {
 
       test('should transition through states during generation', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         expect(client.getIsLoading(), isFalse);
         await client.sendText('Hello');
         expect(client.getStatus(), 'streaming');
@@ -335,7 +335,7 @@ void main() {
 
       test('should clear error on successful request', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('first');
         transport.emit(<String, dynamic>{
           'type': 'RUN_ERROR',
@@ -355,7 +355,7 @@ void main() {
       test('should call onCustomEvent for arbitrary custom events', () async {
         final transport = FakeChatTransport();
         final seen = <Map<String, dynamic>>[];
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           onCustomEvent: (event, _) => seen.add(event),
         );
@@ -385,7 +385,7 @@ void main() {
           () async {
         final transport = FakeChatTransport();
         final changes = <bool>[];
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           transport: transport,
           onSessionGeneratingChange: changes.add,
         );
@@ -412,7 +412,7 @@ void main() {
 
       test('should flip to false on RUN_ERROR', () async {
         final transport = FakeChatTransport();
-        final client = ChatClient(transport: transport);
+        final client = ChatClient.legacy(transport: transport);
         await client.sendText('Hello');
         transport.emit(<String, dynamic>{
           'type': 'RUN_STARTED',

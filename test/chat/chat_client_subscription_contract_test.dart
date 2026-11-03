@@ -15,7 +15,8 @@ import 'support.dart';
 class PushConnection {
   final controller = StreamController<Map<String, dynamic>>.broadcast();
   final List<List<Map<String, dynamic>>> sent = <List<Map<String, dynamic>>>[];
-  late final conn.ConnectionAdapter adapter = conn.ConnectionAdapter(
+  late final conn.ConnectionAdapter adapter =
+      conn.ConnectionAdapter.subscription(
     subscribe: ({signal}) => controller.stream,
     send: (messages, {data, signal, runContext}) async {
       sent.add(messages);
@@ -29,7 +30,7 @@ void main() {
   group('ChatClient subscribe/send connection mode', () {
     test('streams chunks pushed after a send starts', () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
       final send = client.sendText('hello');
       await waitFor(() => push.sent.isNotEmpty);
 
@@ -52,7 +53,7 @@ void main() {
     });
 
     test('stop does not unsubscribe an active subscription', () async {
-      final client = ChatClient(connection: PushConnection().adapter);
+      final client = ChatClient.legacy(connection: PushConnection().adapter);
       client.subscribe();
       await client.stop();
       expect(client.getIsSubscribed(), isTrue);
@@ -60,7 +61,7 @@ void main() {
     });
 
     test('subscribe is idempotent', () async {
-      final client = ChatClient(connection: PushConnection().adapter);
+      final client = ChatClient.legacy(connection: PushConnection().adapter);
       client.subscribe();
       client.subscribe();
       expect(client.getIsSubscribed(), isTrue);
@@ -68,7 +69,7 @@ void main() {
     });
 
     test('subscribe with restart keeps the subscription active', () async {
-      final client = ChatClient(connection: PushConnection().adapter);
+      final client = ChatClient.legacy(connection: PushConnection().adapter);
       client.subscribe();
       client.subscribe(restart: true);
       expect(client.getIsSubscribed(), isTrue);
@@ -76,7 +77,7 @@ void main() {
     });
 
     test('unsubscribe is idempotent', () async {
-      final client = ChatClient(connection: PushConnection().adapter);
+      final client = ChatClient.legacy(connection: PushConnection().adapter);
       client.subscribe();
       await client.unsubscribe();
       await client.unsubscribe();
@@ -85,14 +86,14 @@ void main() {
     });
 
     test('sessionGenerating is false initially', () async {
-      final client = ChatClient(connection: PushConnection().adapter);
+      final client = ChatClient.legacy(connection: PushConnection().adapter);
       expect(client.getSessionGenerating(), isFalse);
       await client.dispose();
     });
 
     test('sessionGenerating flips on RUN_STARTED and RUN_FINISHED', () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
       final send = client.sendText('hello');
       await waitFor(() => push.sent.isNotEmpty);
 
@@ -113,7 +114,7 @@ void main() {
     test('sessionGenerating stays true until a terminal event arrives',
         () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
       final send = client.sendText('hello');
       await waitFor(() => push.sent.isNotEmpty);
 
@@ -127,7 +128,7 @@ void main() {
 
     test('sessionGenerating clears on RUN_ERROR', () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
       final send = client.sendText('hello');
       await waitFor(() => push.sent.isNotEmpty);
 

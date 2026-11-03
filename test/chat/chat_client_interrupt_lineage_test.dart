@@ -69,14 +69,14 @@ ReplayClient replayClient({
       joinRun,
 }) {
   final controller = StreamController<Map<String, dynamic>>.broadcast();
-  final connection = conn.ConnectionAdapter(
+  final connection = conn.ConnectionAdapter.subscription(
     subscribe: ({signal}) => controller.stream,
     send: (messages, {data, signal, runContext}) async {},
     joinRun: joinRun,
     hydrate: (threadId, {options}) async =>
         const conn.ChatHydrationResult(messages: <conn.WireMessage>[]),
   );
-  final client = ChatClient(
+  final client = ChatClient.legacy(
     connection: connection,
     options: ChatClientOptions(
       threadId: 'thread-1',

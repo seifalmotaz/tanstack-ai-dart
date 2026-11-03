@@ -20,7 +20,7 @@ void main() {
         final onResult = <VideoGenerateResult>[];
         final onResultChange = <VideoGenerateResult?>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async => videoResult,
           onResult: (result) {
             onResult.add(result);
@@ -42,7 +42,7 @@ void main() {
         final onError = <Object>[];
         final onErrorChange = <Object?>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             throw Exception('video fetch failed');
           },
@@ -61,7 +61,7 @@ void main() {
       test('should track loading state during fetcher call', () async {
         final states = <bool>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async => videoResult,
           onLoadingChange: states.add,
         );
@@ -75,7 +75,7 @@ void main() {
         GenerationFetcherOptions? captured;
         var calls = 0;
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             calls++;
             captured = options;
@@ -94,7 +94,7 @@ void main() {
         final first = Deferred<Object?>();
         var callCount = 0;
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             callCount++;
             return first.promise;
@@ -139,7 +139,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -178,7 +178,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onVideoStatusChange: onVideoStatusChange.add,
         );
@@ -215,7 +215,7 @@ void main() {
           },
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onError: onError.add,
         );
@@ -244,7 +244,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onProgress: (value, message) => progress.add([value, message]),
         );
@@ -268,7 +268,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onProgress: (value, message) => progress.add([value, message]),
         );
@@ -293,7 +293,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onChunk: chunks.add,
         );
@@ -306,7 +306,7 @@ void main() {
       test('should pass body and input as data to connection', () async {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             calls.add(data);
             context = runContext;
@@ -314,7 +314,7 @@ void main() {
           },
         );
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           body: {'model': 'runway-gen3'},
         );
@@ -337,7 +337,7 @@ void main() {
       test('should abort in-flight request and reset to idle', () async {
         final pending = Deferred<Object?>();
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async => pending.promise,
         );
 
@@ -374,7 +374,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
         );
 
@@ -397,7 +397,7 @@ void main() {
       test('should update body without recreating client', () async {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             calls.add(data);
             context = runContext;
@@ -405,7 +405,7 @@ void main() {
           },
         );
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           body: {'model': 'old'},
         );
@@ -425,7 +425,7 @@ void main() {
         final onJobCreated = <String>[];
         final aborted = Deferred<bool>();
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted('run-1');
             yield custom(
@@ -441,7 +441,7 @@ void main() {
           },
         );
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -467,7 +467,7 @@ void main() {
       test('should wrap non-Error thrown values in Error', () async {
         final onError = <Object>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             throw 'video error string';
           },
@@ -485,7 +485,7 @@ void main() {
           () async {
         final onError = <Object>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           onError: onError.add,
         );
 
@@ -504,7 +504,7 @@ void main() {
           () async {
         var callCount = 0;
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             callCount++;
             return VideoGenerateResult(
@@ -528,7 +528,7 @@ void main() {
       test('should follow idle -> generating -> success', () async {
         final states = <GenerationClientState>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async => videoResult,
           onStatusChange: states.add,
         );
@@ -545,7 +545,7 @@ void main() {
       test('should follow idle -> generating -> error on failure', () async {
         final states = <GenerationClientState>[];
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           fetcher: (input, options) async {
             throw Exception('fail');
           },

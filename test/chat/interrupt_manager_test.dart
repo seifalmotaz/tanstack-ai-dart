@@ -61,8 +61,8 @@ final Map<String, dynamic> transferApproval = <String, dynamic>{
 final ClientTool transfer = ClientTool(
   name: 'transfer',
   needsApproval: true,
-  inputSchema: transferInput,
-  outputSchema: transferOutput,
+  inputSchema: RawJsonSchema(transferInput),
+  outputSchema: RawJsonSchema(transferOutput),
   approvalSchema: transferApproval,
 );
 

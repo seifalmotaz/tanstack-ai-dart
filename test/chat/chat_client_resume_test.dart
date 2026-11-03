@@ -49,7 +49,7 @@ Future<ChatClient> interruptedClient(
   FakeChatTransport transport, {
   List<Map<String, dynamic>>? chunks,
 }) async {
-  final client = ChatClient(
+  final client = ChatClient.legacy(
     transport: transport,
     options: const ChatClientOptions(threadId: 'thread-1'),
   );
@@ -74,7 +74,7 @@ void main() {
 
     test('clears resume state once the run finishes', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         options: const ChatClientOptions(threadId: 'thread-1'),
       );
@@ -90,7 +90,7 @@ void main() {
         () async {
       final seen = <String?>[];
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onRunIdChange: seen.add,
       );
@@ -272,7 +272,7 @@ void main() {
 
     test('restores pending interrupts from an initial resume snapshot',
         () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: const ChatClientOptions(
           initialResume: ChatResumeState(threadId: 't', runId: 'r'),
@@ -509,7 +509,7 @@ void main() {
         'auto-executed client tool during parent stream defers resume until isLoading clears',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(name: 'lookup', execute: (input, context) => 7),

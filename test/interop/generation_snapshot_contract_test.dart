@@ -16,7 +16,7 @@ void main() {
         ],
       };
       final client = GenerationClient<Map<String, dynamic>,
-          Map<String, dynamic>, Map<String, dynamic>>(
+          Map<String, dynamic>, Map<String, dynamic>>.legacy(
         fetcher: (input, options) async => raw,
       );
 
@@ -57,7 +57,8 @@ void main() {
         1,
         <String, dynamic>{'count': 1},
       ];
-      final client = GenerationClient<String, List<dynamic>, List<dynamic>>(
+      final client =
+          GenerationClient<String, List<dynamic>, List<dynamic>>.legacy(
         fetcher: (input, options) async => raw,
       );
 
@@ -85,7 +86,7 @@ void main() {
         'id': '1',
         'nested': <String, dynamic>{'count': 1},
       };
-      final client = VideoGenerationClient<Map<String, dynamic>>(
+      final client = VideoGenerationClient<Map<String, dynamic>>.legacy(
         fetcher: (input, options) async => const VideoGenerateResult(
           jobId: 'job-1',
           status: 'completed',
@@ -112,8 +113,8 @@ void main() {
 
     test('status patches keep the published result identity', () async {
       final raw = <String, dynamic>{'id': '1'};
-      final client =
-          GenerationClient<String, Map<String, dynamic>, Map<String, dynamic>>(
+      final client = GenerationClient<String, Map<String, dynamic>,
+          Map<String, dynamic>>.legacy(
         fetcher: (input, options) async => raw,
       );
       final published = <Map<String, dynamic>>[];
@@ -136,7 +137,8 @@ void main() {
     test('non-JSON typed collections require a copier, never a bad cast',
         () async {
       final raw = <int, int>{1: 2};
-      final client = GenerationClient<String, Map<int, int>, Map<int, int>>(
+      final client =
+          GenerationClient<String, Map<int, int>, Map<int, int>>.legacy(
         fetcher: (input, options) async => raw,
       );
 
@@ -150,7 +152,7 @@ void main() {
 
     test('inferred transformed JSON maps are read-only without a copier',
         () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (_, options) async => {'id': '1'},
         onResult: (_) =>
             GenerationTransformOutcome.value({'transformed': true}),
@@ -164,7 +166,7 @@ void main() {
 
     test('scalar-typed JSON collections keep their Dart types', () async {
       Future<void> check<T>(T raw, void Function(T) mutate) async {
-        final client = GenerationClient<String, T, T>(
+        final client = GenerationClient<String, T, T>.legacy(
           fetcher: (_, options) async => raw,
         );
         await client.generate('test');
@@ -188,7 +190,7 @@ void main() {
         () async {
       final rawMap = <String, int>{'count': 1};
       final mapClient =
-          GenerationClient<String, Map<String, int>, Map<String, int>>(
+          GenerationClient<String, Map<String, int>, Map<String, int>>.legacy(
         copySnapshotResult: (value) => Map<String, int>.unmodifiable(value),
         fetcher: (input, options) async => rawMap,
       );
@@ -201,7 +203,7 @@ void main() {
       expect(rawMap, {'count': 1});
 
       final rawList = <int>[1, 2];
-      final listClient = GenerationClient<String, List<int>, List<int>>(
+      final listClient = GenerationClient<String, List<int>, List<int>>.legacy(
         copySnapshotResult: (value) => List<int>.unmodifiable(value),
         fetcher: (input, options) async => rawList,
       );
@@ -220,7 +222,7 @@ void main() {
         'outer': <String, int>{'count': 1},
       };
       final client = GenerationClient<String, Map<String, Map<String, int>>,
-          Map<String, Map<String, int>>>(
+          Map<String, Map<String, int>>>.legacy(
         copySnapshotResult: (value) =>
             Map<String, Map<String, int>>.unmodifiable({
           for (final entry in value.entries)
@@ -245,7 +247,7 @@ void main() {
       final raw = <String, int>{'count': 1};
       final failure = StateError('copier failed');
       final client =
-          GenerationClient<String, Map<String, int>, Map<String, int>>(
+          GenerationClient<String, Map<String, int>, Map<String, int>>.legacy(
         copySnapshotResult: (value) => throw failure,
         fetcher: (input, options) async => raw,
       );
@@ -270,8 +272,8 @@ void main() {
       raw['self'] = raw;
       sharedList.add(raw);
 
-      final client =
-          GenerationClient<String, Map<String, dynamic>, Map<String, dynamic>>(
+      final client = GenerationClient<String, Map<String, dynamic>,
+          Map<String, dynamic>>.legacy(
         fetcher: (input, options) async => raw,
       );
 
@@ -298,7 +300,8 @@ void main() {
 
     test('keeps opaque result model identity', () async {
       final result = _SnapshotResult('1');
-      final client = GenerationClient<String, _SnapshotResult, _SnapshotResult>(
+      final client =
+          GenerationClient<String, _SnapshotResult, _SnapshotResult>.legacy(
         fetcher: (input, options) async => result,
       );
 

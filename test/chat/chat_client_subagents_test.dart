@@ -60,8 +60,8 @@ Map<String, dynamic> runFinished([String runId = 'run-1']) => <String, dynamic>{
       'outcome': <String, dynamic>{'type': 'success'},
     };
 
-ChatClient clientFor(List<Map<String, dynamic>> chunks) => ChatClient(
-      connection: conn.ConnectionAdapter(
+ChatClient clientFor(List<Map<String, dynamic>> chunks) => ChatClient.legacy(
+      connection: conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           for (final chunk in chunks) {
             yield chunk;
@@ -129,8 +129,8 @@ void main() {
     test('keeps status error after stop when SUBAGENT_FINISHED arrives later',
         () async {
       final gate = Completer<void>();
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted();
             yield subagentStarted();
@@ -165,8 +165,8 @@ void main() {
         () async {
       final gate = Completer<void>();
       var aborted = false;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted();
             yield subagentStarted();
@@ -195,7 +195,7 @@ void main() {
     });
 
     test('gives restored cards a handle, and drops it after clear()', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -232,7 +232,7 @@ void main() {
     });
 
     test('accepts frozen snapshot messages back without throwing', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(

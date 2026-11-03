@@ -17,6 +17,8 @@ library;
 import 'dart:async';
 import 'dart:io';
 
+import '../../tool/analyzer_command.dart';
+
 import 'package:tanstack_ai_dart/connections.dart';
 import 'package:tanstack_ai_dart/generation.dart';
 import 'package:test/test.dart';
@@ -55,17 +57,15 @@ import 'package:tanstack_ai_dart/connections.dart';
 import 'package:tanstack_ai_dart/generation.dart';
 
 void main() {
-  GenerationClient<Map<String, dynamic>, Object?, Object?>(
+  GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
     threadId: 'product-123-hero',
-    connection: ConnectionAdapter(
-      connect: (messages, {data, signal, runContext}) => const Stream.empty(),
+    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, runContext}) => const Stream.empty(),
     ),
     id: 'legacy',
   );
-  VideoGenerationClient<Object?>(
+  VideoGenerationClient<Object?>.legacy(
     threadId: 'video-9-start-frame',
-    connection: ConnectionAdapter(
-      connect: (messages, {data, signal, runContext}) => const Stream.empty(),
+    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, runContext}) => const Stream.empty(),
     ),
     id: 'legacy',
   );
@@ -89,7 +89,7 @@ const _wrongInputFixture = r'''
 import 'package:tanstack_ai_dart/generation.dart';
 
 void main() {
-  final client = GenerationClient<Map<String, dynamic>, Object?, Object?>(
+  final client = GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
     fetcher: (input, options) async => input,
   );
   client.generate('not-a-map');
@@ -100,7 +100,7 @@ const _wrongOutputFixture = r'''
 import 'package:tanstack_ai_dart/generation.dart';
 
 void main() {
-  GenerationClient<Map<String, dynamic>, Object?, String>(
+  GenerationClient<Map<String, dynamic>, Object?, String>.legacy(
     fetcher: (input, options) async => input,
     onResult: (result) => GenerationTransformOutcome.value(42),
   );
@@ -130,7 +130,7 @@ void main() {
         ..writeAsStringSync(source);
       return Process.runSync(
         Platform.resolvedExecutable,
-        ['analyze', '--no-fatal-warnings', file.path],
+        analyzerArguments(['--no-fatal-warnings', file.path]),
       );
     }
 
@@ -142,7 +142,7 @@ void main() {
 
     test('rejects persistence: true without a threadId', () {
       // Upstream `@ts-expect-error` on
-      // `new GenerationClient({ connection, persistence: true })` and the same
+      // `new GenerationClient.legacy({ connection, persistence: true })` and the same
       // call for VideoGenerationClient. Dart's typed equivalent is
       // `GenerationPersistenceOptions.persistent()`, which requires the key.
       expectAnalyzerError(
@@ -206,7 +206,7 @@ void main() {
         ..writeAsStringSync(source);
       return Process.runSync(
         Platform.resolvedExecutable,
-        ['analyze', '--no-fatal-warnings', file.path],
+        analyzerArguments(['--no-fatal-warnings', file.path]),
       );
     }
 
@@ -232,8 +232,8 @@ void main() {
       final messages = <String>[];
       runZoned(
         () {
-          GenerationClient(
-            connection: ConnectionAdapter(
+          GenerationClient.legacy(
+            connection: ConnectionAdapter.connect(
               connect: (messages, {data, signal, runContext}) =>
                   const Stream.empty(),
             ),

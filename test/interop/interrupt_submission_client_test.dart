@@ -15,7 +15,7 @@ void main() {
     test('client retries the original interrupt batch after $failure failure',
         () async {
       final requests = <RunAgentInputContext>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         threadId: 'thread-1',
         initialResumeSnapshot: ChatResumeSnapshot(
           resumeState:
@@ -37,8 +37,8 @@ void main() {
             }
           ],
         ),
-        connection:
-            ConnectionAdapter(connect: (_, {data, signal, runContext}) async* {
+        connection: ConnectionAdapter.connect(
+            connect: (_, {data, signal, runContext}) async* {
           requests.add(runContext!);
           if (requests.length == 1) {
             if (failure == 'transport') throw StateError('offline');

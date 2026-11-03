@@ -15,7 +15,7 @@ void main() {
   group('ChatClient persistence requires a threadId', () {
     test('rejects persistence without a threadId', () {
       expect(
-        () => ChatClient(
+        () => ChatClient.legacy(
           transport: FakeChatTransport(),
           persistence: ChatPersistence(getItem: () => null),
         ),
@@ -25,7 +25,7 @@ void main() {
 
     test('rejects a storage adapter option without a threadId', () {
       expect(
-        () => ChatClient(
+        () => ChatClient.legacy(
           transport: FakeChatTransport(),
           options: ChatClientOptions(
             persistence: ChatPersistence(getItem: () => null),
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('accepts persistence when a threadId is supplied', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',
@@ -47,7 +47,7 @@ void main() {
     });
 
     test('leaves threadId optional for ephemeral chats', () {
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       expect(client.threadId, isNull);
     });
   });
@@ -55,8 +55,8 @@ void main() {
   group('ChatClient history paging', () {
     test('rejects history on a storage adapter', () {
       expect(
-          () => ChatClient(
-                connection: conn.ConnectionAdapter(
+          () => ChatClient.legacy(
+                connection: conn.ConnectionAdapter.connect(
                     connect: (_, {data, signal, runContext}) =>
                         const Stream.empty()),
                 threadId: 't1',
@@ -66,7 +66,7 @@ void main() {
           throwsArgumentError);
     });
     test('accepts history.pageSize with persistence and a threadId', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',

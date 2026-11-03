@@ -47,9 +47,13 @@ translation exists. A runtime `runtimeType` equality is not a type-level check.
 The parity audit consumes explicit per-case mappings and checks that the named
 Dart test actually ran and passed. A title-only match remains an uncovered
 review candidate. The mappings record the assertion review and any Dart
-adaptation. Extra fixture cases, generated parser
+adaptation. Invalid JS connection unions are now checked by actual analyzer
+fixtures because typed Dart constructors cannot represent those configurations. Extra fixture cases, generated parser
 prefixes, or repeated platform runs cannot substitute for missing upstream
 behavior. Module mappings and actual test results should be considered together.
+
+See [MIGRATION.md](MIGRATION.md) for the Dart-native API revision. Existing
+JS-shaped signatures are explicit legacy paths, not the default Dart usage.
 
 ## Platform boundaries
 

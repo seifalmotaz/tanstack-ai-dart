@@ -15,9 +15,9 @@
     "lib/src/cancellation.dart": "sha256:569dac447b74a04351ff03588a95352dc49ab96d1a6630835f4d0a8cd3b18a44",
     "lib/src/crypto/keyring_crypto.dart": "sha256:e5008010435f255ecc1fd43469a728b388ca1b2ff41d8a9b7179e092411fef06",
     "lib/src/crypto/passkey_crypto.dart": "sha256:2702ad17503ff519985be59697ae9099326aefa4369695c2eb2a214d243aa117",
-    "lib/src/platform/audio_recorder.dart": "sha256:5446a77793e952a40caf93327a1c88dcc0d4949d3ef694fda969c82a6e1e3bbc",
+    "lib/src/platform/audio_recorder.dart": "sha256:5b7d4127a903fbc7c252d9f24270fe369b02ddbf7e1043fa1f1c4309e690d394",
     "lib/src/platform/byok/byok.dart": "sha256:cad37ca0ccb78358442391a8c4fe772c986d2ea31f5a8bc68b991ee8f9fd00fc",
-    "lib/src/platform/byok/client.dart": "sha256:547c823981104b3b336829f455b6d94c190ba1e04a1738767f5d3ceec3fff8bf",
+    "lib/src/platform/byok/client.dart": "sha256:79afb769e04b761945d18deb08dbbbf5fa6f1132ddcfe614c36d40d714979332",
     "lib/src/platform/byok/errors.dart": "sha256:7a95ecbac766bfa177b7ab052ba115cad5a7aff85da8755e89935f27217582c4",
     "lib/src/platform/byok/passkey.dart": "sha256:b948d32a5d00c93d3ac68ebb669b2e8977a9b63cae97b26cb8211db032214c02",
     "lib/src/platform/byok/providers.dart": "sha256:cebe147cda39dfb7668128e709799aa31f12ac69a876659ef26854896f464169",
@@ -29,12 +29,12 @@
     "lib/src/platform/mcp_app_bridge.dart": "sha256:6f0ae2308126c3b09b239ad7c264673584af01dffb756d47346ec7d7c39c84c1",
     "lib/src/platform/message_date_normalizer.dart": "sha256:4b6977cba4881567c1267b4fbd6612c7a124f74d250a0dbbd7d07c8a4b14b38b",
     "lib/src/platform/persistence_types.dart": "sha256:5f590e642585f2f23d67ab424460968b354fa80f1113908fa1489a5d58431b8b",
-    "lib/src/platform/realtime_client.dart": "sha256:2be4742ede37d037452cdcc7b3de3aefd73018cee29871ac37a2d8b28bfdd231",
+    "lib/src/platform/realtime_client.dart": "sha256:9154e8b9426bfcb4f07e2218885450a5d1aee3ecee2908b55fd4ed2b3edef639",
     "lib/src/platform/realtime_types.dart": "sha256:5c9b7e3383f449b40e3645620d8dfa286128d67e5c35a196cd21e8a92ccd81bf",
-    "lib/src/platform/snapshot_atom.dart": "sha256:b1de922167ce210e93dc5594269391feab67c23007c2bdbc52a45bf82424e7ad",
+    "lib/src/platform/snapshot_atom.dart": "sha256:478ed722dab0e7efc1abd5c0ce595ae5c15f4d725d4938cc6bdfa49a26cd8074",
     "lib/src/platform/storage_adapters.dart": "sha256:ca62711e1f4bee40c6102474e64563b430545578be6cd8804eebfc430cd76b79",
-    "lib/src/platform/tool_types.dart": "sha256:09ba7c22e4dfcbddbe06fdb85a718283ab12c48aac96afc767d43eb1985f2ae7",
-    "lib/src/platform/web_mcp_tools.dart": "sha256:a00518ea75edfc2c45f394707cef63cc9bb8c6f1daa539a3537a974d7ec234c8"
+    "lib/src/platform/tool_types.dart": "sha256:0b67c9bfa0b887a9694f1bae6c8be393b48d362fd74e4ee3625980f7e42cec96",
+    "lib/src/platform/web_mcp_tools.dart": "sha256:f39a627565d7f4a95053d58ead674843349220fd25553f43fde730a1648d97c6"
   },
   "scope": {
     "platformDomainFiles": [

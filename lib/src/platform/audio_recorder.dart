@@ -127,6 +127,8 @@ class AudioRecorder {
     return () => _listeners.remove(callback);
   }
 
+  AudioRecorderState get snapshot => _state;
+
   AudioRecorderState getSnapshot() => _state;
 
   void _setState(AudioRecorderState state) {

@@ -201,6 +201,8 @@ class RealtimeClient {
   void Function() subscribe(void Function() listener) =>
       subscribeAtom(_snapshotAtom, listener);
 
+  RealtimeClientState get snapshot => _snapshotAtom.get();
+
   RealtimeClientState getSnapshot() => _snapshotAtom.get();
 
   void destroy() {

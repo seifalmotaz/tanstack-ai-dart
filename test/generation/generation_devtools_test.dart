@@ -153,7 +153,7 @@ void main() {
 
     test('registers a generation hook and emits run lifecycle for fetcher mode',
         () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'gen-1',
         fetcher: (input, options) async => {'text': 'done'},
         devtools: const GenerationDevtoolsMetadata(
@@ -194,7 +194,7 @@ void main() {
     final kinds = <String, _Kind>{
       'generation': _Kind(
         (recorder, options) => GenerationClient<Map<String, dynamic>,
-            Map<String, dynamic>, Map<String, dynamic>>(
+            Map<String, dynamic>, Map<String, dynamic>>.legacy(
           threadId: options.threadId,
           fetcher: (input, fetchOptions) async =>
               {'text': await options.fetchText()},
@@ -207,7 +207,8 @@ void main() {
         (result) => result is Map && result['text'] == 'done' || result == null,
       ),
       'video': _Kind(
-        (recorder, options) => VideoGenerationClient<VideoGenerateResult>(
+        (recorder, options) =>
+            VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: options.threadId,
           fetcher: (input, fetchOptions) async => VideoGenerateResult(
             jobId: await options.fetchText(),
@@ -343,7 +344,7 @@ void main() {
     test(
         'includes input, progress, and renderable previews in generation snapshots',
         () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'image-hook',
         fetcher: (input, options) async => {
           'id': 'img-1',
@@ -396,9 +397,9 @@ void main() {
         yield resultChunk({'summary': 'short version'});
         yield runFinishedChunk('run-progress');
       };
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'summary-hook',
-        connection: ConnectionAdapter(connect: connect),
+        connection: ConnectionAdapter.connect(connect: connect),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useSummarize',
           outputKind: 'text',
@@ -443,9 +444,9 @@ void main() {
         });
         yield runFinishedChunk(runId);
       };
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'image-history',
-        connection: ConnectionAdapter(connect: connect),
+        connection: ConnectionAdapter.connect(connect: connect),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useGenerateImage',
           outputKind: 'image',
@@ -484,7 +485,7 @@ void main() {
     });
 
     test('responds to devtools state requests for a generation hook', () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'gen-1',
         fetcher: (input, options) async => {'text': 'done'},
         devtools: const GenerationDevtoolsMetadata(
@@ -518,7 +519,7 @@ void main() {
     });
 
     test('emits errored run lifecycle for generation failures', () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'gen-1',
         fetcher: (input, options) async {
           throw Exception('Generation failed');
@@ -558,9 +559,9 @@ void main() {
         yield runFinishedChunk('server-run-1');
       };
 
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'gen-stream',
-        connection: ConnectionAdapter(connect: connectSpy),
+        connection: ConnectionAdapter.connect(connect: connectSpy),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useGenerateText',
           outputKind: 'text',
@@ -597,7 +598,7 @@ void main() {
 
     test('does not emit hook updates after disposal', () async {
       final deferred = Deferred<Object?>();
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         threadId: 'gen-1',
         fetcher: (input, options) async => deferred.promise,
         devtools: const GenerationDevtoolsMetadata(
@@ -640,9 +641,9 @@ void main() {
         });
         yield runFinishedChunk('server-video-run-1');
       };
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         threadId: 'video-stream',
-        connection: ConnectionAdapter(connect: connectSpy),
+        connection: ConnectionAdapter.connect(connect: connectSpy),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useGenerateVideo',
           outputKind: 'video',
@@ -671,7 +672,7 @@ void main() {
 
     test('registers a video hook and includes job state in snapshots',
         () async {
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         threadId: 'video-1',
         fetcher: (input, options) async => const VideoGenerateResult(
           jobId: 'job-1',
@@ -728,9 +729,9 @@ void main() {
         });
         yield runFinishedChunk('video-run');
       };
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         threadId: 'video-hook',
-        connection: ConnectionAdapter(connect: connect),
+        connection: ConnectionAdapter.connect(connect: connect),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useGenerateVideo',
           outputKind: 'video',
@@ -785,9 +786,9 @@ void main() {
         });
         yield runFinishedChunk(runId);
       };
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         threadId: 'video-history',
-        connection: ConnectionAdapter(connect: connect),
+        connection: ConnectionAdapter.connect(connect: connect),
         devtools: const GenerationDevtoolsMetadata(
           hookName: 'useGenerateVideo',
           outputKind: 'video',
@@ -837,7 +838,7 @@ void main() {
     test('emits generation lifecycle through the real devtools adapter',
         () async {
       final events = InMemoryAIDevtoolsEventClient();
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         connection: mockConnection([
           runStarted('run-real'),
           custom(GenerationEvents.result, {'id': 'real-result'}),

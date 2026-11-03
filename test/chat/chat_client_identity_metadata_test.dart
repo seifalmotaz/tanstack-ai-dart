@@ -11,7 +11,7 @@ conn.ConnectionAdapter capturing(
   List<List<Map<String, dynamic>>>? scripts,
 }) {
   var call = 0;
-  return conn.ConnectionAdapter(
+  return conn.ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       if (runContext != null) contexts.add(runContext);
       final chunks = scripts != null && call < scripts.length
@@ -46,7 +46,7 @@ void main() {
     test('mints a thread id on first send when none is provided, and reuses it',
         () async {
       final contexts = <conn.RunAgentInputContext>[];
-      final client = ChatClient(connection: capturing(contexts));
+      final client = ChatClient.legacy(connection: capturing(contexts));
       await client.sendText('first');
       await waitFor(() => !client.getIsLoading());
       await client.sendText('second');
@@ -58,7 +58,7 @@ void main() {
 
     test('uses the provided threadId on the wire', () async {
       final contexts = <conn.RunAgentInputContext>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: capturing(contexts),
         options: const ChatClientOptions(threadId: 'support-42'),
       );
@@ -69,7 +69,7 @@ void main() {
 
     test('throws when persistence is set without a threadId', () {
       expect(
-        () => ChatClient(
+        () => ChatClient.legacy(
           connection: capturing(<conn.RunAgentInputContext>[]),
           persistence: ChatPersistence(
             getItem: () => const <AssistantTurn>[],
@@ -84,9 +84,9 @@ void main() {
     test('sendMessage object form stamps metadata on the user UIMessage',
         () async {
       final contexts = <conn.RunAgentInputContext>[];
-      final client = ChatClient(connection: capturing(contexts));
-      await client.sendMessage(
-        const ChatMessageInput(
+      final client = ChatClient.legacy(connection: capturing(contexts));
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: 'Show me failed logins',
           metadata: <String, dynamic>{
             'author': <String, dynamic>{'id': 'user-42', 'name': 'Dana'},
@@ -101,7 +101,7 @@ void main() {
     });
 
     test('sendMessage string form has no metadata', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: capturing(<conn.RunAgentInputContext>[]),
       );
       await client.sendText('hello');
@@ -115,11 +115,11 @@ void main() {
     test('queued object send keeps metadata on the queue entry content',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       final first = client.sendText('first');
       await pump();
-      await client.sendMessage(
-        const ChatMessageInput(
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: 'second',
           metadata: <String, dynamic>{
             'author': <String, dynamic>{'id': 'u2'}
@@ -137,7 +137,7 @@ void main() {
 
     test('append copies uiMessage.metadata', () async {
       final contexts = <conn.RunAgentInputContext>[];
-      final client = ChatClient(connection: capturing(contexts));
+      final client = ChatClient.legacy(connection: capturing(contexts));
       await client.append(
         AssistantTurn(
           id: 'user-1',
@@ -157,14 +157,14 @@ void main() {
     test('batch drain merges object metadata last-write-wins per key',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
       final first = client.sendText('first');
       await pump();
-      await client.sendMessage(
-        const ChatMessageInput(
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: 'a',
           metadata: <String, dynamic>{
             'author': <String, dynamic>{'id': 'user-1', 'name': 'Ada'},
@@ -172,8 +172,8 @@ void main() {
           },
         ),
       );
-      await client.sendMessage(
-        const ChatMessageInput(
+      await client.sendLegacyMessage(
+        const ChatMessageInput.legacy(
           content: 'b',
           metadata: <String, dynamic>{
             'author': <String, dynamic>{'id': 'user-42', 'name': 'Dana'},

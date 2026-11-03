@@ -16,7 +16,7 @@ class RecordingConnection {
   var connects = 0;
   Object? error;
 
-  late final conn.ConnectionAdapter adapter = conn.ConnectionAdapter(
+  late final conn.ConnectionAdapter adapter = conn.ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       connects++;
       this.data.add(data);
@@ -41,7 +41,7 @@ ChatClient byokClient(
   ChatPersistence? persistence,
   String? threadId,
 }) =>
-    ChatClient(
+    ChatClient.legacy(
       connection: connection.adapter,
       byokClient: byok,
       byokProvider: provider,
@@ -106,7 +106,7 @@ void main() {
         body: <String, dynamic>{'provider': 'openai', 'model': 'gpt-5.5'},
       );
 
-      await client.sendMessage(
+      await client.sendLegacyMessage(
         'Hello',
         body: <String, dynamic>{'provider': 'anthropic'},
       );

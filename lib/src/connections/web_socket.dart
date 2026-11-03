@@ -111,10 +111,35 @@ class _ChunkPipe {
 /// A durable (`{ id, chunk }`-tagged) run reopens at
 /// `?runId=&offset=<lastEventId>` after a drop, de-duping the replay boundary.
 /// A non-durable drop surfaces [StreamReadError] instead of reconnecting.
+///
+/// [options] is read on every send, join, and reconnect. For a dynamic URL or
+/// options, use [webSocketProvider].
 ConnectionAdapter webSocket(
-  Object url, [
+  String url, {
   WebSocketConnectionOptions options = const WebSocketConnectionOptions(),
-]) {
+}) =>
+    webSocketProvider(url: () => url, options: () => options);
+
+/// Full-duplex WebSocket adapter with a dynamic URL and options.
+///
+/// Exact signature:
+/// ```dart
+/// ConnectionAdapter webSocketProvider({
+///   required ConnectionUrlProvider url,
+///   ConnectionOptionsProvider<WebSocketConnectionOptions>? options,
+/// });
+/// ```
+///
+/// [url] is required and may be synchronous or asynchronous. [options] is
+/// optional; when supplied it may also be synchronous or asynchronous, and is
+/// re-read for every send, join, and reconnect.
+ConnectionAdapter webSocketProvider({
+  required ConnectionUrlProvider url,
+  ConnectionOptionsProvider<WebSocketConnectionOptions>? options,
+}) {
+  Future<WebSocketConnectionOptions> resolveOptions() async =>
+      options == null ? const WebSocketConnectionOptions() : await options();
+
   WebSocketConnection? socket;
   String? socketMode;
   Future<void>? openPromise;
@@ -133,7 +158,11 @@ ConnectionAdapter webSocket(
     }
   }
 
-  WebSocketConnection openOnce(String target, String mode) {
+  WebSocketConnection openOnce(
+    String target,
+    String mode,
+    WebSocketConnectionOptions resolved,
+  ) {
     final existing = socket;
     if (existing != null &&
         existing.readyState <= 1 &&
@@ -141,16 +170,16 @@ ConnectionAdapter webSocket(
         socketMode == 'run') {
       return existing;
     }
-    final factory = options.socketFactory;
+    final factory = resolved.socketFactory;
     if (factory == null) {
       throw StateError(
         'webSocket() requires WebSocketConnectionOptions.socketFactory',
       );
     }
     final prior = existing;
-    final ws = options.protocols == null
+    final ws = resolved.protocols == null
         ? factory(Uri.parse(target))
-        : factory(Uri.parse(target), protocols: options.protocols);
+        : factory(Uri.parse(target), protocols: resolved.protocols);
     socket = ws;
     socketMode = mode;
     openPromise = ws.opened;
@@ -255,13 +284,14 @@ ConnectionAdapter webSocket(
     final live = socket;
     if (live != null && live.readyState <= 1) return;
     session.progressed = false;
-    final base = await resolveConnectionUrl(url);
-    final target = withSearchParams(base, {
-      if (session.runId != null) 'runId': session.runId!,
-      'offset': offset,
-    });
     try {
-      openOnce(target, 'resume');
+      final resolved = await resolveOptions();
+      final base = await url();
+      final target = withSearchParams(base, {
+        if (session.runId != null) 'runId': session.runId!,
+        'offset': offset,
+      });
+      openOnce(target, 'resume', resolved);
     } catch (error) {
       failAll(error);
     }
@@ -276,17 +306,18 @@ ConnectionAdapter webSocket(
     String runId,
     CancellationSignal? signal,
   ) async* {
-    final base = await resolveConnectionUrl(url);
+    final resolved = await resolveOptions();
+    final base = await url();
     final target = withSearchParams(base, {'offset': '-1', 'runId': runId});
-    final factory = options.socketFactory;
+    final factory = resolved.socketFactory;
     if (factory == null) {
       throw StateError(
         'webSocket() requires WebSocketConnectionOptions.socketFactory',
       );
     }
-    final ws = options.protocols == null
+    final ws = resolved.protocols == null
         ? factory(Uri.parse(target))
-        : factory(Uri.parse(target), protocols: options.protocols);
+        : factory(Uri.parse(target), protocols: resolved.protocols);
     final pipe = _ChunkPipe(signal, () {
       if (ws.readyState <= 1) ws.close();
     });
@@ -337,7 +368,7 @@ ConnectionAdapter webSocket(
     yield* pipe.stream;
   }
 
-  return ConnectionAdapter(
+  return ConnectionAdapter.subscription(
     subscribe: ({signal}) {
       late final _ChunkSink sink;
       final pipe = _ChunkPipe(signal, () => listeners.remove(sink));
@@ -346,17 +377,18 @@ ConnectionAdapter webSocket(
       return pipe.stream;
     },
     send: (messages, {data, signal, runContext}) async {
-      final base = await resolveConnectionUrl(url);
+      final resolved = await resolveOptions();
+      final base = await url();
       final target = runContext?.runId == null
           ? base
           : withSearchParams(base, {'runId': runContext!.runId});
-      final ws = openOnce(target, 'run');
+      final ws = openOnce(target, 'run', resolved);
       await waitOpen(ws);
 
       final session = currentSession;
       if (session == null || session.runId != runContext?.runId) {
         currentSession = _RunSession(
-          ReconnectTracker(options.reconnect),
+          ReconnectTracker(resolved.reconnect),
           signal,
         )..runId = runContext?.runId;
       } else {
@@ -391,7 +423,7 @@ ConnectionAdapter webSocket(
             messages,
             data,
             runContext,
-            body: options.body,
+            body: resolved.body,
           ),
         ),
       );

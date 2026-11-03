@@ -1,3 +1,18 @@
+## 0.3.0
+
+- Make typed named configuration the default chat/generation API; retain explicit
+  `legacy` entry points for previous call signatures.
+- Add state streams with an initial snapshot per listener, typed lifecycle enums,
+  read-only transcripts, typed message input and configuration setters.
+- Split static connection factories from async providers; enforce valid connection
+  modes and explicit fetcher response variants through Dart types.
+- Add immutable sealed message-part views with unknown-field preservation.
+- Make tool schema parameters typed; replace approval reflection/side tables with
+  a real field and prefer ordinary Dart tool lists.
+- Add API rejection fixtures and modern client flow tests. Suppress analytics in
+  analyzer subprocess checks so those checks do not depend on telemetry services.
+- Update the runnable example and add MIGRATION.md for breaking API changes.
+
 ## 0.2.0
 
 - Freeze published generation and video snapshots, preserving internal results,

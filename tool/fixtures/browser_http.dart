@@ -8,8 +8,8 @@ import 'package:test/test.dart';
 const endpoint = 'BROWSER_HTTP_ENDPOINT';
 
 Future<List<StreamChunk>> request(String path, {bool credentials = true}) {
-  final adapter = xhrServerSentEvents(
-      '$endpoint/$path', XhrConnectionOptions(withCredentials: credentials));
+  final adapter = xhrServerSentEvents('$endpoint/$path',
+      options: XhrConnectionOptions(withCredentials: credentials));
   return adapter.connect!([],
           runContext:
               const RunAgentInputContext(threadId: 'browser', runId: 'run'))

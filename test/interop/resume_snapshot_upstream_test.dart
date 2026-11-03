@@ -321,7 +321,7 @@ void main() {
     }) async* {}
 
     test('exposes joinRun when the connection is resumable', () {
-      final resumable = conn.ConnectionAdapter(
+      final resumable = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: emptyStream,
       );
@@ -331,7 +331,7 @@ void main() {
 
     test('omits joinRun for a plain connect adapter', () {
       final normalized = conn.normalizeConnectionAdapter(
-        conn.ConnectionAdapter(
+        conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
         ),
       );
@@ -342,7 +342,7 @@ void main() {
       // Dart's typed `joinRun` field cannot hold a non-function value, so the
       // upstream `joinRun: undefined` case collapses to an omitted joinRun.
       final normalized = conn.normalizeConnectionAdapter(
-        conn.ConnectionAdapter(
+        conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: null,
         ),
@@ -368,7 +368,7 @@ void main() {
       );
       final joinIds = <String>[];
       var connectCalls = 0;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           connectCalls += 1;
         },
@@ -380,7 +380,7 @@ void main() {
         },
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,
@@ -421,7 +421,7 @@ void main() {
         ),
       );
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -449,7 +449,7 @@ void main() {
         },
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,
@@ -484,7 +484,7 @@ void main() {
         },
       );
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -494,7 +494,7 @@ void main() {
         },
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         processingScheduler: scheduler,
@@ -521,7 +521,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       var connectCalls = 0;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           connectCalls += 1;
         },
@@ -539,7 +539,7 @@ void main() {
         ),
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -560,7 +560,7 @@ void main() {
     test('persistence:true hydrates a transcript with no active run (no tail)',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -574,7 +574,7 @@ void main() {
         ),
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -592,7 +592,7 @@ void main() {
         'persistence:true restores a pending interrupt from the server on mount',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -610,7 +610,7 @@ void main() {
           ),
         ),
       );
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -640,7 +640,7 @@ void main() {
       final lookup = platform.ClientTool(
         name: 'lookup',
         description: 'Look up an account',
-        outputSchema: outputSchema,
+        outputSchema: platform.RawJsonSchema(outputSchema),
         execute: (input, executionContext) async {
           executeCalls += 1;
           return <String, Object?>{'accountId': 'account-1'};
@@ -648,7 +648,7 @@ void main() {
       );
       final outputSchemaHash = platform.hashSchemaInput(lookup.outputSchema);
       final contexts = <conn.RunAgentInputContext?>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           contexts.add(runContext);
           final runId = runContext?.runId ?? 'run-cancelled';
@@ -689,7 +689,7 @@ void main() {
       );
       final sources = <String>[];
       late final chat.ChatClient client;
-      client = chat.ChatClient(
+      client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -723,7 +723,7 @@ void main() {
         'restores a pending interrupt even when hydrate also reports an activeRun',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -741,7 +741,7 @@ void main() {
           ),
         ),
       );
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -759,7 +759,7 @@ void main() {
         'rejoins an active continuation run instead of restoring its parent interrupt',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -781,7 +781,7 @@ void main() {
         ),
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -801,7 +801,7 @@ void main() {
         'rebuilds a hydrated in-flight partial in place (no duplicate) when tailing on mount',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -825,7 +825,7 @@ void main() {
         ),
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -849,7 +849,7 @@ void main() {
         'rejoins a live run handed to a fresh client via initialResumeSnapshot',
         () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -859,7 +859,7 @@ void main() {
         },
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         initialMessages: <chat.AssistantTurn>[
@@ -902,7 +902,7 @@ void main() {
         ),
       );
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -912,7 +912,7 @@ void main() {
         },
       );
       var latest = <chat.AssistantTurn>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,
@@ -943,7 +943,7 @@ void main() {
         ),
       );
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) {
           joinIds.add(runId);
@@ -955,7 +955,7 @@ void main() {
         },
       );
       String? status;
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,
@@ -1003,12 +1003,12 @@ void main() {
         );
       }
 
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: refused,
       );
       String? status;
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,
@@ -1034,7 +1034,7 @@ void main() {
 
     test('with persistence:true a dead server-tail frees the input', () async {
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) {
           joinIds.add(runId);
@@ -1051,7 +1051,7 @@ void main() {
           activeRun: const conn.ActiveRun('gone-run'),
         ),
       );
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: true,
@@ -1081,7 +1081,7 @@ void main() {
         ),
       );
       final joinIds = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
@@ -1101,7 +1101,7 @@ void main() {
         },
       );
       final errors = <Object>[];
-      final client = chat.ChatClient(
+      final client = chat.ChatClient.legacy(
         threadId: 't1',
         connection: connection,
         persistence: adapter,

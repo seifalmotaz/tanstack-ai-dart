@@ -8,6 +8,8 @@ library;
 
 import 'dart:async';
 
+import 'package:http/http.dart' as http;
+
 import '../connections/cancellation.dart';
 import '../connections/connection_adapter.dart';
 import '../connections/types.dart';
@@ -486,11 +488,6 @@ class GenerationPersistenceOptions {
   /// Server-driven persistence. A stable [threadId] is required.
   const GenerationPersistenceOptions.persistent({required String this.threadId})
       : persistence = true;
-
-  const GenerationPersistenceOptions({
-    this.persistence = false,
-    this.threadId,
-  });
 }
 
 /// Extra request headers for a run (e.g. BYOK keys).
@@ -506,10 +503,42 @@ class GenerationFetcherOptions {
 
 /// A direct async generation request. Returns either the result or a
 /// [GenerationResponse] carrying an SSE body.
-typedef GenerationFetcher<TInput> = Future<Object?> Function(
+typedef LegacyGenerationFetcher<TInput> = Future<Object?> Function(
   TInput input,
   GenerationFetcherOptions options,
 );
+
+/// A typed generation request with an explicit response variant.
+typedef GenerationFetcher<TInput, TResult>
+    = FutureOr<GenerationFetchResult<TResult>> Function(
+  TInput input,
+  GenerationFetcherOptions options,
+);
+
+sealed class GenerationFetchResult<T> {
+  const GenerationFetchResult();
+  const factory GenerationFetchResult.value(T value) =
+      GenerationFetchedValue<T>;
+  const factory GenerationFetchResult.response(http.StreamedResponse response) =
+      GenerationFetchedResponse<T>;
+  const factory GenerationFetchResult.stream(Stream<StreamChunk> stream) =
+      GenerationFetchedStream<T>;
+}
+
+final class GenerationFetchedValue<T> extends GenerationFetchResult<T> {
+  final T value;
+  const GenerationFetchedValue(this.value);
+}
+
+final class GenerationFetchedResponse<T> extends GenerationFetchResult<T> {
+  final http.StreamedResponse response;
+  const GenerationFetchedResponse(this.response);
+}
+
+final class GenerationFetchedStream<T> extends GenerationFetchResult<T> {
+  final Stream<StreamChunk> stream;
+  const GenerationFetchedStream(this.stream);
+}
 
 /// A non-streaming (or SSE-streaming) response returned by a fetcher.
 class GenerationResponse {

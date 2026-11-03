@@ -27,7 +27,7 @@ void main() {
     );
     final adapter = fetchServerSentEvents(
       '/api/chat',
-      FetchConnectionOptions(client: client),
+      options: FetchConnectionOptions(client: client),
     );
 
     await expectLater(
@@ -48,7 +48,7 @@ void main() {
     );
     final adapter = xhrServerSentEvents(
       '/api/chat',
-      XhrConnectionOptions(client: client),
+      options: XhrConnectionOptions(client: client),
     );
 
     await expectLater(
@@ -69,7 +69,7 @@ void main() {
     );
     final adapter = fetchServerSentEvents(
       '/api/chat',
-      FetchConnectionOptions(client: client),
+      options: FetchConnectionOptions(client: client),
     );
 
     final error = await captureError(() => collect(adapter.connect!([])));
@@ -83,7 +83,7 @@ void main() {
     );
     final adapter = fetchServerSentEvents(
       '/api/chat',
-      FetchConnectionOptions(client: client),
+      options: FetchConnectionOptions(client: client),
     );
 
     final error = await captureError(() => collect(adapter.connect!([])));

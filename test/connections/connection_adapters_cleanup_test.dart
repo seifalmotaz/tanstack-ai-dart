@@ -17,7 +17,7 @@ import 'test_utils.dart';
 void main() {
   for (final entry in <({
     String name,
-    ConnectionAdapter Function(Object, FetchConnectionOptions) create,
+    ConnectionAdapter Function(String, {FetchConnectionOptions options}) create,
     String Function(String) frame,
   })>[
     (
@@ -47,7 +47,7 @@ void main() {
           body: body,
           adapter: entry.create(
             '/chat',
-            FetchConnectionOptions(client: client),
+            options: FetchConnectionOptions(client: client),
           ),
         );
       }
@@ -124,7 +124,7 @@ void main() {
     body.write('data: [DONE]\n\n');
     final adapter = fetchServerSentEvents(
       '/chat',
-      FetchConnectionOptions(client: client),
+      options: FetchConnectionOptions(client: client),
     );
 
     final chunks = await collect(adapter.connect!([]));

@@ -23,7 +23,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(
+          options: XhrConnectionOptions(
             client: client,
             headers: {'Authorization': 'Bearer token'},
             body: {'model': 'test-model'},
@@ -84,7 +84,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final resume = [
           {
@@ -122,7 +122,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
           adapter.connect!(
@@ -160,7 +160,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
           adapter.connect!(
@@ -188,7 +188,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
           adapter.connect!([]),
@@ -211,7 +211,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
         final nextChunk = iterator.moveNext();
@@ -233,7 +233,7 @@ void main() {
         );
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         await expectLater(
           collect(adapter.connect!([])),
@@ -259,7 +259,7 @@ void main() {
         );
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final error = await captureError(() => collect(adapter.connect!([])));
         expect(
@@ -275,7 +275,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
 
         final chunks = await collect(
@@ -294,7 +294,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
           adapter.connect!([], signal: controller.signal),
@@ -316,7 +316,7 @@ void main() {
         final successIterator = StreamIterator<StreamChunk>(
           xhrServerSentEvents(
             '/api/chat',
-            XhrConnectionOptions(client: success),
+            options: XhrConnectionOptions(client: success),
           ).connect!([]),
         );
         final next = successIterator.moveNext();
@@ -331,7 +331,7 @@ void main() {
         final failureIterator = StreamIterator<StreamChunk>(
           xhrServerSentEvents(
             '/api/chat',
-            XhrConnectionOptions(client: failure),
+            options: XhrConnectionOptions(client: failure),
           ).connect!([]),
         );
         final failureNext = failureIterator.moveNext();
@@ -352,7 +352,7 @@ void main() {
         );
         final adapter = xhrServerSentEvents(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         await expectLater(
           collect(adapter.connect!([])),
@@ -368,7 +368,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrHttpStream(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
         final nextChunk = iterator.moveNext();
@@ -390,7 +390,7 @@ void main() {
         final client = FakeHttpClient((_) async => body.response);
         final adapter = xhrHttpStream(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
         final nextChunk = iterator.moveNext();
@@ -414,7 +414,7 @@ void main() {
         );
         final adapter = xhrHttpStream(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
         final error = await captureError(() => collect(adapter.connect!([])));
         expect(
@@ -430,7 +430,7 @@ void main() {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = xhrHttpStream(
           '/api/chat',
-          XhrConnectionOptions(client: client),
+          options: XhrConnectionOptions(client: client),
         );
 
         final chunks = await collect(
