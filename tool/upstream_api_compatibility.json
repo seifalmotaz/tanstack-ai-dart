@@ -68,9 +68,9 @@
           "name": "ChatClient",
           "source": "./chat-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "ChatClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed connection construction, state streams, immutable transcript getters and enum states are the default Dart API. Pre-0.3 JS-shaped configuration remains explicitly available through ChatClient.legacy.",
           "evidence": "lib/src/client.dart:44",
           "public": true
         },
@@ -258,9 +258,9 @@
           "name": "GenerationClient",
           "source": "./generation-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "GenerationClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed connected/fetcher construction, state streams and getters; explicit legacy constructor preserves JS-shaped response handling.",
           "evidence": "lib/src/generation/generation_client.dart:69",
           "public": true
         },
@@ -268,9 +268,9 @@
           "name": "VideoGenerationClient",
           "source": "./video-generation-client",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "VideoGenerationClient",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed connected/fetcher construction, state streams and getters; explicit legacy constructor preserves JS-shaped response handling.",
           "evidence": "lib/src/generation/video_generation_client.dart:42",
           "public": true
         },
@@ -480,7 +480,7 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatClientOptions",
-          "reason": "Dart exposes concrete nullable fields and Object? context instead of conditional/mapped option types.",
+          "reason": "Compatibility configuration for ChatClient.legacy; the default Dart constructor uses named parameters and typed persistence.",
           "evidence": "lib/src/chat/types.dart:495",
           "public": true
         },
@@ -690,7 +690,7 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatFetcher",
-          "reason": "Dart typedef returns FutureOr<Object> (http.StreamedResponse or Stream<StreamChunk>) rather than Response|AsyncIterable.",
+          "reason": "Returns a sealed ChatFetcherResult.stream/response instead of a structural return union; cancellation and HTTP behavior are preserved.",
           "evidence": "lib/src/connections/stream_connections.dart:89",
           "public": true
         },
@@ -890,7 +890,7 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "GenerationFetcher",
-          "reason": "Dart typedef returns Future<Object?>; callers may return a result, GenerationResponse, or http.StreamedResponse.",
+          "reason": "Typed input/result parameters and sealed GenerationFetchResult.value/stream/response replace Object return unions.",
           "evidence": "lib/src/generation/generation_types.dart:509",
           "public": true
         },
@@ -1088,9 +1088,9 @@
           "name": "clientTools",
           "source": "./types",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "clientTools",
-          "reason": "Exported from the root barrel via chat.dart -> src/chat/types.dart -> platform/tool_types.dart; the generic function is public.",
+          "reason": "Deprecated compatibility helper; ordinary typed Dart lists retain their element types without an inference wrapper.",
           "evidence": "lib/src/platform/tool_types.dart:184",
           "public": true
         },
@@ -1098,9 +1098,9 @@
           "name": "createChatClientOptions",
           "source": "./types",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "createChatClientOptions",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Identity compatibility helper retained for upstream users; ordinary Dart code uses constructor named parameters.",
           "evidence": "lib/src/chat/types.dart:577",
           "public": true
         },
@@ -1388,9 +1388,9 @@
           "name": "fetchServerSentEvents",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchServerSentEvents",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchServerSentEventsProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/fetch_connections.dart:44",
           "public": true
         },
@@ -1398,9 +1398,9 @@
           "name": "fetchHttpStream",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchHttpStream",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchHttpStreamProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/fetch_connections.dart:51",
           "public": true
         },
@@ -1408,9 +1408,9 @@
           "name": "fetchJson",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "fetchJson",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate fetchJsonProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/json_connection.dart:85",
           "public": true
         },
@@ -1418,9 +1418,9 @@
           "name": "xhrServerSentEvents",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "xhrServerSentEvents",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate xhrServerSentEventsProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/xhr_connections.dart:11",
           "public": true
         },
@@ -1428,9 +1428,9 @@
           "name": "xhrHttpStream",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "xhrHttpStream",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate xhrHttpStreamProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/xhr_connections.dart:18",
           "public": true
         },
@@ -1458,9 +1458,9 @@
           "name": "webSocket",
           "source": "./connection-adapters",
           "kind": "runtime",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "webSocket",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "reason": "Typed static String URL with named options; separate webSocketProvider for per-operation async URL/options refresh. Protocol, cancellation and replay behavior preserved.",
           "evidence": "lib/src/connections/web_socket.dart:113",
           "public": true
         },
@@ -1510,7 +1510,7 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ConnectionAdapter",
-          "reason": "Dart class holds nullable connect/subscribe/send/joinRun/hydrate fields and validates the union at runtime.",
+          "reason": "Required named connect/subscription constructors make partial or mixed modes fail static analysis.",
           "evidence": "lib/src/connections/connection_adapter.dart:50",
           "public": true
         },
@@ -2532,5 +2532,6 @@
       "language-limitation": 20,
       "dart-adapted": 8
     }
-  }
+  },
+  "dartApiRevision": "0.3.0"
 }

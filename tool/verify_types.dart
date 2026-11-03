@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'analyzer_command.dart';
+
 /// Verify positive fixtures and every `expect-error: CODE` negative assertion.
 /// Unlike runtime type checks, this invokes the Dart static analyzer.
 Future<void> main(List<String> args) async {
@@ -34,7 +36,7 @@ Future<void> main(List<String> args) async {
           .add(match.group(1)!.toUpperCase());
     }
     final result = await Process.run(Platform.resolvedExecutable,
-        ['analyze', '--format', 'machine', file.path]);
+        analyzerArguments(['--format', 'machine', file.path]));
     final actual = <int, Set<String>>{};
     for (final diagnostic in '${result.stdout}\n${result.stderr}'.split('\n')) {
       final fields = diagnostic.split('|');

@@ -272,7 +272,7 @@ Future<List<ClientTool>> getWebMCPTools(
     tools.add(ClientTool(
       name: tool.name,
       description: tool.description,
-      inputSchema: tool.inputSchema ?? const {'type': 'object'},
+      inputSchema: asToolSchema(tool.inputSchema ?? const {'type': 'object'}),
       execute: (input, context) async {
         final result = await reader.executeTool(
           tool,

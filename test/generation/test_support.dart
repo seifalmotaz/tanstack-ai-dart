@@ -33,7 +33,8 @@ Future<void> waitForCondition(void Function() assertion) async {
   throw lastError ?? StateError('condition never became true');
 }
 
-ConnectionAdapter mockConnection(List<StreamChunk> chunks) => ConnectionAdapter(
+ConnectionAdapter mockConnection(List<StreamChunk> chunks) =>
+    ConnectionAdapter.connect(
       connect: (messages, {data, signal, runContext}) async* {
         for (final chunk in chunks) {
           yield chunk;

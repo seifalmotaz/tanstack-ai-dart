@@ -1,3 +1,6 @@
+// Intentionally verifies retained upstream compatibility symbols.
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:tanstack_ai_dart/byok.dart' as byok;
 import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 import 'package:tanstack_ai_dart/ui.dart' as ui;

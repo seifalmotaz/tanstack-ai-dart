@@ -16,3 +16,5 @@ export 'src/chat/run_ownership.dart';
 export 'src/chat/ui_selectors.dart';
 export 'src/chat/typed_ui.dart';
 export 'src/chat/processing_scheduler.dart' show StreamProcessingScheduler;
+
+export 'src/chat/part_view.dart';

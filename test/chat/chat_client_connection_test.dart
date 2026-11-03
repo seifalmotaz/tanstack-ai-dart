@@ -12,7 +12,7 @@ void main() {
     test('preserves distinct server assistant message ids via StreamProcessor',
         () async {
       final sent = <List<conn.WireMessage>>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           sent.add(messages.map((m) => Map<String, dynamic>.from(m)).toList());
           yield <String, dynamic>{
@@ -56,7 +56,7 @@ void main() {
           };
         },
       );
-      final client = ChatClient(connection: connection);
+      final client = ChatClient.legacy(connection: connection);
       await client.sendText('hello');
       await waitFor(() => client.getMessages().length >= 3);
       await pump(8);
@@ -85,7 +85,7 @@ void main() {
 
     test('hydrates through the canonical connection hydrate callback',
         () async {
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
@@ -113,7 +113,7 @@ void main() {
           ],
         ),
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         options: const ChatClientOptions(
           threadId: 't1',
@@ -131,7 +131,7 @@ void main() {
 
     test('re-joins an active hydrated run automatically', () async {
       final joined = <String>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
@@ -172,7 +172,7 @@ void main() {
           activeRun: conn.ActiveRun('run-1'),
         ),
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         options: const ChatClientOptions(threadId: 't1', persistence: true),
       );
@@ -188,7 +188,7 @@ void main() {
 
     test('subscribe/send connection streams chunks to the processor', () async {
       final queue = StreamController<Map<String, dynamic>>.broadcast();
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.subscription(
         subscribe: ({signal}) => queue.stream,
         send: (messages, {data, signal, runContext}) async {
           queue.add(<String, dynamic>{
@@ -214,7 +214,7 @@ void main() {
           });
         },
       );
-      final client = ChatClient(connection: connection);
+      final client = ChatClient.legacy(connection: connection);
       await client.sendText('hello');
       await waitFor(() => client.getMessages().any((m) => m.id == 'live-a1'));
       expect(
@@ -227,7 +227,7 @@ void main() {
     test('advertises client tools and forwarded props on the run context',
         () async {
       conn.RunAgentInputContext? seen;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           seen = runContext;
           yield <String, dynamic>{
@@ -238,7 +238,7 @@ void main() {
           };
         },
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         tools: const <ChatClientTool>[
           ChatClientTool(name: 'lookup', description: 'Find records'),

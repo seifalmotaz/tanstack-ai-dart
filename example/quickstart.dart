@@ -1,27 +1,32 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 
-/// Runnable only when an endpoint is available.
-///
-/// This makes a real HTTP request. Do not run it as part of automated checks.
-Future<void> main() async {
-  final transport = SseChatTransport(
-    'http://localhost:3000/ai/chat',
-    headers: () => {'Content-Type': 'application/json'},
-    onUnauthorized: () async {
-      // Refresh credentials here.
-    },
+/// Run with your endpoint: dart run example/quickstart.dart URL [MESSAGE]
+/// The endpoint must implement the pinned TanStack AI streaming protocol.
+Future<void> main(List<String> args) async {
+  if (args.isEmpty) {
+    stdout.writeln('Usage: dart run example/quickstart.dart URL [MESSAGE]');
+    return;
+  }
+  final client = ChatClient(
+    connection: fetchServerSentEvents(args.first),
+    threadId: 'dart-example',
   );
-
-  final turns = <AssistantTurn>[AssistantTurn.user('Hello')];
-  final body = assistantChatBody(null, turns);
-
-  try {
-    await for (final event in transport.stream(body)) {
-      print(jsonEncode(event));
+  final subscription = client.states.listen((snapshot) {
+    if (snapshot.messages.isNotEmpty) {
+      stdout.writeln(snapshot.messages.last.answer);
     }
-  } on ChatTransportException catch (e) {
-    print('Chat failed (${e.status} ${e.code}): ${e.message}');
+  });
+  try {
+    await client.attach();
+    await client.sendText(args.length > 1 ? args[1] : 'Hello');
+    if (client.error != null) {
+      stderr.writeln(client.error);
+      exitCode = 1;
+    }
+  } finally {
+    await subscription.cancel();
+    await client.dispose();
   }
 }

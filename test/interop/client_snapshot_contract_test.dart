@@ -5,7 +5,7 @@ import 'package:tanstack_ai_dart/src/chat/message_snapshot.dart';
 void main() {
   test('snapshots expose lifecycle and freeze queued content and body',
       () async {
-    final client = ChatClient(connection: ConnectionAdapter(
+    final client = ChatClient.legacy(connection: ConnectionAdapter.connect(
       connect: (_, {data, signal, runContext}) async* {
         yield {
           'type': 'RUN_STARTED',
@@ -16,19 +16,19 @@ void main() {
       },
     ));
     addTearDown(client.dispose);
-    final running = client.sendMessage('first');
+    final running = client.sendLegacyMessage('first');
     await Future<void>.delayed(Duration.zero);
     final body = <String, dynamic>{
       'nested': {'value': 1}
     };
-    await client.sendMessage({
+    await client.sendLegacyMessage({
       'content': [
         {'type': 'text', 'content': 'queued'}
       ]
     }, sendOptions: ChatSendOptions(body: body));
     final snapshot = client.getSnapshot();
     expect(snapshot.isSubscribed, client.getIsSubscribed());
-    expect(snapshot.connectionStatus, client.getConnectionStatus());
+    expect(snapshot.connectionStatus.name, client.getConnectionStatus());
     expect(snapshot.runId, client.getCurrentRunId());
     expect(snapshot.interruptState, same(client.getInterruptState()));
     expect(snapshot.queue, hasLength(1));
@@ -73,8 +73,8 @@ void main() {
     expect(copied.parts.last.output, isNull);
   });
 
-  ChatClient clientWith(AssistantTurn turn) => ChatClient(
-        connection: ConnectionAdapter(
+  ChatClient clientWith(AssistantTurn turn) => ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) =>
                 const Stream.empty()),
         messages: [turn],
@@ -131,13 +131,14 @@ void main() {
         id: 'a', role: 'assistant', parts: [AssistantPart.text('A')]));
     addTearDown(client.dispose);
     final first = client.getSnapshot();
-    client.updateOptions(context: Object());
+    client.updateLegacyOptions(context: Object());
     final second = client.getSnapshot();
     expect(identical(first.messages.single, second.messages.single), isTrue);
     client.setMessagesManually(client.messages);
     expect(client.messages.single.answer, 'A');
     client.setMessagesManually(second.messages);
-    client.messages.single.parts.first.content = 'B';
+    client.getMessages().single.parts.first.content = 'B';
+    client.updateLegacyOptions(context: Object());
     expect(second.messages.single.answer, 'A');
     expect(client.getSnapshot().messages.single.answer, 'B');
   });
@@ -152,9 +153,9 @@ void main() {
     final client = clientWith(turn);
     addTearDown(client.dispose);
     final first = client.getSnapshot();
-    client.messages.single.parts.first.content = 'B';
-    client.messages.single.streaming = true;
-    client.updateOptions(context: Object());
+    client.getMessages().single.parts.first.content = 'B';
+    client.getMessages().single.streaming = true;
+    client.updateLegacyOptions(context: Object());
     final next = client.getSnapshot();
     expect(next.messages.single.answer, 'B');
     expect(next.messages.single.streaming, isTrue);

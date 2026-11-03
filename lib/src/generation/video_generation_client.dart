@@ -6,14 +6,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
 import '../identity.dart';
+import '../snapshot_stream.dart';
 
 import '../connections/cancellation.dart';
 import '../connections/connection_adapter.dart';
 import '../connections/errors.dart' as connection_errors;
 import '../connections/hydration.dart';
+import '../connections/http_common.dart' show assertResponseOk;
 import '../connections/sse_utils.dart';
 import '../connections/types.dart';
+import '../connections/stream_connections.dart' as connections;
 import '../connections/wire.dart';
 import '../platform/byok/byok.dart' as platform_byok;
 import '../platform/snapshot_atom.dart';
@@ -42,7 +46,7 @@ class _VideoCallbacks<TOutput> {
 /// A specialized client for job-based video generation.
 class VideoGenerationClient<TOutput> {
   final ConnectionAdapter? _connection;
-  final GenerationFetcher<VideoGenerateInput>? _fetcher;
+  final LegacyGenerationFetcher<VideoGenerateInput>? _fetcher;
   final HydrateGenerationFunction? _hydrateGenerationHandler;
   final JoinRunFunction? _joinRunHandler;
   final bool _serverDriven;
@@ -75,12 +79,139 @@ class VideoGenerationClient<TOutput> {
 
   VideoGenerationClientSnapshot<TOutput> _snapshot =
       const VideoGenerationClientSnapshot.initial();
+  late final _stateEvents =
+      SnapshotStream<VideoGenerationClientSnapshot<TOutput>>(() => _snapshot);
+
+  VideoGenerationClientSnapshot<TOutput> get snapshot => _snapshot;
+  Stream<VideoGenerationClientSnapshot<TOutput>> get states =>
+      _stateEvents.stream;
+  TOutput? get result => _result;
+  bool get isLoading => _isLoading;
+  Object? get error => _error;
+  GenerationClientState get state => _status;
+  String? get jobId => _jobId;
+  VideoStatusInfo? get videoStatus => _videoStatus;
+  GenerationResumeSnapshot? get resumeSnapshot => getResumeSnapshot();
+
   final Set<void Function()> _listeners = <void Function()>{};
 
-  VideoGenerationClient({
+  factory VideoGenerationClient({
+    required ConnectionAdapter connection,
+    Map<String, dynamic>? body,
+    platform_byok.ByokClient? byok,
+    FutureOr<String?> Function()? byokProvider,
+    GenerationPersistenceOptions persistence =
+        const GenerationPersistenceOptions.ephemeral(),
+    HydrateGenerationFunction? hydrateGeneration,
+    JoinRunFunction? joinRun,
+    GenerationDevtoolsMetadata? devtools,
+    GenerationDevtoolsBridgePortFactory? devtoolsBridgeFactory,
+    SnapshotResultCopier<TOutput>? copySnapshotResult,
+    GenerationTransformOutcome<TOutput> Function(VideoGenerateResult result)?
+        onResult,
+    void Function(Object error)? onError,
+    void Function(num progress, String? message)? onProgress,
+    void Function(StreamChunk chunk)? onChunk,
+    void Function(String jobId)? onJobCreated,
+    void Function(VideoStatusInfo status)? onStatusUpdate,
+    void Function(TOutput? result)? onResultChange,
+    void Function(bool isLoading)? onLoadingChange,
+    void Function(Object? error)? onErrorChange,
+    void Function(GenerationClientState status)? onStatusChange,
+    void Function(String? jobId)? onJobIdChange,
+    void Function(VideoStatusInfo? status)? onVideoStatusChange,
+    void Function(GenerationResumeSnapshot? snapshot)? onResumeSnapshotChange,
+    void Function(GenerationResumeState? state)? onResumeStateChange,
+  }) =>
+      VideoGenerationClient.legacy(
+        threadId: persistence.threadId,
+        connection: connection,
+        body: body,
+        byok: byok,
+        byokProvider: byokProvider,
+        persistence: persistence.persistence,
+        hydrateGeneration: hydrateGeneration,
+        joinRun: joinRun,
+        devtools: devtools,
+        devtoolsBridgeFactory: devtoolsBridgeFactory,
+        copySnapshotResult: copySnapshotResult,
+        onResult: onResult,
+        onError: onError,
+        onProgress: onProgress,
+        onChunk: onChunk,
+        onJobCreated: onJobCreated,
+        onStatusUpdate: onStatusUpdate,
+        onResultChange: onResultChange,
+        onLoadingChange: onLoadingChange,
+        onErrorChange: onErrorChange,
+        onStatusChange: onStatusChange,
+        onJobIdChange: onJobIdChange,
+        onVideoStatusChange: onVideoStatusChange,
+        onResumeSnapshotChange: onResumeSnapshotChange,
+        onResumeStateChange: onResumeStateChange,
+      );
+
+  factory VideoGenerationClient.fetcher({
+    required GenerationFetcher<VideoGenerateInput, VideoGenerateResult> fetcher,
+    Map<String, dynamic>? body,
+    platform_byok.ByokClient? byok,
+    FutureOr<String?> Function()? byokProvider,
+    GenerationPersistenceOptions persistence =
+        const GenerationPersistenceOptions.ephemeral(),
+    HydrateGenerationFunction? hydrateGeneration,
+    JoinRunFunction? joinRun,
+    GenerationDevtoolsMetadata? devtools,
+    GenerationDevtoolsBridgePortFactory? devtoolsBridgeFactory,
+    SnapshotResultCopier<TOutput>? copySnapshotResult,
+    GenerationTransformOutcome<TOutput> Function(VideoGenerateResult result)?
+        onResult,
+    void Function(Object error)? onError,
+    void Function(num progress, String? message)? onProgress,
+    void Function(StreamChunk chunk)? onChunk,
+    void Function(String jobId)? onJobCreated,
+    void Function(VideoStatusInfo status)? onStatusUpdate,
+    void Function(TOutput? result)? onResultChange,
+    void Function(bool isLoading)? onLoadingChange,
+    void Function(Object? error)? onErrorChange,
+    void Function(GenerationClientState status)? onStatusChange,
+    void Function(String? jobId)? onJobIdChange,
+    void Function(VideoStatusInfo? status)? onVideoStatusChange,
+    void Function(GenerationResumeSnapshot? snapshot)? onResumeSnapshotChange,
+    void Function(GenerationResumeState? state)? onResumeStateChange,
+  }) =>
+      VideoGenerationClient.legacy(
+        threadId: persistence.threadId,
+        fetcher: (input, options) async => await fetcher(input, options),
+        body: body,
+        byok: byok,
+        byokProvider: byokProvider,
+        persistence: persistence.persistence,
+        hydrateGeneration: hydrateGeneration,
+        joinRun: joinRun,
+        devtools: devtools,
+        devtoolsBridgeFactory: devtoolsBridgeFactory,
+        copySnapshotResult: copySnapshotResult,
+        onResult: onResult,
+        onError: onError,
+        onProgress: onProgress,
+        onChunk: onChunk,
+        onJobCreated: onJobCreated,
+        onStatusUpdate: onStatusUpdate,
+        onResultChange: onResultChange,
+        onLoadingChange: onLoadingChange,
+        onErrorChange: onErrorChange,
+        onStatusChange: onStatusChange,
+        onJobIdChange: onJobIdChange,
+        onVideoStatusChange: onVideoStatusChange,
+        onResumeSnapshotChange: onResumeSnapshotChange,
+        onResumeStateChange: onResumeStateChange,
+      );
+
+  /// Compatibility constructor for pre-0.3 fetcher response unions.
+  VideoGenerationClient.legacy({
     String? threadId,
     ConnectionAdapter? connection,
-    GenerationFetcher<VideoGenerateInput>? fetcher,
+    LegacyGenerationFetcher<VideoGenerateInput>? fetcher,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -216,15 +347,35 @@ class VideoGenerationClient<TOutput> {
           GenerationFetcherOptions(signal: signal, headers: headers),
         );
         if (!_ownsRun(_abortController, abortController)) return;
-        if (raw is GenerationResponse) {
+        if (raw is GenerationFetchedStream<VideoGenerateResult>) {
+          await _processStream(
+            connections.stream((_, data, signal) => raw.stream).connect!(
+              const <WireMessage>[],
+              signal: signal,
+            ),
+            runId,
+            abortController,
+          );
+        } else if (raw is GenerationFetchedResponse<VideoGenerateResult>) {
+          await _processResponse(raw.response, signal, runId, abortController);
+        } else if (raw is GenerationResponse) {
           await _processResponse(raw, signal, runId, abortController);
         } else {
           _devtoolsBridge.ensureRunStarted(runId);
-          if (!_setResult(_coerceVideoResult(raw), abortController) ||
+          if (!_setResult(
+                  _coerceVideoResult(
+                      raw is GenerationFetchedValue<VideoGenerateResult>
+                          ? raw.value
+                          : raw),
+                  abortController) ||
               !_setStatus(GenerationClientState.success, abortController)) {
             return;
           }
-          _completePlainFetcherResumeSnapshot(raw, abortController);
+          _completePlainFetcherResumeSnapshot(
+              raw is GenerationFetchedValue<VideoGenerateResult>
+                  ? raw.value
+                  : raw,
+              abortController);
         }
       } else if (_connection != null && _connection.connect != null) {
         final mergedData = <String, dynamic>{..._body, ...input.toJson()};
@@ -293,6 +444,7 @@ class VideoGenerationClient<TOutput> {
     CancellationController controller,
   ) async {
     if (response is http.StreamedResponse) {
+      await assertResponseOk(response);
       await _processStream(
         parseSseResponse(
           http.StreamedResponse(
@@ -565,6 +717,7 @@ class VideoGenerationClient<TOutput> {
     _serverHydrationStarted = false;
     _rejoinedRunId = null;
     _setIsLoading(false);
+    _stateEvents.close();
   }
 
   void Function() subscribe(void Function() listener) {
@@ -1107,6 +1260,7 @@ class VideoGenerationClient<TOutput> {
       identical(a.videoStatus, b.videoStatus);
 
   void _notify() {
+    if (!_disposed) _stateEvents.emit(_snapshot);
     for (final listener in List<void Function()>.of(_listeners)) {
       var spins = 0;
       late VideoGenerationClientSnapshot<TOutput> seen;

@@ -46,7 +46,7 @@ Map<String, dynamic> descriptor(
       ...overrides,
     };
 
-conn.ConnectionAdapter emptyConnection() => conn.ConnectionAdapter(
+conn.ConnectionAdapter emptyConnection() => conn.ConnectionAdapter.connect(
       connect: (messages, {data, signal, runContext}) =>
           const Stream<Map<String, dynamic>>.empty(),
     );
@@ -56,7 +56,7 @@ void main() {
     test('publishes the shared immutable interrupt state callback', () {
       ChatInterruptState? lastState;
       String? lastSource;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: emptyConnection(),
         initialResumeSnapshot: ChatResumeSnapshot(
           resumeState:
@@ -80,7 +80,7 @@ void main() {
     test('reports source hydrate when a client-tool interrupt is restored', () {
       String? lastSource;
       final outputSchemaHash = hashSchemaInput(lookupOutput);
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: emptyConnection(),
         tools: <ClientTool>[
           ClientTool(name: 'lookup', outputSchema: lookupOutput)
@@ -133,7 +133,7 @@ void main() {
         'batchIndex': 0,
         'responseSchemaHash': hash,
       };
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: emptyConnection(),
         initialResumeSnapshot: ChatResumeSnapshot(
           resumeState:
@@ -172,7 +172,7 @@ void main() {
         final contexts = <conn.RunAgentInputContext?>[];
         final release = Completer<void>();
         var calls = 0;
-        final connection = conn.ConnectionAdapter(
+        final connection = conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             contexts.add(runContext);
             calls++;
@@ -250,13 +250,13 @@ void main() {
             };
           },
         );
-        final client = ChatClient(
+        final client = ChatClient.legacy(
           connection: connection,
           threadId: 'thread-1',
           tools: <ClientTool>[lookup],
         );
 
-        final send = client.sendMessage('start');
+        final send = client.sendLegacyMessage('start');
         await waitFor(() => client.getResumeState() != null);
         if (timing == 'resolve-before') {
           toolCompleter.complete(<String, dynamic>{'accountId': 'account-1'});
@@ -294,7 +294,7 @@ void main() {
         expect(client.getInterruptState().interruptErrors, isEmpty);
         expect(client.getInterruptState().resuming, isFalse);
 
-        await client.sendMessage('later');
+        await client.sendLegacyMessage('later');
         expect(contexts, hasLength(2));
         expect(contexts[1]?.parentRunId, isNull);
         expect(contexts[1]?.resume, isNull);
@@ -316,7 +316,7 @@ void main() {
         'responseSchemaHash': 'none',
       };
       var call = 0;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           contexts.add(runContext);
           sentMessages.add(messages);
@@ -349,13 +349,13 @@ void main() {
         },
       );
       final sources = <String?>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         threadId: 'thread-1',
         onInterruptStateChange: (_, source) => sources.add(source),
       );
 
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
       expect(sources.last, 'live');
       final state = client.getInterruptState();
       expect(state.interrupts, same(state.pendingInterrupts));
@@ -390,7 +390,7 @@ void main() {
       final responseHash = hashInterruptDefinitionSchema(responseSchema);
       final contexts = <conn.RunAgentInputContext?>[];
       var call = 0;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           contexts.add(runContext);
           call++;
@@ -434,7 +434,7 @@ void main() {
           };
         },
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         threadId: 'thread-1',
         interrupts: <ChatInterruptDefinition>[
@@ -443,7 +443,7 @@ void main() {
         ],
       );
 
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
       final item = client.getInterrupts().single;
       item.resolveInterrupt(<String, dynamic>{'answer': 'yes'});
       await waitFor(() => contexts.length == 2);
@@ -456,7 +456,7 @@ void main() {
         'does not auto-send after a completed tool when a generic interrupt is pending',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'},
@@ -490,7 +490,7 @@ void main() {
     test('does not auto-send after rejecting an afterTools generic interrupt',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'},
@@ -526,9 +526,9 @@ void main() {
         () async {
       final contexts = <conn.RunAgentInputContext?>[];
       final sentMessages = <List<Map<String, dynamic>>>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
           threadId: 'thread-1',
-          connection: conn.ConnectionAdapter(
+          connection: conn.ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
               contexts.add(runContext);
               sentMessages.add(messages);
@@ -557,7 +557,7 @@ void main() {
             },
           ));
       addTearDown(client.dispose);
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
       final visited = <String>[];
       client.resolveInterrupts((ChatInterrupt item) {
         visited.add(item.id);
@@ -578,7 +578,7 @@ void main() {
     });
 
     test('hydrates V2 fallback descriptors when recovery is unavailable', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: emptyConnection(),
         initialResumeSnapshot: ChatResumeSnapshot.fromJson(<String, dynamic>{
           'resumeState': <String, dynamic>{
@@ -636,7 +636,7 @@ void main() {
           () {
         late ChatClient client;
         expect(() {
-          client = ChatClient(
+          client = ChatClient.legacy(
             connection: emptyConnection(),
             initialResumeSnapshot:
                 ChatResumeSnapshot.fromJson(<String, dynamic>{

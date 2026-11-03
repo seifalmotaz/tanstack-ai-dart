@@ -90,13 +90,13 @@ void main() {
       });
       await request.response.close();
     });
-    final client = ChatClient(
+    final client = ChatClient.legacy(
       connection: connections.fetchServerSentEvents(_url(server)),
       threadId: 'chat-thread',
       context: {'secretToken': 'local-only-test-marker'},
     );
     addTearDown(client.dispose);
-    await client.sendMessage('hello').timeout(const Duration(seconds: 5));
+    await client.sendLegacyMessage('hello').timeout(const Duration(seconds: 5));
     expect(client.getIsLoading(), isFalse);
     expect(client.getError(), isNull);
     final assistants = client
@@ -106,7 +106,9 @@ void main() {
     expect(assistants.map((message) => message.id), ['server-a1', 'server-a2']);
     expect(assistants.map((message) => message.answer),
         ['First answer', 'Second']);
-    await client.sendMessage('continue').timeout(const Duration(seconds: 5));
+    await client
+        .sendLegacyMessage('continue')
+        .timeout(const Duration(seconds: 5));
     expect(bodies.length, 2);
     expect(jsonEncode(bodies), isNot(contains('local-only-test-marker')));
     expect(
@@ -147,7 +149,7 @@ void main() {
     });
     final progress = <num>[];
     final client = generation.GenerationClient<Map<String, dynamic>,
-        Map<String, dynamic>, Map<String, dynamic>>(
+        Map<String, dynamic>, Map<String, dynamic>>.legacy(
       threadId: 'generation-thread',
       connection: connections.fetchServerSentEvents(_url(server)),
       onProgress: (value, _) => progress.add(value),

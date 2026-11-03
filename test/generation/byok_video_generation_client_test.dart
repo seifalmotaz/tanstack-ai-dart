@@ -22,7 +22,7 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       final calls = <Map<String, String>?>[];
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           calls.add(options.headers);
           return videoResult;
@@ -42,13 +42,13 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       RunAgentInputContext? context;
-      final connection = ConnectionAdapter(
+      final connection = ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           context = runContext;
           yield runFinished('run-1');
         },
       );
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         connection: connection,
         byok: clientByok,
         byokProvider: () => 'elevenlabs',
@@ -65,7 +65,7 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           throw byok.ByokMissingError('elevenlabs');
         },
@@ -88,7 +88,7 @@ void main() {
       await clientByok.update('elevenlabs', elevenLabsKey);
       final errors = <Object?>[];
       late VideoGenerationClient<VideoGenerateResult> client;
-      client = VideoGenerationClient<VideoGenerateResult>(
+      client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           throw byok.ByokMissingError('elevenlabs');
         },
@@ -115,7 +115,7 @@ void main() {
       final second = Deferred<Object?>();
       Future<void>? secondGenerate;
       var replaced = false;
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           if (input.prompt == 'first') {
             throw byok.ByokMissingError('elevenlabs');
@@ -149,7 +149,7 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async =>
             GenerationResponse.byokMissing('elevenlabs'),
         byok: clientByok,
@@ -166,7 +166,7 @@ void main() {
         () async {
       final clientByok = byok.ByokClient();
       var calls = 0;
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           calls++;
           return videoResult;
@@ -190,7 +190,7 @@ void main() {
       await clientByok.update('openai', 'sk-live-secret');
       await clientByok.update('elevenlabs', elevenLabsKey);
       var calls = 0;
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async {
           calls++;
           return videoResult;

@@ -116,8 +116,8 @@ void main() {
   group('ChatClient abort signal handling', () {
     test('should create AbortController and pass signal to adapter', () async {
       CancellationSignal? receivedSignal;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             receivedSignal = signal;
             yield <String, dynamic>{
@@ -148,8 +148,8 @@ void main() {
     test('should abort request when stop() is called', () async {
       final controller = StreamController<Map<String, dynamic>>();
       CancellationSignal? receivedSignal;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) {
             receivedSignal = signal;
             return controller.stream;
@@ -180,8 +180,8 @@ void main() {
       final controller = StreamController<Map<String, dynamic>>();
       CancellationSignal? receivedSignal;
       final chunks = <Map<String, dynamic>>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) {
             receivedSignal = signal;
             return controller.stream;
@@ -214,8 +214,8 @@ void main() {
       final controller = StreamController<Map<String, dynamic>>();
       CancellationSignal? receivedSignal;
       final errors = <Object>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) {
             receivedSignal = signal;
             return controller.stream;
@@ -246,8 +246,8 @@ void main() {
     test('should set isLoading to false after abort', () async {
       final controller = StreamController<Map<String, dynamic>>();
       CancellationSignal? receivedSignal;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) {
             receivedSignal = signal;
             return controller.stream;
@@ -276,8 +276,8 @@ void main() {
 
     test('should create new AbortController for each request', () async {
       final signals = <CancellationSignal?>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             signals.add(signal);
             yield runFinished();
@@ -300,8 +300,8 @@ void main() {
       var connectCalled = false;
       final errors = <Object>[];
       late ChatClient client;
-      client = ChatClient(
-        connection: ConnectionAdapter(
+      client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             connectCalled = true;
             yield runFinished();
@@ -330,8 +330,8 @@ void main() {
       Future<void>? reloadPromise;
       var firstCall = true;
       late ChatClient client;
-      client = ChatClient(
-        connection: ConnectionAdapter(
+      client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             signals.add(signal);
             yield runFinished();
@@ -380,7 +380,8 @@ void main() {
               })}\n\n',
           behavior,
         );
-        final client = GenerationClient<Map<String, dynamic>, Object?, Object?>(
+        final client =
+            GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
           fetcher: (input, options) async =>
               http.StreamedResponse(body.stream, 200),
         );
@@ -405,7 +406,8 @@ void main() {
         'data: {"type":"RUN_ERROR","message":"generation failed"}\n\n',
         'never settles',
       );
-      final client = GenerationClient<Map<String, dynamic>, Object?, Object?>(
+      final client =
+          GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
         fetcher: (input, options) async =>
             http.StreamedResponse(body.stream, 200),
       );
@@ -427,7 +429,8 @@ void main() {
       final body = CancelableResponseBody.error(
         StateError('response reader failed'),
       );
-      final client = GenerationClient<Map<String, dynamic>, Object?, Object?>(
+      final client =
+          GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
         fetcher: (input, options) async =>
             http.StreamedResponse(body.stream, 200),
       );
@@ -462,7 +465,8 @@ void main() {
         closeAfterWrite: true,
       );
       final chunks = <Map<String, dynamic>>[];
-      final client = GenerationClient<Map<String, dynamic>, Object?, Object?>(
+      final client =
+          GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
         fetcher: (input, options) async =>
             http.StreamedResponse(body.stream, 200),
         onChunk: chunks.add,
@@ -494,8 +498,8 @@ void main() {
     test('surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA through getMessages',
         () async {
       final onMessagesChange = <List<AssistantTurn>>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{
               'type': 'ACTIVITY_SNAPSHOT',
@@ -525,7 +529,7 @@ void main() {
         onMessagesChange: onMessagesChange.add,
       );
 
-      await client.sendMessage('search');
+      await client.sendLegacyMessage('search');
 
       final activity =
           client.getMessages().firstWhere((m) => m.role == 'activity');
@@ -550,8 +554,8 @@ void main() {
     test('does not send activity messages as model input on the next turn',
         () async {
       final sent = <List<Map<String, dynamic>>>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             sent.add(messages);
             yield <String, dynamic>{
@@ -568,8 +572,8 @@ void main() {
         ),
       );
 
-      await client.sendMessage('one');
-      await client.sendMessage('two');
+      await client.sendLegacyMessage('one');
+      await client.sendLegacyMessage('two');
 
       expect(
         client.getMessages().any((m) => m.role == 'activity'),
@@ -585,8 +589,8 @@ void main() {
 
     test('keeps an appended activity message without starting a run', () async {
       var connectCalls = 0;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             connectCalls++;
             yield runFinished();
@@ -618,8 +622,8 @@ void main() {
     });
 
     test('exposes initial activity messages', () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runFinished();
           },
@@ -678,8 +682,8 @@ void main() {
           ],
         ),
       );
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             sent.add(messages);
             for (final chunk in textRun('next answer')) {
@@ -703,7 +707,7 @@ void main() {
         'content': <String, dynamic>{'query': 'tanstack'},
       });
 
-      await client.sendMessage('next');
+      await client.sendLegacyMessage('next');
       expect(sent, hasLength(1));
       expect(
         sent.first.any((message) => message['role'] == 'activity'),
@@ -745,8 +749,8 @@ void main() {
           ],
         ),
       );
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{
               'type': 'MESSAGES_SNAPSHOT',
@@ -773,7 +777,7 @@ void main() {
         persistence: persistence,
       );
 
-      await client.sendMessage('next');
+      await client.sendLegacyMessage('next');
 
       final activity =
           client.getMessages().firstWhere((m) => m.role == 'activity');
@@ -786,8 +790,8 @@ void main() {
 
     test('hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage',
         () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{
               'type': 'MESSAGES_SNAPSHOT',
@@ -818,7 +822,7 @@ void main() {
         ),
       );
 
-      await client.sendMessage('hi');
+      await client.sendLegacyMessage('hi');
 
       final activity =
           client.getMessages().firstWhere((m) => m.role == 'activity');
@@ -840,8 +844,8 @@ void main() {
       List<Map<String, dynamic>> parts,
     ) async {
       final sent = <List<Map<String, dynamic>>>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             sent.add(messages);
             for (final chunk in textRun('response')) {
@@ -851,7 +855,7 @@ void main() {
         ),
       );
 
-      await client.sendMessage(<String, dynamic>{'content': parts});
+      await client.sendLegacyMessage(<String, dynamic>{'content': parts});
       expect(sent, hasLength(1));
       final user = sent.single.firstWhere(
         (message) => message['role'] == 'user',
@@ -971,8 +975,8 @@ void main() {
 
   group('ChatClient append', () {
     test('should append a UIMessage', () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;
@@ -998,8 +1002,8 @@ void main() {
     });
 
     test('should convert and append a ModelMessage', () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;
@@ -1025,8 +1029,8 @@ void main() {
     });
 
     test('should generate id and createdAt if missing', () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;

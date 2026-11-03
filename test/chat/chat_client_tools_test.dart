@@ -42,7 +42,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       Object? seen;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         context: <String, dynamic>{'tenantId': 't1'},
         tools: <ChatClientTool>[
@@ -69,7 +69,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       Object? seen = 'unset';
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         context: <String, dynamic>{'tenantId': 't1'},
         tools: <ChatClientTool>[
@@ -82,7 +82,7 @@ void main() {
           ),
         ],
       );
-      client.updateOptions(context: null);
+      client.updateLegacyOptions(context: null);
       await client.sendText('hi');
       await emitAll(transport, toolChunks());
       await pump(8);
@@ -94,7 +94,7 @@ void main() {
         'surfaces executable client tool outputSchema failures as output-error results',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -121,7 +121,7 @@ void main() {
     test('keeps non-JSON output of client tools that are not interrupts',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -146,7 +146,7 @@ void main() {
         'renders a client tool that throws an empty-message error as terminal error',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -171,7 +171,7 @@ void main() {
         'manual addToolResult updates the part and continues with a new assistant',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'run-1'},
@@ -217,7 +217,7 @@ void main() {
     test('tool result output presence distinguishes null from absent',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'run-1'},
@@ -256,7 +256,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final gate = Completer<void>();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -291,7 +291,7 @@ void main() {
         'awaits asynchronous outputSchema validation for manual client tool results',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -330,7 +330,7 @@ void main() {
         'client tools from a foreign AG-UI server runs the tool and continues with its result',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -373,7 +373,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       var ran = false;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(

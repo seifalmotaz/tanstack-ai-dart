@@ -42,7 +42,7 @@ void main() {
 
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -69,7 +69,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat?provider=openai&runId=stale#response',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       await collect(
@@ -95,7 +95,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -124,7 +124,7 @@ void main() {
 
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -169,7 +169,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -205,7 +205,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -233,7 +233,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -276,7 +276,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -306,7 +306,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(
             maxAttempts: 3,
@@ -342,7 +342,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(
             maxAttempts: 2,
@@ -376,7 +376,7 @@ void main() {
       ]) {
         final adapter = fetchServerSentEvents(
           '/api/chat',
-          FetchConnectionOptions(client: client, reconnect: reconnect),
+          options: FetchConnectionOptions(client: client, reconnect: reconnect),
         );
         await expectLater(
           collect(adapter.connect!(
@@ -401,7 +401,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final chunks = await collect(
@@ -428,7 +428,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           signal: controller.signal,
           reconnect: const ReconnectOptions(
@@ -467,7 +467,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -503,7 +503,7 @@ void main() {
       });
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),

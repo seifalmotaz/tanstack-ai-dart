@@ -37,7 +37,7 @@ void main() {
       });
       final connection = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
       const runContext = RunAgentInputContext(
         threadId: 't1',
@@ -83,7 +83,7 @@ void main() {
     });
 
     test('does not throw when a custom connect ignores headers', () async {
-      final adapter = ConnectionAdapter(
+      final adapter = ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {},
       );
 
@@ -97,7 +97,7 @@ void main() {
   group('client UI snapshots', () {
     test('publishes and clears the active generation run id', () async {
       final pending = Completer<Object?>();
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async => pending.future,
       );
 
@@ -114,7 +114,7 @@ void main() {
         'GenerationClient notifies subscribe and keeps getSnapshot identity until a change',
         () async {
       final client = GenerationClient<Map<String, dynamic>,
-          Map<String, dynamic>, Map<String, dynamic>>(
+          Map<String, dynamic>, Map<String, dynamic>>.legacy(
         fetcher: (input, options) async => <String, dynamic>{'id': '1'},
       );
       final snapshot = client.getSnapshot();
@@ -147,7 +147,7 @@ void main() {
     });
 
     test('a throwing generation subscriber does not stick isLoading', () async {
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         fetcher: (input, options) async => {'id': '1'},
       );
       final stop = client.subscribe(() {
@@ -170,7 +170,7 @@ void main() {
         status: 'completed',
         url: 'https://example.com/video.mp4',
       );
-      final client = VideoGenerationClient<VideoGenerateResult>(
+      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
         fetcher: (input, options) async => result,
       );
       final snapshot = client.getSnapshot();

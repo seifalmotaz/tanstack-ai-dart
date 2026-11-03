@@ -12,7 +12,7 @@ void main() {
     test('text and thinking stay separate; thinking never enters the answer',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'run-1'},
@@ -40,7 +40,7 @@ void main() {
       final transport = FakeChatTransport();
       final chunks = <Map<String, dynamic>>[];
       final finished = <Map<String, dynamic>>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onChunk: chunks.add,
         onFinish: finished.add,
@@ -72,7 +72,7 @@ void main() {
 
     test('preserves distinct MESSAGES_SNAPSHOT message ids', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       transport.emit(<String, dynamic>{
         'type': 'MESSAGES_SNAPSHOT',
@@ -109,7 +109,7 @@ void main() {
 
     test('surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA parts', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       transport.emit(<String, dynamic>{
         'type': 'ACTIVITY_SNAPSHOT',
@@ -147,7 +147,7 @@ void main() {
     test('does not duplicate an assistant message on reconnect content arrival',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -177,7 +177,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       Object? seenContext;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         context: <String, dynamic>{'tenant': 'acme'},
         onCustomEvent: (event, context) => seenContext = context,
@@ -196,7 +196,7 @@ void main() {
     test('reasoning replay keeps signed thinking out of the answer text',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'run-1'},
@@ -243,7 +243,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       var second = 0;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         onChanged: () => throw StateError('listener failed'),
       );
@@ -265,9 +265,9 @@ void main() {
     test('does not require a macrotask between chunks in one batch', () async {
       var macrotaskRan = false;
       final timer = Timer(Duration.zero, () => macrotaskRan = true);
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         processingScheduler: StreamProcessingScheduler(now: () => 0),
-        connection: conn.ConnectionAdapter(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield* Stream<Map<String, dynamic>>.fromIterable(
               textChunks('ab'),
@@ -291,8 +291,8 @@ void main() {
         const Duration(milliseconds: 1),
         (_) => ticks++,
       );
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'};
             for (var i = 0; i < 20; i++) {
@@ -324,8 +324,8 @@ void main() {
 
     test('keeps chunk order when timers interleave with delivery', () async {
       final deltas = <String>[];
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             for (final delta in <String>['a', 'b', 'c']) {
               await Future<void>.delayed(const Duration(milliseconds: 1));
@@ -357,8 +357,8 @@ void main() {
     });
 
     test('processes a synchronous burst without dropping chunks', () async {
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'};
             for (var i = 0; i < 500; i++) {

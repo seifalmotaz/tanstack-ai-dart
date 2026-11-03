@@ -60,7 +60,7 @@ Map<String, dynamic> completedHydration() => {
 ConnectionAdapter hydratingConnection(
   Map<String, dynamic> result,
 ) =>
-    ConnectionAdapter(
+    ConnectionAdapter.connect(
       connect: (messages, {data, signal, runContext}) => const Stream.empty(),
       hydrateGeneration: (_) async => GenerationHydrationResult(
         resumeSnapshot: result['resumeSnapshot'] as Map<String, dynamic>?,
@@ -78,7 +78,7 @@ void main() {
         final onResult = <Object?>[];
         final onResultChange = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => mockResult,
           onResult: (result) {
             onResult.add(result);
@@ -101,7 +101,7 @@ void main() {
         final onError = <Object>[];
         final onErrorChange = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             throw Exception('fetch failed');
           },
@@ -120,7 +120,7 @@ void main() {
       test('should track loading state during fetcher call', () async {
         final states = <bool>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
           onLoadingChange: states.add,
         );
@@ -134,7 +134,7 @@ void main() {
         GenerationFetcherOptions? captured;
         var calls = 0;
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             calls++;
             captured = options;
@@ -153,7 +153,7 @@ void main() {
         final first = Deferred<Object?>();
         var callCount = 0;
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             callCount++;
             return first.promise;
@@ -188,7 +188,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -212,7 +212,7 @@ void main() {
           custom(GenerationEvents.result, {'id': '1'}),
           runFinished('run-1'),
         ];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield chunks[0];
             await gate.promise;
@@ -222,7 +222,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(connection: connection);
+        final client = GenerationClient.legacy(connection: connection);
         final pending = client.generate({'prompt': 'test'});
         await waitForCondition(() {
           expect(client.getSnapshot().isLoading, isTrue);
@@ -248,7 +248,7 @@ void main() {
           },
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onError: onError.add,
         );
@@ -274,7 +274,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onProgress: (value, message) => progress.add([value, message]),
         );
@@ -295,7 +295,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onChunk: chunks.add,
         );
@@ -309,7 +309,7 @@ void main() {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             calls.add(data);
             context = runContext;
@@ -318,7 +318,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           body: {'model': 'dall-e-3'},
         );
@@ -342,10 +342,10 @@ void main() {
         jsonEncode(custom(GenerationEvents.result, {'id': 'http-result'})),
         jsonEncode(runFinished('run-http', 'thread-http')),
       ].map((line) => 'data: $line\n\n').join();
-      final client = GenerationClient(
+      final client = GenerationClient.legacy(
         connection: fetchServerSentEvents(
           'https://example.com/generate',
-          FetchConnectionOptions(client: _FakeHttpClient(body)),
+          options: FetchConnectionOptions(client: _FakeHttpClient(body)),
         ),
       );
 
@@ -359,7 +359,7 @@ void main() {
       test('should abort in-flight request and reset to idle', () async {
         final pending = Deferred<Object?>();
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => pending.promise,
         );
 
@@ -379,7 +379,7 @@ void main() {
 
     group('reset()', () {
       test('should clear result, error, and return to idle', () async {
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
         );
 
@@ -399,7 +399,7 @@ void main() {
       test('should update body without recreating client', () async {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             calls.add(data);
             context = runContext;
@@ -407,7 +407,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           body: {'model': 'old'},
         );
@@ -426,7 +426,7 @@ void main() {
         final onResult = <Object?>[];
         final aborted = Deferred<bool>();
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
@@ -436,7 +436,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -461,7 +461,7 @@ void main() {
         final onResult = <Object?>[];
         final aborted = Deferred<bool>();
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
@@ -471,7 +471,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -498,7 +498,7 @@ void main() {
         final secondAborted = Deferred<bool>();
         final signals = <CancellationSignal?>[];
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             signals.add(signal);
             if (data?['prompt'] == 'first') {
@@ -515,7 +515,7 @@ void main() {
           },
         );
 
-        final client = GenerationClient(connection: connection);
+        final client = GenerationClient.legacy(connection: connection);
 
         final firstGenerate = client.generate({'prompt': 'first'});
         await waitForCondition(() {
@@ -550,7 +550,7 @@ void main() {
         final onStatusUpdate = <VideoStatusInfo>[];
         final aborted = Deferred<bool>();
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
@@ -564,7 +564,7 @@ void main() {
           },
         );
 
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -595,7 +595,7 @@ void main() {
         final secondAborted = Deferred<bool>();
         final signals = <CancellationSignal?>[];
 
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             signals.add(signal);
             if (data?['prompt'] == 'first') {
@@ -616,8 +616,8 @@ void main() {
           },
         );
 
-        final client =
-            VideoGenerationClient<VideoGenerateResult>(connection: connection);
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
+            connection: connection);
 
         final firstGenerate =
             client.generate(const VideoGenerateInput(prompt: 'first'));
@@ -651,7 +651,7 @@ void main() {
         final pending = Deferred<Object?>();
         final onResult = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => pending.promise,
           onResult: (result) {
             onResult.add(result);
@@ -673,7 +673,7 @@ void main() {
       test('should wrap non-Error thrown values in Error', () async {
         final onError = <Object>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             throw 'string error';
           },
@@ -691,7 +691,7 @@ void main() {
           () async {
         final onError = <Object>[];
 
-        final client = GenerationClient(onError: onError.add);
+        final client = GenerationClient.legacy(onError: onError.add);
 
         await client.generate({'prompt': 'test'});
 
@@ -714,7 +714,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onResult: (result) {
             onResult.add(result);
@@ -739,7 +739,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onChunk: chunks.add,
         );
@@ -757,7 +757,7 @@ void main() {
           () async {
         var callCount = 0;
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             callCount++;
             return {'id': '$callCount'};
@@ -781,7 +781,7 @@ void main() {
           () async {
         final onResultChange = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
           onResult: (raw) =>
               GenerationTransformOutcome.value({'transformed': true}),
@@ -800,7 +800,7 @@ void main() {
       test('should keep previous result when onResult returns null', () async {
         final onResultChange = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
           onResult: (raw) => const GenerationTransformOutcome.keep(),
           onResultChange: onResultChange.add,
@@ -816,7 +816,7 @@ void main() {
       test('should use raw result when onResult returns void', () async {
         final onResult = <Object?>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1', 'data': 'test'},
           onResult: (raw) {
             onResult.add(raw);
@@ -839,7 +839,7 @@ void main() {
           runFinished('run-1'),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           connection: connection,
           onResult: (raw) => GenerationTransformOutcome.value({
             'imageCount': ((raw as Map)['images'] as List).length,
@@ -852,7 +852,7 @@ void main() {
       });
 
       test('should reset transformed result to null on reset()', () async {
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
           onResult: (raw) =>
               GenerationTransformOutcome.value({'transformed': true}),
@@ -869,7 +869,7 @@ void main() {
           'should keep previous transformed result on second generation when onResult returns null',
           () async {
         var callCount = 0;
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             callCount++;
             return {'id': '$callCount'};
@@ -904,7 +904,7 @@ void main() {
           jsonEncode(runFinished('run-1')),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onResult: (result) {
             onResult.add(result);
@@ -938,7 +938,7 @@ void main() {
           spaceAfterDataColon: false,
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onResult: (result) {
             onResult.add(result);
@@ -967,7 +967,7 @@ void main() {
           }),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onError: onError.add,
         );
@@ -988,7 +988,7 @@ void main() {
           jsonEncode(runFinished('run-1')),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onChunk: chunks.add,
         );
@@ -1011,7 +1011,7 @@ void main() {
           jsonEncode(runFinished('run-1')),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onProgress: (value, message) => progress.add([value, message]),
         );
@@ -1031,7 +1031,7 @@ void main() {
           reasonPhrase: 'Internal Server Error',
         );
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => errorResponse,
           onError: onError.add,
         );
@@ -1049,7 +1049,7 @@ void main() {
         final onError = <Object>[];
         const response = GenerationResponse(statusCode: 200);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => response,
           onError: onError.add,
         );
@@ -1072,7 +1072,7 @@ void main() {
           jsonEncode(runFinished('run-1')),
         ]);
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             captured = options;
             return response;
@@ -1090,7 +1090,7 @@ void main() {
       test('should follow idle -> generating -> success', () async {
         final states = <GenerationClientState>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async => {'id': '1'},
           onStatusChange: states.add,
         );
@@ -1107,7 +1107,7 @@ void main() {
       test('should follow idle -> generating -> error on failure', () async {
         final states = <GenerationClientState>[];
 
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           fetcher: (input, options) async {
             throw Exception('fail');
           },
@@ -1128,7 +1128,7 @@ void main() {
           'adopts the server snapshot on mount, keyed by threadId, without a local store',
           () async {
         final hydrateCalls = <String>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async {
@@ -1140,7 +1140,7 @@ void main() {
           },
         );
         final snapshots = <GenerationResumeSnapshot?>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-server',
           connection: connection,
           persistence: true,
@@ -1164,7 +1164,7 @@ void main() {
       test('reuses the stable threadId for hydration and wire runs', () async {
         final hydrateCalls = <String>[];
         final runThreadIds = <String>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             if (runContext != null) runThreadIds.add(runContext.threadId);
             yield runStarted('run-1', 'thread-stable');
@@ -1175,7 +1175,7 @@ void main() {
             return const GenerationHydrationResult();
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-stable',
           connection: connection,
           persistence: true,
@@ -1210,7 +1210,7 @@ void main() {
           'activeRun': null,
         });
         final resumeStates = <GenerationResumeState?>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-img-server',
           connection: connection,
           persistence: true,
@@ -1249,7 +1249,7 @@ void main() {
           runFinished(runId, 'thread-live'),
         ];
         final joinCalls = <String>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
@@ -1267,7 +1267,7 @@ void main() {
             }
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-live',
           connection: connection,
           persistence: true,
@@ -1287,7 +1287,7 @@ void main() {
           'surfaces an error (never stays stuck generating) when the rejoin throws',
           () async {
         const runId = 'run-gone-1';
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
@@ -1302,7 +1302,7 @@ void main() {
             throw Exception('Unknown or expired memory stream run');
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-gone',
           connection: connection,
           persistence: true,
@@ -1320,7 +1320,7 @@ void main() {
           'surfaces an error when the rejoin delivers a terminal RUN_ERROR chunk',
           () async {
         const runId = 'run-gone-2';
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
@@ -1340,7 +1340,7 @@ void main() {
             };
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-gone-2',
           connection: connection,
           persistence: true,
@@ -1356,7 +1356,7 @@ void main() {
 
       test('does nothing when the connection exposes no hydrateGeneration',
           () async {
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-server',
           connection: mockConnection([]),
           persistence: true,
@@ -1371,7 +1371,7 @@ void main() {
           'resumeSnapshot': {'resumeState': null, 'status': 'bogus'},
           'activeRun': null,
         });
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-server',
           connection: connection,
           persistence: true,
@@ -1384,7 +1384,7 @@ void main() {
       test(
           'does not stomp a run that a generate() started before hydration resolves',
           () async {
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield runStarted('run-live', 'thread-server');
             yield runFinished('run-live', 'thread-server');
@@ -1394,7 +1394,7 @@ void main() {
                 as Map<String, dynamic>),
           ),
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-server',
           connection: connection,
           persistence: true,
@@ -1411,7 +1411,7 @@ void main() {
 
       test('adopts the server snapshot for the video client too', () async {
         final hydrateCalls = <String>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async {
@@ -1432,7 +1432,7 @@ void main() {
             );
           },
         );
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: 'thread-video',
           connection: connection,
           persistence: true,
@@ -1455,7 +1455,7 @@ void main() {
           'hydrates via the hydrateGeneration option in fetcher mode (no connection)',
           () async {
         final hydrateCalls = <String>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-server',
           fetcher: (input, options) async => <String, dynamic>{},
           persistence: true,
@@ -1481,7 +1481,7 @@ void main() {
           () async {
         const runId = 'run-option-1';
         final joinCalls = <String>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-option',
           connection: mockConnection([]),
           persistence: true,
@@ -1515,7 +1515,7 @@ void main() {
         final messages = <String>[];
         await runZoned(
           () async {
-            GenerationClient(
+            GenerationClient.legacy(
               threadId: 'thread-warn',
               fetcher: (input, options) async => <String, dynamic>{},
               persistence: true,
@@ -1530,7 +1530,7 @@ void main() {
 
         await runZoned(
           () async {
-            GenerationClient(
+            GenerationClient.legacy(
               threadId: 'thread-warn',
               fetcher: (input, options) async => <String, dynamic>{},
               persistence: true,
@@ -1557,7 +1557,7 @@ void main() {
           },
           'activeRun': {'runId': runId},
         });
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-stranded',
           connection: connection,
           persistence: true,
@@ -1579,14 +1579,14 @@ void main() {
           'surfaces a hydration transport failure instead of looking like a fresh thread',
           () async {
         final errors = <Object>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async {
             throw Exception('403 Forbidden');
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-denied',
           connection: connection,
           persistence: true,
@@ -1611,7 +1611,7 @@ void main() {
           'resumeSnapshot': null,
           'activeRun': null,
         });
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-fresh',
           connection: connection,
           persistence: true,
@@ -1627,14 +1627,14 @@ void main() {
 
       test('surfaces a hydration failure for the video client too', () async {
         final errors = <Object>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async {
             throw Exception('503 Service Unavailable');
           },
         );
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: 'thread-video-denied',
           connection: connection,
           persistence: true,
@@ -1660,7 +1660,7 @@ void main() {
           'settles generate() to an error when the stream ends without RUN_FINISHED',
           () async {
         final errors = <Object>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-trunc',
           connection:
               mockConnection(truncatedChunks('run-trunc', 'thread-trunc')),
@@ -1684,7 +1684,7 @@ void main() {
           () async {
         const runId = 'run-trunc-rejoin';
         final errors = <Object>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
@@ -1704,7 +1704,7 @@ void main() {
             }
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-trunc-rejoin',
           connection: connection,
           persistence: true,
@@ -1728,7 +1728,7 @@ void main() {
           'settles a video generate() to an error when the stream ends without RUN_FINISHED',
           () async {
         final errors = <Object>[];
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: 'thread-video-trunc',
           connection: mockConnection(
             truncatedChunks('run-video-trunc', 'thread-video-trunc'),
@@ -1753,7 +1753,7 @@ void main() {
           () async {
         const runId = 'run-video-trunc-rejoin';
         final errors = <Object>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
@@ -1773,7 +1773,7 @@ void main() {
             }
           },
         );
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: 'thread-video-rejoin',
           connection: connection,
           persistence: true,
@@ -1797,8 +1797,8 @@ void main() {
           'does not report a truncation when the stream was stopped by the caller',
           () async {
         final errors = <Object>[];
-        final client = GenerationClient(
-          connection: ConnectionAdapter(
+        final client = GenerationClient.legacy(
+          connection: ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
               yield runStarted('run-stop', 'thread-stop');
               await Future<void>.delayed(Duration.zero);
@@ -1821,7 +1821,8 @@ void main() {
     });
 
     group('declined result reconstruction on restore', () {
-      ConnectionAdapter resultOnlyHydratingConnection() => ConnectionAdapter(
+      ConnectionAdapter resultOnlyHydratingConnection() =>
+          ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) =>
                 const Stream.empty(),
             hydrateGeneration: (_) async => GenerationHydrationResult(
@@ -1837,9 +1838,9 @@ void main() {
       test('reports a complete snapshot the activity mapper cannot rebuild',
           () async {
         final errors = <Object>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-unrestorable',
-          connection: ConnectionAdapter(
+          connection: ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) =>
                 const Stream.empty(),
             hydrateGeneration: (_) async => GenerationHydrationResult(
@@ -1875,7 +1876,7 @@ void main() {
           'stays a plain success when no reconstructResult mapper is configured',
           () async {
         final errors = <Object>[];
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-no-mapper',
           connection: resultOnlyHydratingConnection(),
           persistence: true,
@@ -1896,7 +1897,7 @@ void main() {
           () async {
         const runId = 'run-still-live';
         final errors = <Object>[];
-        final connection = ConnectionAdapter(
+        final connection = ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
@@ -1921,7 +1922,7 @@ void main() {
             yield runFinished(runId, 'thread-live-decline');
           },
         );
-        final client = GenerationClient(
+        final client = GenerationClient.legacy(
           threadId: 'thread-live-decline',
           connection: connection,
           persistence: true,
@@ -1940,7 +1941,7 @@ void main() {
       test('reports a complete video snapshot with no durable artifact',
           () async {
         final errors = <Object>[];
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           threadId: 'thread-video-unrestorable',
           connection: resultOnlyHydratingConnection(),
           persistence: true,
@@ -1964,7 +1965,7 @@ void main() {
     final clients = <String, HarnessFactory>{
       'GenerationClient': (options) {
         final client = GenerationClient<Map<String, dynamic>,
-            Map<String, dynamic>, Map<String, dynamic>>(
+            Map<String, dynamic>, Map<String, dynamic>>.legacy(
           connection: options.connection,
           fetcher: options.connection == null
               ? (input, fetchOptions) async {
@@ -1999,7 +2000,7 @@ void main() {
         );
       },
       'VideoGenerationClient': (options) {
-        final client = VideoGenerationClient<VideoGenerateResult>(
+        final client = VideoGenerationClient<VideoGenerateResult>.legacy(
           connection: options.connection,
           fetcher: options.connection == null
               ? (input, fetchOptions) async {
@@ -2561,7 +2562,7 @@ void main() {
 
         test('should not publish a run id after onChunk stops the run',
             () async {
-          final connection = ConnectionAdapter(
+          final connection = ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
               yield runStarted('run-1');
             },
@@ -2584,7 +2585,7 @@ void main() {
             () async {
           var connectionCount = 0;
           final secondBlocked = Deferred<bool>();
-          final connection = ConnectionAdapter(
+          final connection = ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {
               connectionCount++;
               if (connectionCount == 1) {

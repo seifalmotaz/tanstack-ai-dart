@@ -12,7 +12,7 @@ ChatClient interrupted(
   FakeChatTransport transport, {
   List<Map<String, dynamic>>? interrupts,
 }) {
-  final client = ChatClient(
+  final client = ChatClient.legacy(
     transport: transport,
     options: const ChatClientOptions(threadId: 'thread-1'),
   );
@@ -53,7 +53,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final contexts = <Object?>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         context: <String, dynamic>{'run': 1},
         tools: <ChatClientTool>[
@@ -81,7 +81,7 @@ void main() {
           'input': <String, dynamic>{},
         },
       ]);
-      client.updateOptions(context: <String, dynamic>{'run': 2});
+      client.updateLegacyOptions(context: <String, dynamic>{'run': 2});
       await pump(8);
       expect(contexts.first, <String, dynamic>{'run': 1});
       await client.stop();
@@ -91,7 +91,7 @@ void main() {
         'uses the per-run client tool snapshot for automatic result validation',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(
@@ -104,7 +104,7 @@ void main() {
         ],
       );
       await client.sendText('hi');
-      client.updateOptions(body: <String, dynamic>{'changed': true});
+      client.updateLegacyOptions(body: <String, dynamic>{'changed': true});
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'},
         <String, dynamic>{
@@ -256,7 +256,8 @@ void main() {
     test('lets a stopped child stream again when the server restarts it',
         () async {
       var calls = 0;
-      final client = ChatClient(connection: connections.ConnectionAdapter(
+      final client =
+          ChatClient.legacy(connection: connections.ConnectionAdapter.connect(
         connect: (_, {data, signal, runContext}) async* {
           calls++;
           yield {
@@ -294,7 +295,7 @@ void main() {
         },
       ));
       addTearDown(client.dispose);
-      final first = client.sendMessage('hi');
+      final first = client.sendLegacyMessage('hi');
       await waitFor(() =>
           client.getSubagents().isNotEmpty &&
           client.getSubagents().first.messages.isNotEmpty &&
@@ -307,7 +308,7 @@ void main() {
       client.getSubagents().first.stop();
       await first;
       expect(client.getSubagents().first.status, 'error');
-      await client.sendMessage('go on');
+      await client.sendLegacyMessage('go on');
       final handle = client.getSubagents().firstWhere((h) => h.id == 'sub-1');
       expect(handle.status, 'finished');
       expect(handle.messages.first['parts'], [
@@ -316,7 +317,7 @@ void main() {
     });
 
     test('accepts a frozen nested subagent card back without throwing', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -356,7 +357,7 @@ void main() {
     });
 
     test('gives a nested card a handle with stop', () {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -399,7 +400,7 @@ void main() {
     test('clears resume state when tool_calls finishes without an interrupt',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.append(userMessage('u', 'hi'));
       transport.emit(<String, dynamic>{
         'type': 'RUN_FINISHED',

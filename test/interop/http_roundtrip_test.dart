@@ -82,9 +82,8 @@ void main() {
       }
       await request.response.close();
     });
-    final connection = fetchServerSentEvents(
-        endpoint(server),
-        const FetchConnectionOptions(
+    final connection = fetchServerSentEvents(endpoint(server),
+        options: const FetchConnectionOptions(
             reconnect: ReconnectOptions(delay: Duration.zero)));
     final chunks = await connection.connect!(input, runContext: context)
         .toList()
@@ -133,8 +132,8 @@ void main() {
       }
       await request.response.close();
     });
-    final connection = fetchJson(
-        endpoint(server), const FetchJsonOptions(pollInterval: Duration.zero));
+    final connection = fetchJson(endpoint(server),
+        options: const FetchJsonOptions(pollInterval: Duration.zero));
     final chunks = await connection.connect!(input,
             runContext: const RunAgentInputContext(
                 threadId: 'thread',

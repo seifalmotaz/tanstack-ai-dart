@@ -1,289 +1,223 @@
 # tanstack_ai_dart
 
-Unofficial, community-maintained Dart port of the TanStack AI **client** SDK.
-The compatibility target is `@tanstack/ai-client` **0.40.0** with
-`@tanstack/ai` **0.70.0**, pinned to upstream commit
-`7095ebbf1b59175f0cd339c1c477d6af55b312de`.
+Unofficial, framework-independent Dart client for TanStack AI. It implements
+chat, generation/video, client tools, interrupts, persistence/resume, BYOK and
+devtools against `@tanstack/ai-client` **0.40.0** / `@tanstack/ai` **0.70.0**,
+pinned to `7095ebbf1b59175f0cd339c1c477d6af55b312de`.
 
-This package is not maintained by TanStack. It targets the pinned client version
-above, with explicit Dart language and host-platform adaptations. See
-[API_COMPATIBILITY.md](API_COMPATIBILITY.md) and [VALIDATION.md](VALIDATION.md).
-
-The endpoint, authentication, tenant rules, models, and provider keys remain
-caller-owned. No PinCRM URL or application credentials are embedded here.
-Legacy `SseChatTransport` and approval helpers remain available for applications
-using the earlier `@tanstack/ai` 0.42 protocol.
-
-## Modern client
-
-```dart
-import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
-
-final client = ChatClient(
-  threadId: 'conversation-123',
-  connection: fetchServerSentEvents(
-    'https://your-service.example/api/chat',
-    FetchConnectionOptions(headers: {'Authorization': 'Bearer YOUR_TOKEN'}),
-  ),
-);
-final unsubscribe = client.subscribeSnapshot(() {
-  final snapshot = client.getSnapshot();
-  // Rebuild the UI from snapshot.messages, status, error, and loading state.
-});
-await client.sendMessage('Hello');
-unsubscribe();
-await client.dispose();
-```
-
-The root library exports chat, connection adapters, generation/video, tools,
-processing, BYOK, persistence, and devtools. Domain-specific imports are also
-available: `chat.dart`, `connections.dart`, `generation.dart`, `platform.dart`,
-`processing.dart`, `byok.dart`, `devtools.dart`, and `ui.dart`.
-
-Connection hydration returns JSON messages; `connections.ChatHydrationResult`
-and the turn-based chat hydration result are available through their respective
-qualified libraries. Shared resume pointers, paging options, cancellation, and
-tool types are the same classes across modules.
-
-## Lifecycle and persistence
-
-Call `attach()` when the consuming view mounts. It restores persisted messages,
-hydrates server history, and rejoins a live run when supported. Constructing a
-client does not open a replay connection. Call `detach()` when the view leaves,
-and `dispose()` when the client is no longer needed. `subscribeSnapshot()`
-listens for UI updates; `subscribe()` controls a persistent push transport.
-
-Persistence choices are explicit:
-
-- Omitted or `false`: ephemeral conversation.
-- `true`, with `threadId`: server-authoritative history through the adapter's
-  `hydrate`/`joinRun` methods.
-- A `ChatClientPersistence` adapter, with `threadId`: client-authoritative
-  storage of messages and the resume pointer in one record.
-
-`ChatPersistenceOptions.server(...)`, `.stored(...)`, and `.ephemeral(...)`
-provide typed configuration. History paging belongs to the server option.
-The legacy transport also retains its original custom history callback support.
-
-## Dart typing
-
-Use explicit `ClientTool<TInput, TOutput>` types and a validating `ToolSchema`.
-The callback receives `ToolCallContext`, including its cancellation signal and
-caller context. JSON-shaped inputs can use `Map<String, dynamic>`; a schema may
-validate and transform values into a custom Dart model.
-
-`ui.dart` exposes typed tool, result, structured-output and interrupt selectors.
-Tool selectors infer generic parameters from the registered `ClientTool`.
-Dart cannot reproduce TypeScript's schema-derived conditional types or literal
-string-key unions. Explicit generic parameters and runtime validation are used
-instead; the type mapping files record those differences. Unknown tool-option
-keys and arbitrary caller-context shapes are not statically inferred.
-
-## Generation snapshots
-
-`GenerationClient` and `VideoGenerationClient` publish isolated, read-only copies
-of JSON maps/lists and scalar-typed JSON collections such as `Map<String, int>`
-and `List<int>`. `getResult()` keeps the original result. Status updates preserve
-the identity of an unchanged published result.
-
-For other reified collection shapes, supply a copier that preserves their Dart
-types and freezes nested containers:
-
-```dart
-final client = GenerationClient<String, Map<String, List<int>>,
-    Map<String, List<int>>>(
-  fetcher: (input, options) async => {'scores': <int>[1, 2]},
-  copySnapshotResult: (value) => Map<String, List<int>>.unmodifiable({
-    for (final entry in value.entries)
-      entry.key: List<int>.unmodifiable(entry.value),
-  }),
-);
-```
-
-Without a compatible copier, these collection types report
-`SnapshotCopyException` through the client's error state. They never fall back
-to a mutable published alias. This replaces the earlier mutable-snapshot behavior.
-Opaque class instances keep their identity; use immutable result models or an
-explicit copier for mutable classes.
+This is a Dart API over the TanStack protocol. JavaScript call signatures and
+TypeScript inference are not its public API contract. The package is not
+maintained by TanStack and does not include server/provider adapters.
 
 ## Install
 
-The package is available from GitHub. It has not been published to pub.dev.
+Requires Dart `>=3.6.2 <4.0.0`. Not yet published to pub.dev.
 
 ```yaml
 dependencies:
   tanstack_ai_dart:
     git:
       url: https://github.com/seifalmotaz/tanstack-ai-dart.git
-      ref: feat/client-sdk
+      ref: main
 ```
 
-Requires Dart `>=3.6.2 <4.0.0`.
-
-## Quick start (transport only)
-
-This example performs a real HTTP request when you run it. Point `endpoint` at
-your own chat route.
+## Chat
 
 ```dart
-import 'dart:convert';
 import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 
-Future<void> main() async {
-  final transport = SseChatTransport(
-    'http://localhost:3000/ai/chat', // caller-owned endpoint
-    headers: () => {'Content-Type': 'application/json'},
-    onUnauthorized: () async {
-      // Refresh credentials here; headers() is re-evaluated afterwards.
-    },
-  );
+final client = ChatClient(
+  connection: fetchServerSentEvents(
+    'https://your-service.example/api/chat',
+    options: const FetchConnectionOptions(
+      headers: {'Authorization': 'Bearer YOUR_TOKEN'},
+    ),
+  ),
+  threadId: 'conversation-123',
+);
 
-  final turns = <AssistantTurn>[AssistantTurn.user('Hello')];
-  final body = assistantChatBody(null, turns); // legacy body shape
+final subscription = client.states.listen((snapshot) {
+  // Render snapshot.messages and snapshot.state.
+  // ChatClientState is an enum, including submitted, streaming, ready, error.
+});
 
-  await for (final event in transport.stream(body)) {
-    print(jsonEncode(event));
-  }
-}
+await client.attach();
+await client.sendText('Hello');
+await client.sendMessage(const ChatMessageInput.text('Follow up', id: 'user-2'));
+
+await subscription.cancel();
+await client.dispose();
 ```
 
-## Quick start (optional client)
+`client.snapshot` reads current state. Each `states` listener receives current
+state followed by ordered updates, buffers independently while paused, and can
+cancel independently. Errors are represented in snapshots rather than emitted
+as stream errors. Disposal closes the stream, including for later listeners.
+Disposal does not wait for a paused state listener to resume.
 
-`ChatClient` also accepts the legacy transport shown above. This preserves
-existing event folding and approval continuation behavior.
+The core has no Flutter dependency. In Flutter, pass `client.states` to
+`StreamBuilder<ChatSnapshot>` with `initialData: client.snapshot`, and dispose
+subscriptions/client when their owner leaves. No widget lifecycle is required
+for plain Dart usage.
+
+`client.messages` and published snapshots are read-only. Replace the transcript
+with `setMessagesManually(...)` rather than modifying a list or part. Update
+configuration with typed setters such as `client.body = null`, `client.context =
+myContext`, `client.tools = tools`, and `client.queueConfig = config`.
+
+## Connections and authentication refresh
+
+SSE, NDJSON, polling JSON and WebSocket adapters share `ConnectionAdapter`.
+Fixed URLs use named options. Async URL/header refresh uses a provider factory:
+
+```dart
+final connection = fetchServerSentEventsProvider(
+  url: () async => 'https://your-service.example/api/chat',
+  options: () async => FetchConnectionOptions(
+    headers: {'Authorization': 'Bearer ${await readAccessToken()}'},
+  ),
+);
+```
+
+Providers run per operation, so reconnect, history and replay can use fresh
+credentials. Options can inject a `package:http` client. Injected clients remain
+caller-owned; clients created internally are closed by the adapter.
+
+Custom connections use `ConnectionAdapter.connect(connect: ...)` or
+`ConnectionAdapter.subscription(subscribe: ..., send: ...)`. Partial and mixed
+modes fail analysis. Custom fetchers return explicit variants:
+
+```dart
+final connection = fetcherToConnectionAdapter(
+  (input, {signal, headers}) async {
+    // request() returns package:http's StreamedResponse.
+    final response = await request(input, signal, headers);
+    return ChatFetcherResult.response(response);
+    // Or return ChatFetcherResult.stream(yourChunkStream).
+  },
+);
+```
+
+`fetchHttpStream`, `fetchJson`, `xhrServerSentEvents`, `xhrHttpStream` and
+`webSocket` have corresponding `...Provider` factories. WebSocket requires a
+platform socket factory. Wire payloads remain extensible JSON maps.
+
+## Persistence and lifecycle
+
+Use one typed persistence choice:
 
 ```dart
 final client = ChatClient(
-  transport: transport,
-  onChanged: () {
-    // Rebuild your UI from client.messages / client.status / client.error.
-  },
+  connection: connection,
+  persistence: const ChatPersistenceOptions.server(
+    threadId: 'conversation-123',
+    history: ChatHistoryConfig(pageSize: 20),
+  ),
 );
-
-await client.sendText('Show me unassigned leads');
-
-// Later, when a tool part has an approval request:
-final tool = client.messages.last.tools.firstWhere(
-  (p) => p.approval != null,
-);
-await client.approve(tool, true);  // or false to deny
-await client.stop();               // cancellation closes the HTTP client
 ```
 
-## Transport API
+- `ChatPersistenceOptions.ephemeral(...)` is the default.
+- `.server(...)` requires a stable thread ID and uses adapter history/replay.
+- `.stored(threadId: ..., adapter: ...)` stores messages and resume state together
+  through a `ChatClientPersistence` implementation.
+
+Call `attach()` to restore history/rejoin a live run. Construction alone does
+not open a replay connection. `detach()` releases the active view; `dispose()`
+ends ownership. Queue policies, history paging, interrupts and cancellation
+retain their TanStack behavior.
+
+## Tools
+
+Use ordinary Dart lists and `ClientTool<TInput, TOutput>`. Schemas are explicit
+`ToolSchema` objects. `RawJsonSchema` advertises a JSON schema; it does not validate
+inputs. `StandardSchema` runs a caller-provided validator/decoder and can return
+an application model before execution. No schema-library dependency is required.
 
 ```dart
-SseChatTransport(
-  String endpoint, {
-  required FutureOr<Map<String, String>> Function() headers,
-  http.Client Function()? clientFactory,
-  Future<void> Function()? onUnauthorized,
-  Duration connectTimeout = const Duration(seconds: 30),
-  Duration idleTimeout = const Duration(seconds: 90),
+final tool = ClientTool<String, int>(
+  name: 'length',
+  inputSchema: StandardSchema(
+    (value) => value is String
+        ? SchemaValidationResult.success(value)
+        : const SchemaValidationResult.failure([SchemaIssue('Expected text')]),
+    schema: {'type': 'string'},
+  ),
+  execute: (text, context) => text.length,
+);
+client.tools = [tool];
+```
+
+Tool callbacks use `FutureOr<TOutput>` and receive `ToolCallContext`, including
+cancellation and caller context. Caller context remains application-defined;
+Dart does not infer TypeScript intersections of heterogeneous tool contexts.
+Read `tool.approvalSchema` directly. Client tools, approval/interrupt submissions
+and automatic continuations are covered by the upstream behavior mappings.
+
+## Rendering message parts
+
+`message.chatParts` provides immutable sealed variants for exhaustive switches.
+For example, `if (part case ChatTextPart(:final content))` extracts text.
+Other variants cover thinking, tools/results, activities, structured output,
+subagents and media. `ChatUnknownPart` preserves future part types. Every variant
+retains deep-frozen wire JSON. Opaque application objects retain their identity.
+The mutable `AssistantPart` model remains available for explicit wire/reducer
+integration and constructing outgoing parts.
+
+## Generation
+
+Use a connection with the default constructor, or a typed fetcher:
+
+```dart
+final generator = GenerationClient<String, Map<String, dynamic>,
+    Map<String, dynamic>>.fetcher(
+  fetcher: (prompt, options) async => GenerationFetchResult.value(
+    await generateImage(prompt, options.signal),
+  ),
+);
+final subscription = generator.states.listen((snapshot) {
+  // Render snapshot.result, snapshot.status and snapshot.error.
 });
-
-Stream<Map<String, dynamic>> stream(Map<String, dynamic> body);
+await generator.generate('A house in Cairo');
+await subscription.cancel();
+generator.dispose();
 ```
 
-Behavior:
+`GenerationFetchResult.value(...)`, `.stream(...)` and `.response(...)` distinguish
+application results from protocol streams/HTTP responses. `VideoGenerationClient`
+uses the same variants with `VideoGenerateResult`. `GenerationPersistenceOptions`
+has `.ephemeral(...)` and `.persistent(threadId: ...)` constructors.
 
-- SSE is parsed incrementally, so split UTF-8 sequences, LF/CRLF/lone-CR
-  line endings, a leading UTF-8 BOM, comments, `id`/`event` fields, and blank
-  frames are handled.
-- Multiple `data:` lines in one event are joined with `\n`.
-- Unknown event `type`s are passed through as maps.
-- Malformed JSON data throws a `FormatException` on the stream.
-- `[DONE]`, EOF, and `RUN_ERROR` complete the stream. `RUN_FINISHED` is
-  forwarded but does **not** close it: the legacy agent loop emits one
-  `RUN_FINISHED` per model iteration (see
-  `stream-transcript.ts` in the reference backend), so closing at the first
-  one would drop tool results, approvals, and the final answer.
-- Cancelling the subscription cancels the response subscription and closes the
-  per-stream HTTP client immediately, even if the server is silent.
-- A 401 triggers one refresh via `onUnauthorized`, re-evaluates `headers`, and
-  replays the exact original body. Partial streams are never retried; non-401
-  statuses are never retried.
-- Non-2xx responses throw `ChatTransportException` with `status`, `code`, and
-  `message`. Plain text and nested `{ "error": { "code", "message" } }` bodies
-  are both understood.
-- `connectTimeout` covers the request until response headers; `idleTimeout`
-  covers silence between response bytes.
+Generation snapshots copy JSON maps/lists and scalar-typed JSON collections
+read-only. `result` retains the original result; published unchanged results
+retain identity across status updates. Other reified collection shapes need an
+explicit copier:
 
-## Tested request protocol
-
-`assistantChatBody` sends TanStack UI messages with `parts`, matching the
-React client's server input on TanStack AI 0.42.x. Approval IDs and decisions
-MUST remain in tool-call parts: TanStack extracts these before converting
-messages to the model format. Sending only a synthetic tool result loses the
-approval state and can cause another approval request instead of execution.
-
-```json
-{
-  "id": "a1", "role": "assistant",
-  "parts": [{
-    "type": "tool-call", "id": "tc1", "name": "assign_lead",
-    "arguments": "{\"leadId\":\"l1\"}",
-    "state": "approval-responded",
-    "approval": {"id": "approval_tc1", "needsApproval": true, "approved": true}
-  }]
-}
+```dart
+copySnapshotResult: (Map<String, List<int>> value) =>
+    Map<String, List<int>>.unmodifiable({
+      for (final entry in value.entries)
+        entry.key: List<int>.unmodifiable(entry.value),
+    }),
 ```
 
-Absent `output` is omitted, never sent as null: TanStack treats a present output
-as a completed result. Reasoning and empty assistant placeholders are omitted
-from outbound wire messages. `assistantWireMessages` produces this UI shape;
-`assistantModelMessages` is a lower-level projection for inspection/integrations
-that explicitly expect model messages. It does not preserve approval metadata
-and must not replace UI messages for an approval continuation.
+Without a compatible copier the error state contains `SnapshotCopyException`.
+Opaque class instances retain identity; use immutable application models.
 
-The server converts an approved UI part to an internal tool message whose
-content is `{"approved":true,"pendingExecution":true,"message":"User approved this action"}`.
-Denial sets `approved:false` and omits `pendingExecution`.
+## Compatibility and platform support
 
-### SSE events consumed by the reducer
+Domain imports are available in `chat.dart`, `connections.dart`, `generation.dart`,
+`ui.dart`, `byok.dart`, `platform.dart`, `processing.dart`, and `devtools.dart`.
+[API_COMPATIBILITY.md](API_COMPATIBILITY.md) records upstream exports and Dart
+adaptations. [VALIDATION.md](VALIDATION.md) records executed checks.
 
-`TEXT_MESSAGE_START`, `TEXT_MESSAGE_CONTENT`/`CHUNK`, `TEXT_MESSAGE_END`,
-`THINKING_*`/`REASONING_*`, `TOOL_CALL_START`, `TOOL_CALL_ARGS`/`CHUNK`,
-`TOOL_CALL_END`, `TOOL_CALL_RESULT`, `CUSTOM`, `RUN_FINISHED`, `RUN_ERROR`.
+Audio, WebAuthn, storage, WebSocket and MCP host capabilities require the
+consuming application to supply platform implementations. Their interfaces and
+crypto are tested; no Flutter hardware plugin is bundled.
 
-Approval requests arrive either as a custom event:
-
-```json
-{
-  "type":"CUSTOM",
-  "name":"approval-requested",
-  "value":{
-    "toolCallId":"tc1",
-    "toolName":"assign_lead",
-    "input":{"leadId":"l1"},
-    "approval":{"id":"approval_tc1","needsApproval":true}
-  }
-}
-```
-
-or as a `RUN_FINISHED` interrupt:
-
-```json
-{
-  "type":"RUN_FINISHED",
-  "outcome":{
-    "type":"interrupt",
-    "interrupts":[{
-      "id":"approval_tc9",
-      "reason":"approval_required",
-      "toolCallId":"tc9",
-      "metadata":{"kind":"approval","toolName":"bulk_assign_leads","input":{}}
-    }]
-  }
-}
-```
-
-Thinking/reasoning parts are never merged into `AssistantTurn.answer`.
-
-`assistantChatBody(threadId, turns)` optionally adds `durableThreadId`,
-`threadId`, `forwardedProps`, and `data` when `threadId` is non-empty. Omit it
-if your server does not use durable threads.
-
-## License
-
-MIT. Original extracted code © 2026 SeifAlmotaz.
+Pre-0.3 JavaScript-shaped construction is available explicitly through
+`ChatClient.legacy`, `GenerationClient.legacy`, and `VideoGenerationClient.legacy`.
+`sendLegacyMessage`, `updateLegacyOptions`, old `get...()` accessors and identity
+helpers exist for migration/upstream compatibility. In particular, legacy
+`getMessages()` returns live mutable data; new code should use `messages` or
+`snapshot`. The earlier TanStack AI 0.42 `SseChatTransport` remains supported.
+See [MIGRATION.md](MIGRATION.md) for the breaking API changes.

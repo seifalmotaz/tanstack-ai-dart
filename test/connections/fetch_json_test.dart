@@ -74,7 +74,7 @@ Stream<StreamChunk> connectWith(
 }) {
   final adapter = fetchJson(
     '/api/chat',
-    FetchJsonOptions(
+    options: FetchJsonOptions(
       client: client,
       pollInterval: pollInterval,
       reconnect: const ReconnectOptions(delay: Duration.zero),
@@ -102,13 +102,14 @@ void main() {
       await collect(
         fetchJson(
           '/api/chat',
-          FetchJsonOptions(client: jsonClient, headers: headers, body: body),
+          options: FetchJsonOptions(
+              client: jsonClient, headers: headers, body: body),
         ).connect!(messages, data: {'extra': 1}, runContext: runContext),
       );
       await collect(
         fetchHttpStream(
           '/api/chat',
-          FetchConnectionOptions(
+          options: FetchConnectionOptions(
             client: streamClient,
             headers: headers,
             body: body,
@@ -301,7 +302,7 @@ void main() {
       ]);
       final adapter = fetchJson(
         '/api/chat',
-        FetchJsonOptions(
+        options: FetchJsonOptions(
           client: client,
           pollInterval: Duration.zero,
           reconnect: const ReconnectOptions(
@@ -388,7 +389,7 @@ void main() {
       ]);
       final adapter = fetchJson(
         '/api/chat',
-        FetchJsonOptions(client: client, pollInterval: Duration.zero),
+        options: FetchJsonOptions(client: client, pollInterval: Duration.zero),
       );
 
       final chunks = await collect(adapter.joinRun!('run-9'));
@@ -410,7 +411,7 @@ void main() {
       ]);
       final adapter = fetchJson(
         '/api/chat',
-        FetchJsonOptions(client: client),
+        options: FetchJsonOptions(client: client),
       );
 
       final result = await adapter.hydrate!('thread-1');

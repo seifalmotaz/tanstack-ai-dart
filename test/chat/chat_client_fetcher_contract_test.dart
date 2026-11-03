@@ -32,7 +32,7 @@ void main() {
   group('ChatClient — fetcher transport', () {
     test('runs an in-process AsyncIterable fetcher and streams text', () async {
       final seen = <conn.ChatFetcherInput>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) {
           seen.add(input);
           return Stream<Map<String, dynamic>>.fromIterable(
@@ -49,7 +49,7 @@ void main() {
 
     test('parses an SSE Response returned by the fetcher (server-fn style)',
         () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) async =>
             sseResponse(textChunks('Hi')),
       );
@@ -61,7 +61,7 @@ void main() {
     test('passes the AbortSignal to the fetcher; stop() aborts it', () async {
       conn.CancellationSignal? seen;
       final started = Completer<void>();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) {
           seen = signal;
           started.complete();
@@ -80,7 +80,7 @@ void main() {
 
     test('surfaces a fetcher error as a ChatClient error', () async {
       Object? observed;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) async =>
             throw StateError('fetcher exploded'),
         onError: (error, chunk) => observed = error,
@@ -92,7 +92,7 @@ void main() {
     });
 
     test('surfaces a malformed-SSE Response as a ChatClient error', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) async => http.StreamedResponse(
           Stream<List<int>>.value(
             utf8.encode('data: { not valid json\n\n'),
@@ -108,7 +108,7 @@ void main() {
 
     test('passes UI messages and merged body to the fetcher', () async {
       conn.ChatFetcherInput? seen;
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         body: <String, dynamic>{'provider': 'openai'},
         fetcher: (input, {signal, headers}) {
           seen = input;
@@ -132,8 +132,8 @@ void main() {
 
     test('throws when both connection and fetcher are passed', () {
       expect(
-        () => ChatClient(
-          connection: conn.ConnectionAdapter(
+        () => ChatClient.legacy(
+          connection: conn.ConnectionAdapter.connect(
             connect: (messages, {data, signal, runContext}) async* {},
           ),
           fetcher: (input, {signal, headers}) => const Stream.empty(),
@@ -143,11 +143,11 @@ void main() {
     });
 
     test('throws when neither connection nor fetcher is passed', () {
-      expect(() => ChatClient(), throwsArgumentError);
+      expect(() => ChatClient.legacy(), throwsArgumentError);
     });
 
     test('surfaces a non-OK Response as a ChatClient error', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) async => http.StreamedResponse(
           Stream<List<int>>.value(
             utf8.encode('Internal Server Error'),
@@ -163,7 +163,7 @@ void main() {
 
     test('surfaces a non-stream result from the fetcher as a ChatClient error',
         () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) async => Object(),
       );
       await client.sendText('hi');
@@ -182,7 +182,7 @@ void main() {
         throw StateError('mid-stream boom');
       }
 
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) => failing(),
       );
       await client.sendText('hi');
@@ -199,7 +199,7 @@ void main() {
         }
       }
 
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) => noTerminal(),
       );
       await client.sendText('hi');
@@ -210,7 +210,7 @@ void main() {
     test('stops consuming chunks from an AsyncIterable that ignores its signal',
         () async {
       final observed = <Map<String, dynamic>>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         fetcher: (input, {signal, headers}) =>
             Stream<Map<String, dynamic>>.periodic(
           const Duration(milliseconds: 5),

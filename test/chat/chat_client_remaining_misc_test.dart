@@ -30,7 +30,7 @@ void main() {
     test('does not call crypto.randomUUID or Math.random in the constructor',
         () {
       // Dart equivalent: construction performs no id generation at all.
-      final client = ChatClient(transport: FakeChatTransport());
+      final client = ChatClient.legacy(transport: FakeChatTransport());
       expect(client.getMessages(), isEmpty);
       expect(client.threadId, isNull);
     });
@@ -42,7 +42,7 @@ void main() {
       final transport = FakeChatTransport();
       final states = <String>[];
       late final ChatClient client;
-      client = ChatClient(
+      client = ChatClient.legacy(
         transport: transport,
         onStatusChange: states.add,
       );
@@ -57,7 +57,7 @@ void main() {
         'sendMessage with a bare RUN_FINISHED{stop} first run (no assistant message) settles to ready',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emit(<String, dynamic>{
         'type': 'RUN_FINISHED',
@@ -75,7 +75,7 @@ void main() {
         'settles status to ready after a client tool when the continuation run emits only RUN_FINISHED',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         tools: <ChatClientTool>[
           ChatClientTool(name: 'lookup', execute: (input, context) => 1),
@@ -133,7 +133,7 @@ void main() {
           (value) => SchemaValidationResult.success(value),
           schema: schema);
       final hash = storage.hashSchemaInput(outputSchema);
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           contexts.add(runContext!);
           yield {
@@ -201,7 +201,7 @@ void main() {
           await joinHold.future;
         },
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
           threadId: 't1',
           connection: connection,
           persistence: MemoryPersistence(storage.ChatPersistedState(
@@ -237,7 +237,7 @@ void main() {
       ]);
       expect(client.getInterruptState().interruptErrors, isEmpty);
       expect(client.getInterrupts(), isEmpty);
-      await client.sendMessage('later');
+      await client.sendLegacyMessage('later');
       expect(contexts, hasLength(2));
     });
   });
@@ -246,7 +246,7 @@ void main() {
     test("keeps activity when replay starts with 'reasoning content'",
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -272,7 +272,7 @@ void main() {
     test("keeps activity when replay starts with 'encrypted reasoning'",
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emit(<String, dynamic>{
         'type': 'REASONING_ENCRYPTED_VALUE',
@@ -286,7 +286,7 @@ void main() {
 
     test("keeps activity when replay starts with 'step signature'", () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       transport.emit(<String, dynamic>{
         'type': 'STEP_FINISHED',
@@ -325,7 +325,7 @@ void main() {
           }
         ]
       };
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
         yield {'type': 'RUN_FINISHED', 'runId': 'unused', 'threadId': 't1'};
       }, joinRun: (runId, {signal}) async* {
@@ -350,7 +350,7 @@ void main() {
         yield {'type': 'SUBAGENT_FINISHED', 'subagentRunId': 'child-1'};
         yield {'type': 'RUN_FINISHED', 'runId': 'r1', 'threadId': 't1'};
       });
-      final client = ChatClient(
+      final client = ChatClient.legacy(
           threadId: 't1',
           connection: connection,
           persistence: MemoryPersistence(storage.ChatPersistedState(
@@ -388,7 +388,7 @@ void main() {
         name: 'deleteFile',
         approval: AssistantApproval(id: 'approval'),
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(

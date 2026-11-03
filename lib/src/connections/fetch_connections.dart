@@ -14,57 +14,116 @@ import 'resumable_stream.dart';
 import 'types.dart';
 import 'wire.dart';
 
-/// Resolve a static URL or a (possibly async) URL provider.
-Future<String> resolveConnectionUrl(Object source) async {
-  if (source is String) return source;
-  if (source is FutureOr<String> Function()) return await source();
-  throw ArgumentError('URL must be a String or a function returning a String');
-}
+/// Produces the request URL for each operation.
+///
+/// Called once per connect, join, hydrate, or reconnect, so a provider may
+/// refresh the URL (and read current app state) dynamically. It may return a
+/// [String] or a `Future<String>`.
+typedef ConnectionUrlProvider = FutureOr<String> Function();
 
-/// Resolve static fetch options or a (possibly async) options provider.
-Future<FetchConnectionOptions> resolveFetchOptions(Object? source) async {
-  if (source == null) return const FetchConnectionOptions();
-  if (source is FetchConnectionOptions) return source;
-  if (source is FutureOr<FetchConnectionOptions> Function()) {
-    return await source();
-  }
-  throw ArgumentError(
-    'Options must be FetchConnectionOptions or a function returning them',
-  );
-}
+/// Produces options for each operation.
+///
+/// Called once per connect, join, hydrate, or reconnect, so a provider may
+/// refresh headers or other option values dynamically. It may return [T] or a
+/// `Future<T>`.
+typedef ConnectionOptionsProvider<T> = FutureOr<T> Function();
 
 Map<String, String> _mergeHeaders(Map<String, String>? headers) =>
     headers == null ? <String, String>{} : {...headers};
 
-/// Create an SSE connection adapter.
+/// Create an SSE connection adapter for a static [url].
+///
+/// [options] is read on every request. For a dynamic URL or options, use
+/// [fetchServerSentEventsProvider].
 ///
 /// Resumable: if the server tags events with `id:` offsets, a dropped or
 /// rolled-over connection reconnects with `Last-Event-ID` and de-dupes the
 /// replayed prefix. Untagged responses behave as a single plain request.
-ConnectionAdapter fetchServerSentEvents(Object url, [Object? options]) =>
+ConnectionAdapter fetchServerSentEvents(
+  String url, {
+  FetchConnectionOptions options = const FetchConnectionOptions(),
+}) =>
     createHttpConnection(url: url, options: options, sse: true);
 
-/// Create an NDJSON connection adapter.
+/// Create an SSE connection adapter with a dynamic URL and options.
+///
+/// Exact signature:
+/// ```dart
+/// ConnectionAdapter fetchServerSentEventsProvider({
+///   required ConnectionUrlProvider url,
+///   ConnectionOptionsProvider<FetchConnectionOptions>? options,
+/// });
+/// ```
+///
+/// [url] is required and may be synchronous or asynchronous. [options] is
+/// optional; when supplied it may also be synchronous or asynchronous, and is
+/// re-read for every request so headers can refresh.
+ConnectionAdapter fetchServerSentEventsProvider({
+  required ConnectionUrlProvider url,
+  ConnectionOptionsProvider<FetchConnectionOptions>? options,
+}) =>
+    createHttpConnectionProvider(url: url, options: options, sse: true);
+
+/// Create an NDJSON connection adapter for a static [url].
+///
+/// [options] is read on every request. For a dynamic URL or options, use
+/// [fetchHttpStreamProvider].
 ///
 /// Resumable: `{ id, chunk }` envelopes reconnect with `Last-Event-ID`; bare
 /// chunks are a single plain request.
-ConnectionAdapter fetchHttpStream(Object url, [Object? options]) =>
+ConnectionAdapter fetchHttpStream(
+  String url, {
+  FetchConnectionOptions options = const FetchConnectionOptions(),
+}) =>
     createHttpConnection(url: url, options: options, sse: false);
 
-/// Shared implementation for the fetch- and XHR-named adapters.
+/// Create an NDJSON connection adapter with a dynamic URL and options.
 ///
+/// Exact signature:
+/// ```dart
+/// ConnectionAdapter fetchHttpStreamProvider({
+///   required ConnectionUrlProvider url,
+///   ConnectionOptionsProvider<FetchConnectionOptions>? options,
+/// });
+/// ```
+ConnectionAdapter fetchHttpStreamProvider({
+  required ConnectionUrlProvider url,
+  ConnectionOptionsProvider<FetchConnectionOptions>? options,
+}) =>
+    createHttpConnectionProvider(url: url, options: options, sse: false);
+
+/// Shared typed implementation for the static fetch- and XHR-named adapters.
+///
+/// [options] is typed and named. For a dynamic URL or options, use
+/// [createHttpConnectionProvider] (or one of the named provider factories).
+ConnectionAdapter createHttpConnection({
+  required String url,
+  FetchConnectionOptions options = const FetchConnectionOptions(),
+  required bool sse,
+  bool xhr = false,
+}) =>
+    createHttpConnectionProvider(
+      url: () => url,
+      options: () => options,
+      sse: sse,
+      xhr: xhr,
+    );
+
+/// Shared typed implementation for adapters with a dynamic URL and options.
+///
+/// [url] and [options] are typed providers, called once per operation.
 /// [xhr] changes the non-2xx error wording and selects the real browser XHR
 /// seam when no client is injected. An injected `http.Client` is always used
 /// unchanged.
-ConnectionAdapter createHttpConnection({
-  required Object url,
-  required Object? options,
+ConnectionAdapter createHttpConnectionProvider({
+  required ConnectionUrlProvider url,
+  ConnectionOptionsProvider<FetchConnectionOptions>? options,
   required bool sse,
   bool xhr = false,
 }) {
-  Future<String> resolveUrl() => resolveConnectionUrl(url);
-  Future<FetchConnectionOptions> resolveOptions() =>
-      resolveFetchOptions(options);
+  Future<String> resolveUrl() async => await url();
+  Future<FetchConnectionOptions> resolveOptions() async =>
+      options == null ? const FetchConnectionOptions() : await options();
 
   StreamEventSource eventSource({
     required http.Client client,
@@ -106,7 +165,7 @@ ConnectionAdapter createHttpConnection({
     };
   }
 
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) =>
         _requestStream((localSignal) async* {
       final target = await resolveUrl();

@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('HTTP generation responses preserve BYOK 401 errors', () async {
-    final client = GenerationClient<Object?, Object?, Object?>(
+    final client = GenerationClient<Object?, Object?, Object?>.legacy(
       fetcher: (_, options) async => http.StreamedResponse(
         Stream.value(utf8.encode(jsonEncode({
           'error': {
@@ -26,7 +26,7 @@ void main() {
   });
 
   test('HTTP generation errors do not become successful SSE runs', () async {
-    final client = GenerationClient<Object?, Object?, Object?>(
+    final client = GenerationClient<Object?, Object?, Object?>.legacy(
       fetcher: (_, options) async => http.StreamedResponse(
         Stream.value(utf8.encode('service unavailable')),
         503,

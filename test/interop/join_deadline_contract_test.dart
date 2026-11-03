@@ -11,8 +11,8 @@ Future<void> settled(bool Function() condition) async {
 }
 
 ChatClient restored(JoinRunFunction join, {void Function(Object)? onError}) =>
-    ChatClient(
-      connection: ConnectionAdapter(
+    ChatClient.legacy(
+      connection: ConnectionAdapter.connect(
         connect: (_, {data, signal, runContext}) => const Stream.empty(),
         joinRun: join,
       ),
@@ -34,12 +34,12 @@ void main() {
         return Completer<void>().future;
       },
     );
-    final client = ChatClient(
-        connection: ConnectionAdapter(
+    final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
       connect: (_, {data, signal, runContext}) => body.stream,
     ));
     addTearDown(client.dispose);
-    final run = client.sendMessage('hello');
+    final run = client.sendLegacyMessage('hello');
     await settled(() => body.hasListener);
     await client.stop().timeout(const Duration(milliseconds: 200));
     await run;

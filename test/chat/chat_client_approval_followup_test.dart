@@ -24,7 +24,7 @@ void main() {
         approval: AssistantApproval(id: 'approval-2'),
       );
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(

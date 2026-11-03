@@ -611,29 +611,33 @@
       "upstreamFile": "connection-adapters.test.ts",
       "upstreamName": "connection-adapters normalizeConnectionAdapter should throw when subscribe/send are partially implemented",
       "upstreamTitle": "should throw when subscribe/send are partially implemented",
-      "dartFile": "test/connections/connection_adapters_test.dart",
-      "dartTestName": "connection-adapters normalizeConnectionAdapter should throw when subscribe/send are partially implemented",
-      "status": "implemented",
+      "dartFile": "test/types/dart_api_negative.dart",
+      "status": "ported-static-adapted",
       "upstreamAssertions": [
         "expect(() => normalizeConnectionAdapter(adapter as any))"
       ],
       "actualAssertions": [
-        "expect( () => normalizeConnectionAdapter(adapter), throwsA( predicate<Object>( (error) => error .toString() .contains('either connect or both subscribe and send'), ), ), )"
-      ]
+        "Analyzer rejects partial subscription and mixed connection modes through required/named constructor parameters."
+      ],
+      "kind": "compile",
+      "runtimeVsStatic": "static",
+      "dartAdaptation": "Dart ConnectionAdapter.connect/subscription make the upstream invalid structural-union configuration unrepresentable. Verified analyzer-negative fixtures replace runtime casts to any."
     },
     {
       "upstreamFile": "connection-adapters.test.ts",
       "upstreamName": "connection-adapters normalizeConnectionAdapter should throw when both connection modes are provided",
       "upstreamTitle": "should throw when both connection modes are provided",
-      "dartFile": "test/connections/connection_adapters_test.dart",
-      "dartTestName": "connection-adapters normalizeConnectionAdapter should throw when both connection modes are provided",
-      "status": "implemented",
+      "dartFile": "test/types/dart_api_negative.dart",
+      "status": "ported-static-adapted",
       "upstreamAssertions": [
         "expect(() => normalizeConnectionAdapter(invalidAdapter as any))"
       ],
       "actualAssertions": [
-        "expect( () => normalizeConnectionAdapter(adapter), throwsA( predicate<Object>( (error) => error.toString().contains('not both modes'), ), ), )"
-      ]
+        "Analyzer rejects partial subscription and mixed connection modes through required/named constructor parameters."
+      ],
+      "kind": "compile",
+      "runtimeVsStatic": "static",
+      "dartAdaptation": "Dart ConnectionAdapter.connect/subscription make the upstream invalid structural-union configuration unrepresentable. Verified analyzer-negative fixtures replace runtime casts to any."
     },
     {
       "upstreamFile": "connection-adapters.test.ts",
@@ -2202,10 +2206,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport runs an in-process AsyncIterable fetcher and streams text",
+      "upstreamName": "ChatClient — fetcher transport runs an in-process AsyncIterable fetcher and streams text",
       "upstreamTitle": "runs an in-process AsyncIterable fetcher and streams text",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport runs an in-process AsyncIterable fetcher and streams text",
+      "dartTestName": "ChatClient — fetcher transport runs an in-process AsyncIterable fetcher and streams text",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(fetcher)",
@@ -2221,10 +2225,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
+      "upstreamName": "ChatClient — fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
       "upstreamTitle": "parses an SSE Response returned by the fetcher (server-fn style)",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
+      "dartTestName": "ChatClient — fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(fetcher)",
@@ -2238,10 +2242,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
+      "upstreamName": "ChatClient — fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
       "upstreamTitle": "passes the AbortSignal to the fetcher; stop() aborts it",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
+      "dartTestName": "ChatClient — fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedSignal)",
@@ -2256,10 +2260,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a fetcher error as a ChatClient error",
+      "upstreamName": "ChatClient — fetcher transport surfaces a fetcher error as a ChatClient error",
       "upstreamTitle": "surfaces a fetcher error as a ChatClient error",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a fetcher error as a ChatClient error",
+      "dartTestName": "ChatClient — fetcher transport surfaces a fetcher error as a ChatClient error",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedError)",
@@ -2274,10 +2278,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
+      "upstreamName": "ChatClient — fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
       "upstreamTitle": "surfaces a malformed-SSE Response as a ChatClient error",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
+      "dartTestName": "ChatClient — fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedError)",
@@ -2292,10 +2296,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport passes UIMessages and merged body to the fetcher",
+      "upstreamName": "ChatClient — fetcher transport passes UIMessages and merged body to the fetcher",
       "upstreamTitle": "passes UIMessages and merged body to the fetcher",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport passes UI messages and merged body to the fetcher",
+      "dartTestName": "ChatClient — fetcher transport passes UI messages and merged body to the fetcher",
       "status": "ported-static-adapted",
       "upstreamAssertions": [
         "expect(fetcher)",
@@ -2319,10 +2323,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport throws when both connection and fetcher are passed",
+      "upstreamName": "ChatClient — fetcher transport throws when both connection and fetcher are passed",
       "upstreamTitle": "throws when both connection and fetcher are passed",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport throws when both connection and fetcher are passed",
+      "dartTestName": "ChatClient — fetcher transport throws when both connection and fetcher are passed",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(() => new ChatClient(both))"
@@ -2333,10 +2337,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport throws when neither connection nor fetcher is passed",
+      "upstreamName": "ChatClient — fetcher transport throws when neither connection nor fetcher is passed",
       "upstreamTitle": "throws when neither connection nor fetcher is passed",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport throws when neither connection nor fetcher is passed",
+      "dartTestName": "ChatClient — fetcher transport throws when neither connection nor fetcher is passed",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(() => new ChatClient({} as any))"
@@ -2347,10 +2351,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a non-OK Response as a ChatClient error",
+      "upstreamName": "ChatClient — fetcher transport surfaces a non-OK Response as a ChatClient error",
       "upstreamTitle": "surfaces a non-OK Response as a ChatClient error",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a non-OK Response as a ChatClient error",
+      "dartTestName": "ChatClient — fetcher transport surfaces a non-OK Response as a ChatClient error",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedError)",
@@ -2364,10 +2368,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
+      "upstreamName": "ChatClient — fetcher transport surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
       "upstreamTitle": "surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a non-stream result from the fetcher as a ChatClient error",
+      "dartTestName": "ChatClient — fetcher transport surfaces a non-stream result from the fetcher as a ChatClient error",
       "status": "ported-static-adapted",
       "upstreamAssertions": [
         "expect(observedError)",
@@ -2382,10 +2386,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
+      "upstreamName": "ChatClient — fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
       "upstreamTitle": "surfaces an AsyncIterable that throws after yielding chunks",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
+      "dartTestName": "ChatClient — fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedError)",
@@ -2399,10 +2403,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "upstreamName": "ChatClient — fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
       "upstreamTitle": "completes cleanly when AsyncIterable ends without RUN_FINISHED",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "dartTestName": "ChatClient — fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(client.getStatus())",
@@ -2416,10 +2420,10 @@
     },
     {
       "upstreamFile": "chat-fetcher.test.ts",
-      "upstreamName": "ChatClient \u2014 fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
+      "upstreamName": "ChatClient — fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
       "upstreamTitle": "stops consuming chunks from an AsyncIterable that ignores its signal",
       "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
-      "dartTestName": "ChatClient \u2014 fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
+      "dartTestName": "ChatClient — fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
       "status": "implemented",
       "upstreamAssertions": [
         "expect(observedChunks.length)"

@@ -85,7 +85,7 @@ ConnectionAdapter _adapter(
   List<RunAgentInputContext>? contexts,
 }) {
   var calls = 0;
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       if (runContext != null) contexts?.add(runContext);
       final chunks =
@@ -104,7 +104,7 @@ class _ManualConnection {
       StreamController<Map<String, dynamic>>();
   final List<RunAgentInputContext> contexts = <RunAgentInputContext>[];
 
-  late final ConnectionAdapter adapter = ConnectionAdapter(
+  late final ConnectionAdapter adapter = ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) {
       if (runContext != null) contexts.add(runContext);
       return controller.stream;
@@ -218,7 +218,7 @@ ChatClient _client({
   bool mount = true,
   ChatDevtoolsBridge Function(ChatDevtoolsBridgeOptions)? factory,
 }) {
-  final client = ChatClient(
+  final client = ChatClient.legacy(
     threadId: threadId,
     transport: transport,
     connection: connection ?? (transport == null ? _adapter(const []) : null),
@@ -362,18 +362,18 @@ void main() {
         description: 'Lookup weather',
         needsApproval: true,
         metadata: const <String, dynamic>{'fixture': true},
-        inputSchema: const <String, dynamic>{
+        inputSchema: RawJsonSchema(const <String, dynamic>{
           'type': 'object',
           'properties': <String, dynamic>{
             'city': <String, dynamic>{'type': 'string'},
           },
-        },
-        outputSchema: const <String, dynamic>{
+        }),
+        outputSchema: RawJsonSchema(const <String, dynamic>{
           'type': 'object',
           'properties': <String, dynamic>{
             'temperature': <String, dynamic>{'type': 'number'},
           },
-        },
+        }),
       );
       final client = _client(tools: <ClientTool>[tool]);
       addTearDown(client.dispose);
@@ -637,8 +637,8 @@ void main() {
       final tool = ClientTool(
         name: 'weather',
         description: 'Get the weather for a city',
-        inputSchema: const <String, dynamic>{'type': 'object'},
-        outputSchema: const <String, dynamic>{'type': 'object'},
+        inputSchema: RawJsonSchema(const <String, dynamic>{'type': 'object'}),
+        outputSchema: RawJsonSchema(const <String, dynamic>{'type': 'object'}),
         execute: (input, ToolCallContext context) {
           calls += 1;
           return <String, dynamic>{
@@ -715,7 +715,7 @@ void main() {
       final duplicate = _client(threadId: 'shared-thread');
       _sink.clear();
 
-      await first.sendMessage('start');
+      await first.sendLegacyMessage('start');
 
       expect(contexts, isNotEmpty);
       expect(_emitted('run:created'), isEmpty);
@@ -931,7 +931,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      final sending = client.sendMessage('research');
+      final sending = client.sendLegacyMessage('research');
       await _waitFor(() => manual.contexts.isNotEmpty);
       manual.controller.add({
         'type': 'RUN_STARTED',
@@ -1009,7 +1009,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
 
       expect(contexts, isNotEmpty);
       final runId = contexts.first.runId;
@@ -1059,7 +1059,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
 
       expect(contexts, isNotEmpty);
       final text = _payload('text:chunk:content');
@@ -1097,7 +1097,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('start');
+      await client.sendLegacyMessage('start');
 
       expect(contexts.first.runId, isNot('server-run'));
       final text = _payload('text:chunk:content');
@@ -1150,7 +1150,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('make recipe');
+      await client.sendLegacyMessage('make recipe');
 
       final started = _emitted('structured-output:started');
       final updated = _emitted('structured-output:updated');
@@ -1236,7 +1236,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('what is my name?');
+      await client.sendLegacyMessage('what is my name?');
       await _waitFor(() => _emitted('memory:snapshot').isNotEmpty);
 
       final started = _payload('memory:retrieve:started');
@@ -1337,7 +1337,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('keep going');
+      await client.sendLegacyMessage('keep going');
       await _waitFor(() => _emitted('compaction:ended').isNotEmpty);
 
       final started = _payload('compaction:started');
@@ -1414,7 +1414,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('talk like a pirate');
+      await client.sendLegacyMessage('talk like a pirate');
       await _waitFor(() => _emitted('skills:snapshot').isNotEmpty);
 
       final snapshot = _payload('skills:snapshot');
@@ -1472,7 +1472,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('make recipe');
+      await client.sendLegacyMessage('make recipe');
 
       final updates = _emitted('structured-output:updated');
       expect(updates, hasLength(3));
@@ -1528,7 +1528,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('make risotto');
+      await client.sendLegacyMessage('make risotto');
 
       final completed = _payload('structured-output:completed');
       expect(completed['hookId'], 'thread-1');
@@ -1608,8 +1608,8 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('make pasta');
-      await client.sendMessage('make soup');
+      await client.sendLegacyMessage('make pasta');
+      await client.sendLegacyMessage('make soup');
 
       final first = _findStructuredPart('msg-structured-first');
       final second = _findStructuredPart('msg-structured-second');
@@ -1656,7 +1656,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('add it to cart');
+      await client.sendLegacyMessage('add it to cart');
       await _waitFor(() => _emitted('tools:approval:requested').isNotEmpty);
 
       final requested = _payload('tools:approval:requested');
@@ -1760,10 +1760,10 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      final firstRun = client.sendMessage('first');
+      final firstRun = client.sendLegacyMessage('first');
       await toolStarted.future;
       await client.stop();
-      final secondRun = client.sendMessage('second');
+      final secondRun = client.sendLegacyMessage('second');
       await _waitFor(() => contexts.length == 2);
 
       toolOutput.complete(<String, dynamic>{'ok': true});
@@ -1797,7 +1797,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('Hello');
+      await client.sendLegacyMessage('Hello');
 
       expect(
         _emitted('text:message:created')
@@ -1814,7 +1814,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('Hello');
+      await client.sendLegacyMessage('Hello');
 
       expect(_emitted('text:chunk:content').length, greaterThan(0));
     });
@@ -1826,7 +1826,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('What is the weather?');
+      await client.sendLegacyMessage('What is the weather?');
 
       expect(_emitted('tools:call:updated').length, greaterThan(0));
     });
@@ -1859,7 +1859,7 @@ void main() {
       addTearDown(client.dispose);
       _sink.clear();
 
-      await client.sendMessage('Hello');
+      await client.sendLegacyMessage('Hello');
 
       expect(_emitted('text:chunk:thinking').length, greaterThan(0));
     });
@@ -1875,7 +1875,7 @@ void main() {
       );
       addTearDown(client.dispose);
 
-      await client.sendMessage('hello');
+      await client.sendLegacyMessage('hello');
 
       expect(_sink.events, isEmpty);
     });
@@ -1889,14 +1889,14 @@ void main() {
       );
       addTearDown(client.dispose);
 
-      await client.sendMessage('hello');
+      await client.sendLegacyMessage('hello');
 
       expect(_sink.events, isNotEmpty);
     });
 
     test('does not throw when there is no process global', () {
       expect(
-        () => ChatClient(
+        () => ChatClient.legacy(
           connection: _adapter(const []),
           devtools: const AIDevtoolsClientMetadata(hookName: 'useChat'),
           devtoolsBridgeFactory: (options) =>
@@ -1909,13 +1909,13 @@ void main() {
 
   group('ChatClient with default no-op devtools bridge', () {
     test('sends the first message and appends it', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection:
             _adapter(<List<Map<String, dynamic>>>[_textChunks('Hi there')]),
       );
       addTearDown(client.dispose);
 
-      await client.sendMessage('hello');
+      await client.sendLegacyMessage('hello');
 
       final messages = client.getMessages();
       expect(messages.first.role, 'user');
@@ -1925,11 +1925,11 @@ void main() {
     });
 
     test('updates tools without throwing', () {
-      final client = ChatClient(connection: _adapter(const []));
+      final client = ChatClient.legacy(connection: _adapter(const []));
       addTearDown(client.dispose);
 
       expect(
-        () => (client as dynamic).updateOptions(tools: <ClientTool>[]),
+        () => (client as dynamic).updateLegacyOptions(tools: <ClientTool>[]),
         returnsNormally,
       );
     });

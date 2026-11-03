@@ -2,7 +2,8 @@
 
 The client SDK implementation and pinned upstream mapping are complete within
 the Dart/platform boundaries in [API_COMPATIBILITY.md](API_COMPATIBILITY.md).
-The snapshot regression is fixed; minimum/stable SDK checks and CI are included.
+The snapshot regression and Dart API revision are implemented; minimum/stable
+SDK checks, migration documentation and CI are included.
 See [VALIDATION.md](VALIDATION.md) for executed checks.
 
 Before a public pub.dev release:
@@ -15,6 +16,7 @@ For consuming applications:
 
 - Supply platform implementations for audio, WebAuthn, storage, WebSocket and
   MCP host capabilities that the application uses; verify them on real devices.
+- Migrate pre-0.3 call sites using [MIGRATION.md](MIGRATION.md).
 - Use an explicit `copySnapshotResult` for generation output collection types
   outside JSON containers/scalar collections.
 - Treat caller context as an application model; Dart does not infer TypeScript

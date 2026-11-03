@@ -38,23 +38,11 @@ class _JsonRunBody {
   const _JsonRunBody(this.chunks, this.offset, this.done);
 }
 
-Future<FetchJsonOptions> _resolveJsonOptions(Object? source) async {
+Future<FetchJsonOptions> _resolveJsonOptions(
+  ConnectionOptionsProvider<FetchJsonOptions>? source,
+) async {
   if (source == null) return const FetchJsonOptions();
-  if (source is FetchJsonOptions) return source;
-  if (source is FetchConnectionOptions) {
-    return FetchJsonOptions(
-      headers: source.headers,
-      signal: source.signal,
-      body: source.body,
-      client: source.client,
-      credentials: source.credentials,
-      reconnect: source.reconnect,
-    );
-  }
-  if (source is FutureOr<FetchJsonOptions> Function()) return await source();
-  throw ArgumentError(
-    'Options must be FetchJsonOptions or a function returning them',
-  );
+  return await source();
 }
 
 class _JsonPollOptions {
@@ -78,15 +66,40 @@ class _JsonPollOptions {
 /// Create a connection adapter for a server that replies with one JSON body
 /// per request (`{ chunks, offset?, done }`) instead of a stream.
 ///
+/// [options] is read on every request. For a dynamic URL or options, use
+/// [fetchJsonProvider].
+///
 /// While `done` is false the adapter waits [FetchJsonOptions.pollInterval] and
 /// asks for the rest with `GET url?runId=<id>&offset=<offset>`. A failed
 /// follow-up GET is retried with the `reconnect` bounds; a failed first POST is
 /// not retried.
-ConnectionAdapter fetchJson(Object url, [Object? options]) {
-  Future<String> resolveUrl() => resolveConnectionUrl(url);
+ConnectionAdapter fetchJson(
+  String url, {
+  FetchJsonOptions options = const FetchJsonOptions(),
+}) =>
+    fetchJsonProvider(url: () => url, options: () => options);
+
+/// Create a JSON-poll connection adapter with a dynamic URL and options.
+///
+/// Exact signature:
+/// ```dart
+/// ConnectionAdapter fetchJsonProvider({
+///   required ConnectionUrlProvider url,
+///   ConnectionOptionsProvider<FetchJsonOptions>? options,
+/// });
+/// ```
+///
+/// [url] is required and may be synchronous or asynchronous. [options] is
+/// optional; when supplied it may also be synchronous or asynchronous, and is
+/// re-read for every request so headers and polling settings can refresh.
+ConnectionAdapter fetchJsonProvider({
+  required ConnectionUrlProvider url,
+  ConnectionOptionsProvider<FetchJsonOptions>? options,
+}) {
+  Future<String> resolveUrl() async => await url();
   Future<FetchJsonOptions> resolveOptions() => _resolveJsonOptions(options);
 
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       final target = await resolveUrl();
       final resolved = await resolveOptions();

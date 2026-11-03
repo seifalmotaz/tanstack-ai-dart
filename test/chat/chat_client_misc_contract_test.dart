@@ -43,15 +43,15 @@ void main() {
   group('ChatClient with default no-op devtools bridge', () {
     test('sends the first message and appends it', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hello');
       expect(client.getMessages().first.answer, 'hello');
       await client.stop();
     });
 
     test('updates tools without throwing', () {
-      final client = ChatClient(transport: FakeChatTransport());
-      expect(() => client.updateOptions(body: <String, dynamic>{'x': 1}),
+      final client = ChatClient.legacy(transport: FakeChatTransport());
+      expect(() => client.updateLegacyOptions(body: <String, dynamic>{'x': 1}),
           returnsNormally);
     });
   });
@@ -95,7 +95,7 @@ void main() {
 
     test('does not invent a server abort when the client stops', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await client.stop();
       expect(
@@ -109,8 +109,8 @@ void main() {
     test('does not join a run when hydration resolves after dispose', () async {
       final gate = Completer<conn.ChatHydrationResult>();
       var joins = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
@@ -133,7 +133,7 @@ void main() {
 
     test('aborts an OPEN tail when the client is disposed', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('x');
       await client.dispose();
       expect(transport.controllers.single.hasListener, isFalse);
@@ -142,8 +142,8 @@ void main() {
     test('detach drops the connection, and attach picks the run back up',
         () async {
       var joins = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
@@ -167,8 +167,8 @@ void main() {
     test('attach is idempotent, so a wrapper mount after construction is free',
         () async {
       var hydrates = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           hydrate: (threadId, {options}) async {
             hydrates++;
@@ -184,7 +184,7 @@ void main() {
     });
 
     test('detach must not wipe a PERSISTED resume pointer', () async {
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: const ChatClientOptions(
           initialResume: ChatResumeState(threadId: 't', runId: 'r'),
@@ -196,8 +196,8 @@ void main() {
 
     test('an EPHEMERAL chat makes no request on attach or re-attach', () async {
       var requests = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             requests++;
           },
@@ -212,8 +212,8 @@ void main() {
         () async {
       final gate = Completer<conn.ChatHydrationResult>();
       var joins = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
@@ -239,8 +239,8 @@ void main() {
     test('a re-attach while hydration is in flight reuses that GET', () async {
       final gate = Completer<conn.ChatHydrationResult>();
       var hydrates = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           hydrate: (threadId, {options}) {
             hydrates++;
@@ -262,8 +262,8 @@ void main() {
     test('still joins the run when hydration resolves before dispose',
         () async {
       var joins = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;

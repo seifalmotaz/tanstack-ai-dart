@@ -14,8 +14,8 @@ void main() {
         () async {
       final gate = Completer<conn.ChatHydrationResult>();
       var errors = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           hydrate: (threadId, {options}) => gate.future,
         ),
@@ -33,8 +33,8 @@ void main() {
 
     test('does not surface anything when hydration succeeds', () async {
       var errors = 0;
-      final client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           hydrate: (threadId, {options}) async =>
               const conn.ChatHydrationResult(messages: <conn.WireMessage>[]),
@@ -66,8 +66,8 @@ void main() {
       final joinGate = Completer<void>();
       var loadingWhenHydrated = false;
       late ChatClient client;
-      client = ChatClient(
-        connection: conn.ConnectionAdapter(
+      client = ChatClient.legacy(
+        connection: conn.ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             await joinGate.future;
@@ -94,7 +94,7 @@ void main() {
     test('is true until an async storage adapter has read the transcript',
         () async {
       final gate = Completer<List<AssistantTurn>?>();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
           threadId: 't1',

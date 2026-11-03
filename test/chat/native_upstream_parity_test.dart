@@ -114,7 +114,7 @@ class PushConnection {
   final List<List<Map<String, dynamic>>> sent = <List<Map<String, dynamic>>>[];
   final List<RunAgentInputContext?> contexts = <RunAgentInputContext?>[];
 
-  late final ConnectionAdapter adapter = ConnectionAdapter(
+  late final ConnectionAdapter adapter = ConnectionAdapter.subscription(
     subscribe: ({signal}) => _controller.stream,
     send: (messages, {data, signal, runContext}) async {
       sent.add(messages);
@@ -137,7 +137,7 @@ class GatedConnect {
   final Completer<void> release = Completer<void>();
   final List<List<Map<String, dynamic>>> requests =
       <List<Map<String, dynamic>>>[];
-  late final ConnectionAdapter adapter = ConnectionAdapter(
+  late final ConnectionAdapter adapter = ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       requests.add(messages);
       await release.future;
@@ -255,9 +255,9 @@ void main() {
       final controller = StreamController<Map<String, dynamic>>.broadcast(
         sync: true,
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         threadId: threadId,
-        connection: ConnectionAdapter(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => controller.stream,
           send: (messages, {data, signal, runContext}) async {},
         ),
@@ -289,16 +289,16 @@ void main() {
         'request without runId', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final firstSend = client.sendMessage('A');
+      final firstSend = client.sendLegacyMessage('A');
       await waitFor(() => client.getIsLoading());
       await client.clear();
-      final secondSend = client.sendMessage('B');
+      final secondSend = client.sendLegacyMessage('B');
       await waitFor(() => push.sent.length >= 2);
       final firstContext = push.contexts[0]!;
       final secondContext = push.contexts[1]!;
@@ -338,13 +338,13 @@ void main() {
         'request', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-cleared'));
       await waitFor(() => client.getSessionGenerating());
@@ -368,19 +368,19 @@ void main() {
         'before stale chunks drain', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final firstSend = client.sendMessage('A');
+      final firstSend = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-cleared'));
       await waitFor(() => client.getSessionGenerating());
 
       await client.clear();
-      final secondSend = client.sendMessage('B');
+      final secondSend = client.sendLegacyMessage('B');
       await waitFor(() => push.sent.length >= 2);
       final secondContext = push.contexts[1]!;
 
@@ -411,13 +411,13 @@ void main() {
         'ignored terminal chunk', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final firstSend = client.sendMessage('A');
+      final firstSend = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       final firstContext = push.contexts[0]!;
       push.push(runStarted(firstContext.runId, firstContext.threadId));
@@ -427,7 +427,7 @@ void main() {
       push.push(runFinished(firstContext.runId, firstContext.threadId));
       await firstSend;
 
-      final secondSend = client.sendMessage('B');
+      final secondSend = client.sendLegacyMessage('B');
       await waitFor(() => push.sent.length >= 2);
       // Upstream strips runId from this run's RUN_FINISHED chunk.
       push.pushAll(<Map<String, dynamic>>[
@@ -455,13 +455,13 @@ void main() {
         () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       await waitFor(() => client.getSessionGenerating());
@@ -492,14 +492,14 @@ void main() {
       final push = PushConnection();
       final persistence = RecordingPersistence();
       final errors = <Object>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
         onError: (error, _) => errors.add(error),
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       await waitFor(() => client.getSessionGenerating());
@@ -529,18 +529,18 @@ void main() {
         'before stale cleared chunks', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final firstSend = client.sendMessage('A');
+      final firstSend = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       await waitFor(() => client.getIsLoading());
 
       await client.clear();
-      final secondSend = client.sendMessage('B');
+      final secondSend = client.sendLegacyMessage('B');
       await waitFor(() => push.sent.length >= 2);
       final firstContext = push.contexts[0]!;
       final secondContext = push.contexts[1]!;
@@ -579,13 +579,13 @@ void main() {
         'persisted clear', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       push.push(textDelta('assistant-a', ''));
@@ -627,13 +627,13 @@ void main() {
         'are ignored after persisted clear', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       await waitFor(() => client.getSessionGenerating());
@@ -673,13 +673,13 @@ void main() {
         'persisted clear', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       await waitFor(() => client.getSessionGenerating());
@@ -718,13 +718,13 @@ void main() {
         'should reset session generation when a persisted clear ignores '
         'terminal chunks', () async {
       final push = PushConnection();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: RecordingPersistence().adapter,
       );
 
-      final send = client.sendMessage('A');
+      final send = client.sendLegacyMessage('A');
       await waitFor(() => push.sent.isNotEmpty);
       push.push(runStarted('run-1'));
       await waitFor(() => client.getSessionGenerating());
@@ -744,7 +744,7 @@ void main() {
         'clean up session generation', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
@@ -777,8 +777,8 @@ void main() {
         'context', () async {
       final onChunk = <Map<String, dynamic>>[];
       final runContexts = <RunAgentInputContext?>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             runContexts.add(runContext);
             for (final chunk in textChunks('Hello')) {
@@ -789,7 +789,7 @@ void main() {
         onChunk: onChunk.add,
       );
 
-      await client.sendMessage('Hello');
+      await client.sendLegacyMessage('Hello');
 
       expect(runContexts, isNotEmpty);
       final context = runContexts.first as dynamic;
@@ -805,8 +805,8 @@ void main() {
     test('should not add internal threadId or runId to public connect chunks',
         () async {
       final onChunk = <Map<String, dynamic>>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             yield <String, dynamic>{
               'type': 'TEXT_MESSAGE_CONTENT',
@@ -819,7 +819,7 @@ void main() {
         onChunk: onChunk.add,
       );
 
-      await client.sendMessage('Hello');
+      await client.sendLegacyMessage('Hello');
 
       expect(
         onChunk.any(
@@ -844,14 +844,14 @@ void main() {
       final adapter = PushConnection();
       final subscriptionChanges = <bool>[];
       final connectionStatuses = <String>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: adapter.adapter,
         onSubscriptionChange: subscriptionChanges.add,
         onConnectionStatusChange: connectionStatuses.add,
       );
 
       client.subscribe();
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => adapter.sent.isNotEmpty);
       adapter.pushAll(textChunks('callback flow'));
       await send;
@@ -868,10 +868,10 @@ void main() {
     test('unsubscribe should abort in-flight requests and disconnect',
         () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
 
       client.subscribe();
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       await client.unsubscribe();
 
@@ -886,8 +886,8 @@ void main() {
 
     test('should expose connectionStatus error for subscription loop failures',
         () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => failingSubscription('subscription failed'),
           send: (messages, {data, signal, runContext}) async {},
         ),
@@ -904,8 +904,8 @@ void main() {
 
     test('should expose connectionStatus error when subscribe throws',
         () async {
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => throw StateError('subscription failed'),
           send: (messages, {data, signal, runContext}) async {},
         ),
@@ -932,9 +932,9 @@ void main() {
     test('should remain correct through subscribe/unsubscribe cycles',
         () async {
       final push = PushConnection();
-      final client = ChatClient(connection: push.adapter);
+      final client = ChatClient.legacy(connection: push.adapter);
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(textChunks('Hi'));
       await send;
@@ -952,8 +952,8 @@ void main() {
         sync: true,
       );
       final generatingChanges = <bool>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => controller.stream,
           send: (messages, {data, signal, runContext}) async {},
         ),
@@ -978,7 +978,7 @@ void main() {
       final first = PushConnection();
       final second = PushConnection();
       final generatingChanges = <bool>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: first.adapter,
         onSessionGeneratingChange: generatingChanges.add,
       );
@@ -989,7 +989,7 @@ void main() {
       await waitFor(() => client.getSessionGenerating());
       expect(client.getSessionGenerating(), isTrue);
 
-      client.updateOptions(connection: second.adapter);
+      client.updateLegacyOptions(connection: second.adapter);
 
       expect(client.getSessionGenerating(), isFalse);
       expect(generatingChanges, <bool>[true, false]);
@@ -1003,12 +1003,12 @@ void main() {
         () async {
       final push = PushConnection();
       final generatingChanges = <bool>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         onSessionGeneratingChange: generatingChanges.add,
       );
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(<Map<String, dynamic>>[
         runStarted('run-1'),
@@ -1029,12 +1029,12 @@ void main() {
         () async {
       final push = PushConnection();
       final generatingChanges = <bool>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         onSessionGeneratingChange: generatingChanges.add,
       );
 
-      final first = client.sendMessage('First');
+      final first = client.sendLegacyMessage('First');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(<Map<String, dynamic>>[
         runStarted('run-first'),
@@ -1044,7 +1044,7 @@ void main() {
       await first;
       expect(generatingChanges, <bool>[true, false]);
 
-      final second = client.sendMessage('Second');
+      final second = client.sendLegacyMessage('Second');
       await waitFor(() => push.sent.length >= 2);
       push.pushAll(<Map<String, dynamic>>[
         runStarted('run-second'),
@@ -1062,7 +1062,7 @@ void main() {
       final push = PushConnection();
       final generatingChanges = <bool>[];
       final finishedRunIds = <String>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         onChunk: (chunk) {
           if (chunk['type'] == 'RUN_FINISHED' && chunk['runId'] is String) {
@@ -1101,7 +1101,7 @@ void main() {
         'clear', () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
@@ -1130,7 +1130,7 @@ void main() {
     test('should clear all runs on RUN_ERROR without runId', () async {
       final push = PushConnection();
       final generatingChanges = <bool>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         onSessionGeneratingChange: generatingChanges.add,
       );
@@ -1161,8 +1161,8 @@ void main() {
     test('should reset on fatal subscription loop teardown', () async {
       final generatingChanges = <bool>[];
       var yieldedStart = false;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => (() async* {
             if (!yieldedStart) {
               yieldedStart = true;
@@ -1196,13 +1196,13 @@ void main() {
         () async {
       final push = PushConnection();
       final persistence = RecordingPersistence();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(textChunks('Response'));
       await send;
@@ -1221,8 +1221,8 @@ void main() {
         'should not persist non-cooperative delayed chunks after clear removes '
         'storage', () async {
       final persistence = RecordingPersistence();
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             await Future<void>.delayed(const Duration(milliseconds: 10));
             for (final chunk in textChunks('Delayed')) {
@@ -1234,7 +1234,7 @@ void main() {
         persistence: persistence.adapter,
       );
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await Future<void>.delayed(Duration.zero);
       await client.clear();
       await send;
@@ -1253,7 +1253,7 @@ void main() {
         'new send', () async {
       final releaseFirst = Completer<void>();
       final persistence = RecordingPersistence();
-      final connection = ConnectionAdapter(
+      final connection = ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           final text = messages
               .expand((message) => message['parts'] is List
@@ -1275,17 +1275,17 @@ void main() {
           }
         },
       );
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: connection,
         threadId: 'chat-1',
         persistence: persistence.adapter,
       );
 
-      final firstSend = client.sendMessage('A');
+      final firstSend = client.sendLegacyMessage('A');
       await waitFor(() => client.getIsLoading());
 
       await client.clear();
-      await client.sendMessage('B');
+      await client.sendLegacyMessage('B');
       releaseFirst.complete();
       await firstSend;
 
@@ -1324,13 +1324,13 @@ void main() {
         },
       );
       final push = PushConnection();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         persistence: persistence,
       );
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(textChunks('Response'));
       await send;
@@ -1357,7 +1357,7 @@ void main() {
         removeItem: () => throw StateError('remove failed'),
       );
       final push = PushConnection();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         threadId: 'chat-1',
         messages: <AssistantTurn>[initialMessage()],
@@ -1368,7 +1368,7 @@ void main() {
       expect(client.getMessages(), hasLength(1));
       expect(client.getMessages().first.id, 'initial-1');
 
-      final send = client.sendMessage('Hello');
+      final send = client.sendLegacyMessage('Hello');
       await waitFor(() => push.sent.isNotEmpty);
       push.pushAll(textChunks('Response'));
       await send;
@@ -1437,8 +1437,8 @@ void main() {
       ];
       final roundTwo = textChunks('Done!', messageId: 'msg-2');
       var callIndex = 0;
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             callIndex++;
             final chunks = callIndex == 1 ? roundOne : roundTwo;
@@ -1464,7 +1464,7 @@ void main() {
         ],
       );
 
-      await client.sendMessage('Run both tools');
+      await client.sendLegacyMessage('Run both tools');
       await waitFor(
         () => !client.getIsLoading() && callIndex >= 2,
         reason: 'continuation round never started after simultaneous tools',
@@ -1491,7 +1491,7 @@ void main() {
         'content', () async {
       final push = PushConnection();
       final finishedRunIds = <String>[];
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         connection: push.adapter,
         onChunk: (chunk) {
           if (chunk['type'] == 'RUN_FINISHED' && chunk['runId'] is String) {
@@ -1560,15 +1560,17 @@ void main() {
   group('ChatClient error handling', () {
     test('should surface subscription loop failures without hanging', () async {
       final errors = <Object>[];
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => failingSubscription('subscription exploded'),
           send: (messages, {data, signal, runContext}) async {},
         ),
         onError: (error, _) => errors.add(error),
       );
 
-      await client.sendMessage('Hello').timeout(const Duration(seconds: 2));
+      await client
+          .sendLegacyMessage('Hello')
+          .timeout(const Duration(seconds: 2));
 
       expect(errors, hasLength(1));
       expect(generatorsError(errors.first), contains('subscription exploded'));
@@ -1582,8 +1584,8 @@ void main() {
     test('should allow updating onCustomEvent via updateOptions', () async {
       final seen = <Map<String, dynamic>>[];
       Object? seenContext = 'unset';
-      final client = ChatClient(
-        connection: ConnectionAdapter(
+      final client = ChatClient.legacy(
+        connection: ConnectionAdapter.connect(
           connect: (messages, {data, signal, runContext}) async* {
             for (final chunk in customChunks(<({String name, Object? value})>[
               (name: 'test-event', value: <String, dynamic>{'value': 42}),
@@ -1594,14 +1596,14 @@ void main() {
         ),
       );
 
-      client.updateOptions(
+      client.updateLegacyOptions(
         onCustomEvent: (event, context) {
           seen.add(event);
           seenContext = context;
         },
       );
 
-      await client.sendMessage('Test');
+      await client.sendLegacyMessage('Test');
 
       expect(seen, hasLength(1));
       expect(seen.single['name'], 'test-event');

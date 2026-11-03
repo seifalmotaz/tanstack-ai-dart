@@ -9,8 +9,8 @@ void main() {
     final sent = Completer<void>();
     final subscriptions = <bool>[];
     final states = <String>[];
-    final client = ChatClient(
-        connection: ConnectionAdapter(
+    final client = ChatClient.legacy(
+        connection: ConnectionAdapter.subscription(
             subscribe: ({signal}) => source.stream,
             send: (messages, {data, signal, runContext}) async {
               if (!sent.isCompleted) sent.complete();
@@ -19,7 +19,7 @@ void main() {
         onConnectionStatusChange: states.add);
     addTearDown(client.dispose);
     client.subscribe();
-    final pending = client.sendMessage('Hello');
+    final pending = client.sendLegacyMessage('Hello');
     await sent.future;
     for (final character in 'callback flow'.split('')) {
       source.add({

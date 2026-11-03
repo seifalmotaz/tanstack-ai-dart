@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
+import 'snapshot_stream.dart';
+import 'package:http/http.dart' as http;
+
 import 'connections/cancellation.dart';
 import 'connections/connection_adapter.dart';
 import 'connections/stream_connections.dart'
-    show ChatFetcher, fetcherToConnectionAdapter;
+    show ChatFetcherResult, fetcherToConnectionAdapter;
 import 'connections/types.dart'
     show ClientToolDeclaration, RunAgentInputContext;
 import 'processing/processor.dart' as proc;
@@ -30,28 +33,91 @@ import 'platform/byok/byok.dart' as byok_api;
 
 enum ChatClientStatus { idle, streaming, error }
 
-/// Convenience wrapper around a [ChatTransport].
+/// Framework-independent TanStack AI chat client.
 ///
-/// It owns [messages], folds events into the last assistant turn with
-/// [AssistantStreamReducer], and supports send / stop / approval continuation.
-/// Supply [bodyBuilder] when the server needs a custom request body (durable
-/// thread id, model options, etc.). Otherwise [assistantChatBody] is used with
-/// no thread id.
-///
-/// The original constructor stays source-compatible. The optional parameters
-/// add the upstream TanStack surfaces: queue policies, interrupts, history
-/// paging, runtime context, client tools, subagent handles and snapshots.
+/// Uses typed connection configuration, immutable snapshots and [states] streams.
+/// The explicit [ChatClient.legacy] constructor retains pre-0.3 compatibility.
 class ChatClient {
   final ChatTransport? transport;
-  ConnectionAdapter? connection;
-  final List<AssistantTurn> messages;
+  ConnectionAdapter? _connection;
+  ConnectionAdapter? get connection => _connection;
+
+  /// Replaces the transport, cancelling the current subscription/run first.
+  void replaceConnection(ConnectionAdapter value) =>
+      updateLegacyOptions(connection: value);
+  final List<AssistantTurn> _messages;
+
+  /// Read-only transcript. Use [setMessagesManually] to replace it.
+  List<AssistantTurn> get messages => snapshot.messages;
   Map<String, dynamic> Function(List<AssistantTurn> messages)? bodyBuilder;
   void Function()? onChanged;
 
-  ChatClient({
+  /// Creates a framework-independent chat client.
+  ///
+  /// [states] emits the current snapshot followed by updates. Call [attach]
+  /// to restore history and [dispose] when the client is no longer needed.
+  factory ChatClient({
+    required ConnectionAdapter connection,
+    List<AssistantTurn> initialMessages = const [],
+    String? threadId,
+    ChatPersistenceOptions persistence =
+        const ChatPersistenceOptions.ephemeral(),
+    ChatQueueConfig queue = const ChatQueueConfig(),
+    Object? context,
+    List<ClientTool> tools = const [],
+    List<ChatInterruptDefinition> interrupts = const [],
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? forwardedProps,
+    ChatResumeSnapshot? initialResumeSnapshot,
+    byok_api.ByokClient? byok,
+    FutureOr<String?> Function()? byokProvider,
+    FutureOr<void> Function()? onResponse,
+    AIDevtoolsClientMetadata? devtools,
+    ChatDevtoolsBridgeFactory? devtoolsBridgeFactory,
+    void Function(ChatClientState state)? onStateChange,
+    void Function(Object error, Map<String, dynamic>? chunk)? onError,
+    void Function(Map<String, dynamic> chunk)? onChunk,
+    void Function(Map<String, dynamic> chunk)? onFinish,
+    void Function(Map<String, dynamic> event, Object? context)? onCustomEvent,
+  }) {
+    if (threadId != null &&
+        persistence.threadId != null &&
+        threadId != persistence.threadId) {
+      throw ArgumentError('threadId must match persistence.threadId');
+    }
+    return ChatClient.legacy(
+      connection: connection,
+      initialMessages: initialMessages,
+      threadId: threadId,
+      persistenceOptions: persistence,
+      queue: queue,
+      context: context,
+      tools: List<ClientTool>.of(tools),
+      interrupts: List<ChatInterruptDefinition>.of(interrupts),
+      body: body,
+      forwardedProps: forwardedProps,
+      initialResumeSnapshot: initialResumeSnapshot,
+      byok: byok,
+      byokProvider: byokProvider,
+      onResponse: onResponse,
+      devtools: devtools,
+      devtoolsBridgeFactory: devtoolsBridgeFactory,
+      onStatusChange: onStateChange == null
+          ? null
+          : (value) => onStateChange(ChatClientState.values.byName(value)),
+      onError: onError,
+      onChunk: onChunk,
+      onFinish: onFinish,
+      onCustomEvent: onCustomEvent,
+    );
+  }
+
+  /// Compatibility constructor for applications migrating from 0.2.
+  /// New applications should use the typed default constructor.
+  ChatClient.legacy({
     this.transport,
     ConnectionAdapter? connection,
-    ChatFetcher? fetcher,
+    LegacyChatFetcher? fetcher,
     List<AssistantTurn>? messages,
     List<AssistantTurn>? initialMessages,
     this.bodyBuilder,
@@ -94,12 +160,12 @@ class ChatClient {
     void Function(Map<String, dynamic> event, Object? context)? onCustomEvent,
   })  : _processingScheduler =
             processingScheduler ?? StreamProcessingScheduler(),
-        connection = _resolveConnection(connection ?? options?.connection,
+        _connection = _resolveConnection(connection ?? options?.connection,
             fetcher ?? options?.fetcher, transport),
         _byok = byokClient ?? byok,
         _byokProvider = byokProvider,
         _onResponse = onResponse,
-        messages = connection != null ||
+        _messages = connection != null ||
                 fetcher != null ||
                 options?.connection != null ||
                 options?.fetcher != null ||
@@ -238,7 +304,7 @@ class ChatClient {
     }
     final persistor = caching.ChatPersistor(adapter, _threadId!, (rows) {
       if (_disposed) return;
-      messages
+      _messages
         ..clear()
         ..addAll(assistantTurnsFromProcessor(rows));
       _syncSubagents();
@@ -254,7 +320,7 @@ class ChatClient {
         _notify();
       });
     } else if (initial != null) {
-      messages
+      _messages
         ..clear()
         ..addAll(assistantTurnsFromProcessor(initial.messages));
       if (initial.resume != null) _restoreStoredResume(initial.resume!);
@@ -306,11 +372,24 @@ class ChatClient {
   }
 
   static ConnectionAdapter? _resolveConnection(ConnectionAdapter? connection,
-      ChatFetcher? fetcher, ChatTransport? transport) {
+      LegacyChatFetcher? fetcher, ChatTransport? transport) {
     if (fetcher != null && (connection != null || transport != null)) {
       throw ArgumentError('Pass either connection, fetcher, or transport.');
     }
-    if (fetcher != null) return fetcherToConnectionAdapter(fetcher);
+    if (fetcher != null) {
+      return fetcherToConnectionAdapter((input, {signal, headers}) async {
+        final result = await fetcher(input, signal: signal, headers: headers);
+        if (result is ChatFetcherResult) return result;
+        if (result is http.StreamedResponse) {
+          return ChatFetcherResult.response(result);
+        }
+        if (result is Stream<Map<String, dynamic>>) {
+          return ChatFetcherResult.stream(result);
+        }
+        throw ArgumentError(
+            'ChatFetcher must return a chunk stream or an HTTP streaming response.');
+      });
+    }
     if (connection == null && transport == null) {
       throw ArgumentError(
           'ChatClient requires a connection, fetcher, or transport.');
@@ -333,8 +412,10 @@ class ChatClient {
   CancellationController? _cancellation;
   bool _processorErrored = false;
 
-  ChatClientStatus status = ChatClientStatus.idle;
-  String? error;
+  ChatClientStatus _status = ChatClientStatus.idle;
+  String? _error;
+  ChatClientState get status => state;
+  String? get error => _error;
 
   late String? _threadId;
   String? _runId;
@@ -414,18 +495,25 @@ class ChatClient {
   void Function(bool)? _onSubscriptionChange;
   void Function(String)? _onConnectionStatusChange;
   ChatSnapshot? _snapshot;
+  late final _stateEvents = SnapshotStream<ChatSnapshot>(() => snapshot);
+
+  ChatSnapshot get snapshot => getSnapshot();
+
+  /// Each listener receives current state, then ordered updates. Errors are
+  /// represented in snapshots; this stream closes on dispose.
+  Stream<ChatSnapshot> get states => _stateEvents.stream;
   Map<String, AssistantTurn> _snapshotTurnCache = <String, AssistantTurn>{};
 
-  bool get isStreaming => status == ChatClientStatus.streaming;
+  bool get isStreaming => _status == ChatClientStatus.streaming;
   bool getIsSubscribed() => _subscribed;
   String getConnectionStatus() => _connectionStatus;
   bool get isLoading => isStreaming || _sendInFlight || _queueDraining;
 
   ChatClientState getState() => state;
 
-  ChatClientState get state => switch (status) {
+  ChatClientState get state => switch (_status) {
         ChatClientStatus.idle =>
-          error == null ? ChatClientState.ready : ChatClientState.error,
+          _error == null ? ChatClientState.ready : ChatClientState.error,
         ChatClientStatus.streaming => connection != null && !_hasRunChunk
             ? ChatClientState.submitted
             : ChatClientState.streaming,
@@ -444,7 +532,8 @@ class ChatClient {
   /// The active reducer, exposed for tests or advanced callers.
   AssistantStreamReducer? get reducer => _reducer;
 
-  List<AssistantTurn> getMessages() => messages;
+  /// Legacy live transcript. New consumers should use [messages] or [snapshot].
+  List<AssistantTurn> getMessages() => _messages;
 
   List<ChatInterrupt> getInterrupts() => _interruptManager.getInterrupts();
 
@@ -477,7 +566,7 @@ class ChatClient {
   /// bridge is in use.
   void mountDevtools() {
     _ensureThreadId();
-    _devtools.mount(messages.length);
+    _devtools.mount(_messages.length);
   }
 
   void _ensureThreadId() {
@@ -500,7 +589,7 @@ class ChatClient {
       );
 
   List<Map<String, dynamic>> _devtoolsMessages() => <Map<String, dynamic>>[
-        for (final turn in messages) _cloneTurn(turn).toRow(),
+        for (final turn in _messages) _cloneTurn(turn).toRow(),
       ];
 
   void _setDevtoolsMessages(List<Map<String, dynamic>> next) {
@@ -531,7 +620,7 @@ class ChatClient {
     Object? output, [
     String? errorText,
   ]) {
-    for (final turn in messages) {
+    for (final turn in _messages) {
       final index = turn.parts.indexWhere(
         (part) => part.type == 'tool-call' && part.id == toolCallId,
       );
@@ -632,8 +721,8 @@ class ChatClient {
           return;
         }
         final message = '$e';
-        error = message;
-        status = ChatClientStatus.error;
+        _error = message;
+        _status = ChatClientStatus.error;
         _options.onError?.call(e, null);
         _notify();
       } finally {
@@ -660,10 +749,10 @@ class ChatClient {
     ChatHydrationResult result, {
     required String source,
   }) {
-    error = null;
-    if (status == ChatClientStatus.error) status = ChatClientStatus.idle;
+    _error = null;
+    if (_status == ChatClientStatus.error) _status = ChatClientStatus.idle;
     if (result.messages.isNotEmpty) {
-      messages
+      _messages
         ..clear()
         ..addAll(result.messages);
       _rememberServerIds(result.messages);
@@ -732,7 +821,7 @@ class ChatClient {
         throw StateError('Older page was empty');
       }
       _applyHydrationPage(result.page);
-      messages.insertAll(0, result.messages);
+      _messages.insertAll(0, result.messages);
       _rememberServerIds(result.messages);
       _notify();
     } finally {
@@ -742,7 +831,7 @@ class ChatClient {
 
   /// Appends a user turn and an assistant placeholder, then streams the reply.
   Future<void> sendText(String text, {ChatSendOptions? options}) async {
-    await sendMessage(text, sendOptions: options);
+    await sendLegacyMessage(text, sendOptions: options);
   }
 
   /// Appends an existing user/activity message and streams the reply.
@@ -783,14 +872,14 @@ class ChatClient {
     }
     message.createdAt ??= DateTime.now();
     if (message.role == 'activity') {
-      messages.add(message);
+      _messages.add(message);
       _notify();
       return;
     }
     message.createdAt ??= DateTime.now();
-    messages.add(message);
+    _messages.add(message);
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-    messages.add(assistant);
+    _messages.add(assistant);
     await _start(assistant);
   }
 
@@ -824,7 +913,7 @@ class ChatClient {
     _processor ??= proc.StreamProcessor(proc.StreamProcessorOptions(
         events: proc.StreamProcessorEvents(
             onStructuredOutputChange: _emitStructuredOutput),
-        initialMessages: assistantWireTurns(messages, includeActivity: true)));
+        initialMessages: assistantWireTurns(_messages, includeActivity: true)));
     final Stream<Map<String, dynamic>> source;
     try {
       source = subscribe(signal: cancellation.signal);
@@ -852,7 +941,7 @@ class ChatClient {
             events: proc.StreamProcessorEvents(
                 onStructuredOutputChange: _emitStructuredOutput),
             initialMessages:
-                assistantWireTurns(messages, includeActivity: true)));
+                assistantWireTurns(_messages, includeActivity: true)));
         _handleConnectionEvent(event, fallback);
         if (settlesSend && _isFinalTerminal(event)) {
           _processor?.finalizeStream();
@@ -943,9 +1032,17 @@ class ChatClient {
     _notify();
   }
 
-  /// Sends text or a [ChatMessageInput] with optional per-call body overrides.
+  /// Sends a typed message. Use [sendText] for ordinary text input.
   Future<void> sendMessage(
-    dynamic content, {
+    ChatMessageInput message, {
+    Map<String, dynamic>? body,
+    ChatSendOptions? options,
+  }) =>
+      sendLegacyMessage(message, body: body, sendOptions: options);
+
+  /// Sends text or a [ChatMessageInput] with optional per-call body overrides.
+  Future<void> sendLegacyMessage(
+    Object? content, {
     Map<String, dynamic>? body,
     ChatSendOptions? sendOptions,
   }) async {
@@ -1075,7 +1172,7 @@ class ChatClient {
         metadata: input.metadata,
         createdAt: DateTime.now(),
       );
-      messages.add(user);
+      _messages.add(user);
       _devtools.bridge.events.messageSent(
         user.id,
         input.parts.length == 1 && input.parts.single.type == 'text'
@@ -1083,7 +1180,7 @@ class ChatClient {
             : input.parts.map((part) => part.toJson()).toList(),
       );
       final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-      messages.add(assistant);
+      _messages.add(assistant);
       _pendingMessageBody = body;
       _notify();
       await _start(assistant);
@@ -1096,6 +1193,11 @@ class ChatClient {
 
   /// Marks [part]'s approval and streams the continuation.
   Future<void> approve(AssistantPart part, bool approved) async {
+    final owned = _messages.expand((turn) => turn.parts).where(
+          (candidate) => candidate.id == part.id && candidate.type == part.type,
+        );
+    if (owned.isEmpty) return;
+    part = owned.first;
     final approval = part.approval;
     final turn = _turnForPart(part);
     if (approval == null || approval.approved != null || turn == null) {
@@ -1126,7 +1228,7 @@ class ChatClient {
     required String id,
     required bool approved,
   }) async {
-    for (final turn in messages) {
+    for (final turn in _messages) {
       for (final part in turn.parts) {
         if (part.approval?.id == id) {
           if (part.approval!.approved == null) {
@@ -1152,7 +1254,7 @@ class ChatClient {
     final continuationGeneration = _streamContinuationGeneration;
     AssistantPart? found;
     AssistantTurn? owner;
-    for (final turn in messages) {
+    for (final turn in _messages) {
       for (final part in turn.parts) {
         if (part.type == 'tool-call' && part.id == toolCallId) {
           found = part;
@@ -1206,7 +1308,7 @@ class ChatClient {
     }
     if (found != null && owner != null && _shouldAutoSend()) {
       final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-      messages.add(assistant);
+      _messages.add(assistant);
       await _start(assistant);
     }
   }
@@ -1231,7 +1333,7 @@ class ChatClient {
     _continuationGeneration++;
     final hadActive = _subscription != null || _sendInFlight || isLoading;
     _clearedTracker.snapshotClear(
-      messages: messages,
+      messages: _messages,
       activeRunIds: _activeRunIds,
       currentRunId: _runId,
     );
@@ -1241,7 +1343,7 @@ class ChatClient {
       _flushQueue();
     }
     _activeRunIds.clear();
-    messages.clear();
+    _messages.clear();
     _processor?.setMessages([]);
     _knownServerMessageIds.clear();
     _olderPage = null;
@@ -1255,8 +1357,8 @@ class ChatClient {
     _subagentHandles.clear();
     _stoppedSubagentIds.clear();
     _pendingToolContinuation = false;
-    error = null;
-    status = ChatClientStatus.idle;
+    _error = null;
+    _status = ChatClientStatus.idle;
     _persistor?.remove();
     _lastPersistedResume = '';
     _clearingStorage = true;
@@ -1270,19 +1372,19 @@ class ChatClient {
   /// Reload the last assistant message from the last user turn.
   Future<void> reload() async {
     _continuationGeneration++;
-    final lastUser = messages.lastIndexWhere((turn) => turn.role == 'user');
+    final lastUser = _messages.lastIndexWhere((turn) => turn.role == 'user');
     if (lastUser == -1) return;
     if (isStreaming) {
       await _cancelActive(clearQueue: false, keepResume: true);
     }
     _flushQueue();
-    final retained = messages.sublist(0, lastUser + 1);
-    messages
+    final retained = _messages.sublist(0, lastUser + 1);
+    _messages
       ..clear()
       ..addAll(retained);
     _notify();
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-    messages.add(assistant);
+    _messages.add(assistant);
     await _start(assistant);
   }
 
@@ -1310,7 +1412,7 @@ class ChatClient {
       if (generation != _continuationGeneration) return;
       final failure = _interruptSubmissionFailure;
       if (failure != null) throw failure;
-      if (status == ChatClientStatus.error) {
+      if (_status == ChatClientStatus.error) {
         throw StateError(error ?? 'Interrupt continuation failed');
       }
     } finally {
@@ -1328,7 +1430,7 @@ class ChatClient {
     if (items.isEmpty || state == null) return;
     _resumeWasResume = true;
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-    messages.add(assistant);
+    _messages.add(assistant);
     await _start(
       assistant,
       resumeItems: items,
@@ -1351,7 +1453,7 @@ class ChatClient {
     }
     _resumeWasResume = true;
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-    messages.add(assistant);
+    _messages.add(assistant);
     await _start(
       assistant,
       resumeItems: items,
@@ -1372,7 +1474,7 @@ class ChatClient {
     _runId = runId;
     _resumeWasResume = true;
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-    messages.add(assistant);
+    _messages.add(assistant);
     await _start(
       assistant,
       resumeItems: items,
@@ -1400,8 +1502,8 @@ class ChatClient {
     }
     _ensureThreadId();
     _streamingTurn = turn;
-    status = ChatClientStatus.streaming;
-    error = null;
+    _status = ChatClientStatus.streaming;
+    _error = null;
     turn.streaming = true;
     _runId = requestRunId;
     _subscribed = true;
@@ -1457,7 +1559,7 @@ class ChatClient {
         proc.StreamProcessorOptions(
           events: proc.StreamProcessorEvents(
               onStructuredOutputChange: _emitStructuredOutput),
-          initialMessages: assistantWireTurns(messages, includeActivity: true)
+          initialMessages: assistantWireTurns(_messages, includeActivity: true)
               .where((message) => (message['parts'] as List).isNotEmpty)
               .toList(),
         ),
@@ -1638,7 +1740,7 @@ class ChatClient {
     final connection = this.connection;
     if (connection == null) return const Stream<Map<String, dynamic>>.empty();
     final request = _connectionRequest(body, headers);
-    final messages = request.messages;
+    final wireMessages = request.messages;
     final forwarded = request.data;
     final runContext = request.context;
 
@@ -1656,7 +1758,7 @@ class ChatClient {
       controller = StreamController<Map<String, dynamic>>(
         onListen: () {
           subscription = connection.connect!(
-            messages,
+            wireMessages,
             data: forwarded,
             signal: signal,
             runContext: runContext,
@@ -1690,7 +1792,7 @@ class ChatClient {
     String? resumeThreadId,
     String? resumeParentRunId,
   }) {
-    final custom = bodyBuilder?.call(messages);
+    final custom = bodyBuilder?.call(_messages);
     final body =
         custom ?? assistantChatBody(resumeThreadId ?? _threadId, sendMessages);
     if (custom != null || _connectionTransport != null) {
@@ -1737,7 +1839,7 @@ class ChatClient {
 
   List<AssistantTurn> _messagesForSend({bool fullHistory = false}) {
     final forModel = [
-      for (final turn in messages)
+      for (final turn in _messages)
         if (turn.role != 'activity' && _hasWireContent(turn)) turn,
     ];
     final pageSize = _history?.pageSize;
@@ -1753,7 +1855,7 @@ class ChatClient {
   }
 
   AssistantTurn _currentTurn(AssistantTurn fallback) {
-    for (final turn in messages.reversed) {
+    for (final turn in _messages.reversed) {
       if (turn.role == 'assistant') return turn;
     }
     return fallback;
@@ -1763,7 +1865,7 @@ class ChatClient {
     final processor = _processor;
     if (processor == null) return;
     final converted = assistantTurnsFromProcessor(processor.getMessages());
-    messages
+    _messages
       ..clear()
       ..addAll(converted);
     _syncSubagents();
@@ -1890,7 +1992,7 @@ class ChatClient {
           final metadata = descriptor['metadata'];
           if (metadata is! Map || metadata['kind'] != 'client_tool') continue;
           final callId = descriptor['toolCallId'];
-          for (final turn in messages) {
+          for (final turn in _messages) {
             for (final part in turn.parts) {
               if (part.type == 'tool-call' &&
                   part.id == callId &&
@@ -1921,7 +2023,7 @@ class ChatClient {
       if (!local) return;
       _lastTerminalEvent = event;
       _processorErrored = true;
-      error = _str(event['message']).isEmpty
+      _error = _str(event['message']).isEmpty
           ? 'The assistant run failed.'
           : _str(event['message']);
       if (runId.isNotEmpty && _activeInterruptSubmission == null) {
@@ -1977,7 +2079,7 @@ class ChatClient {
       proc.StreamProcessorOptions(
         events: proc.StreamProcessorEvents(
             onStructuredOutputChange: _emitStructuredOutput),
-        initialMessages: assistantWireTurns(messages, includeActivity: true)
+        initialMessages: assistantWireTurns(_messages, includeActivity: true)
             .where((message) => (message['parts'] as List).isNotEmpty)
             .toList(),
       ),
@@ -1985,7 +2087,7 @@ class ChatClient {
     _processorErrored = false;
     _runId = runId;
     _activeRunIds.add(runId);
-    status = ChatClientStatus.streaming;
+    _status = ChatClientStatus.streaming;
     _subscribed = true;
     _devtoolsRunId = runId;
     _devtoolsStreamId = generateIdentity('stream');
@@ -2011,8 +2113,8 @@ class ChatClient {
     });
     var replayStarted = false;
     final hydratedTailId =
-        messages.isNotEmpty && messages.last.role == 'assistant'
-            ? messages.last.id
+        _messages.isNotEmpty && _messages.last.role == 'assistant'
+            ? _messages.last.id
             : null;
     try {
       _subscription = join(runId, signal: cancellation.signal).listen(
@@ -2024,9 +2126,9 @@ class ChatClient {
           if (!replayStarted && _rebuildsMessage(event)) {
             replayStarted = true;
             if (hydratedTailId != null) {
-              messages.removeWhere((message) => message.id == hydratedTailId);
+              _messages.removeWhere((message) => message.id == hydratedTailId);
               _processor?.setMessages(
-                  assistantWireTurns(messages, includeActivity: true));
+                  assistantWireTurns(_messages, includeActivity: true));
             }
           }
           _handleConnectionEvent(event, fallback);
@@ -2363,7 +2465,7 @@ class ChatClient {
   void _applySnapshot(List<Map<String, dynamic>> snapshot) {
     final restored = assistantTurnsFromProcessor(snapshot);
     if (restored.isEmpty && snapshot.isNotEmpty) return;
-    messages
+    _messages
       ..clear()
       ..addAll(restored);
     _notify();
@@ -2400,7 +2502,7 @@ class ChatClient {
       return handle;
     }
 
-    for (final turn in messages) {
+    for (final turn in _messages) {
       for (final part in turn.parts) {
         if (part.type == 'subagent' && part.subagent != null) {
           part.subagent = bind(part.subagent!);
@@ -2549,7 +2651,7 @@ class ChatClient {
           _shouldAutoSend()) {
         _pendingToolContinuation = false;
         final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-        messages.add(assistant);
+        _messages.add(assistant);
         unawaited(_start(assistant));
       }
     }
@@ -2565,7 +2667,8 @@ class ChatClient {
   bool _shouldAutoSend() {
     if (_resumeState != null) return false;
     if (_interruptManager.getInterrupts().isNotEmpty) return false;
-    final lastAssistant = messages.lastWhere((turn) => turn.role == 'assistant',
+    final lastAssistant = _messages.lastWhere(
+        (turn) => turn.role == 'assistant',
         orElse: () => AssistantTurn(id: '', role: 'assistant'));
     if (lastAssistant.id.isEmpty) return false;
     final tools = lastAssistant.parts.where((p) => p.type == 'tool-call');
@@ -2610,8 +2713,8 @@ class ChatClient {
     _streamingTurn = null;
     _reducer = null;
     _pendingMessageBody = null;
-    this.error = error;
-    this.status = status;
+    _error = error;
+    _status = status;
     if (status == ChatClientStatus.idle) {
       _runId = null;
       _options.onRunIdChange?.call(null);
@@ -2652,7 +2755,7 @@ class ChatClient {
           _shouldAutoSend()) {
         _pendingToolContinuation = false;
         final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
-        messages.add(assistant);
+        _messages.add(assistant);
         _settleRun(completion, _start(assistant));
         return;
       }
@@ -2735,7 +2838,7 @@ class ChatClient {
       while (isStreaming && claim == _sendClaim) {
         await Future<void>.delayed(Duration.zero);
       }
-      return claim == _sendClaim && status != ChatClientStatus.error;
+      return claim == _sendClaim && _status != ChatClientStatus.error;
     } finally {
       if (claim == _sendClaim) _sendInFlight = false;
     }
@@ -2769,7 +2872,7 @@ class ChatClient {
         }
       }
     }
-    return ChatMessageInput(
+    return ChatMessageInput.legacy(
       content: parts,
       metadata: hasMetadata ? mergedMetadata : null,
     );
@@ -2820,7 +2923,7 @@ class ChatClient {
     active?.streaming = false;
     _streamingTurn = null;
     _reducer = null;
-    status = ChatClientStatus.idle;
+    _status = ChatClientStatus.idle;
     _pendingMessageBody = null;
     _options.onLoadingChange?.call(false);
     if (clearQueue) {
@@ -2914,7 +3017,7 @@ class ChatClient {
     }
     if (content is Map) {
       return _normalizeInput(
-        ChatMessageInput(
+        ChatMessageInput.legacy(
           content: content['content'],
           id: content['id'] is String ? content['id'] as String : null,
           metadata: content['metadata'] is Map
@@ -2927,7 +3030,7 @@ class ChatClient {
   }
 
   AssistantTurn? _turnForPart(AssistantPart part) {
-    for (final turn in messages) {
+    for (final turn in _messages) {
       if (turn.parts.contains(part)) return turn;
     }
     return null;
@@ -2938,7 +3041,7 @@ class ChatClient {
   ChatSnapshot _buildSnapshot() {
     final nextCache = <String, AssistantTurn>{};
     final nextMessages = <AssistantTurn>[];
-    for (final turn in messages) {
+    for (final turn in _messages) {
       final key = '${turn.id}\u0000${_turnFingerprint(turn)}';
       final cached = _snapshotTurnCache[key];
       final copy = cached ?? freezeAssistantTurn(turn);
@@ -2957,10 +3060,10 @@ class ChatClient {
               body: freezeSnapshotValue(item.body))
       ]),
       isSubscribed: _subscribed,
-      connectionStatus: _connectionStatus,
+      connectionStatus: ChatConnectionState.values.byName(_connectionStatus),
       runId: _runId,
       interruptState: _interruptManager.getState(),
-      status: state.name,
+      status: state,
       isLoading: isLoading,
       isStreaming: isStreaming,
       isHydrating: _isHydrating,
@@ -2992,7 +3095,8 @@ class ChatClient {
   static AssistantTurn _cloneTurn(AssistantTurn turn) =>
       copyAssistantTurn(turn);
 
-  String messagesFingerprint() => messages.map(_turnFingerprint).join('\u0000');
+  String messagesFingerprint() =>
+      _messages.map(_turnFingerprint).join('\u0000');
 
   void _notify() {
     _snapshot = null;
@@ -3028,7 +3132,7 @@ class ChatClient {
       _lastNotifiedTranscript = transcript;
       if (!_disposed) {
         _persistor?.notifyMessagesChanged(
-            assistantWireTurns(messages, includeActivity: true));
+            assistantWireTurns(_messages, includeActivity: true));
       }
       try {
         _options.onMessagesChange?.call(getSnapshot().messages);
@@ -3041,7 +3145,7 @@ class ChatClient {
             toEncodable: (value) =>
                 value is DateTime ? value.toIso8601String() : '$value');
     if (!_disposed &&
-        !(_clearingStorage && messages.isEmpty) &&
+        !(_clearingStorage && _messages.isEmpty) &&
         resumeFingerprint != _lastPersistedResume) {
       _lastPersistedResume = resumeFingerprint;
       _persistor?.persistResumeSnapshot(resume);
@@ -3058,20 +3162,50 @@ class ChatClient {
         // Keep notifying the remaining listeners.
       }
     }
+    if (!_disposed) _stateEvents.emit(snapshot);
     _devtools.emitSnapshot();
   }
 
   /// Replace the transcript manually (upstream `setMessagesManually`).
   void setMessagesManually(List<AssistantTurn> next) {
     final copied = next.map(copyAssistantTurn).toList();
-    messages
+    _messages
       ..clear()
       ..addAll(copied);
     _processor
-        ?.setMessages(assistantWireTurns(messages, includeActivity: true));
+        ?.setMessages(assistantWireTurns(_messages, includeActivity: true));
     _syncSubagents();
     _notify();
   }
+
+  set context(Object? value) => updateLegacyOptions(context: value);
+  set body(Map<String, dynamic>? value) => updateLegacyOptions(body: value);
+  Map<String, dynamic>? get body => _bodyOption == null
+      ? null
+      : Map<String, dynamic>.unmodifiable(_bodyOption!);
+  set forwardedProps(Map<String, dynamic>? value) =>
+      updateLegacyOptions(forwardedProps: value);
+  Map<String, dynamic>? get forwardedProps => _forwardedProps == null
+      ? null
+      : Map<String, dynamic>.unmodifiable(_forwardedProps!);
+  set tools(List<ClientTool> value) => updateLegacyOptions(tools: value);
+  List<ClientTool> get tools =>
+      List<ClientTool>.unmodifiable(_options.tools ?? []);
+  set queueConfig(ChatQueueConfig value) => updateLegacyOptions(queue: value);
+  ChatQueueConfig get queueConfig => _queueConfig;
+  set onResponse(FutureOr<void> Function()? value) =>
+      updateLegacyOptions(onResponse: value);
+  FutureOr<void> Function()? get onResponse => _onResponse;
+  set byok(byok_api.ByokClient? value) =>
+      updateLegacyOptions(byokClient: value);
+  byok_api.ByokClient? get byok => _byok;
+  set byokProvider(FutureOr<String?> Function()? value) =>
+      updateLegacyOptions(byokProvider: value);
+  FutureOr<String?> Function()? get byokProvider => _byokProvider;
+  set onCustomEvent(void Function(Map<String, dynamic>, Object?)? value) =>
+      updateLegacyOptions(onCustomEvent: value);
+  void Function(Map<String, dynamic>, Object?)? get onCustomEvent =>
+      _onCustomEvent;
 
   static const Object _unset = Object();
 
@@ -3079,7 +3213,7 @@ class ChatClient {
   ///
   /// Passing an explicit `null` for [context], [body] or [forwardedProps]
   /// clears that slot; omitting the parameter leaves it unchanged.
-  void updateOptions({
+  void updateLegacyOptions({
     Object? context = _unset,
     Object? body = _unset,
     Object? forwardedProps = _unset,
@@ -3092,8 +3226,9 @@ class ChatClient {
     ChatQueueConfig? queue,
   }) {
     if (!identical(tools, _unset)) {
-      final configured =
-          tools == null ? <ClientTool>[] : (tools as List).cast<ClientTool>();
+      final configured = tools == null
+          ? <ClientTool>[]
+          : List<ClientTool>.of((tools as List).cast<ClientTool>());
       _options = _mergeOptions(_options, tools: configured);
       _interruptManager.updateTools(configured);
       _devtools.notifyToolsChanged();
@@ -3106,7 +3241,7 @@ class ChatClient {
         unawaited(_cancelActive(clearQueue: false, keepResume: true)
             .catchError((Object _) {}));
         _activeRunIds.clear();
-        this.connection = _resolveConnection(next, null, transport);
+        _connection = _resolveConnection(next, null, transport);
         _connectionTransport =
             next == null ? null : ConnectionChatTransport(next);
         _subscribed = false;
@@ -3153,6 +3288,7 @@ class ChatClient {
     _stopNativeSubscription();
     await _cancelActive(clearQueue: true, keepResume: false);
     _snapshotListeners.clear();
+    _stateEvents.close();
     _interruptManager.dispose();
     _devtools.dispose();
   }

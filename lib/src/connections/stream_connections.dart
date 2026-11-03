@@ -1,10 +1,10 @@
-import 'http_common.dart';
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
 import 'cancellation.dart';
 import 'connection_adapter.dart';
+import 'http_common.dart';
 import 'response_stream.dart';
 import 'resumable_stream.dart';
 import 'types.dart';
@@ -41,7 +41,7 @@ ConnectionAdapter stream(
   StreamFactory streamFactory, [
   StreamConnectionHandlers? handlers,
 ]) {
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       yield* _abortableStream(streamFactory(messages, data, signal), signal);
     },
@@ -56,7 +56,7 @@ ConnectionAdapter rpcStream(
   RpcStreamCall rpcCall, [
   StreamConnectionHandlers? handlers,
 ]) {
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       yield* _abortableStream(rpcCall(messages, data, signal), signal);
     },
@@ -85,8 +85,41 @@ class ChatFetcherInput {
   });
 }
 
-/// A fetcher may return a streaming HTTP response or a chunk stream.
-typedef ChatFetcher = FutureOr<Object> Function(
+/// The typed result of a [ChatFetcher].
+///
+/// Construct with [ChatFetcherResult.stream] to yield already-decoded chunks,
+/// or [ChatFetcherResult.response] to let this package parse an SSE response.
+/// The sealed hierarchy makes consumers exhaustive.
+sealed class ChatFetcherResult {
+  const ChatFetcherResult._();
+
+  factory ChatFetcherResult.stream(Stream<StreamChunk> stream) =
+      ChatFetcherStreamResult;
+
+  factory ChatFetcherResult.response(http.StreamedResponse response) =
+      ChatFetcherResponseResult;
+}
+
+/// A [ChatFetcherResult] carrying a chunk stream.
+final class ChatFetcherStreamResult extends ChatFetcherResult {
+  final Stream<StreamChunk> stream;
+
+  const ChatFetcherStreamResult(this.stream) : super._();
+}
+
+/// A [ChatFetcherResult] carrying an HTTP response whose body is parsed as SSE.
+final class ChatFetcherResponseResult extends ChatFetcherResult {
+  final http.StreamedResponse response;
+
+  const ChatFetcherResponseResult(this.response) : super._();
+}
+
+/// A fetcher returns either a chunk stream or a streaming HTTP response.
+///
+/// Return `ChatFetcherResult.stream(...)` for chunks you already parsed, or
+/// `ChatFetcherResult.response(...)` for an SSE body this package should parse.
+/// The result may be synchronous or asynchronous.
+typedef ChatFetcher = FutureOr<ChatFetcherResult> Function(
   ChatFetcherInput input, {
   CancellationSignal? signal,
   Map<String, String>? headers,
@@ -94,10 +127,10 @@ typedef ChatFetcher = FutureOr<Object> Function(
 
 /// Wrap a [ChatFetcher] as a [ConnectionAdapter].
 ///
-/// A returned [http.StreamedResponse] is parsed as SSE; a returned
-/// `Stream<StreamChunk>` is yielded directly.
+/// A [ChatFetcherResponseResult] is parsed as SSE; a
+/// [ChatFetcherStreamResult] is yielded directly.
 ConnectionAdapter fetcherToConnectionAdapter(ChatFetcher fetcher) {
-  return ConnectionAdapter(
+  return ConnectionAdapter.connect(
     connect: (messages, {data, signal, runContext}) async* {
       if (signal == null) {
         throw ArgumentError(
@@ -123,23 +156,19 @@ ConnectionAdapter fetcherToConnectionAdapter(ChatFetcher fetcher) {
         signal: signal,
         headers: runContext.headers,
       );
-      if (result is http.StreamedResponse) {
-        await assertResponseOk(result);
-        final lines = readResponseLines(result.stream, signal: signal);
-        await for (final event in linesToSseEvents(
-          lines,
-          fallbackThreadId: runContext.threadId,
-          fallbackRunId: runContext.runId,
-        )) {
-          yield event.chunk;
-        }
-      } else if (result is Stream<StreamChunk>) {
-        yield* _abortableStream(result, signal);
-      } else {
-        throw ArgumentError(
-          'ChatFetcher must return an http.StreamedResponse or a '
-          'Stream<StreamChunk>',
-        );
+      switch (result) {
+        case ChatFetcherResponseResult(:final response):
+          await assertResponseOk(response);
+          final lines = readResponseLines(response.stream, signal: signal);
+          await for (final event in linesToSseEvents(
+            lines,
+            fallbackThreadId: runContext.threadId,
+            fallbackRunId: runContext.runId,
+          )) {
+            yield event.chunk;
+          }
+        case ChatFetcherStreamResult(:final stream):
+          yield* _abortableStream(stream, signal);
       }
     },
   );

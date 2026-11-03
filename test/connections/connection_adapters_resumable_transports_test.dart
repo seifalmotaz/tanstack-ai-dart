@@ -39,7 +39,7 @@ void main() {
       });
       final adapter = fetchHttpStream(
         '/api/chat',
-        FetchConnectionOptions(
+        options: FetchConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -65,7 +65,7 @@ void main() {
       );
       final adapter = fetchHttpStream(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final chunks = await collect(adapter.joinRun!('run-x'));
@@ -88,7 +88,7 @@ void main() {
       );
       final adapter = fetchHttpStream(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final chunks = await collect(
@@ -130,7 +130,7 @@ void main() {
       });
       final adapter = xhrHttpStream(
         '/api/chat',
-        XhrConnectionOptions(
+        options: XhrConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -168,7 +168,7 @@ void main() {
       });
       final adapter = xhrHttpStream(
         '/api/chat',
-        XhrConnectionOptions(
+        options: XhrConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -203,7 +203,7 @@ void main() {
       });
       final adapter = xhrServerSentEvents(
         '/api/chat',
-        XhrConnectionOptions(
+        options: XhrConnectionOptions(
           client: client,
           reconnect: const ReconnectOptions(delay: Duration.zero),
         ),
@@ -229,7 +229,7 @@ void main() {
       );
       final adapter = xhrHttpStream(
         '/api/chat',
-        XhrConnectionOptions(client: client),
+        options: XhrConnectionOptions(client: client),
       );
 
       final chunks = await collect(adapter.joinRun!('run-x'));

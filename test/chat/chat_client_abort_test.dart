@@ -9,7 +9,7 @@ void main() {
   group('ChatClient abort and stop', () {
     test('stop cancels the active stream and ignores late chunks', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       final assistant = client.getMessages().last;
       await client.stop();
@@ -35,7 +35,7 @@ void main() {
     test('stop flushes queued messages and pending continuation work',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await client.sendText('second');
       await client.stop();
@@ -46,7 +46,7 @@ void main() {
 
     test('stop leaves the subscription flag set', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       expect(client.getIsSubscribed(), isTrue);
       await client.stop();
@@ -59,7 +59,7 @@ void main() {
         'a stream error then stop keeps the terminal error once, then clears on send',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('first');
       await emitAll(transport, <Map<String, dynamic>>[
         <String, dynamic>{'type': 'RUN_ERROR', 'message': 'boom'},
@@ -81,7 +81,7 @@ void main() {
         approval: AssistantApproval(id: 'approval'),
       );
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -98,7 +98,7 @@ void main() {
 
     test('a throwing stream listener does not prevent stop()', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[
           AssistantTurn(
@@ -116,7 +116,7 @@ void main() {
 
     test('should create AbortController and pass signal to adapter', () async {
       conn.CancellationSignal? seen;
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           seen = signal;
           yield <String, dynamic>{
@@ -127,7 +127,7 @@ void main() {
           };
         },
       );
-      final client = ChatClient(connection: connection);
+      final client = ChatClient.legacy(connection: connection);
       await client.sendText('hi');
       expect(seen, isNotNull);
       expect(seen!.isCancelled, isFalse);
@@ -135,7 +135,7 @@ void main() {
 
     test('should preserve partial content when aborted', () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       await client.sendText('hi');
       transport.emit(<String, dynamic>{'type': 'TEXT_MESSAGE_START'});
       transport.emit(<String, dynamic>{
@@ -149,7 +149,7 @@ void main() {
 
     test('should create new AbortController for each request', () async {
       final signals = <conn.CancellationSignal?>[];
-      final connection = conn.ConnectionAdapter(
+      final connection = conn.ConnectionAdapter.connect(
         connect: (messages, {data, signal, runContext}) async* {
           signals.add(signal);
           yield <String, dynamic>{
@@ -160,7 +160,7 @@ void main() {
           };
         },
       );
-      final client = ChatClient(connection: connection);
+      final client = ChatClient.legacy(connection: connection);
       await client.sendText('one');
       await pump(4);
       await client.sendText('two');
@@ -172,7 +172,7 @@ void main() {
     test('should resolve cleanly when stop() is called during onResponse',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(transport: transport);
+      final client = ChatClient.legacy(transport: transport);
       final sending = client.sendText('hi');
       await client.stop();
       await sending;
@@ -183,7 +183,7 @@ void main() {
         'should resolve cleanly when reload() supersedes the stream during onResponse',
         () async {
       final transport = FakeChatTransport();
-      final client = ChatClient(
+      final client = ChatClient.legacy(
         transport: transport,
         messages: <AssistantTurn>[userMessage('u', 'hi')],
       );

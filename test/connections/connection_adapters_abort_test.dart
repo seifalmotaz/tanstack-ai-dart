@@ -19,7 +19,7 @@ void main() {
       final client = FakeHttpClient((_) async => body.response);
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final result = collect(adapter.connect!(
@@ -47,7 +47,7 @@ void main() {
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client, signal: options.signal),
+        options: FetchConnectionOptions(client: client, signal: options.signal),
       );
 
       final chunks = await collect(
@@ -68,7 +68,7 @@ void main() {
       final client = FakeHttpClient((_) async => body.response);
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final result = collect(adapter.connect!(
@@ -93,7 +93,7 @@ void main() {
       final client = FakeHttpClient((_) async => body.response);
       final adapter = fetchServerSentEvents(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final result = collect(adapter.connect!(
@@ -117,7 +117,7 @@ void main() {
       );
       final adapter = fetchHttpStream(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final chunks = await collect(
@@ -139,7 +139,7 @@ void main() {
       final client = FakeHttpClient((_) async => body.response);
       final adapter = fetchHttpStream(
         '/api/chat',
-        FetchConnectionOptions(client: client),
+        options: FetchConnectionOptions(client: client),
       );
 
       final result = collect(adapter.connect!(

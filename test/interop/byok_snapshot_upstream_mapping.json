@@ -6,7 +6,7 @@
   "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
   "inventorySha256": "sha256:1cc1ac6ac75ca032d928860cefc96de579840ebd86eea0d82412015cf4632f49",
   "dartFile": "test/interop/byok_snapshot_upstream_test.dart",
-  "dartFileSha256": "sha256:fe65454c44e6ea9ed2ffb29625e7ab72673089a677b5991c066fd183d03d5894",
+  "dartFileSha256": "sha256:26eef2cfafb2afe6b71b3798228fd8e800abaca22bb7295c29b2a1a157042362",
   "caseCount": 7,
   "implementedCount": 7,
   "missingCount": 0,

@@ -871,7 +871,7 @@ class InterruptManager {
 
   Object? _approvalBranchSchema(ClientTool? tool, bool approved) {
     if (tool == null) return null;
-    final approval = clientToolApprovalSchema(tool);
+    final approval = tool.approvalSchema;
     if (approval is Map &&
         (approval.containsKey('approve') || approval.containsKey('reject'))) {
       return approved ? approval['approve'] : approval['reject'];
@@ -1539,7 +1539,7 @@ class InterruptManager {
     }
     try {
       final approval = normalizeApprovalSchema(
-        clientToolApprovalSchema(tool),
+        tool.approvalSchema,
         tool.inputSchema,
       );
       return hashSchemaInput(tool.inputSchema) == inputHash &&

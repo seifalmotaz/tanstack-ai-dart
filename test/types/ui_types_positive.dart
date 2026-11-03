@@ -20,8 +20,7 @@ void main() {
     execute: (input, context) => WeatherOutput(21),
   );
 
-  final List<ClientTool<WeatherInput, WeatherOutput>> tools =
-      clientTools([weatherTool]);
+  final List<ClientTool<WeatherInput, WeatherOutput>> tools = [weatherTool];
   final call = AssistantPart.tool(
     id: 'call-1',
     name: 'getWeather',

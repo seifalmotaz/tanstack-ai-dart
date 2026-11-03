@@ -43,26 +43,59 @@ typedef HydrateGenerationFunction = Future<GenerationHydrationResult> Function(
   String threadId,
 );
 
-/// Either a [ConnectFunction] adapter or a subscribe/send adapter.
+/// A connection adapter in exactly one of two modes.
 ///
-/// Keeping both modes on one class mirrors the upstream structural union and
-/// lets [normalizeConnectionAdapter] reject partial or mixed configurations.
+/// Construct with [ConnectionAdapter.connect] for a request-scoped adapter,
+/// or [ConnectionAdapter.subscription] for a push adapter. There is no public
+/// constructor that can represent a partial or mixed configuration.
+///
+/// The nullable getters expose the selected mode to clients that consume
+/// adapters. New callers should prefer the named constructors and the
+/// non-nullable functions on [SubscribeConnectionAdapter].
 class ConnectionAdapter {
-  final ConnectFunction? connect;
-  final SubscribeFunction? subscribe;
-  final SendFunction? send;
-  final JoinRunFunction? joinRun;
-  final HydrateFunction? hydrate;
-  final HydrateGenerationFunction? hydrateGeneration;
+  final ConnectFunction? _connect;
+  final SubscribeFunction? _subscribe;
+  final SendFunction? _send;
+  final JoinRunFunction? _joinRun;
+  final HydrateFunction? _hydrate;
+  final HydrateGenerationFunction? _hydrateGeneration;
 
-  const ConnectionAdapter({
-    this.connect,
-    this.subscribe,
-    this.send,
-    this.joinRun,
-    this.hydrate,
-    this.hydrateGeneration,
-  });
+  const ConnectionAdapter.connect({
+    required ConnectFunction connect,
+    JoinRunFunction? joinRun,
+    HydrateFunction? hydrate,
+    HydrateGenerationFunction? hydrateGeneration,
+  })  : _connect = connect,
+        _subscribe = null,
+        _send = null,
+        _joinRun = joinRun,
+        _hydrate = hydrate,
+        _hydrateGeneration = hydrateGeneration;
+
+  const ConnectionAdapter.subscription({
+    required SubscribeFunction subscribe,
+    required SendFunction send,
+    JoinRunFunction? joinRun,
+    HydrateFunction? hydrate,
+    HydrateGenerationFunction? hydrateGeneration,
+  })  : _connect = null,
+        _subscribe = subscribe,
+        _send = send,
+        _joinRun = joinRun,
+        _hydrate = hydrate,
+        _hydrateGeneration = hydrateGeneration;
+
+  ConnectFunction? get connect => _connect;
+
+  SubscribeFunction? get subscribe => _subscribe;
+
+  SendFunction? get send => _send;
+
+  JoinRunFunction? get joinRun => _joinRun;
+
+  HydrateFunction? get hydrate => _hydrate;
+
+  HydrateGenerationFunction? get hydrateGeneration => _hydrateGeneration;
 }
 
 /// Normalized subscribe/send view of a [ConnectionAdapter].
@@ -91,27 +124,19 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
     throw ArgumentError('Connection adapter is required');
   }
 
-  final hasConnect = connection.connect != null;
-  final hasSubscribe = connection.subscribe != null;
-  final hasSend = connection.send != null;
-
-  if (hasConnect && (hasSubscribe || hasSend)) {
-    throw ArgumentError(
-      'Connection adapter must provide either connect or both subscribe and '
-      'send, not both modes',
-    );
-  }
-
-  if (hasSubscribe && hasSend) {
+  final subscribe = connection.subscribe;
+  final send = connection.send;
+  if (subscribe != null && send != null) {
     return SubscribeConnectionAdapter(
-      subscribe: connection.subscribe!,
-      send: connection.send!,
+      subscribe: subscribe,
+      send: send,
       joinRun: connection.joinRun,
       hydrate: connection.hydrate,
     );
   }
 
-  if (!hasConnect) {
+  final connect = connection.connect;
+  if (connect == null) {
     throw ArgumentError(
       'Connection adapter must provide either connect or both subscribe and '
       'send',
@@ -120,7 +145,7 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
 
   final queue = _ConnectQueue();
 
-  Future<void> send(
+  Future<void> sendWithConnect(
     List<WireMessage> messages, {
     Map<String, dynamic>? data,
     CancellationSignal? signal,
@@ -130,7 +155,7 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
     String? upstreamThreadId;
     String? upstreamRunId;
     try {
-      final stream = connection.connect!(
+      final stream = connect(
         messages,
         data: data,
         signal: signal,
@@ -198,7 +223,7 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
   return SubscribeConnectionAdapter(
     subscribe: ({CancellationSignal? signal}) =>
         queue.subscribe(signal: signal),
-    send: send,
+    send: sendWithConnect,
     joinRun: connection.joinRun,
     hydrate: connection.hydrate,
   );
