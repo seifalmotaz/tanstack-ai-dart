@@ -52,3 +52,16 @@ jobs:
       - run: dart pub get
       - run: dart test --platform chrome
       - run: dart run tool/verify_browser.dart
+
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: dart pub get
+      - run: dart run tool/docs.dart check
+      - run: dart analyze example tool/docs.dart
+      - run: dart test test/doc

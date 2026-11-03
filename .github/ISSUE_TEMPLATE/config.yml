@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/README.md
+    about: Read setup, usage, compatibility and validation notes before filing.
+  - name: Existing issues
+    url: https://github.com/seifalmotaz/tanstack-ai-dart/issues
+    about: Search open and closed issues for an existing report or discussion.

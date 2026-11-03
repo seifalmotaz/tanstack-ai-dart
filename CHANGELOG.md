@@ -1,5 +1,8 @@
 ## 0.3.0
 
+- Add public usage guides, generated LLM references, contribution rules, and a
+  reviewed upstream-update/release procedure with documentation checks.
+
 - Make typed named configuration the default chat/generation API; retain explicit
   `legacy` entry points for previous call signatures.
 - Add state streams with an initial snapshot per listener, typed lifecycle enums,

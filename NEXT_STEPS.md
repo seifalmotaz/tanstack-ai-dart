@@ -6,7 +6,8 @@ The snapshot regression and Dart API revision are implemented; minimum/stable
 SDK checks, migration documentation and CI are included.
 See [VALIDATION.md](VALIDATION.md) for executed checks.
 
-Before a public pub.dev release:
+Use the [maintainer release guide](doc/maintainers/releasing.md) for the full
+procedure. Before a public pub.dev release:
 
 - Review the package name/version and publication ownership.
 - Run `dart pub publish --dry-run` from the final release commit.
@@ -22,6 +23,6 @@ For consuming applications:
 - Treat caller context as an application model; Dart does not infer TypeScript
   context intersections or schema-derived literal types.
 
-Future upstream updates should refresh the pinned manifests, review changed
-assertions, and rerun the mapping audit. Server provider adapters from
+Follow the [upstream update guide](doc/maintainers/upstream-updates.md) to
+refresh pinned manifests, review changed assertions, and rerun the mapping audit. Server provider adapters from
 `@tanstack/ai` and the PinCRM application are outside this repository's scope.

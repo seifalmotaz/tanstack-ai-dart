@@ -1,17 +1,28 @@
 # tanstack_ai_dart
 
-Unofficial, framework-independent Dart client for TanStack AI. It implements
-chat, generation/video, client tools, interrupts, persistence/resume, BYOK and
-devtools against `@tanstack/ai-client` **0.40.0** / `@tanstack/ai` **0.70.0**,
-pinned to `7095ebbf1b59175f0cd339c1c477d6af55b312de`.
+A framework-independent Dart client for TanStack AI chat and generation. Use it
+from Dart or Flutter to stream responses, run client tools, handle approvals,
+and restore conversations.
 
-This is a Dart API over the TanStack protocol. JavaScript call signatures and
-TypeScript inference are not its public API contract. The package is not
-maintained by TanStack and does not include server/provider adapters.
+[![CI](https://github.com/seifalmotaz/tanstack-ai-dart/actions/workflows/ci.yml/badge.svg)](https://github.com/seifalmotaz/tanstack-ai-dart/actions/workflows/ci.yml)
+
+This is an **unofficial community port**, not a package maintained by TanStack.
+It provides a Dart API over a pinned TanStack protocol. Server orchestration and
+model-provider adapters belong to your backend.
+
+<!-- compatibility:start -->
+| Compatibility | Supported target |
+| --- | --- |
+| Dart package API | `0.3.0` |
+| Dart SDK | `>=3.6.2 <4.0.0` |
+| Official client | `@tanstack/ai-client 0.40.0` |
+| Official core protocol | `@tanstack/ai 0.70.0` |
+| Upstream source | [`7095ebbf1b59175f0cd339c1c477d6af55b312de`](https://github.com/TanStack/ai/tree/7095ebbf1b59175f0cd339c1c477d6af55b312de) |
+<!-- compatibility:end -->
 
 ## Install
 
-Requires Dart `>=3.6.2 <4.0.0`. Not yet published to pub.dev.
+The package has not been published to pub.dev. Install from GitHub:
 
 ```yaml
 dependencies:
@@ -21,203 +32,102 @@ dependencies:
       ref: main
 ```
 
-## Chat
+Use `main` to evaluate the current checkout. Pin a reviewed full commit SHA in
+production.
+Use a backend endpoint that implements the supported TanStack streaming protocol.
+An arbitrary LLM-provider URL is not a compatible chat endpoint.
 
+## Send a message
+
+Call this function with your backend URL. It subscribes to typed state, sends a
+message, and releases the client even if a request fails.
+
+<!-- example: example/basic_chat.dart -->
 ```dart
 import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 
-final client = ChatClient(
-  connection: fetchServerSentEvents(
-    'https://your-service.example/api/chat',
-    options: const FetchConnectionOptions(
-      headers: {'Authorization': 'Bearer YOUR_TOKEN'},
-    ),
-  ),
-  threadId: 'conversation-123',
-);
-
-final subscription = client.states.listen((snapshot) {
-  // Render snapshot.messages and snapshot.state.
-  // ChatClientState is an enum, including submitted, streaming, ready, error.
-});
-
-await client.attach();
-await client.sendText('Hello');
-await client.sendMessage(const ChatMessageInput.text('Follow up', id: 'user-2'));
-
-await subscription.cancel();
-await client.dispose();
-```
-
-`client.snapshot` reads current state. Each `states` listener receives current
-state followed by ordered updates, buffers independently while paused, and can
-cancel independently. Errors are represented in snapshots rather than emitted
-as stream errors. Disposal closes the stream, including for later listeners.
-Disposal does not wait for a paused state listener to resume.
-
-The core has no Flutter dependency. In Flutter, pass `client.states` to
-`StreamBuilder<ChatSnapshot>` with `initialData: client.snapshot`, and dispose
-subscriptions/client when their owner leaves. No widget lifecycle is required
-for plain Dart usage.
-
-`client.messages` and published snapshots are read-only. Replace the transcript
-with `setMessagesManually(...)` rather than modifying a list or part. Update
-configuration with typed setters such as `client.body = null`, `client.context =
-myContext`, `client.tools = tools`, and `client.queueConfig = config`.
-
-## Connections and authentication refresh
-
-SSE, NDJSON, polling JSON and WebSocket adapters share `ConnectionAdapter`.
-Fixed URLs use named options. Async URL/header refresh uses a provider factory:
-
-```dart
-final connection = fetchServerSentEventsProvider(
-  url: () async => 'https://your-service.example/api/chat',
-  options: () async => FetchConnectionOptions(
-    headers: {'Authorization': 'Bearer ${await readAccessToken()}'},
-  ),
-);
-```
-
-Providers run per operation, so reconnect, history and replay can use fresh
-credentials. Options can inject a `package:http` client. Injected clients remain
-caller-owned; clients created internally are closed by the adapter.
-
-Custom connections use `ConnectionAdapter.connect(connect: ...)` or
-`ConnectionAdapter.subscription(subscribe: ..., send: ...)`. Partial and mixed
-modes fail analysis. Custom fetchers return explicit variants:
-
-```dart
-final connection = fetcherToConnectionAdapter(
-  (input, {signal, headers}) async {
-    // request() returns package:http's StreamedResponse.
-    final response = await request(input, signal, headers);
-    return ChatFetcherResult.response(response);
-    // Or return ChatFetcherResult.stream(yourChunkStream).
-  },
-);
-```
-
-`fetchHttpStream`, `fetchJson`, `xhrServerSentEvents`, `xhrHttpStream` and
-`webSocket` have corresponding `...Provider` factories. WebSocket requires a
-platform socket factory. Wire payloads remain extensible JSON maps.
-
-## Persistence and lifecycle
-
-Use one typed persistence choice:
-
-```dart
-final client = ChatClient(
-  connection: connection,
-  persistence: const ChatPersistenceOptions.server(
+Future<void> runChat(String endpoint) async {
+  final client = ChatClient(
+    connection: fetchServerSentEvents(endpoint),
     threadId: 'conversation-123',
-    history: ChatHistoryConfig(pageSize: 20),
-  ),
-);
+  );
+  final subscription = client.states.listen((snapshot) {
+    for (final message in snapshot.messages) {
+      print('${message.role}: ${message.answer}');
+    }
+  });
+
+  try {
+    await client.attach();
+    await client.sendText('Hello');
+    if (client.error != null) {
+      throw StateError(client.error!);
+    }
+  } finally {
+    await subscription.cancel();
+    await client.dispose();
+  }
+}
+```
+<!-- /example -->
+
+For a runnable command-line example:
+
+```sh
+dart run example/quickstart.dart http://localhost:3000/api/chat "Hello"
 ```
 
-- `ChatPersistenceOptions.ephemeral(...)` is the default.
-- `.server(...)` requires a stable thread ID and uses adapter history/replay.
-- `.stored(threadId: ..., adapter: ...)` stores messages and resume state together
-  through a `ChatClientPersistence` implementation.
+This command makes a real request to the endpoint you supply. See
+[getting started](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/getting-started.md) for setup and error handling.
 
-Call `attach()` to restore history/rejoin a live run. Construction alone does
-not open a replay connection. `detach()` releases the active view; `dispose()`
-ends ownership. Queue policies, history paging, interrupts and cancellation
-retain their TanStack behavior.
+## What you can build
 
-## Tools
+| Capability | Guide |
+| --- | --- |
+| Chat streams, cancellation, queues, and immutable state | [Chat and rendering](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/chat.md) |
+| SSE, NDJSON, JSON polling, WebSocket, and custom fetchers | [Connections and authentication](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/connections.md) |
+| History, storage adapters, and live-run replay | [Persistence and resume](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/persistence.md) |
+| Typed tools, schemas, approvals, and interrupts | [Tools and interrupts](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/tools-and-interrupts.md) |
+| Generation, video, and result snapshots | [Generation](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/generation.md) |
+| Flutter integration, BYOK, and host capabilities | [Platform support](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/platform-support.md) |
+| Public imports and API entry points | [API reference map](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/api-reference.md) |
 
-Use ordinary Dart lists and `ClientTool<TInput, TOutput>`. Schemas are explicit
-`ToolSchema` objects. `RawJsonSchema` advertises a JSON schema; it does not validate
-inputs. `StandardSchema` runs a caller-provided validator/decoder and can return
-an application model before execution. No schema-library dependency is required.
+The core has no Flutter dependency. Flutter apps can use
+`StreamBuilder<ChatSnapshot>` or their existing state-management library.
+Audio, WebAuthn, device storage, WebSocket sockets, and MCP host integration need
+application-supplied implementations. See the platform guide before choosing a
+feature that depends on hardware or a browser host.
 
-```dart
-final tool = ClientTool<String, int>(
-  name: 'length',
-  inputSchema: StandardSchema(
-    (value) => value is String
-        ? SchemaValidationResult.success(value)
-        : const SchemaValidationResult.failure([SchemaIssue('Expected text')]),
-    schema: {'type': 'string'},
-  ),
-  execute: (text, context) => text.length,
-);
-client.tools = [tool];
-```
+## Compatibility
 
-Tool callbacks use `FutureOr<TOutput>` and receive `ToolCallContext`, including
-cancellation and caller context. Caller context remains application-defined;
-Dart does not infer TypeScript intersections of heterogeneous tool contexts.
-Read `tool.approvalSchema` directly. Client tools, approval/interrupt submissions
-and automatic continuations are covered by the upstream behavior mappings.
+Behavior is checked against the pinned official client tests. Dart uses enums,
+named configuration, typed response variants, and streams. TypeScript conditional
+inference and JavaScript call signatures are not the Dart API contract.
 
-## Rendering message parts
+Read [API compatibility](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/API_COMPATIBILITY.md), [parity methodology](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/PARITY.md),
+and [validation evidence](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/VALIDATION.md) for the scope and limits. Earlier call
+signatures remain available through explicit legacy entry points. Existing
+users should read the [0.3 migration guide](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/MIGRATION.md).
 
-`message.chatParts` provides immutable sealed variants for exhaustive switches.
-For example, `if (part case ChatTextPart(:final content))` extracts text.
-Other variants cover thinking, tools/results, activities, structured output,
-subagents and media. `ChatUnknownPart` preserves future part types. Every variant
-retains deep-frozen wire JSON. Opaque application objects retain their identity.
-The mutable `AssistantPart` model remains available for explicit wire/reducer
-integration and constructing outgoing parts.
+## Contribute and stay current
 
-## Generation
+Start with [CONTRIBUTING.md](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/CONTRIBUTING.md). The
+[upstream update guide](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/maintainers/upstream-updates.md) explains how to
+review new official TypeScript changes, update the port and mappings, and prove
+compatibility before advancing the supported version. The
+[release guide](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/maintainers/releasing.md) covers public releases.
 
-Use a connection with the default constructor, or a typed fetcher:
+Report reproducible Dart SDK problems in
+[GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).
+Include the SDK version, transport, platform, and a sanitized reproduction.
 
-```dart
-final generator = GenerationClient<String, Map<String, dynamic>,
-    Map<String, dynamic>>.fetcher(
-  fetcher: (prompt, options) async => GenerationFetchResult.value(
-    await generateImage(prompt, options.signal),
-  ),
-);
-final subscription = generator.states.listen((snapshot) {
-  // Render snapshot.result, snapshot.status and snapshot.error.
-});
-await generator.generate('A house in Cairo');
-await subscription.cancel();
-generator.dispose();
-```
+## Documentation for coding assistants
 
-`GenerationFetchResult.value(...)`, `.stream(...)` and `.response(...)` distinguish
-application results from protocol streams/HTTP responses. `VideoGenerationClient`
-uses the same variants with `VideoGenerateResult`. `GenerationPersistenceOptions`
-has `.ephemeral(...)` and `.persistent(threadId: ...)` constructors.
+Use [llms.txt](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/llms.txt) as the documentation index or
+[llms-full.txt](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/llms-full.txt) for the combined reference. Both are generated
+from the same documentation and examples used by contributors.
 
-Generation snapshots copy JSON maps/lists and scalar-typed JSON collections
-read-only. `result` retains the original result; published unchanged results
-retain identity across status updates. Other reified collection shapes need an
-explicit copier:
+## License
 
-```dart
-copySnapshotResult: (Map<String, List<int>> value) =>
-    Map<String, List<int>>.unmodifiable({
-      for (final entry in value.entries)
-        entry.key: List<int>.unmodifiable(entry.value),
-    }),
-```
-
-Without a compatible copier the error state contains `SnapshotCopyException`.
-Opaque class instances retain identity; use immutable application models.
-
-## Compatibility and platform support
-
-Domain imports are available in `chat.dart`, `connections.dart`, `generation.dart`,
-`ui.dart`, `byok.dart`, `platform.dart`, `processing.dart`, and `devtools.dart`.
-[API_COMPATIBILITY.md](API_COMPATIBILITY.md) records upstream exports and Dart
-adaptations. [VALIDATION.md](VALIDATION.md) records executed checks.
-
-Audio, WebAuthn, storage, WebSocket and MCP host capabilities require the
-consuming application to supply platform implementations. Their interfaces and
-crypto are tested; no Flutter hardware plugin is bundled.
-
-Pre-0.3 JavaScript-shaped construction is available explicitly through
-`ChatClient.legacy`, `GenerationClient.legacy`, and `VideoGenerationClient.legacy`.
-`sendLegacyMessage`, `updateLegacyOptions`, old `get...()` accessors and identity
-helpers exist for migration/upstream compatibility. In particular, legacy
-`getMessages()` returns live mutable data; new code should use `messages` or
-`snapshot`. The earlier TanStack AI 0.42 `SseChatTransport` remains supported.
-See [MIGRATION.md](MIGRATION.md) for the breaking API changes.
+[MIT](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/LICENSE). Upstream code and attribution are recorded in
+[THIRD_PARTY_NOTICES](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/THIRD_PARTY_NOTICES).

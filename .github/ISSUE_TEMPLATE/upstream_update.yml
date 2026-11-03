@@ -1,0 +1,83 @@
+name: Upstream update review
+description: Track a manual review of an official TanStack AI change.
+title: "[upstream]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form tracks a reviewed manual port, not an automatic bump. Read the
+        manifests first; they are the authority for the current baseline. Do not
+        claim full equality from test titles or counts.
+  - type: input
+    id: baseline-sha
+    attributes:
+      label: Current baseline SHA
+      description: The `commit` value in `tool/upstream_tests.json`.
+    validations:
+      required: true
+  - type: input
+    id: candidate-sha
+    attributes:
+      label: Candidate immutable SHA
+      description: Full resolved SHA of the candidate default branch or release tag.
+    validations:
+      required: true
+  - type: input
+    id: npm-versions
+    attributes:
+      label: Upstream npm versions inspected
+      description: For example `@tanstack/ai-client` and `@tanstack/ai` versions. If a release tag or dist-tag differs from the default-branch commit, record both.
+    validations:
+      required: true
+  - type: input
+    id: toolchain
+    attributes:
+      label: Candidate toolchain
+      description: Node version from `.nvmrc` and pnpm version from `packageManager`.
+    validations:
+      required: true
+  - type: textarea
+    id: changed-surface
+    attributes:
+      label: Changed upstream surface
+      description: List changed paths under ai-client source/tests, the ai wire/protocol package, and ai-event-client/ai-utils when affected.
+    validations:
+      required: true
+  - type: textarea
+    id: test-results
+    attributes:
+      label: Official test commands and results
+      description: Include the Vitest JSON output path and the type-check result. State where the report was actually written.
+      placeholder: |
+        pnpm --filter @tanstack/ai-client test:lib --run --reporter=json --outputFile=...
+        pnpm --filter @tanstack/ai-client test:types
+    validations:
+      required: true
+  - type: textarea
+    id: exports
+    attributes:
+      label: Exports and cases added, removed or renamed
+      description: List runtime and type-only exports and upstream tests. Preserve rename/deletion history.
+    validations:
+      required: true
+  - type: textarea
+    id: mappings
+    attributes:
+      label: Mapping and fixture changes
+      description: Name updated mapping files and type fixtures. Keep runtime mappings separate from declaration-only/static cases.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Unimplemented, adapted or not-representable boundaries
+      description: Do not hide gaps or reclassify `not-implemented` just to make the audit pass.
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Pin, notice and documentation changes
+      description: Confirm the pin, compatibility records, notices and docs move together only after the new behavior is ported and tested.
+    validations:
+      required: true
