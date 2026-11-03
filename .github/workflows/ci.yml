@@ -27,7 +27,11 @@ jobs:
       - if: matrix.sdk == 'stable'
         run: dart format --output=none --set-exit-if-changed lib test tool example
       - run: dart analyze
-      - run: dart test --platform vm --reporter json > .dart_tool/tests.jsonl
+      - run: |
+          if ! dart test --platform vm --reporter json > .dart_tool/tests.jsonl; then
+            cat .dart_tool/tests.jsonl
+            exit 1
+          fi
       - run: dart run tool/parity_audit.dart .dart_tool/tests.jsonl .dart_tool/parity.json
 
   analyzer-fixtures:
