@@ -20,19 +20,21 @@ model-provider adapters belong to your backend.
 | Upstream source | [`7095ebbf1b59175f0cd339c1c477d6af55b312de`](https://github.com/TanStack/ai/tree/7095ebbf1b59175f0cd339c1c477d6af55b312de) |
 <!-- compatibility:end -->
 
-## Install
+## Install from GitHub
 
-The package has not been published to pub.dev. Install from GitHub:
+Use the tagged source release:
 
 ```yaml
 dependencies:
   tanstack_ai_dart:
     git:
       url: https://github.com/seifalmotaz/tanstack-ai-dart.git
-      ref: main
+      ref: v0.3.0
 ```
 
-Use `main` to evaluate the current checkout. Pin a reviewed full commit SHA in
+Use the `v0.3.0` source release for this API. See
+[GitHub releases](https://github.com/seifalmotaz/tanstack-ai-dart/releases) for
+versioned source and LLM references. Pin a reviewed tag or full commit SHA in
 production.
 Use a backend endpoint that implements the supported TanStack streaming protocol.
 An arbitrary LLM-provider URL is not a compatible chat endpoint.
@@ -116,6 +118,11 @@ Start with [CONTRIBUTING.md](https://github.com/seifalmotaz/tanstack-ai-dart/blo
 review new official TypeScript changes, update the port and mappings, and prove
 compatibility before advancing the supported version. The
 [release guide](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/doc/maintainers/releasing.md) covers public releases.
+
+Ask usage questions in
+[Discussions](https://github.com/seifalmotaz/tanstack-ai-dart/discussions).
+Read the [community guidelines](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/CODE_OF_CONDUCT.md)
+and [private security reporting policy](https://github.com/seifalmotaz/tanstack-ai-dart/blob/main/SECURITY.md).
 
 Report reproducible Dart SDK problems in
 [GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).

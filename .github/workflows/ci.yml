@@ -18,7 +18,7 @@ jobs:
       matrix:
         sdk: ['3.6.2', stable]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
@@ -34,7 +34,7 @@ jobs:
     name: Analyzer fixtures
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -45,7 +45,7 @@ jobs:
     name: Chrome
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -57,7 +57,7 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable

@@ -1,5 +1,8 @@
 ## 0.3.0
 
+- Prepare the first GitHub source release with tag-based installation, community
+  guidelines, private vulnerability reporting, and versioned LLM references.
+
 - Add public usage guides, generated LLM references, contribution rules, and a
   reviewed upstream-update/release procedure with documentation checks.
 

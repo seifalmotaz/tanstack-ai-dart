@@ -1,3 +1,6 @@
+This is an unofficial community package. It is not affiliated with, endorsed
+by, or published by TanStack.
+
 Portions of this package and its tests are adapted from TanStack AI.
 Upstream: https://github.com/TanStack/ai
 Release: @tanstack/ai-client 0.40.0

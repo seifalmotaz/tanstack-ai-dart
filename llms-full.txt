@@ -30,19 +30,21 @@ model-provider adapters belong to your backend.
 | Upstream source | [`7095ebbf1b59175f0cd339c1c477d6af55b312de`](https://github.com/TanStack/ai/tree/7095ebbf1b59175f0cd339c1c477d6af55b312de) |
 <!-- compatibility:end -->
 
-### Install
+### Install from GitHub
 
-The package has not been published to pub.dev. Install from GitHub:
+Use the tagged source release:
 
 ```yaml
 dependencies:
   tanstack_ai_dart:
     git:
       url: https://github.com/seifalmotaz/tanstack-ai-dart.git
-      ref: main
+      ref: v0.3.0
 ```
 
-Use `main` to evaluate the current checkout. Pin a reviewed full commit SHA in
+Use the `v0.3.0` source release for this API. See
+[GitHub releases](https://github.com/seifalmotaz/tanstack-ai-dart/releases) for
+versioned source and LLM references. Pin a reviewed tag or full commit SHA in
 production.
 Use a backend endpoint that implements the supported TanStack streaming protocol.
 An arbitrary LLM-provider URL is not a compatible chat endpoint.
@@ -126,6 +128,11 @@ Start with [CONTRIBUTING.md](https://raw.githubusercontent.com/seifalmotaz/tanst
 review new official TypeScript changes, update the port and mappings, and prove
 compatibility before advancing the supported version. The
 [release guide](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/doc/maintainers/releasing.md) covers public releases.
+
+Ask usage questions in
+[Discussions](https://github.com/seifalmotaz/tanstack-ai-dart/discussions).
+Read the [community guidelines](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CODE_OF_CONDUCT.md)
+and [private security reporting policy](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/SECURITY.md).
 
 Report reproducible Dart SDK problems in
 [GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).
@@ -1378,6 +1385,9 @@ Source: [CONTRIBUTING.md](https://raw.githubusercontent.com/seifalmotaz/tanstack
 Contributions to the Dart client are welcome. Start with a small reproduction or
 a focused proposal in [GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).
 Search existing issues and pull requests before starting overlapping work.
+Use [Discussions](https://github.com/seifalmotaz/tanstack-ai-dart/discussions)
+for usage questions. Follow the [community guidelines](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CODE_OF_CONDUCT.md), and
+use [private reporting](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/SECURITY.md) for vulnerabilities.
 
 ### Keep the API idiomatic Dart
 
@@ -1635,7 +1645,8 @@ Source: [doc/maintainers/releasing.md](https://raw.githubusercontent.com/seifalm
 ## Release the Dart package
 
 This guide is for maintainers publishing a reviewed Dart release. It does not
-publish anything automatically. The package is currently unpublished on pub.dev.
+publish anything automatically. GitHub source releases and pub.dev publication
+are separate steps.
 
 ### Prepare the release commit
 
@@ -1657,11 +1668,10 @@ dart doc
 dart pub publish --dry-run
 ```
 
-Before the final archive, replace pre-release status text in the README,
-`tool/docs.dart`, and this guide with neutral instructions for the target release.
-Do not publish an archive that describes its own version as unpublished. Regenerate
-the LLM files after that edit. Announce hosted availability only after publication
-has been confirmed.
+Keep installation instructions specific to the target release and regenerate
+LLM references when they change. Avoid time-sensitive publication claims in an
+archive that cannot be edited later. Announce hosted availability only after
+publication has been confirmed.
 
 Review the archive listing and warnings. Generated documentation, examples,
 license/notice files, and public guides should be included as intended. Local
@@ -1695,12 +1705,112 @@ dart pub publish
 Confirm the version, archive, license, and repository link on pub.dev. Only after
 that confirmation should release announcements claim hosted availability.
 
-### Record the source release
+### Create a GitHub source release
 
-Create the Dart version tag and GitHub release for the same source commit.
+A GitHub source release can precede publication to pub.dev. Keep those statuses
+separate in the README and release notes. Verify all CI checks on the immutable
+source commit before creating its tag. Write reviewed release notes to
+`.dart_tool/release-notes.md`, and set `release_commit` to that verified SHA.
+For the first source release:
+
+```sh
+release_tag=v0.3.0
+test -n "$release_commit" || exit 1
+git tag -a "$release_tag" "$release_commit" -m "tanstack_ai_dart $release_tag"
+git push origin "refs/tags/$release_tag"
+gh release create "$release_tag" llms.txt llms-full.txt --verify-tag --title "$release_tag" --notes-file .dart_tool/release-notes.md --latest
+```
+
+If a tag already exists, verify its target instead of overwriting it. Derive attached files from that exact source revision.
+For versioned LLM copies, rebase only this repository's GitHub/raw URL references
+from `main` to the release tag; preserve examples and compatibility data. Include
+checksums for attached files. A release's LLM text provides a versioned
+reference alongside GitHub's automatic source archives.
+
+### Record the release
+
+When publishing to pub.dev, use the same reviewed source commit as its GitHub
+release, or create a new release/version if the source changed.
 Include the Dart version, supported upstream versions/SHA, migration notes, and
 validation scope. Do not reuse an upstream npm tag as the Dart release tag.
 
 The [application integration checklist](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/NEXT_STEPS.md) covers host-specific
 work that consuming applications still own. No mobile store upload or production
 application deployment is part of this library release.
+
+
+## Community guidelines
+
+Source: [CODE_OF_CONDUCT.md](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CODE_OF_CONDUCT.md)
+
+## Code of Conduct
+
+This is a small community project around an unofficial Dart SDK. Participation
+is open to anyone who treats others with basic respect.
+
+### Expected behavior
+
+- Disagree about technical decisions directly and respectfully. Critique code,
+  evidence, and tradeoffs, not people.
+- Assume good faith and keep discussion focused on the project.
+- Welcome contributors with different experience levels and time zones.
+
+### Unacceptable behavior
+
+- Harassment, threats, discrimination, or personal targeting.
+- Spam, promotional noise, or repeated off-topic posting.
+- Publishing someone's private information without consent.
+- Sustained disruption of issues, pull requests, or discussions.
+
+This applies to issues, pull requests, discussions, and other project spaces.
+
+### Moderation
+
+Maintainers may moderate, close, or lock abusive or off-topic content, and may
+limit participation when needed. Moderation is proportionate and does not
+require a formal escalation process.
+
+### Reporting
+
+Use GitHub's "Report content" or "Report abuse" tools on the specific content
+or profile, documented at
+https://docs.github.com/en/communities/maintaining-your-safety-on-github/reporting-abuse-or-spam
+For contribution expectations, including AI-assisted work, see
+[CONTRIBUTING](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CONTRIBUTING.md).
+
+
+## Security reporting
+
+Source: [SECURITY.md](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/SECURITY.md)
+
+## Security
+
+This is an unofficial community Dart SDK for TanStack AI, not affiliated with TanStack.
+
+### Reporting a vulnerability
+
+Use GitHub's private vulnerability reporting and open a draft advisory at:
+
+https://github.com/seifalmotaz/tanstack-ai-dart/security/advisories/new
+
+Use this private channel for sensitive reports. Do not include credentials, API
+keys, customer prompts, or other private data. Provide a minimal reproduction.
+
+Report ordinary bugs in [GitHub issues](https://github.com/seifalmotaz/tanstack-ai-dart/issues).
+Ask usage questions in [Discussions](https://github.com/seifalmotaz/tanstack-ai-dart/discussions).
+
+### What to include
+
+- A minimal, sanitized reproduction.
+- The affected Dart SDK version and package version.
+- Platform and runtime details (Dart, OS, browser or VM).
+- The observed impact and any conditions required to trigger it.
+
+### Supported versions
+
+Fixes are reviewed against the latest GitHub release only. Older versions do not
+carry a separate maintenance promise. The initial release is v0.3.0; the Dart
+version is independent of any npm package pin.
+
+See [LICENSE](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/LICENSE) for warranty terms and
+[CONTRIBUTING](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CONTRIBUTING.md) for how changes are proposed and verified.

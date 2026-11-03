@@ -5,7 +5,8 @@
 Dart API 0.3.0; Dart SDK >=3.6.2 <4.0.0; @tanstack/ai-client 0.40.0; @tanstack/ai 0.70.0; upstream commit 7095ebbf1b59175f0cd339c1c477d6af55b312de.
 
 Use Dart constructors, enums, typed fetcher variants, and state streams.
-The package is not published to pub.dev yet. Server/provider adapters and
+Installation uses the GitHub source release. Hosted pub.dev availability is separate.
+Server/provider adapters and
 real device host implementations are outside this client package.
 
 ## Guides
@@ -34,4 +35,6 @@ real device host implementations are outside this client package.
 - [Contribution rules](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CONTRIBUTING.md): Development setup, tests, and reviewed pull requests.
 - [Update the TypeScript port](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/doc/maintainers/upstream-updates.md): Review new upstream commits, assertions, and protocol changes.
 - [Release the Dart package](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/doc/maintainers/releasing.md): Manual checks and publication responsibilities.
+- [Community guidelines](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/CODE_OF_CONDUCT.md): Respectful participation and moderation.
+- [Security reporting](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/SECURITY.md): Private vulnerability reports and supported release policy.
 - [Combined reference](https://raw.githubusercontent.com/seifalmotaz/tanstack-ai-dart/main/llms-full.txt): Generated full documentation in one file.
