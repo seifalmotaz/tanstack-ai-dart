@@ -6,8 +6,10 @@ select a model, create backend routes, or supply provider credentials.
 
 ## Install and configure
 
-1. Add the Git dependency from the README while the package is unpublished.
-2. Run `dart pub get`.
+1. Run `dart pub add tanstack_ai_dart`, or `flutter pub add tanstack_ai_dart`
+   for a Flutter project. This adds the hosted package from
+   [pub.dev](https://pub.dev/packages/tanstack_ai_dart) and resolves dependencies.
+2. Import `package:tanstack_ai_dart/tanstack_ai_dart.dart`.
 3. Pass your chat route URL to `fetchServerSentEvents`.
 4. Add authentication with a fixed header or an async options provider. See
    [connections and authentication](connections.md).

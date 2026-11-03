@@ -291,7 +291,7 @@ Future<List<String>> processDocumentation(Directory root,
     output(path, expected);
   }
   final index = StringBuffer(
-      '# tanstack_ai_dart\n\n> Unofficial Dart client for TanStack AI chat and generation.\n\n$summary\n\nUse Dart constructors, enums, typed fetcher variants, and state streams.\nInstallation uses the GitHub source release. Hosted pub.dev availability is separate.\nServer/provider adapters and\nreal device host implementations are outside this client package.\n\n');
+      '# tanstack_ai_dart\n\n> Unofficial Dart client for TanStack AI chat and generation.\n\n$summary\n\nUse Dart constructors, enums, typed fetcher variants, and state streams.\nInstall from pub.dev with `dart pub add tanstack_ai_dart` or `flutter pub add tanstack_ai_dart`.\nServer/provider adapters and\nreal device host implementations are outside this client package.\n\n');
   for (final group in ['Guides', 'Compatibility', 'Optional']) {
     index.writeln('## $group\n');
     for (final (path, title, description, section) in documentation) {

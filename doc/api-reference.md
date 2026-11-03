@@ -3,7 +3,6 @@
 The main import is `package:tanstack_ai_dart/tanstack_ai_dart.dart`. This page
 maps tasks to public Dart symbols. It is not a generated declaration reference.
 Generate local API documentation with `dart doc`; open `doc/api/index.html`.
-A hosted pub.dev API URL will be added after an actual package release.
 
 ## Choose a public library
 

@@ -1,3 +1,9 @@
+## 0.3.1
+
+- Use pub.dev installation commands and hosted dependencies in the README,
+  getting-started guide, and generated LLM references.
+- Remove the outdated pre-publication note from the API reference guide.
+
 ## 0.3.0
 
 - Prepare the first GitHub source release with tag-based installation, community

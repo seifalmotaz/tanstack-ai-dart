@@ -13,29 +13,36 @@ model-provider adapters belong to your backend.
 <!-- compatibility:start -->
 | Compatibility | Supported target |
 | --- | --- |
-| Dart package API | `0.3.0` |
+| Dart package API | `0.3.1` |
 | Dart SDK | `>=3.6.2 <4.0.0` |
 | Official client | `@tanstack/ai-client 0.40.0` |
 | Official core protocol | `@tanstack/ai 0.70.0` |
 | Upstream source | [`7095ebbf1b59175f0cd339c1c477d6af55b312de`](https://github.com/TanStack/ai/tree/7095ebbf1b59175f0cd339c1c477d6af55b312de) |
 <!-- compatibility:end -->
 
-## Install from GitHub
+## Install
 
-Use the tagged source release:
+Add the package from [pub.dev](https://pub.dev/packages/tanstack_ai_dart):
+
+```sh
+# Dart
+dart pub add tanstack_ai_dart
+
+# Flutter
+flutter pub add tanstack_ai_dart
+```
+
+Or add it to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  tanstack_ai_dart:
-    git:
-      url: https://github.com/seifalmotaz/tanstack-ai-dart.git
-      ref: v0.3.0
+  tanstack_ai_dart: ^0.3.1
 ```
 
-Use the `v0.3.0` source release for this API. See
-[GitHub releases](https://github.com/seifalmotaz/tanstack-ai-dart/releases) for
-versioned source and LLM references. Pin a reviewed tag or full commit SHA in
-production.
+Run `dart pub get` or `flutter pub get` after editing `pubspec.yaml` manually.
+See [GitHub releases](https://github.com/seifalmotaz/tanstack-ai-dart/releases)
+for tagged source and versioned LLM references.
+
 Use a backend endpoint that implements the supported TanStack streaming protocol.
 An arbitrary LLM-provider URL is not a compatible chat endpoint.
 
