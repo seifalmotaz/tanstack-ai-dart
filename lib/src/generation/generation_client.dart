@@ -1,5 +1,4 @@
-/// Ported from `packages/ai-client/src/generation-client.ts` (TanStack AI
-/// client 0.40.0).
+/// Ported from `packages/ai-client/src/generation-client.ts`.
 library;
 
 import 'dart:async';
@@ -120,6 +119,7 @@ class GenerationClient<TInput, TResult, TOutput> {
 
   factory GenerationClient({
     required ConnectionAdapter connection,
+    required String threadId,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -143,7 +143,7 @@ class GenerationClient<TInput, TResult, TOutput> {
     TResult? Function(GenerationRestoredResult restored)? reconstructResult,
   }) =>
       GenerationClient.legacy(
-        threadId: persistence.threadId,
+        threadId: validateGenerationThreadId(threadId),
         connection: connection,
         body: body,
         byok: byok,
@@ -169,6 +169,7 @@ class GenerationClient<TInput, TResult, TOutput> {
 
   factory GenerationClient.fetcher({
     required GenerationFetcher<TInput, TResult> fetcher,
+    required String threadId,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -192,7 +193,7 @@ class GenerationClient<TInput, TResult, TOutput> {
     TResult? Function(GenerationRestoredResult restored)? reconstructResult,
   }) =>
       GenerationClient.legacy(
-        threadId: persistence.threadId,
+        threadId: validateGenerationThreadId(threadId),
         fetcher: (input, options) async => await fetcher(input, options),
         body: body,
         byok: byok,
@@ -362,15 +363,19 @@ class GenerationClient<TInput, TResult, TOutput> {
           input,
           GenerationFetcherOptions(
             signal: signal,
+            threadId: _threadId,
+            runId: runId,
             headers: headers,
           ),
         );
         if (!_ownsRun(_abortController, abortController)) return;
         if (result is GenerationFetchedStream<TResult>) {
           await _processStream(
-            connections.stream((_, data, signal) => result.stream).connect!(
+            connections.stream((_) => result.stream).connect!(
               const <WireMessage>[],
               signal: signal,
+              runContext:
+                  RunAgentInputContext(threadId: _threadId, runId: runId),
             ),
             runId,
             abortController,

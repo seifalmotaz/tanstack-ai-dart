@@ -13,7 +13,8 @@ Future<void> settled(bool Function() condition) async {
 ChatClient restored(JoinRunFunction join, {void Function(Object)? onError}) =>
     ChatClient.legacy(
       connection: ConnectionAdapter.connect(
-        connect: (_, {data, signal, runContext}) => const Stream.empty(),
+        connect: (_, {data, signal, required runContext}) =>
+            const Stream.empty(),
         joinRun: join,
       ),
       threadId: 't',
@@ -36,7 +37,7 @@ void main() {
     );
     final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-      connect: (_, {data, signal, runContext}) => body.stream,
+      connect: (_, {data, signal, required runContext}) => body.stream,
     ));
     addTearDown(client.dispose);
     final run = client.sendLegacyMessage('hello');

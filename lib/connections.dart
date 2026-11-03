@@ -1,4 +1,4 @@
-/// Connection adapters for the TanStack AI 0.40 wire protocol.
+/// Connection adapters for the TanStack AI wire protocol.
 ///
 /// This is a Dart port of `@tanstack/ai-client`'s `connection-adapters.ts`.
 /// It is intentionally separate from the legacy transport barrel so existing
@@ -12,7 +12,8 @@ export 'src/connections/fetch_connections.dart';
 export 'src/connections/http_common.dart';
 export 'src/connections/hydration.dart';
 export 'src/connections/json_connection.dart';
-export 'src/connections/reconnect.dart';
+export 'src/connections/reconnect.dart'
+    hide reconnectBackoff, isTemporaryStatusError, retryAfterForError;
 export 'src/connections/response_stream.dart';
 export 'src/connections/resumable_stream.dart';
 export 'src/connections/sse_utils.dart';

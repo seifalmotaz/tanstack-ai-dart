@@ -97,11 +97,15 @@ Future<SchemaValidationResult> validateWithSchema(
 class ToolCallContext {
   final CancellationSignal? abortSignal;
   final Object? context;
+  final String? threadId;
+  final String? toolCallId;
   final void Function()? emitCustomEvent;
 
   const ToolCallContext({
     this.abortSignal,
     this.context,
+    this.threadId,
+    this.toolCallId,
     this.emitCustomEvent,
   });
 }

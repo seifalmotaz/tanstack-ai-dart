@@ -9,10 +9,10 @@ void main() {
   test('connect drains events after intermediate and terminal run markers',
       () async {
     final client = ChatClient.legacy(connection: conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
       yield {
         'type': 'RUN_STARTED',
-        'runId': runContext!.runId,
+        'runId': runContext.runId,
         'threadId': runContext.threadId
       };
       yield {
@@ -50,7 +50,7 @@ void main() {
     final client = ChatClient.legacy(
         onResponse: () => gate.future,
         connection: conn.ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
           requests++;
         }));
     addTearDown(client.dispose);
@@ -73,10 +73,10 @@ void main() {
         byokClient: keyring,
         byokProvider: () async => 'openai',
         connection: conn.ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
           captured = runContext;
           expect('$messages$data', isNot(contains('fake-openai-marker')));
-          yield {'type': 'RUN_FINISHED', 'runId': runContext!.runId};
+          yield {'type': 'RUN_FINISHED', 'runId': runContext.runId};
         }));
     addTearDown(client.dispose);
     await client.sendLegacyMessage('hello');

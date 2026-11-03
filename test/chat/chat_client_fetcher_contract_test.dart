@@ -108,14 +108,16 @@ void main() {
 
     test('passes UI messages and merged body to the fetcher', () async {
       conn.ChatFetcherInput? seen;
-      final client = ChatClient.legacy(
-        body: <String, dynamic>{'provider': 'openai'},
-        fetcher: (input, {signal, headers}) {
+      final client = ChatClient(
+        threadId: 'thread-1',
+        forwardedProps: <String, dynamic>{'provider': 'openai'},
+        connection: conn.fetcherToConnectionAdapter((input, {signal, headers}) {
           seen = input;
-          return Stream<Map<String, dynamic>>.fromIterable(
+          return conn.ChatFetcherResult.stream(
+              Stream<Map<String, dynamic>>.fromIterable(
             textChunks('ok'),
-          );
-        },
+          ));
+        }),
       );
       await client.sendText('hello there');
       expect(seen, isNotNull);
@@ -126,7 +128,7 @@ void main() {
         'content': 'hello there',
       });
       expect(seen!.data, containsPair('provider', 'openai'));
-      expect(seen!.threadId, isNotEmpty);
+      expect(seen!.threadId, 'thread-1');
       expect(seen!.runId, isNotEmpty);
     });
 
@@ -134,7 +136,7 @@ void main() {
       expect(
         () => ChatClient.legacy(
           connection: conn.ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {},
+            connect: (messages, {data, signal, required runContext}) async* {},
           ),
           fetcher: (input, {signal, headers}) => const Stream.empty(),
         ),

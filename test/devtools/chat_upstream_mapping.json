@@ -1,15 +1,15 @@
 {
   "generatedFrom": "tool/upstream_tests.json",
   "upstreamPackage": "@tanstack/ai-client",
-  "upstreamVersion": "0.40.0",
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamVersion": "1.0.1",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "assignedFiles": [
     "devtools.test.ts",
     "chat-client.test.ts",
     "chat-client-noop-devtools.test.ts"
   ],
-  "assignedCases": 49,
-  "mappedCount": 49,
+  "assignedCases": 47,
+  "mappedCount": 46,
   "unmappedCount": 0,
   "mapped": [
     {
@@ -19,14 +19,6 @@
       "dartTestName": "ChatClient devtools bridge does not emit hook lifecycle events before devtools is mounted",
       "status": "ported-passing",
       "upstreamLine": 237
-    },
-    {
-      "upstreamFile": "devtools.test.ts",
-      "upstreamName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
-      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
-      "dartTestName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
-      "status": "ported-passing",
-      "upstreamLine": 248
     },
     {
       "upstreamFile": "devtools.test.ts",
@@ -330,22 +322,6 @@
     },
     {
       "upstreamFile": "devtools.test.ts",
-      "upstreamName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
-      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
-      "dartTestName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
-      "status": "ported-passing",
-      "upstreamLine": 1961
-    },
-    {
-      "upstreamFile": "devtools.test.ts",
-      "upstreamName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
-      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
-      "dartTestName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
-      "status": "ported-passing",
-      "upstreamLine": 2031
-    },
-    {
-      "upstreamFile": "devtools.test.ts",
       "upstreamName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
       "dartFile": "test/interop/chat_devtools_upstream_test.dart",
       "dartTestName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
@@ -448,5 +424,6 @@
   "statusCounts": {
     "ported-passing": 49,
     "ported-failing": 0
-  }
+  },
+  "reviewNote": "The new 1.0 thread-identity case is mapped in test/upgrade_1_0_1_mapping.json; this file retains the other 46 reviewed mappings."
 }

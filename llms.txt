@@ -2,7 +2,7 @@
 
 > Unofficial Dart client for TanStack AI chat and generation.
 
-Dart API 0.3.1; Dart SDK >=3.6.2 <4.0.0; @tanstack/ai-client 0.40.0; @tanstack/ai 0.70.0; upstream commit 7095ebbf1b59175f0cd339c1c477d6af55b312de.
+Dart API 0.4.0; Dart SDK >=3.6.2 <4.0.0; @tanstack/ai-client 1.0.1; @tanstack/ai 1.0.1; upstream commit a7eb58459ebd528bbcc4166cc68377b777989462.
 
 Use Dart constructors, enums, typed fetcher variants, and state streams.
 Install from pub.dev with `dart pub add tanstack_ai_dart` or `flutter pub add tanstack_ai_dart`.

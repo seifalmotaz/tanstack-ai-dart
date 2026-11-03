@@ -71,13 +71,16 @@ void main() {
         expect(states, [true, false]);
       });
 
-      test('should pass abort signal to fetcher', () async {
+      test('should pass abort signal, threadId and runId to fetcher', () async {
         GenerationFetcherOptions? captured;
         var calls = 0;
+        Object? capturedInput;
 
         final client = VideoGenerationClient<VideoGenerateResult>.legacy(
+          threadId: 'thread-1',
           fetcher: (input, options) async {
             calls++;
+            capturedInput = input;
             captured = options;
             return videoResult;
           },
@@ -88,6 +91,9 @@ void main() {
         expect(calls, 1);
         expect(captured, isNotNull);
         expect(captured!.signal.isCancelled, isFalse);
+        expect(captured!.threadId, 'thread-1');
+        expect(captured!.runId, isNotEmpty);
+        expect((capturedInput as VideoGenerateInput).prompt, 'test video');
       });
 
       test('should not allow concurrent requests', () async {
@@ -307,7 +313,7 @@ void main() {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             calls.add(data);
             context = runContext;
             yield runFinished('run-1');
@@ -315,6 +321,7 @@ void main() {
         );
 
         final client = VideoGenerationClient<VideoGenerateResult>.legacy(
+          threadId: 'thread-1',
           connection: connection,
           body: {'model': 'runway-gen3'},
         );
@@ -328,8 +335,8 @@ void main() {
           'prompt': 'A sunset',
           'size': '1280x720',
         });
-        expect(context?.threadId, matches(RegExp(r'^video-')));
-        expect(context?.runId, isNotEmpty);
+        expect(context?.threadId, 'thread-1');
+        expect(context?.runId, matches(RegExp(r'^run-')));
       });
     });
 
@@ -398,7 +405,7 @@ void main() {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             calls.add(data);
             context = runContext;
             yield runFinished('run-1');
@@ -406,6 +413,7 @@ void main() {
         );
 
         final client = VideoGenerationClient<VideoGenerateResult>.legacy(
+          threadId: 'thread-1',
           connection: connection,
           body: {'model': 'old'},
         );
@@ -414,8 +422,8 @@ void main() {
         await client.generate(const VideoGenerateInput(prompt: 'test'));
 
         expect(calls.single, {'model': 'new', 'prompt': 'test'});
-        expect(context?.threadId, matches(RegExp(r'^video-')));
-        expect(context?.runId, isNotEmpty);
+        expect(context?.threadId, 'thread-1');
+        expect(context?.runId, matches(RegExp(r'^run-')));
       });
     });
 
@@ -426,7 +434,7 @@ void main() {
         final aborted = Deferred<bool>();
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted('run-1');
             yield custom(
                 GenerationEvents.videoJobCreated, {'jobId': 'job-123'});

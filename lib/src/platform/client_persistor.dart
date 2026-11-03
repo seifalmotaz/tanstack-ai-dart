@@ -9,14 +9,6 @@ import 'persistence_types.dart';
 
 ChatPersistedState? normalizePersistedState(Object? raw) {
   if (raw is ChatPersistedState) return raw;
-  if (raw is List) {
-    return ChatPersistedState(
-      messages: raw
-          .whereType<Map>()
-          .map((message) => Map<String, dynamic>.from(message))
-          .toList(growable: false),
-    );
-  }
   if (raw is Map && raw['messages'] is List) {
     return ChatPersistedState.fromJson(Map<String, dynamic>.from(raw));
   }
@@ -48,6 +40,7 @@ class ChatPersistor {
   final void Function(ChatResumeSnapshot snapshot)? applyResume;
 
   bool _skipNextPersist = false;
+  bool _legacyStored = false;
   int _generation = 0;
   Future<void> _queue = Future<void>.value();
   bool _queuePending = false;
@@ -69,6 +62,7 @@ class ChatPersistor {
   ]);
 
   void _writeState() {
+    if (_legacyStored) return;
     final messages = List<Map<String, dynamic>>.of(_lastMessages);
     if (messages.isEmpty && _lastResume == null) {
       final generation = _generation;
@@ -95,9 +89,9 @@ class ChatPersistor {
     try {
       final raw = adapter.getItem(id);
       if (raw is Future) {
-        return raw.then(normalizePersistedState).catchError((_) => null);
+        return raw.then(_normalize).catchError((_) => null);
       }
-      final state = normalizePersistedState(raw);
+      final state = _normalize(raw);
       if (state != null) {
         _lastMessages = state.messages;
         _lastResume = state.resume;
@@ -106,6 +100,16 @@ class ChatPersistor {
     } catch (_) {
       return null;
     }
+  }
+
+  ChatPersistedState? _normalize(Object? raw) {
+    if (raw is List) {
+      _legacyStored = true;
+      print('[TanStack AI] The stored chat for threadId "$id" uses the 0.x '
+          'format. It will not be read or overwritten. Clear the chat or '
+          'stored value to start saving again.');
+    }
+    return normalizePersistedState(raw);
   }
 
   /// Apply async hydrated state unless the message list already changed.
@@ -141,6 +145,7 @@ class ChatPersistor {
   }
 
   void remove() {
+    _legacyStored = false;
     _lastMessages = <Map<String, dynamic>>[];
     _lastResume = null;
     final generation = ++_generation;

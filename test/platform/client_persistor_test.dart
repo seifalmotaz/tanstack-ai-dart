@@ -113,7 +113,8 @@ void main() {
     group('readInitial', () {
       test('returns the stored messages from a synchronous getItem', () {
         final stored = [uiMessage('m-1')];
-        final adapter = MockPersistence(stored);
+        final adapter = MockPersistence()
+          ..stored = ChatPersistedState(messages: stored);
         final created = createPersistor(adapter);
 
         final initial = created.persistor.readInitial();
@@ -121,6 +122,32 @@ void main() {
         expect((initial as ChatPersistedState).messages, stored);
         expect(adapter.getItemCalls, 1);
       });
+
+      for (final asynchronous in [false, true]) {
+        test('preserves legacy data until clear (async: $asynchronous)',
+            () async {
+          final legacy = [uiMessage('old')];
+          final adapter = MockPersistence()
+            ..stored = asynchronous ? Future.value(legacy) : legacy;
+          final persistor = createPersistor(adapter).persistor;
+          final diagnostics = <String>[];
+          await runZoned(() async {
+            expect(await persistor.readInitial(), isNull);
+          }, zoneSpecification: ZoneSpecification(print: (_, __, ___, line) {
+            diagnostics.add(line);
+          }));
+          expect(diagnostics.single, contains('threadId "chat-1"'));
+          expect(diagnostics.single, contains('Clear'));
+          persistor.notifyMessagesChanged([uiMessage('new')]);
+          persistor.persistResumeSnapshot(null);
+          expect(adapter.setItemCalls, 0);
+          expect(adapter.removeItemCalls, 0);
+          persistor.remove();
+          persistor.notifyMessagesChanged([uiMessage('new')]);
+          expect(adapter.removeItemCalls, 1);
+          expect(adapter.setItemCalls, 1);
+        });
+      }
 
       test('round-trips a mixed transcript that includes activity', () {
         ChatPersistedState? stored;
@@ -157,13 +184,15 @@ void main() {
         expect(initial.messages, mixed);
       });
 
-      test('returns the promise from an asynchronous getItem', () {
+      test('returns the promise from an asynchronous getItem', () async {
         final stored = [uiMessage('m-1')];
         final adapter = MockPersistence();
-        adapter.stored = Future.value(stored);
+        adapter.stored = Future.value(ChatPersistedState(messages: stored));
         final created = createPersistor(adapter);
 
-        expect(created.persistor.readInitial(), isA<Future>());
+        final initial = created.persistor.readInitial();
+        expect(initial, isA<Future>());
+        expect((await initial as ChatPersistedState).messages, stored);
       });
 
       test('swallows a throwing getItem and returns undefined', () {

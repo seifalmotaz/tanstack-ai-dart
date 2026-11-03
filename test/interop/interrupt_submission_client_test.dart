@@ -38,8 +38,8 @@ void main() {
           ],
         ),
         connection: ConnectionAdapter.connect(
-            connect: (_, {data, signal, runContext}) async* {
-          requests.add(runContext!);
+            connect: (_, {data, signal, required runContext}) async* {
+          requests.add(runContext);
           if (requests.length == 1) {
             if (failure == 'transport') throw StateError('offline');
             yield {

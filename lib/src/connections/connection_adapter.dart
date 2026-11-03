@@ -10,7 +10,7 @@ typedef ConnectFunction = Stream<StreamChunk> Function(
   List<WireMessage> messages, {
   Map<String, dynamic>? data,
   CancellationSignal? signal,
-  RunAgentInputContext? runContext,
+  required RunAgentInputContext runContext,
 });
 
 /// Subscribe to chunks pushed by [SendFunction].
@@ -23,7 +23,7 @@ typedef SendFunction = Future<void> Function(
   List<WireMessage> messages, {
   Map<String, dynamic>? data,
   CancellationSignal? signal,
-  RunAgentInputContext? runContext,
+  required RunAgentInputContext runContext,
 });
 
 /// Re-attach to an existing run and replay it from the start.
@@ -149,7 +149,7 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
     List<WireMessage> messages, {
     Map<String, dynamic>? data,
     CancellationSignal? signal,
-    RunAgentInputContext? runContext,
+    required RunAgentInputContext runContext,
   }) async {
     var hasTerminalEvent = false;
     String? upstreamThreadId;
@@ -181,11 +181,11 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
             {
               'type': 'RUN_FINISHED',
               'threadId': _requireSyntheticId(
-                upstreamThreadId ?? runContext?.threadId,
+                upstreamThreadId ?? runContext.threadId,
                 'threadId',
               ),
               'runId': _requireSyntheticId(
-                upstreamRunId ?? runContext?.runId,
+                upstreamRunId ?? runContext.runId,
                 'runId',
               ),
               'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -201,11 +201,11 @@ SubscribeConnectionAdapter normalizeConnectionAdapter(
           queue.push({
             'type': 'RUN_ERROR',
             'threadId': _requireSyntheticId(
-              upstreamThreadId ?? runContext?.threadId,
+              upstreamThreadId ?? runContext.threadId,
               'threadId',
             ),
             'runId': _requireSyntheticId(
-              upstreamRunId ?? runContext?.runId,
+              upstreamRunId ?? runContext.runId,
               'runId',
             ),
             'timestamp': DateTime.now().millisecondsSinceEpoch,

@@ -1,4 +1,4 @@
-/// Real devtools bridges for the TanStack AI client 0.40.0 surface.
+/// Real devtools bridges for the TanStack AI client surface.
 ///
 /// Ported from `packages/ai-client/src/devtools.ts`. Everything the upstream
 /// bridge reached into — the chat client, generation clients and the browser
@@ -1421,22 +1421,6 @@ class ChatDevtoolsAwareEventEmitter extends DefaultChatClientEventEmitter {
       output,
       state,
       context ?? _eventContext(),
-    );
-    _afterEmit();
-  }
-
-  @override
-  void toolApprovalResponded(
-    String approvalId,
-    String toolCallId,
-    bool approved, [
-    ChatClientRunEventContext? context,
-  ]) {
-    super.toolApprovalResponded(
-      approvalId,
-      toolCallId,
-      approved,
-      context ?? helper.getCurrentRunEventContext(),
     );
     _afterEmit();
   }

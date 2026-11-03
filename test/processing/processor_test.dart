@@ -80,6 +80,27 @@ class _Events {
         'messageId': messageId,
         'delta': delta,
       });
+  Map<String, dynamic> approvalInterrupt(
+          String callId, String name, String id) =>
+      chunk('RUN_FINISHED', {
+        'runId': 'run-1',
+        'threadId': 'thread-1',
+        'outcome': {
+          'type': 'interrupt',
+          'interrupts': [
+            {
+              'id': id,
+              'toolCallId': callId,
+              'reason': 'approval_required',
+              'metadata': {
+                'kind': 'approval',
+                'toolName': name,
+                'input': <String, dynamic>{}
+              }
+            }
+          ]
+        },
+      });
   Map<String, dynamic> custom(String name, [dynamic value]) =>
       chunk('CUSTOM', {'name': name, 'value': value});
   Map<String, dynamic> activitySnapshot(
@@ -1091,6 +1112,18 @@ void main() {
   });
 
   group('thinking/reasoning', () {
+    test('starts a separate thinking part for each reasoning message', () {
+      final p = processor();
+      p.processChunk(ev.runStarted());
+      p.processChunk(ev.textStart());
+      p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'r-a'}));
+      p.processChunk(ev.reasoningContent('A', 'r-a'));
+      p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'r-b'}));
+      p.processChunk(ev.reasoningContent('B', 'r-b'));
+      final thinking = partsOf(p).where((part) => part['type'] == 'thinking');
+      expect(thinking.map((part) => part['content']).toList(), ['A', 'B']);
+      expect(thinking.map((part) => part['stepId']).toList(), ['r-a', 'r-b']);
+    });
     test(
         'should accumulate REASONING_MESSAGE_CONTENT deltas into thinking content',
         () {
@@ -1137,39 +1170,26 @@ void main() {
 
     test('should create separate ThinkingParts for different stepIds', () {
       final p = processor();
-      p.processChunk(ev.stepStarted('step-a'));
-      p.processChunk(ev.reasoningContent('A', 'r-a'));
-      p.processChunk(ev.stepStarted('step-b'));
-      p.processChunk(ev.reasoningContent('B', 'r-b'));
+      p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'step-1'}));
+      p.processChunk(ev.reasoningContent('First thought', 'step-1'));
+      p.processChunk(ev.reasoningContent(' continued', 'step-1'));
+      p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'step-2'}));
+      p.processChunk(ev.reasoningContent('Second thought', 'step-2'));
       final thinking =
           partsOf(p).where((part) => part['type'] == 'thinking').toList();
-      expect(thinking.map((part) => part['content']).toList(), ['A', 'B']);
-    });
-
-    test('should attribute reasoning content to pending STEP_STARTED stepId',
-        () {
-      final p = processor();
-      p.processChunk(ev.runStarted());
-      p.processChunk(chunk('REASONING_START', {'messageId': 'r-1'}));
-      p.processChunk(chunk('REASONING_MESSAGE_START', {
-        'messageId': 'r-1',
-        'role': 'reasoning',
-      }));
-      p.processChunk(ev.stepStarted('step-1'));
-      p.processChunk(ev.reasoningContent('Thinking...'));
-      final thinking =
-          partsOf(p).where((part) => part['type'] == 'thinking').single;
-      expect(thinking['stepId'], 'step-1');
-      expect(thinking['content'], 'Thinking...');
+      expect(thinking.map((part) => part['content']).toList(),
+          ['First thought continued', 'Second thought']);
+      expect(thinking.map((part) => part['stepId']).toList(),
+          ['step-1', 'step-2']);
     });
 
     test('getResult().thinking should concatenate all steps in order',
         () async {
       final p = processor();
       final result = await p.process(streamOf([
-        ev.stepStarted('step-a'),
+        chunk('REASONING_MESSAGE_START', {'messageId': 'r-a'}),
         ev.reasoningContent('A', 'r-a'),
-        ev.stepStarted('step-b'),
+        chunk('REASONING_MESSAGE_START', {'messageId': 'r-b'}),
         ev.reasoningContent('B', 'r-b'),
         ev.runFinished(),
       ]));
@@ -1243,22 +1263,6 @@ void main() {
   });
 
   group('client tools (CUSTOM events)', () {
-    test(
-        'should fire onToolCall when tool-input-available CUSTOM event arrives',
-        () {
-      final spy = EventSpy();
-      final p = processor(spy);
-      final input = {'city': 'NYC'};
-      p.processChunk(ev.custom('tool-input-available', {
-        'toolCallId': 'tc-1',
-        'toolName': 'getWeather',
-        'input': input,
-      }));
-      expect(spy.toolCalls, [
-        {'toolCallId': 'tc-1', 'toolName': 'getWeather', 'input': input},
-      ]);
-    });
-
     test('should not fire onToolCall for CUSTOM events with no data', () {
       final spy = EventSpy();
       final p = processor(spy);
@@ -1392,25 +1396,6 @@ void main() {
   });
 
   group('approval flow', () {
-    test('should handle approval-requested CUSTOM event', () {
-      final spy = EventSpy();
-      final p = processor(spy);
-      p.processChunk(ev.toolStart('tc-1', 'delete'));
-      p.processChunk(ev.toolArgs('tc-1', '{}'));
-      p.processChunk(ev.toolEnd('tc-1'));
-      final input = {'id': 1};
-      p.processChunk(ev.custom('approval-requested', {
-        'toolCallId': 'tc-1',
-        'toolName': 'delete',
-        'input': input,
-        'approval': {'id': 'ap-1', 'needsApproval': true},
-      }));
-      final call = partsOf(p).firstWhere((part) => part['type'] == 'tool-call');
-      expect(call['state'], 'approval-requested');
-      expect(call['approval'], {'id': 'ap-1', 'needsApproval': true});
-      expect(spy.approvals.single['approvalId'], 'ap-1');
-    });
-
     test('should handle approval interrupts on RUN_FINISHED', () {
       final spy = EventSpy();
       final p = processor(spy);
@@ -1508,12 +1493,7 @@ void main() {
       p.processChunk(ev.toolStart('tc-1', 'x'));
       p.processChunk(ev.toolArgs('tc-1', '{}'));
       p.processChunk(ev.toolEnd('tc-1'));
-      p.processChunk(ev.custom('approval-requested', {
-        'toolCallId': 'tc-1',
-        'toolName': 'x',
-        'input': {},
-        'approval': {'id': 'ap-1', 'needsApproval': true},
-      }));
+      p.processChunk(ev.approvalInterrupt('tc-1', 'x', 'ap-1'));
       p.addToolApprovalResponse('ap-1', true);
       final call = partsOf(p).firstWhere((part) => part['type'] == 'tool-call');
       expect(call['approval']['approved'], isTrue);
@@ -1525,12 +1505,7 @@ void main() {
       p.processChunk(ev.toolStart('tc-1', 'x'));
       p.processChunk(ev.toolArgs('tc-1', '{}'));
       p.processChunk(ev.toolEnd('tc-1'));
-      p.processChunk(ev.custom('approval-requested', {
-        'toolCallId': 'tc-1',
-        'toolName': 'x',
-        'input': {},
-        'approval': {'id': 'ap-1', 'needsApproval': true},
-      }));
+      p.processChunk(ev.approvalInterrupt('tc-1', 'x', 'ap-1'));
       p.addToolApprovalResponse('ap-1', false);
       final call = partsOf(p).firstWhere((part) => part['type'] == 'tool-call');
       expect(call['approval']['approved'], isFalse);
@@ -1558,33 +1533,6 @@ void main() {
         'percent': 50,
       }));
       expect(spy.customEvents.single[2], {'toolCallId': 'tc-1'});
-    });
-
-    test(
-        'should NOT forward system custom events (tool-input-available) to onCustomEvent',
-        () {
-      final spy = EventSpy();
-      final p = processor(spy);
-      p.processChunk(ev.custom('tool-input-available', {
-        'toolCallId': 'tc-1',
-        'toolName': 'x',
-        'input': {},
-      }));
-      expect(spy.customEvents, isEmpty);
-    });
-
-    test(
-        'should NOT forward system custom events (approval-requested) to onCustomEvent',
-        () {
-      final spy = EventSpy();
-      final p = processor(spy);
-      p.processChunk(ev.custom('approval-requested', {
-        'toolCallId': 'tc-1',
-        'toolName': 'x',
-        'input': {},
-        'approval': {'id': 'a', 'needsApproval': true},
-      }));
-      expect(spy.customEvents, isEmpty);
     });
 
     test('should work when onCustomEvent handler is not provided', () {
@@ -1640,12 +1588,7 @@ void main() {
       final p = processor();
       p.processChunk(ev.toolStart('tc-1', 'x'));
       p.processChunk(ev.toolEnd('tc-1'));
-      p.processChunk(ev.custom('approval-requested', {
-        'toolCallId': 'tc-1',
-        'toolName': 'x',
-        'input': {},
-        'approval': {'id': 'a', 'needsApproval': true},
-      }));
+      p.processChunk(ev.approvalInterrupt('tc-1', 'x', 'a'));
       p.addToolApprovalResponse('a', true);
       expect(p.areAllToolsComplete(), isTrue);
     });
@@ -1680,15 +1623,6 @@ void main() {
       p.prepareAssistantMessage();
       p.processChunk(ev.runError('boom'));
       expect(p.getMessages(), hasLength(1));
-    });
-
-    test(
-        'should support deprecated startAssistantMessage for backwards compatibility',
-        () {
-      final p = processor();
-      final id = p.startAssistantMessage();
-      p.processChunk(ev.textContent('Hello', id));
-      expect(p.getMessages().single['id'], id);
     });
   });
 
@@ -2024,33 +1958,8 @@ void main() {
     });
   });
 
-  group('startAssistantMessage + TEXT_MESSAGE_START dedup', () {
-    test(
-        'should associate TEXT_MESSAGE_START with pending manual message (different ID)',
-        () {
-      final p = processor();
-      final id = p.startAssistantMessage();
-      p.processChunk(ev.textStart('server-id'));
-      p.processChunk(ev.textContent('hi', 'server-id'));
-      expect(p.getMessages(), hasLength(1));
-      expect(p.getMessages().single['id'], 'server-id');
-      expect(p.getMessages().single['parts'][0]['content'], 'hi');
-      expect(id, isNot('server-id'));
-    });
-
-    test(
-        'should associate TEXT_MESSAGE_START with pending manual message (same ID)',
-        () {
-      final p = processor();
-      p.startAssistantMessage('same');
-      p.processChunk(ev.textStart('same'));
-      p.processChunk(ev.textContent('hi', 'same'));
-      expect(p.getMessages(), hasLength(1));
-    });
-
-    test(
-        'should work when TEXT_MESSAGE_START arrives without startAssistantMessage',
-        () {
+  group('TEXT_MESSAGE_START', () {
+    test('creates a message on TEXT_MESSAGE_START', () {
       final p = processor();
       p.processChunk(ev.textStart());
       expect(p.getMessages(), hasLength(1));
@@ -3113,55 +3022,6 @@ void main() {
       p.processChunk(ev.textEnd());
       p.processChunk(ev.runFinished());
       expect(spy.streamEnds, hasLength(1));
-    });
-  });
-
-  group('replay', () {
-    test(
-        'replay should consume legacy approval-requested CUSTOM chunks after RUN_FINISHED',
-        () async {
-      final spy = EventSpy();
-      final recording = ChunkRecording(
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        chunks: [
-          RecordedChunk(chunk: ev.runStarted(), timestamp: 1, index: 0),
-          RecordedChunk(
-            chunk: ev.toolStart('tc-1', 'dangerousTool'),
-            timestamp: 2,
-            index: 1,
-          ),
-          RecordedChunk(
-            chunk: ev.toolArgs('tc-1', '{"action":"delete"}'),
-            timestamp: 3,
-            index: 2,
-          ),
-          RecordedChunk(
-            chunk: ev.runFinished('tool_calls'),
-            timestamp: 4,
-            index: 3,
-          ),
-          RecordedChunk(
-            chunk: ev.custom('approval-requested', {
-              'toolCallId': 'tc-1',
-              'toolName': 'dangerousTool',
-              'input': {'action': 'delete'},
-              'approval': {'id': 'approval-1', 'needsApproval': true},
-            }),
-            timestamp: 5,
-            index: 4,
-          ),
-        ],
-      );
-      await StreamProcessor.replay(
-        recording,
-        StreamProcessorOptions(events: spy.events),
-      );
-      expect(spy.approvals.single, {
-        'toolCallId': 'tc-1',
-        'toolName': 'dangerousTool',
-        'input': {'action': 'delete'},
-        'approvalId': 'approval-1',
-      });
     });
   });
 }

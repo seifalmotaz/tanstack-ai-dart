@@ -117,7 +117,7 @@ void main() {
     test('should create AbortController and pass signal to adapter', () async {
       conn.CancellationSignal? seen;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           seen = signal;
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
@@ -150,7 +150,7 @@ void main() {
     test('should create new AbortController for each request', () async {
       final signals = <conn.CancellationSignal?>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           signals.add(signal);
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',

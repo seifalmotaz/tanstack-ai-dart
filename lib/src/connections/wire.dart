@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../identity.dart' as identity;
 import '../processing/agui_wire.dart' as agui;
 import 'types.dart';
 
@@ -38,7 +37,7 @@ StreamChunk withTanstackMetadata(
 ///
 /// Copies `metadata.tanstack` extras back to top-level fields, restores the
 /// `usage[]` wire array into TanStack's `{promptTokens,...}` shape, and repairs
-/// `toolName` / `TOOL_CALL_END.input` aliases the wire does not keep.
+/// `TOOL_CALL_END.input` field the wire does not keep.
 StreamChunk restoreInboundChunk(StreamChunk chunk) {
   _restorePublicUsage(chunk);
   final tanstack = tanstackMetadata(chunk);
@@ -68,12 +67,6 @@ void _restorePublicUsage(StreamChunk chunk) {
       );
       if (rebuilt != null) chunk['usage'] = rebuilt;
     }
-  }
-
-  if (type == 'TOOL_CALL_START' &&
-      chunk['toolName'] == null &&
-      chunk['toolCallName'] != null) {
-    chunk['toolName'] = chunk['toolCallName'];
   }
 
   if (type == 'TOOL_CALL_END' && chunk['input'] == null) {
@@ -169,30 +162,28 @@ Object? _tryJson(String raw) {
 /// Build the AG-UI `RunAgentInput` payload shared by every POST adapter.
 ///
 /// Precedence (later wins): static adapter `body`, then
-/// `runContext.forwardedProps`, then per-send `data`. The legacy `data` field
-/// mirrors `forwardedProps` for older servers.
+/// `runContext.forwardedProps`, then per-send `data`.
 Map<String, dynamic> buildRunAgentInputBody(
   List<WireMessage> messages,
   Map<String, dynamic>? data,
-  RunAgentInputContext? runContext, {
+  RunAgentInputContext runContext, {
   Map<String, dynamic>? body,
 }) {
   final forwardedProps = <String, dynamic>{
     ...?body,
-    ...?runContext?.forwardedProps,
+    ...?runContext.forwardedProps,
     ...?data,
   };
   return {
-    'threadId': runContext?.threadId ?? identity.generateIdentity('thread'),
-    'runId': runContext?.runId ?? identity.generateIdentity('run'),
-    if (runContext?.parentRunId != null) 'parentRunId': runContext!.parentRunId,
-    if (runContext?.resume != null) 'resume': runContext!.resume,
+    'threadId': runContext.threadId,
+    'runId': runContext.runId,
+    if (runContext.parentRunId != null) 'parentRunId': runContext.parentRunId,
+    if (runContext.resume != null) 'resume': runContext.resume,
     'state': <String, dynamic>{},
     'messages': agui.uiMessagesToWire(messages),
-    'tools': runContext?.clientTools?.map((tool) => tool.toJson()).toList() ??
+    'tools': runContext.clientTools?.map((tool) => tool.toJson()).toList() ??
         <dynamic>[],
     'context': <dynamic>[],
     'forwardedProps': forwardedProps,
-    'data': <String, dynamic>{...forwardedProps},
   };
 }

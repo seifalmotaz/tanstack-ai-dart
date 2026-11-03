@@ -2,7 +2,7 @@
   "generatedFrom": "packages/ai-client/tests/chat-client-interrupts.test.ts (pinned @tanstack/ai 0.40.0)",
   "upstreamFile": "chat-client-interrupts.test.ts",
   "upstreamCases": 43,
-  "mappedCount": 43,
+  "mappedCount": 41,
   "mapped": [
     {
       "upstreamName": "surfaces an interrupt with no binding as unbound rather than resolvable generic",
@@ -38,12 +38,6 @@
       "upstreamName": "hydrates a real core client-tool terminal with distinct schema identity hashes",
       "dartFile": "test/chat/interrupt_manager_test.dart",
       "dartTestName": "hydrates a real core client-tool terminal with distinct schema identity hashes",
-      "status": "implemented"
-    },
-    {
-      "upstreamName": "keeps deprecated approval and client-tool reason aliases compatible",
-      "dartFile": "test/chat/interrupt_manager_test.dart",
-      "dartTestName": "keeps deprecated approval and client-tool reason aliases compatible",
       "status": "implemented"
     },
     {
@@ -146,12 +140,6 @@
       "upstreamName": "reports client-tool canonicalization failures as invalid output",
       "dartFile": "test/chat/interrupt_manager_test.dart",
       "dartTestName": "reports client-tool canonicalization failures as invalid output",
-      "status": "implemented"
-    },
-    {
-      "upstreamName": "resolves pre-binding client-tool fallback with raw output",
-      "dartFile": "test/chat/interrupt_manager_test.dart",
-      "dartTestName": "resolves pre-binding client-tool fallback with raw output",
       "status": "implemented"
     },
     {

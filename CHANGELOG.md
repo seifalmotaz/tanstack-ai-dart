@@ -1,4 +1,13 @@
-## 0.3.1
+## 0.4.0
+
+- Target TanStack AI client and core 1.0.1 with required stable thread identity,
+  current interrupt and persistence formats, typed run context, hydration,
+  generation context, and resilient reconnect/backoff behavior.
+- Make interrupt snapshots read-only and expose resume state in chat snapshots.
+  See [MIGRATION.md](MIGRATION.md) for breaking changes and the deliberate
+  unbound-interrupt execution boundary.
+- Add reproducible upstream inventories, removed-case ledger, four export-path
+  records, captured stream fixtures, and modern connection regression coverage.
 
 - Use pub.dev installation commands and hosted dependencies in the README,
   getting-started guide, and generated LLM references.

@@ -1,5 +1,8 @@
 // Upstream reference: packages/ai-client/tests/chat-client-resume.test.ts
+import 'dart:async';
+
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'package:test/test.dart';
 
 import 'support.dart';
@@ -38,7 +41,17 @@ List<Map<String, dynamic>> interruptRun({
               'id': id,
               'reason': reason,
               if (toolCallId != null) 'toolCallId': toolCallId,
-              'metadata': metadata,
+              'metadata': {
+                ...metadata,
+                'tanstack:interruptBinding': {
+                  'v': 1,
+                  'kind': 'generic',
+                  'interruptId': id,
+                  'interruptedRunId': runId,
+                  'generation': 0,
+                  'responseSchemaHash': 'none',
+                },
+              },
             },
           ],
         },
@@ -61,6 +74,188 @@ Future<ChatClient> interruptedClient(
 }
 
 void main() {
+  test('modern unsafe resume forwards history and interrupted context',
+      () async {
+    final contexts = <conn.RunAgentInputContext>[];
+    final histories = <List<conn.WireMessage>>[];
+    final adapter = conn.ConnectionAdapter.connect(
+        connect: (messages, {data, signal, required runContext}) async* {
+      contexts.add(runContext);
+      histories.add(messages);
+      final providerRunId =
+          contexts.length == 1 ? runContext.runId : 'provider-run';
+      yield {
+        'type': 'RUN_STARTED',
+        'runId': providerRunId,
+        'threadId': runContext.threadId
+      };
+      if (contexts.length == 1) {
+        yield {'type': 'TEXT_MESSAGE_CONTENT', 'messageId': 'm1', 'delta': 'a'};
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {
+            'type': 'interrupt',
+            'interrupts': [
+              {'id': 'interrupt-1', 'reason': 'approval_required'}
+            ]
+          }
+        };
+      } else {
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': providerRunId,
+          'threadId': runContext.threadId,
+          'outcome': {'type': 'success'}
+        };
+      }
+    });
+    final client = ChatClient(connection: adapter, threadId: 'thread-1');
+    await client.sendText('hi');
+    final state = client.getResumeState()!;
+    expect(client.getInterrupts().single.id, 'interrupt-1');
+    expect(state.threadId, 'thread-1');
+    final items = <Map<String, dynamic>>[
+      {
+        'interruptId': 'interrupt-1',
+        'status': 'resolved',
+        'payload': {'approved': true}
+      }
+    ];
+    await client.resumeInterruptsUnsafe(items,
+        threadId: state.threadId, runId: state.runId);
+    expect(contexts, hasLength(2));
+    expect(contexts.last.threadId, state.threadId);
+    expect(contexts.last.runId, isNot(state.runId));
+    expect(contexts.last.parentRunId, state.runId);
+    expect(contexts.last.resume, items);
+    expect(histories.first, hasLength(1));
+    expect(histories.last, isNotEmpty);
+    expect(histories.last.first['role'], 'user');
+    expect(histories.last.any((message) => message['role'] == 'assistant'),
+        isTrue);
+    expect(client.getResumeState(), isNull);
+    expect(client.getInterrupts(), isEmpty);
+  });
+
+  test('modern snapshot publishes pause and clear with fresh input', () async {
+    var calls = 0;
+    final connection = conn.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+      calls++;
+      yield {
+        'type': 'RUN_STARTED',
+        'threadId': runContext.threadId,
+        'runId': runContext.runId
+      };
+      yield {
+        'type': 'RUN_FINISHED',
+        'threadId': runContext.threadId,
+        'runId': runContext.runId,
+        'outcome': calls == 1
+            ? {
+                'type': 'interrupt',
+                'interrupts': [
+                  {'id': 'interrupt-1', 'reason': 'client_tool_input'}
+                ]
+              }
+            : {'type': 'success'}
+      };
+    });
+    final client = ChatClient(connection: connection, threadId: 'thread-1');
+    final snapshots = <ChatSnapshot>[];
+    final subscription = client.states.listen(snapshots.add);
+    await client.sendText('hi');
+    await waitFor(() => snapshots.any((state) =>
+        state.resumeState != null &&
+        state.interruptState.interrupts.isNotEmpty));
+    expect(client.getInterrupts(), hasLength(1));
+    await client.clear();
+    await waitFor(() =>
+        snapshots.last.resumeState == null &&
+        snapshots.last.interruptState.interrupts.isEmpty);
+    expect(client.getResumeState(), isNull);
+    await client.sendText('fresh');
+    await client.append(userMessage('u2', 'fresh append'));
+    expect(calls, 3);
+    await subscription.cancel();
+    await client.dispose();
+  });
+
+  for (final mode in ['finish', 'start-and-finish', 'error', 'runless-error']) {
+    test('modern interrupt ownership survives $mode lifecycle', () async {
+      final controller = StreamController<Map<String, dynamic>>();
+      conn.RunAgentInputContext? context;
+      var calls = 0;
+      final connection = conn.ConnectionAdapter.connect(
+          connect: (_, {data, signal, required runContext}) {
+        context = runContext;
+        calls++;
+        return calls == 1 ? controller.stream : const Stream.empty();
+      });
+      final client = ChatClient(connection: connection, threadId: 'thread-1');
+      final send = client.sendText('hi');
+      await waitFor(() => context != null);
+      controller.add({
+        'type': 'RUN_STARTED',
+        'threadId': 'thread-1',
+        'runId': context!.runId
+      });
+      controller.add({
+        'type': 'RUN_FINISHED',
+        'threadId': 'thread-1',
+        'runId': context!.runId,
+        'outcome': {
+          'type': 'interrupt',
+          'interrupts': [
+            {'id': 'interrupt-a', 'reason': 'client_tool_input'}
+          ]
+        }
+      });
+      await waitFor(() => client.getInterrupts().isNotEmpty);
+      final interrupted = client.getResumeState()!.runId;
+      if (mode == 'start-and-finish') {
+        controller.add({
+          'type': 'RUN_STARTED',
+          'threadId': 'thread-1',
+          'runId': 'other-run'
+        });
+      }
+      controller.add(mode == 'runless-error'
+          ? {'type': 'RUN_ERROR', 'message': 'session failed'}
+          : mode == 'error'
+              ? {
+                  'type': 'RUN_ERROR',
+                  'threadId': 'thread-1',
+                  'runId': 'other-run',
+                  'message': 'unrelated'
+                }
+              : {
+                  'type': 'RUN_FINISHED',
+                  'threadId': 'thread-1',
+                  'runId': 'other-run',
+                  'outcome': {'type': 'success'}
+                });
+      await pump();
+      if (mode == 'runless-error') {
+        expect(client.getResumeState(), isNull);
+        expect(client.getInterrupts(), isEmpty);
+      } else {
+        expect(client.getResumeState()!.runId, interrupted);
+        expect(client.getInterrupts().single.id, 'interrupt-a');
+        await expectLater(client.sendText('blocked'), throwsStateError);
+      }
+      await controller.close();
+      await send;
+      if (mode == 'runless-error') {
+        await client.sendText('fresh');
+        expect(calls, 2);
+      }
+      await client.dispose();
+    });
+  }
+
   group('ChatClient resume', () {
     test('tracks the run/thread of an interrupted run', () async {
       final transport = FakeChatTransport();
@@ -69,7 +264,7 @@ void main() {
       expect(state, isNotNull);
       expect(state!.threadId, 'thread-1');
       expect(state.runId, 'run-1');
-      expect(client.getPendingInterrupts().single.id, 'interrupt-1');
+      expect(client.getInterrupts().single.id, 'interrupt-1');
     });
 
     test('clears resume state once the run finishes', () async {
@@ -111,7 +306,7 @@ void main() {
       final transport = FakeChatTransport();
       final client = await interruptedClient(transport);
       expect(client.getResumeState()!.threadId, 'thread-1');
-      expect(client.getPendingInterrupts(), hasLength(1));
+      expect(client.getInterrupts(), hasLength(1));
     });
 
     test(
@@ -127,7 +322,7 @@ void main() {
           'payload': <String, dynamic>{'approved': true},
         },
       ];
-      await client.resumeInterrupts(resumeItems);
+      await client.resumeInterruptsLegacy(resumeItems);
       final body = transport.bodies[1];
       expect(body['threadId'], state.threadId);
       expect(body['parentRunId'], state.runId);
@@ -147,7 +342,7 @@ void main() {
       );
       await transport.closeAt(1);
       await pump();
-      expect(client.getPendingInterrupts(), isEmpty);
+      expect(client.getInterrupts(), isEmpty);
       expect(client.getResumeState(), isNull);
     });
 
@@ -186,6 +381,20 @@ void main() {
       expect(client.getResumeState(), isNull);
     });
 
+    test('unsafe resume preserves the configured thread identity', () async {
+      final transport = FakeChatTransport();
+      final client = await interruptedClient(transport);
+      await client.resumeInterruptsUnsafe(
+        <Map<String, dynamic>>[],
+        threadId: 'other-thread',
+        runId: 'other-run',
+      );
+      expect(client.threadId, 'thread-1');
+      expect(transport.bodies[1]['threadId'], 'other-thread');
+      await transport.closeAt(1);
+      await pump();
+    });
+
     test('blocks normal input while interrupts are pending', () async {
       final transport = FakeChatTransport();
       final client = await interruptedClient(transport);
@@ -197,77 +406,7 @@ void main() {
       final client = await interruptedClient(transport);
       await client.clear();
       expect(client.getResumeState(), isNull);
-      expect(client.getPendingInterrupts(), isEmpty);
-    });
-
-    test('addToolApprovalResponse sends a compatibility resume item', () async {
-      final transport = FakeChatTransport();
-      final client = await interruptedClient(
-        transport,
-        chunks: interruptRun(toolCallId: 'tool-1'),
-      );
-      await client.addToolApprovalResponse(id: 'interrupt-1', approved: true);
-      await waitFor(() => transport.bodies.length == 2);
-      final resume = transport.bodies[1]['resume'] as List;
-      expect((resume.single as Map)['interruptId'], 'interrupt-1');
-      expect(
-        ((resume.single as Map)['payload'] as Map)['approved'],
-        isTrue,
-      );
-      await client.stop();
-    });
-
-    test(
-        'addToolApprovalResponse waits for all pending approval interrupts before resuming',
-        () async {
-      final transport = FakeChatTransport();
-      final client = await interruptedClient(
-        transport,
-        chunks: <Map<String, dynamic>>[
-          <String, dynamic>{
-            'type': 'RUN_STARTED',
-            'runId': 'run-1',
-            'threadId': 'thread-1',
-          },
-          <String, dynamic>{
-            'type': 'RUN_FINISHED',
-            'runId': 'run-1',
-            'threadId': 'thread-1',
-            'outcome': <String, dynamic>{
-              'type': 'interrupt',
-              'interrupts': <Map<String, dynamic>>[
-                <String, dynamic>{
-                  'id': 'i1',
-                  'reason': 'approval_required',
-                  'toolCallId': 't1',
-                  'metadata': <String, dynamic>{
-                    'kind': 'approval',
-                    'toolName': 'a',
-                    'input': <String, dynamic>{},
-                  },
-                },
-                <String, dynamic>{
-                  'id': 'i2',
-                  'reason': 'approval_required',
-                  'toolCallId': 't2',
-                  'metadata': <String, dynamic>{
-                    'kind': 'approval',
-                    'toolName': 'b',
-                    'input': <String, dynamic>{},
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      );
-      await client.addToolApprovalResponse(id: 'i1', approved: true);
-      await pump(20);
-      expect(transport.bodies, hasLength(1));
-      await client.addToolApprovalResponse(id: 'i2', approved: false);
-      await waitFor(() => transport.bodies.length == 2);
-      expect((transport.bodies[1]['resume'] as List), hasLength(2));
-      await client.stop();
+      expect(client.getInterrupts(), isEmpty);
     });
 
     test('restores pending interrupts from an initial resume snapshot',
@@ -293,7 +432,7 @@ void main() {
         ),
       );
       expect(client.getResumeState()!.runId, 'r');
-      expect(client.getPendingInterrupts().single.id, 'i1');
+      expect(client.getInterrupts().single.id, 'i1');
     });
 
     test('resolves a generic interrupt and auto-resumes with entries',
@@ -315,7 +454,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final client = await interruptedClient(transport);
-      await client.resumeInterrupts(<Map<String, dynamic>>[
+      await client.resumeInterruptsLegacy(<Map<String, dynamic>>[
         <String, dynamic>{'interruptId': 'interrupt-1', 'status': 'resolved'},
       ]);
       final requestRun = transport.bodies[1]['runId'];
@@ -336,7 +475,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final client = await interruptedClient(transport);
-      await client.resumeInterrupts(<Map<String, dynamic>>[
+      await client.resumeInterruptsLegacy(<Map<String, dynamic>>[
         <String, dynamic>{'interruptId': 'interrupt-1', 'status': 'resolved'},
       ]);
       await emitAll(transport, <Map<String, dynamic>>[
@@ -354,7 +493,7 @@ void main() {
         () async {
       final transport = FakeChatTransport();
       final client = await interruptedClient(transport);
-      await client.resumeInterrupts(<Map<String, dynamic>>[
+      await client.resumeInterruptsLegacy(<Map<String, dynamic>>[
         <String, dynamic>{'interruptId': 'interrupt-1', 'status': 'resolved'},
       ]);
       final ids = (transport.bodies[1]['messages'] as List)
@@ -376,7 +515,7 @@ void main() {
       expect(client.getSessionGenerating(), isFalse);
       await client.stop();
       expect(client.getResumeState(), isNull);
-      expect(client.getPendingInterrupts(), isEmpty);
+      expect(client.getInterrupts(), isEmpty);
     });
 
     test('keeps pending interrupts when an unrelated run finishes', () async {
@@ -389,7 +528,7 @@ void main() {
         'outcome': <String, dynamic>{'type': 'success'},
       });
       await pump();
-      expect(client.getPendingInterrupts(), hasLength(1));
+      expect(client.getInterrupts(), hasLength(1));
       await client.stop();
     });
 
@@ -409,7 +548,7 @@ void main() {
         'outcome': <String, dynamic>{'type': 'success'},
       });
       await pump();
-      expect(client.getPendingInterrupts(), hasLength(1));
+      expect(client.getInterrupts(), hasLength(1));
       await client.stop();
     });
 
@@ -422,12 +561,11 @@ void main() {
         'message': 'boom',
       });
       await pump();
-      expect(client.getPendingInterrupts(), hasLength(1));
+      expect(client.getInterrupts(), hasLength(1));
       await client.stop();
     });
 
-    test('addToolResult for pending client-tool input sends a resume item',
-        () async {
+    test('addToolResult resolves a bound generic tool-call fallback', () async {
       final transport = FakeChatTransport();
       final client = await interruptedClient(
         transport,
@@ -449,59 +587,6 @@ void main() {
       await waitFor(() => transport.bodies.length == 2);
       final resume = transport.bodies[1]['resume'] as List;
       expect((resume.single as Map)['interruptId'], 'interrupt-1');
-      await client.stop();
-    });
-
-    test(
-        'addToolResult waits for all pending client-tool interrupts before resuming',
-        () async {
-      final transport = FakeChatTransport();
-      final client = await interruptedClient(
-        transport,
-        chunks: <Map<String, dynamic>>[
-          <String, dynamic>{
-            'type': 'RUN_STARTED',
-            'runId': 'run-1',
-            'threadId': 'thread-1',
-          },
-          <String, dynamic>{
-            'type': 'RUN_FINISHED',
-            'runId': 'run-1',
-            'threadId': 'thread-1',
-            'outcome': <String, dynamic>{
-              'type': 'interrupt',
-              'interrupts': <Map<String, dynamic>>[
-                <String, dynamic>{
-                  'id': 'i1',
-                  'reason': 'client_tool_input',
-                  'toolCallId': 't1',
-                  'metadata': <String, dynamic>{
-                    'kind': 'client_tool',
-                    'toolName': 'a',
-                    'input': <String, dynamic>{},
-                  },
-                },
-                <String, dynamic>{
-                  'id': 'i2',
-                  'reason': 'client_tool_input',
-                  'toolCallId': 't2',
-                  'metadata': <String, dynamic>{
-                    'kind': 'client_tool',
-                    'toolName': 'b',
-                    'input': <String, dynamic>{},
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      );
-      await client.addToolResult(toolCallId: 't1', output: 1);
-      await pump(20);
-      expect(transport.bodies, hasLength(1));
-      await client.addToolResult(toolCallId: 't2', output: 2);
-      await waitFor(() => transport.bodies.length == 2);
-      expect((transport.bodies[1]['resume'] as List), hasLength(2));
       await client.stop();
     });
 

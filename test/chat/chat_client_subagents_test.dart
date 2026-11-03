@@ -62,7 +62,7 @@ Map<String, dynamic> runFinished([String runId = 'run-1']) => <String, dynamic>{
 
 ChatClient clientFor(List<Map<String, dynamic>> chunks) => ChatClient.legacy(
       connection: conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           for (final chunk in chunks) {
             yield chunk;
           }
@@ -131,7 +131,7 @@ void main() {
       final gate = Completer<void>();
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted();
             yield subagentStarted();
             await gate.future;
@@ -167,7 +167,7 @@ void main() {
       var aborted = false;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted();
             yield subagentStarted();
             yield childTextStart('sub-1');

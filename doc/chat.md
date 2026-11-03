@@ -71,7 +71,9 @@ your application's workload:
 
 <!-- example: example/recipes.dart#queue -->
 ```dart
-ChatClient queuedChat(ConnectionAdapter connection) => ChatClient(
+ChatClient queuedChat(ConnectionAdapter connection, String threadId) =>
+    ChatClient(
+      threadId: threadId,
       connection: connection,
       queue: const ChatQueueConfig(
         whenBusy: QueueWhenBusy.queue,

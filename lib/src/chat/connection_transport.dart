@@ -185,10 +185,10 @@ List<Map<String, dynamic>> assistantWireTurns(Iterable<AssistantTurn> turns,
     ];
 
 /// Convert canonical connection hydration to the chat client's result shape.
-ChatHydrationResult chatHydrationFromConnection(
+LegacyChatHydrationResult chatHydrationFromConnection(
   conn.ChatHydrationResult result,
 ) {
-  return ChatHydrationResult(
+  return LegacyChatHydrationResult(
     messages: assistantTurnsFromThread(<String, dynamic>{
       'messages': result.messages,
     }),
@@ -225,7 +225,7 @@ ChatHydrateCallback connectionHydrateCallback(
       );
       final converted = chatHydrationFromConnection(result);
       final run = converted.activeRun;
-      return ChatHydrationResult(
+      return LegacyChatHydrationResult(
         messages: converted.messages,
         activeRun: run == null
             ? null

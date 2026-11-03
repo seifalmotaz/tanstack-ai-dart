@@ -1,5 +1,5 @@
 // Faithful runtime port of
-// packages/ai-client/tests/resume-snapshot.test.ts (TanStack AI 0.40.0).
+// packages/ai-client/tests/resume-snapshot.test.ts (TanStack AI 1.0.1).
 //
 // The upstream file has 23 cases. This fixture exercises the real Dart
 // ChatClient, ChatPersistor, normalizeConnectionAdapter and storage adapters
@@ -271,7 +271,8 @@ void main() {
       expect(state.resume, isNull);
     });
 
-    test('normalizes a legacy bare-array record on read', () {
+    test('preserves a legacy bare-array record without reading or replacing it',
+        () {
       final applied = <List<Map<String, dynamic>>>[];
       final adapter = MemoryAdapter(<Map<String, dynamic>>[
         uiMessage('m1', 'legacy'),
@@ -283,10 +284,10 @@ void main() {
       );
 
       final read = persistor.readInitial();
-      expect(read, isA<platform.ChatPersistedState>());
-      final state = read as platform.ChatPersistedState;
-      expect(state.messages.first['id'], 'm1');
-      expect(state.resume, isNull);
+      expect(read, isNull);
+      persistor.notifyMessagesChanged([uiMessage('m2', 'new')]);
+      expect(adapter.value, isA<List>());
+      expect((adapter.value as List).first['id'], 'm1');
     });
   });
 
@@ -322,7 +323,7 @@ void main() {
 
     test('exposes joinRun when the connection is resumable', () {
       final resumable = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: emptyStream,
       );
       final normalized = conn.normalizeConnectionAdapter(resumable);
@@ -332,7 +333,7 @@ void main() {
     test('omits joinRun for a plain connect adapter', () {
       final normalized = conn.normalizeConnectionAdapter(
         conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
         ),
       );
       expect(normalized.joinRun, isNull);
@@ -343,7 +344,7 @@ void main() {
       // upstream `joinRun: undefined` case collapses to an omitted joinRun.
       final normalized = conn.normalizeConnectionAdapter(
         conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: null,
         ),
       );
@@ -369,7 +370,7 @@ void main() {
       final joinIds = <String>[];
       var connectCalls = 0;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           connectCalls += 1;
         },
         joinRun: (runId, {signal}) async* {
@@ -422,7 +423,7 @@ void main() {
       );
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield <String, dynamic>{
@@ -485,7 +486,7 @@ void main() {
       );
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield* Stream<Map<String, dynamic>>.fromIterable(
@@ -522,7 +523,7 @@ void main() {
       final joinIds = <String>[];
       var connectCalls = 0;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           connectCalls += 1;
         },
         joinRun: (runId, {signal}) async* {
@@ -561,7 +562,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
         },
@@ -593,7 +594,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
         },
@@ -649,10 +650,10 @@ void main() {
       final outputSchemaHash = platform.hashSchemaInput(lookup.outputSchema);
       final contexts = <conn.RunAgentInputContext?>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           contexts.add(runContext);
-          final runId = runContext?.runId ?? 'run-cancelled';
-          final threadId = runContext?.threadId ?? 't1';
+          final runId = runContext.runId;
+          final threadId = runContext.threadId;
           yield <String, dynamic>{
             'type': 'RUN_STARTED',
             'runId': runId,
@@ -724,7 +725,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
         },
@@ -760,7 +761,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield* Stream<Map<String, dynamic>>.fromIterable(
@@ -802,7 +803,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield* Stream<Map<String, dynamic>>.fromIterable(
@@ -850,7 +851,7 @@ void main() {
         () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield* Stream<Map<String, dynamic>>.fromIterable(
@@ -903,7 +904,7 @@ void main() {
       );
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield* Stream<Map<String, dynamic>>.fromIterable(
@@ -944,7 +945,7 @@ void main() {
       );
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) {
           joinIds.add(runId);
           final controller = StreamController<Map<String, dynamic>>();
@@ -1004,7 +1005,7 @@ void main() {
       }
 
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: refused,
       );
       String? status;
@@ -1025,17 +1026,14 @@ void main() {
       });
 
       final stored = adapter.value;
-      if (stored is platform.ChatPersistedState) {
-        expect(stored.resume, isNull);
-      } else {
-        expect(stored == null || stored is List, isTrue);
-      }
+      expect(stored, isA<platform.ChatPersistedState>());
+      expect((stored as platform.ChatPersistedState).resume, isNull);
     });
 
     test('with persistence:true a dead server-tail frees the input', () async {
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) {
           joinIds.add(runId);
           final controller = StreamController<Map<String, dynamic>>();
@@ -1082,7 +1080,7 @@ void main() {
       );
       final joinIds = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
         joinRun: (runId, {signal}) async* {
           joinIds.add(runId);
           yield <String, dynamic>{

@@ -29,9 +29,11 @@ Pass token lookup as an argument, so credential ownership stays in your app:
 ```dart
 ChatClient authenticatedChat(
   String endpoint,
+  String threadId,
   Future<String> Function() readAccessToken,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: fetchServerSentEventsProvider(
         url: () => endpoint,
         options: () async => FetchConnectionOptions(
@@ -60,6 +62,7 @@ Return `ChatFetcherResult.response` for a `package:http` SSE response or
 <!-- example: example/recipes.dart#fetcher -->
 ```dart
 ChatClient customHttpChat(
+  String threadId,
   Future<http.StreamedResponse> Function(
     ChatFetcherInput input,
     CancellationSignal? signal,
@@ -67,6 +70,7 @@ ChatClient customHttpChat(
   ) request,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: fetcherToConnectionAdapter(
         (input, {signal, headers}) async => ChatFetcherResult.response(
           await request(input, signal, headers),

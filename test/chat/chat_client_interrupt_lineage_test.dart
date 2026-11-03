@@ -71,7 +71,7 @@ ReplayClient replayClient({
   final controller = StreamController<Map<String, dynamic>>.broadcast();
   final connection = conn.ConnectionAdapter.subscription(
     subscribe: ({signal}) => controller.stream,
-    send: (messages, {data, signal, runContext}) async {},
+    send: (messages, {data, signal, required runContext}) async {},
     joinRun: joinRun,
     hydrate: (threadId, {options}) async =>
         const conn.ChatHydrationResult(messages: <conn.WireMessage>[]),

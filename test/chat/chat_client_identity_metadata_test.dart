@@ -12,8 +12,8 @@ conn.ConnectionAdapter capturing(
 }) {
   var call = 0;
   return conn.ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
-      if (runContext != null) contexts.add(runContext);
+    connect: (messages, {data, signal, required runContext}) async* {
+      contexts.add(runContext);
       final chunks = scripts != null && call < scripts.length
           ? scripts[call++]
           : <Map<String, dynamic>>[

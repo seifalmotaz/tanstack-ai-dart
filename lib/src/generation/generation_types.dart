@@ -1,5 +1,4 @@
-/// Ported from `packages/ai-client/src/generation-types.ts` (TanStack AI
-/// client 0.40.0).
+/// Ported from `packages/ai-client/src/generation-types.ts`.
 ///
 /// Wire payloads (stream chunks, hydrated records, artifact refs) stay JSON
 /// maps because the protocol is extensible. Configuration and client state are
@@ -479,15 +478,17 @@ const GENERATION_EVENTS = <String, String>{
 /// The `persistence` / `threadId` identity shared by every generation client.
 class GenerationPersistenceOptions {
   final bool persistence;
-  final String? threadId;
 
-  /// Ephemeral generation. [threadId] is optional.
-  const GenerationPersistenceOptions.ephemeral({this.threadId})
-      : persistence = false;
+  /// Ephemeral generation.
+  const GenerationPersistenceOptions.ephemeral() : persistence = false;
 
-  /// Server-driven persistence. A stable [threadId] is required.
-  const GenerationPersistenceOptions.persistent({required String this.threadId})
-      : persistence = true;
+  /// Server-driven persistence.
+  const GenerationPersistenceOptions.persistent() : persistence = true;
+}
+
+String validateGenerationThreadId(String threadId) {
+  if (threadId.isEmpty) throw ArgumentError('threadId must not be empty');
+  return threadId;
 }
 
 /// Extra request headers for a run (e.g. BYOK keys).
@@ -495,10 +496,18 @@ class GenerationFetcherOptions {
   /// Cancelled when the user calls `stop()`.
   final CancellationSignal signal;
 
+  final String threadId;
+  final String runId;
+
   /// Extra request headers for this run.
   final Map<String, String>? headers;
 
-  const GenerationFetcherOptions({required this.signal, this.headers});
+  const GenerationFetcherOptions({
+    required this.signal,
+    required this.threadId,
+    required this.runId,
+    this.headers,
+  });
 }
 
 /// A direct async generation request. Returns either the result or a

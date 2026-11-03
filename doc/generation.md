@@ -15,8 +15,10 @@ no transformation is needed:
 Future<String?> generateText(
   Future<String> Function(String prompt, CancellationSignal signal) request,
   String prompt,
+  String threadId,
 ) async {
   final generator = GenerationClient<String, String, String>.fetcher(
+    threadId: threadId,
     fetcher: (input, options) async => GenerationFetchResult.value(
       await request(input, options.signal),
     ),
@@ -50,12 +52,14 @@ The video fetcher receives `VideoGenerateInput` and returns a `VideoGenerateResu
 <!-- example: example/recipes.dart#video -->
 ```dart
 VideoGenerationClient<VideoGenerateResult> videoClient(
+  String threadId,
   Future<VideoGenerateResult> Function(
     VideoGenerateInput input,
     GenerationFetcherOptions options,
   ) request,
 ) =>
     VideoGenerationClient<VideoGenerateResult>.fetcher(
+      threadId: threadId,
       fetcher: (input, options) async => GenerationFetchResult.value(
         await request(input, options),
       ),
@@ -75,8 +79,9 @@ server-restored artifact records. Media-specific reconstruction helpers include
 `reconstructImageResult`, `reconstructAudioResult`, and
 `reconstructTranscriptionResult`.
 
-Use `GenerationPersistenceOptions.persistent(threadId: ...)` for server-driven
-persistence. The thread ID must stay stable across reloads, and the connection
+Use `GenerationPersistenceOptions.persistent()` for server-driven persistence.
+Pass the required thread ID to the generation client once; it must stay stable
+across reloads, and the connection
 must implement compatible generation hydration and replay. The default is
 `.ephemeral(...)`.
 

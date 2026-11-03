@@ -54,7 +54,11 @@ void main() {
 
       test('cancels the response when JSON parsing fails', () async {
         final setup = connection('{invalid json}');
-        final iterator = StreamIterator(setup.adapter.connect!([]));
+        final iterator = StreamIterator(setup.adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
 
         await expectLater(
           iterator.moveNext(),
@@ -73,7 +77,11 @@ void main() {
             onCancel:
                 pendingCancellation ? () => Completer<void>().future : null,
           );
-          await for (final received in setup.adapter.connect!([])) {
+          await for (final received in setup.adapter.connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )) {
             expect(received['type'], 'RUN_STARTED');
             break;
           }
@@ -93,7 +101,11 @@ void main() {
               return Completer<void>().future;
             },
           );
-          final iterator = StreamIterator(setup.adapter.connect!([]));
+          final iterator = StreamIterator(setup.adapter.connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ));
 
           await expectLater(
             iterator.moveNext(),
@@ -110,27 +122,15 @@ void main() {
           '{"type":"RUN_STARTED","threadId":"thread","runId":"run"}',
           close: true,
         );
-        final chunks = await collect(setup.adapter.connect!([]));
+        final chunks = await collect(setup.adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         expect(chunks, [
           {'type': 'RUN_STARTED', 'threadId': 'thread', 'runId': 'run'},
         ]);
       });
     });
   }
-
-  test('cancels an SSE response after the DONE sentinel', () async {
-    final body = ControlledResponse();
-    final client = FakeHttpClient((_) async => body.response);
-    body.write('data: [DONE]\n\n');
-    final adapter = fetchServerSentEvents(
-      '/chat',
-      options: FetchConnectionOptions(client: client),
-    );
-
-    final chunks = await collect(adapter.connect!([]));
-
-    expect(chunks, hasLength(1));
-    expect(chunks.single['type'], 'RUN_FINISHED');
-    expect(body.cancelled, isTrue);
-  });
 }

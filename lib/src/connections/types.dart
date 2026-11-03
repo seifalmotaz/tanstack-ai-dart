@@ -60,14 +60,20 @@ class RunAgentInputContext {
 /// Bounding for resumable-stream reconnection.
 class ReconnectOptions {
   /// Ceiling on CONSECUTIVE reconnects that deliver no new events.
-  final int maxAttempts;
+  final int? maxAttempts;
 
   /// Delay between reconnect attempts.
-  final Duration delay;
+  final Duration? delay;
+  final Duration? initialDelay;
+  final Duration? maxDelay;
+  final Duration? budget;
 
   const ReconnectOptions({
-    this.maxAttempts = 5,
-    this.delay = const Duration(milliseconds: 250),
+    this.maxAttempts,
+    this.delay,
+    this.initialDelay,
+    this.maxDelay,
+    this.budget,
   });
 }
 

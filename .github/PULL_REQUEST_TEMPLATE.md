@@ -16,7 +16,7 @@ For behavior changes, include a regression that fails before the fix.
 
 For an upstream baseline update, provide the old/candidate immutable SHAs, npm
 versions, changed exports/cases, official test results, and remaining adaptations.
-Follow `docs/maintainers/upstream-updates.md`. For other changes, mark this section
+Follow `doc/maintainers/upstream-updates.md`. For other changes, mark this section
 not applicable rather than invent evidence.
 
 ## AI assistance

@@ -3,11 +3,7 @@ library;
 
 export 'chat.dart';
 export 'connections.dart'
-    hide
-        ChatHydrationResult,
-        normalizeMessageDates,
-        tanstackMetadata,
-        withTanstackMetadata;
+    hide normalizeMessageDates, tanstackMetadata, withTanstackMetadata;
 export 'generation.dart';
 export 'platform.dart';
 export 'processing.dart';

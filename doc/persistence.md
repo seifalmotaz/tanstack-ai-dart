@@ -15,9 +15,9 @@ paging is configured on that persistence choice:
 ```dart
 ChatClient serverHistory(ConnectionAdapter connection, String threadId) =>
     ChatClient(
+      threadId: threadId,
       connection: connection,
       persistence: ChatPersistenceOptions.server(
-        threadId: threadId,
         history: const ChatHistoryConfig(pageSize: 20),
       ),
     );
@@ -40,9 +40,9 @@ ChatClient storedHistory(
   String threadId,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: connection,
       persistence: ChatPersistenceOptions.stored(
-        threadId: threadId,
         adapter: storage,
       ),
     );

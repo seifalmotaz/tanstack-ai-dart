@@ -1,10 +1,34 @@
 // Upstream reference: packages/ai-client/tests/chat-client.test.ts
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'package:test/test.dart';
 
 import 'support.dart';
 
 void main() {
+  test('modern chat merges forwarded properties and per-send body overrides',
+      () async {
+    Map<String, dynamic>? captured;
+    final connection = conn.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+      captured = data;
+      yield {
+        'type': 'RUN_FINISHED',
+        'runId': runContext.runId,
+        'threadId': runContext.threadId,
+        'outcome': {'type': 'success'}
+      };
+    });
+    final client = ChatClient(
+        connection: connection,
+        threadId: 'thread-1',
+        forwardedProps: {'a': 1, 'b': 1, 'c': 1});
+    await client.sendMessage(const ChatMessageInput.text('Hello'),
+        body: {'b': 2, 'd': 2},
+        options: const ChatSendOptions(body: {'c': 3, 'e': 3}));
+    expect(captured, {'a': 1, 'b': 2, 'c': 3, 'd': 2, 'e': 3});
+  });
+
   group('ChatClient', () {
     group('constructor', () {
       test('should create a client with default options', () {
@@ -362,20 +386,19 @@ void main() {
         await client.sendText('Hello');
         transport.emit(<String, dynamic>{
           'type': 'CUSTOM',
-          'name': 'analytics',
-          'value': <String, dynamic>{'n': 1},
+          'name': 'progress-update',
+          'value': <String, dynamic>{'progress': 50, 'step': 'processing'},
         });
         transport.emit(<String, dynamic>{
           'type': 'CUSTOM',
-          'name': 'tool-input-available',
-          'value': <String, dynamic>{
-            'toolCallId': 't1',
-            'toolName': 'x',
-            'input': <String, dynamic>{},
-          },
+          'name': 'tool-status',
+          'value': <String, dynamic>{'toolCallId': 'tc-1', 'status': 'running'},
         });
         await pump();
-        expect(seen.single['name'], 'analytics');
+        expect(seen.map((e) => e['name']).toList(),
+            ['progress-update', 'tool-status']);
+        expect(seen[0]['value'], {'progress': 50, 'step': 'processing'});
+        expect(seen[1]['value'], {'toolCallId': 'tc-1', 'status': 'running'});
         await client.stop();
       });
     });

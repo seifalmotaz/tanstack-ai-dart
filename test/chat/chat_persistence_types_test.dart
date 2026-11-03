@@ -12,6 +12,19 @@ import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'support.dart';
 
 void main() {
+  test('modern chat rejects an empty thread ID with and without persistence',
+      () {
+    final connection = conn.stream((_) => const Stream.empty());
+    expect(() => ChatClient(connection: connection, threadId: ''),
+        throwsArgumentError);
+    expect(
+        () => ChatClient(
+            connection: connection,
+            threadId: '',
+            persistence: const ChatPersistenceOptions.server()),
+        throwsArgumentError);
+  });
+
   group('ChatClient persistence requires a threadId', () {
     test('rejects persistence without a threadId', () {
       expect(
@@ -57,7 +70,7 @@ void main() {
       expect(
           () => ChatClient.legacy(
                 connection: conn.ConnectionAdapter.connect(
-                    connect: (_, {data, signal, runContext}) =>
+                    connect: (_, {data, signal, required runContext}) =>
                         const Stream.empty()),
                 threadId: 't1',
                 persistence: _Store(),

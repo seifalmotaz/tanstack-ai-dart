@@ -21,11 +21,12 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final calls = <Map<String, String>?>[];
-      final client = VideoGenerationClient<VideoGenerateResult>.legacy(
+      final calls = <GenerationFetcherOptions>[];
+      final client = VideoGenerationClient<VideoGenerateResult>.fetcher(
+        threadId: 'thread-1',
         fetcher: (input, options) async {
-          calls.add(options.headers);
-          return videoResult;
+          calls.add(options);
+          return GenerationFetchResult.value(videoResult);
         },
         byok: clientByok,
       );
@@ -33,7 +34,9 @@ void main() {
       client.updateOptions(byokProvider: () => 'elevenlabs');
       await client.generate(const VideoGenerateInput(prompt: 'hello'));
 
-      expect(calls.single, {'x-byok-elevenlabs': elevenLabsKey});
+      expect(calls.single.headers, {'x-byok-elevenlabs': elevenLabsKey});
+      expect(calls.single.threadId, 'thread-1');
+      expect(calls.single.runId, isNotEmpty);
     });
 
     test('stamps headers on the connection runContext', () async {
@@ -43,7 +46,7 @@ void main() {
       await clientByok.update('elevenlabs', elevenLabsKey);
       RunAgentInputContext? context;
       final connection = ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           context = runContext;
           yield runFinished('run-1');
         },

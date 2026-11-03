@@ -375,20 +375,6 @@ abstract class ChatClientEventEmitter {
     });
   }
 
-  void toolApprovalResponded(
-    String approvalId,
-    String toolCallId,
-    bool approved, [
-    ChatClientRunEventContext? context,
-  ]) {
-    emitEvent('tools:approval:responded', {
-      'approvalId': approvalId,
-      'toolCallId': toolCallId,
-      'approved': approved,
-      ...?context?.toJson(),
-    });
-  }
-
   void toolFixtureApplied(ChatClientToolFixtureAppliedEvent fixture) {
     emitEvent('devtools:tool-fixture:applied', fixture.toJson());
   }

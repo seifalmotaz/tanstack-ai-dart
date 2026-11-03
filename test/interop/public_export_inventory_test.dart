@@ -7,7 +7,7 @@ import 'package:tanstack_ai_dart/ui.dart' as ui;
 import 'package:test/test.dart';
 
 void main() {
-  test('root barrel exposes all 50 runtime exports from upstream 0.40.0', () {
+  test('root barrel exposes 50 upstream client runtime exports', () {
     final runtime = <Object>[
       AudioRecorder,
       ChatClient,

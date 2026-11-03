@@ -3,17 +3,7 @@ library;
 
 // Ported from `packages/ai-client/tests/generation-persistence-types.test.ts`.
 //
-// The upstream assertions are pure TypeScript type checks. Dart cannot express
-// a conditional "required when persistence is true" parameter, so
-// `GenerationPersistenceOptions.persistent()` carries that contract at the type
-// level. These tests run the analyzer on fixtures instead of asserting the
-// contract at runtime: a title-only or runtime stand-in would pass even if the
-// constructor stopped requiring `threadId`.
-//
-// The `GenerationClient` constructor keeps the JavaScript-style
-// `persistence: true` flag for API parity; it warns at runtime when no stable
-// `threadId` was supplied (there is no Dart type-level way to reject that
-// call for callers that bypass the typed options).
+// The analyzer fixtures verify required client identity and typed inputs.
 import 'dart:async';
 import 'dart:io';
 
@@ -25,31 +15,37 @@ import 'package:test/test.dart';
 
 const _positiveFixture = r'''
 import 'package:tanstack_ai_dart/generation.dart';
-
 void main() {
-  const persistent = GenerationPersistenceOptions.persistent(
-    threadId: 'product-123-hero',
+  GenerationClient<String, int, int>.fetcher(
+    threadId: 'product-123',
+    persistence: const GenerationPersistenceOptions.persistent(),
+    fetcher: (input, options) => const GenerationFetchResult.value(1),
   );
-  const videoPersistent = GenerationPersistenceOptions.persistent(
-    threadId: 'video-9-start-frame',
+  VideoGenerationClient<VideoGenerateResult>.fetcher(
+    threadId: 'video-9',
+    fetcher: (input, options) => const GenerationFetchResult.value(VideoGenerateResult(jobId: 'job', url: 'https://example.test')),
   );
-  const ephemeral = GenerationPersistenceOptions.ephemeral();
-  const ephemeralWithId = GenerationPersistenceOptions.ephemeral(
-    threadId: 'product-123-hero',
-  );
-  final String? a = persistent.threadId;
-  final String? b = videoPersistent.threadId;
-  final String? c = ephemeral.threadId;
-  final String? d = ephemeralWithId.threadId;
-  // ignore: avoid_print
-  print([a, b, c, d]);
 }
 ''';
 
 const _missingThreadIdFixture = r'''
 import 'package:tanstack_ai_dart/generation.dart';
-
-const options = GenerationPersistenceOptions.persistent();
+void main() {
+  GenerationClient<String, int, int>.fetcher(
+    persistence: const GenerationPersistenceOptions.persistent(),
+    fetcher: (input, options) => const GenerationFetchResult.value(1),
+  );
+  VideoGenerationClient<VideoGenerateResult>.fetcher(
+    fetcher: (input, options) => const GenerationFetchResult.value(VideoGenerateResult(jobId: 'job', url: 'https://example.test')),
+  );
+  GenerationClient<String, int, int>.fetcher(
+    fetcher: (input, options) => const GenerationFetchResult.value(1),
+  );
+  VideoGenerationClient<VideoGenerateResult>.fetcher(
+    persistence: const GenerationPersistenceOptions.persistent(),
+    fetcher: (input, options) => const GenerationFetchResult.value(VideoGenerateResult(jobId: 'job', url: 'https://example.test')),
+  );
+}
 ''';
 
 const _clientIdFixture = r'''
@@ -59,13 +55,13 @@ import 'package:tanstack_ai_dart/generation.dart';
 void main() {
   GenerationClient<Map<String, dynamic>, Object?, Object?>.legacy(
     threadId: 'product-123-hero',
-    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, runContext}) => const Stream.empty(),
+    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, required runContext}) => const Stream.empty(),
     ),
     id: 'legacy',
   );
   VideoGenerationClient<Object?>.legacy(
     threadId: 'video-9-start-frame',
-    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, runContext}) => const Stream.empty(),
+    connection: ConnectionAdapter.connect(connect: (messages, {data, signal, required runContext}) => const Stream.empty(),
     ),
     id: 'legacy',
   );
@@ -76,9 +72,7 @@ const _optionsIdFixture = r'''
 import 'package:tanstack_ai_dart/generation.dart';
 
 void main() {
-  const options = GenerationPersistenceOptions.persistent(
-    threadId: 'product-123-hero',
-  );
+  const options = GenerationPersistenceOptions.persistent();
   final id = options.id;
   // ignore: avoid_print
   print(id);
@@ -141,14 +135,13 @@ void main() {
     }
 
     test('rejects persistence: true without a threadId', () {
-      // Upstream `@ts-expect-error` on
-      // `new GenerationClient.legacy({ connection, persistence: true })` and the same
-      // call for VideoGenerationClient. Dart's typed equivalent is
-      // `GenerationPersistenceOptions.persistent()`, which requires the key.
-      expectAnalyzerError(
-        analyze('missing_thread_id', _missingThreadIdFixture),
-        'missing_required_argument',
-      );
+      final result = analyze('missing_thread_id', _missingThreadIdFixture);
+      expectAnalyzerError(result, 'missing_required_argument');
+      expect(
+          RegExp('missing_required_argument')
+              .allMatches('${result.stdout}')
+              .length,
+          4);
     });
 
     test('accepts persistence when a threadId is supplied', () {
@@ -156,9 +149,7 @@ void main() {
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
     });
 
-    test('leaves threadId optional for ephemeral generations', () {
-      // Covered by `_positiveFixture`: both `ephemeral()` and
-      // `ephemeral(threadId: ...)` compile, matching the four upstream calls.
+    test('accepts an explicit threadId for ephemeral generations', () {
       final result = analyze('ephemeral', _positiveFixture);
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
     });
@@ -172,12 +163,7 @@ void main() {
       );
     });
 
-    test('does not list `id` on generation option types. `threadId` is present',
-        () {
-      // Upstream indexes GenerationClientOptions['id'] (a type error) and
-      // assigns GenOpts['threadId'] to a string. The Dart port has no
-      // GenerationClientOptions type; GenerationPersistenceOptions is the
-      // equivalent identity carrier.
+    test('does not list `id` on generation persistence options', () {
       expectAnalyzerError(
         analyze('options_id', _optionsIdFixture),
         'undefined_getter',
@@ -234,7 +220,7 @@ void main() {
         () {
           GenerationClient.legacy(
             connection: ConnectionAdapter.connect(
-              connect: (messages, {data, signal, runContext}) =>
+              connect: (messages, {data, signal, required runContext}) =>
                   const Stream.empty(),
             ),
             persistence: true,

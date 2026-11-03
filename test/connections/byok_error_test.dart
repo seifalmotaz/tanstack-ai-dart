@@ -31,7 +31,11 @@ void main() {
     );
 
     await expectLater(
-      collect(adapter.connect!([])),
+      collect(adapter.connect!(
+        [],
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
+      )),
       throwsA(
         isA<byok.ByokMissingError>().having(
           (error) => error.provider,
@@ -52,7 +56,11 @@ void main() {
     );
 
     await expectLater(
-      collect(adapter.connect!([])),
+      collect(adapter.connect!(
+        [],
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
+      )),
       throwsA(
         isA<byok.ByokMissingError>().having(
           (error) => error.provider,
@@ -72,7 +80,11 @@ void main() {
       options: FetchConnectionOptions(client: client),
     );
 
-    final error = await captureError(() => collect(adapter.connect!([])));
+    final error = await captureError(() => collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        )));
     expect(error, isA<HttpStatusException>());
     expect(error, isNot(isA<byok.ByokMissingError>()));
   });
@@ -86,7 +98,11 @@ void main() {
       options: FetchConnectionOptions(client: client),
     );
 
-    final error = await captureError(() => collect(adapter.connect!([])));
+    final error = await captureError(() => collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        )));
     expect(error, isA<HttpStatusException>());
   });
 }

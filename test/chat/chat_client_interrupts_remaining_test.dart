@@ -47,7 +47,7 @@ Map<String, dynamic> descriptor(
     };
 
 conn.ConnectionAdapter emptyConnection() => conn.ConnectionAdapter.connect(
-      connect: (messages, {data, signal, runContext}) =>
+      connect: (messages, {data, signal, required runContext}) =>
           const Stream<Map<String, dynamic>>.empty(),
     );
 
@@ -73,7 +73,7 @@ void main() {
 
       expect(lastSource, 'hydrate');
       expect(lastState, same(client.getInterruptState()));
-      expect(lastState!.interrupts, same(lastState!.pendingInterrupts));
+      expect(lastState!.interrupts, isNotEmpty);
       client.dispose();
     });
 
@@ -173,10 +173,10 @@ void main() {
         final release = Completer<void>();
         var calls = 0;
         final connection = conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             contexts.add(runContext);
             calls++;
-            final runId = runContext?.runId ?? 'run-$calls';
+            final runId = runContext.runId;
             yield <String, dynamic>{
               'type': 'RUN_STARTED',
               'runId': runId,
@@ -193,14 +193,16 @@ void main() {
                 'toolCallId': 'call-1',
                 'delta': '{}',
               };
-              yield <String, dynamic>{
-                'type': 'CUSTOM',
-                'name': 'tool-input-available',
-                'value': <String, dynamic>{
-                  'toolCallId': 'call-1',
-                  'toolName': 'lookup',
-                  'input': <String, dynamic>{},
-                },
+              final binding = <String, dynamic>{
+                'v': 1,
+                'kind': 'client-tool-execution',
+                'interruptId': 'client-1',
+                'interruptedRunId': runId,
+                'generation': 0,
+                'toolName': 'lookup',
+                'toolCallId': 'call-1',
+                'outputSchemaHash': outputSchemaHash,
+                'responseSchemaHash': responseSchemaHash,
               };
               yield <String, dynamic>{
                 'type': 'RUN_FINISHED',
@@ -209,18 +211,14 @@ void main() {
                 'outcome': <String, dynamic>{
                   'type': 'interrupt',
                   'interrupts': <Map<String, dynamic>>[
-                    descriptor(<String, dynamic>{
-                      'v': 1,
-                      'kind': 'client-tool-execution',
-                      'interruptId': 'client-1',
-                      'interruptedRunId': runId,
-                      'generation': 0,
-                      'toolName': 'lookup',
-                      'toolCallId': 'call-1',
-                      'outputSchemaHash': outputSchemaHash,
-                      'responseSchemaHash': responseSchemaHash,
-                    }, overrides: <String, dynamic>{
+                    descriptor(binding, overrides: <String, dynamic>{
                       'responseSchema': responseSchema,
+                      'metadata': <String, dynamic>{
+                        'kind': 'client_tool',
+                        'toolName': 'lookup',
+                        'input': <String, dynamic>{},
+                        'tanstack:interruptBinding': binding,
+                      },
                     }),
                   ],
                 },
@@ -317,11 +315,11 @@ void main() {
       };
       var call = 0;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           contexts.add(runContext);
           sentMessages.add(messages);
           call++;
-          final runId = runContext?.runId ?? 'run-$call';
+          final runId = runContext.runId;
           yield <String, dynamic>{
             'type': 'RUN_STARTED',
             'runId': runId,
@@ -358,9 +356,8 @@ void main() {
       await client.sendLegacyMessage('start');
       expect(sources.last, 'live');
       final state = client.getInterruptState();
-      expect(state.interrupts, same(state.pendingInterrupts));
       expect(client.getInterrupts(), same(state.interrupts));
-      expect(client.getPendingInterrupts(), same(state.interrupts));
+      expect(client.getLegacyPendingInterrupts(), same(state.interrupts));
       state.interrupts.single.resolveInterrupt(<String, dynamic>{'answer': 42});
 
       await waitFor(() => contexts.length == 2);
@@ -391,10 +388,10 @@ void main() {
       final contexts = <conn.RunAgentInputContext?>[];
       var call = 0;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           contexts.add(runContext);
           call++;
-          final runId = runContext?.runId ?? 'run-$call';
+          final runId = runContext.runId;
           yield <String, dynamic>{
             'type': 'RUN_STARTED',
             'runId': runId,
@@ -529,10 +526,10 @@ void main() {
       final client = ChatClient.legacy(
           threadId: 'thread-1',
           connection: conn.ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
               contexts.add(runContext);
               sentMessages.add(messages);
-              final runId = runContext!.runId;
+              final runId = runContext.runId;
               yield {
                 'type': 'RUN_FINISHED',
                 'runId': runId,

@@ -4,8 +4,8 @@ import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 import 'package:test/test.dart';
 
 ConnectionAdapter replyConnection({List<WireMessage>? seen}) => stream(
-      (messages, data, signal) async* {
-        seen?.addAll(messages);
+      (request) async* {
+        seen?.addAll(request.messages);
         yield {'type': 'RUN_STARTED', 'threadId': 'thread', 'runId': 'run'};
         yield {
           'type': 'TEXT_MESSAGE_START',
@@ -52,7 +52,8 @@ void main() {
 
   test('typed messages retain IDs, metadata and parts', () async {
     final seen = <WireMessage>[];
-    final client = ChatClient(connection: replyConnection(seen: seen));
+    final client =
+        ChatClient(threadId: 'thread', connection: replyConnection(seen: seen));
     await client.sendMessage(ChatMessageInput.parts(
       [AssistantPart.text('Hello')],
       id: 'custom',
@@ -68,8 +69,10 @@ void main() {
       'transcript and initial data cannot mutate client state without an action',
       () async {
     final initial = AssistantTurn.user('before');
-    final client =
-        ChatClient(connection: replyConnection(), initialMessages: [initial]);
+    final client = ChatClient(
+        threadId: 'thread',
+        connection: replyConnection(),
+        initialMessages: [initial]);
     initial.parts.single.content = 'outside';
     expect(client.messages.single.answer, 'before');
     expect(() => client.messages.clear(), throwsUnsupportedError);
@@ -82,15 +85,16 @@ void main() {
 
   test('typed setters clear nullable options and update tools', () async {
     final client = ChatClient(
-        connection: replyConnection(), context: 'old', body: {'old': true});
+        threadId: 'thread',
+        connection: replyConnection(),
+        context: 'old',
+        forwardedProps: {'old': true});
     client.context = null;
-    client.body = null;
     client.forwardedProps = {'provider': 'test'};
     client.tools = [
       ClientTool<String, String>(name: 'echo', execute: (v, _) => v)
     ];
     expect(client.context, isNull);
-    expect(client.body, isNull);
     expect(client.forwardedProps, {'provider': 'test'});
     expect(client.tools.single.name, 'echo');
     client.replaceConnection(replyConnection());
@@ -102,7 +106,8 @@ void main() {
 
   test('dispose closes state streams without waiting for paused subscriptions',
       () async {
-    final client = ChatClient(connection: replyConnection());
+    final client =
+        ChatClient(threadId: 'thread', connection: replyConnection());
     final done = Completer<void>();
     final active = client.states.listen((_) {}, onDone: done.complete);
     final paused = client.states.listen((_) {})..pause();
@@ -116,7 +121,8 @@ void main() {
   test(
       'stream listener can issue a new action without reentrant controller errors',
       () async {
-    final client = ChatClient(connection: replyConnection());
+    final client =
+        ChatClient(threadId: 'thread', connection: replyConnection());
     var changed = false;
     final sub = client.states.listen((snapshot) {
       if (!changed) {
@@ -130,12 +136,12 @@ void main() {
     await client.dispose();
   });
 
-  test('persistence thread IDs must agree', () {
+  test('thread ID must not be empty', () {
     expect(
         () => ChatClient(
             connection: replyConnection(),
-            threadId: 'a',
-            persistence: const ChatPersistenceOptions.server(threadId: 'b')),
+            threadId: '',
+            persistence: const ChatPersistenceOptions.server()),
         throwsArgumentError);
   });
 }

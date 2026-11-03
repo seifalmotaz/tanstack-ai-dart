@@ -17,15 +17,15 @@ class RecordingConnection {
   Object? error;
 
   late final conn.ConnectionAdapter adapter = conn.ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
+    connect: (messages, {data, signal, required runContext}) async* {
       connects++;
       this.data.add(data);
-      headers.add(runContext?.headers ?? const <String, String>{});
+      headers.add(runContext.headers ?? const <String, String>{});
       if (error != null) throw error!;
       yield <String, dynamic>{
         'type': 'RUN_FINISHED',
-        'runId': runContext?.runId ?? 'r',
-        'threadId': runContext?.threadId ?? 't',
+        'runId': runContext.runId,
+        'threadId': runContext.threadId,
         'outcome': <String, dynamic>{'type': 'success'},
       };
     },

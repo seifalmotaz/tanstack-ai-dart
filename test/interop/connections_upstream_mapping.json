@@ -1,5 +1,5 @@
 {
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "reviewMethod": {
     "method": "Each candidate was compared by upstream and Dart test bodies, not title alone. actualAssertions list the Dart expect/expectLater calls verbatim (whitespace-normalized, truncated at 360 chars). Upstream assertions are included for review.",
     "adaptations": "TypeScript SyntaxError maps to Dart FormatException; AbortSignal/AbortController map to CancellationSignal/CancellationController; Headers maps to Map<String,String>; fetchClient maps to client; ReadableStream lock/cancel semantics map to Dart stream cancellation. Missing normalize/merge/wire cases are marked missing rather than silently claimed.",
@@ -98,22 +98,6 @@
       ],
       "actualAssertions": [
         "expect(chunks, hasLength(1))"
-      ]
-    },
-    {
-      "upstreamFile": "connection-adapters.test.ts",
-      "upstreamName": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading",
-      "upstreamTitle": "should synthesize RUN_FINISHED on [DONE] and stop reading",
-      "dartFile": "test/connections/connection_adapters_test.dart",
-      "dartTestName": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading",
-      "status": "implemented",
-      "upstreamAssertions": [
-        "expect(chunks)",
-        "expect(chunks[0]!.type)"
-      ],
-      "actualAssertions": [
-        "expect(chunks, hasLength(1))",
-        "expect(chunks.single['type'], 'RUN_FINISHED')"
       ]
     },
     {
@@ -238,23 +222,6 @@
       "actualAssertions": [
         "expect(body['forwardedProps'], containsPair('key', 'value'))"
       ]
-    },
-    {
-      "upstreamFile": "connection-adapters.test.ts",
-      "upstreamName": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field for backward-compat",
-      "upstreamTitle": "should mirror forwardedProps under legacy `data` field for backward-compat",
-      "dartFile": "test/connections/connection_adapters_test.dart",
-      "dartTestName": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field",
-      "status": "ported-static-adapted",
-      "upstreamAssertions": [
-        "expect(body.data)",
-        "expect(body.data)"
-      ],
-      "actualAssertions": [
-        "expect(body['data'], body['forwardedProps'])",
-        "expect(body['data'], containsPair('provider', 'openai'))"
-      ],
-      "dartAdaptation": "Dart test title/symbols adapted from \"should mirror forwardedProps under legacy `data` field for backward-compat\" to \"should mirror forwardedProps under legacy `data` field\"."
     },
     {
       "upstreamFile": "connection-adapters.test.ts",
@@ -1205,22 +1172,6 @@
     },
     {
       "upstreamFile": "connection-adapters-resumable.test.ts",
-      "upstreamName": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress",
-      "upstreamTitle": "does not retry HTTP setup failures after earlier progress",
-      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
-      "dartTestName": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress",
-      "status": "implemented",
-      "upstreamAssertions": [
-        "expect(async () => { for await (const _chunk of adapter.connect( [{ role: 'user', content: 'hi' }], undefined, undefined, { threadId: 't', runId: 'r' }, )) { // drain } })",
-        "expect(fetchClient)"
-      ],
-      "actualAssertions": [
-        "expectLater( collect(adapter.connect!( [ {'role': 'user', 'content': 'hi'}, ], runContext: const RunAgentInputContext(threadId: 't', runId: 'r'), )), throwsA( predicate<Object>( (error) => error.toString().contains('503 Unavailable'), ), ), )",
-        "expect(client.requests, hasLength(2))"
-      ]
-    },
-    {
-      "upstreamFile": "connection-adapters-resumable.test.ts",
       "upstreamName": "createReconnectTracker de-dupes ids, tracks lastEventId, and resets on empty id",
       "upstreamTitle": "de-dupes ids, tracks lastEventId, and resets on empty id",
       "dartFile": "test/connections/connection_adapters_resumable_test.dart",
@@ -1710,50 +1661,6 @@
     },
     {
       "upstreamFile": "connection-adapters-xhr.test.ts",
-      "upstreamName": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
-      "upstreamTitle": "synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
-      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
-      "dartTestName": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
-      "status": "implemented",
-      "upstreamAssertions": [
-        "expect(nextChunk)",
-        "expect(iterator.next())"
-      ],
-      "actualAssertions": [
-        "expect(await nextChunk, isTrue)",
-        "expect(iterator.current['type'], 'RUN_FINISHED')",
-        "expect(iterator.current['threadId'], 'thread-1')",
-        "expect(iterator.current['runId'], 'run-1')",
-        "expect( (iterator.current['metadata'] as Map)['tanstack']['finishReason'], 'stop', )",
-        "expect(await iterator.moveNext(), isFalse)"
-      ]
-    },
-    {
-      "upstreamFile": "connection-adapters-xhr.test.ts",
-      "upstreamName": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading",
-      "upstreamTitle": "aborts the XHR after [DONE] so late bytes stop downloading",
-      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
-      "dartTestName": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading",
-      "status": "implemented",
-      "upstreamAssertions": [
-        "expect(nextChunk)",
-        "expect(iterator.next())",
-        "expect(xhr.abort)",
-        "expect(nextChunk)",
-        "expect(nextChunk)",
-        "expect(nextChunk)",
-        "expect(nextChunk)",
-        "expect(nextChunk)"
-      ],
-      "actualAssertions": [
-        "expect(await nextChunk, isTrue)",
-        "expect(iterator.current['type'], 'RUN_FINISHED')",
-        "expect(await iterator.moveNext(), isFalse)",
-        "expect(body.cancelled, isTrue)"
-      ]
-    },
-    {
-      "upstreamFile": "connection-adapters-xhr.test.ts",
       "upstreamName": "xhr connection adapters xhrServerSentEvents parses SSE data frames without a space after the colon",
       "upstreamTitle": "parses SSE data frames without a space after the colon",
       "dartFile": "test/connections/connection_adapters_xhr_test.dart",
@@ -1872,7 +1779,8 @@
         "expect(successBody.cancelled, isTrue)",
         "expectLater( failureNext, throwsA(isA<FormatException>()), )",
         "expect(failureBody.cancelled, isTrue)"
-      ]
+      ],
+      "dartAdaptation": "Injected Dart HTTP client proves response stream cancellation on success and parse failure; native XHR handler removal is not directly observable through this seam. Separate real Chrome HTTP checks exercise XHR abort before headers."
     },
     {
       "upstreamFile": "connection-adapters-xhr.test.ts",
@@ -2435,28 +2343,6 @@
       ]
     },
     {
-      "upstreamFile": "sse-done-model.test.ts",
-      "upstreamName": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
-      "upstreamTitle": "copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
-      "dartFile": "test/connections/sse_done_model_test.dart",
-      "dartTestName": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
-      "status": "ported-static-adapted",
-      "upstreamAssertions": [
-        "expect(chunks)",
-        "expect(chunks[0]!.type)",
-        "expect(done)",
-        "expect(done)",
-        "expect(done.metadata?.tanstack)"
-      ],
-      "actualAssertions": [
-        "expect(chunks, hasLength(2))",
-        "expect(finished['type'], 'RUN_FINISHED')",
-        "expect(tanstack['model'], 'gpt-test')",
-        "expect(tanstack['finishReason'], 'stop')"
-      ],
-      "dartAdaptation": "Dart test title/symbols adapted from \"copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop\" to \"SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop\"."
-    },
-    {
       "upstreamFile": "replay-metadata.test.ts",
       "upstreamName": "saved replay metadata keeps source, failed-turn and response metadata through JSON storage and hydration",
       "upstreamTitle": "keeps source, failed-turn and response metadata through JSON storage and hydration",
@@ -2718,20 +2604,6 @@
       "upstreamAssertions": [],
       "actualAssertions": [],
       "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
-    },
-    {
-      "upstreamFile": "connection-adapters-cleanup.test.ts",
-      "upstreamName": "cancels an SSE response after the DONE sentinel",
-      "upstreamTitle": "cancels an SSE response after the DONE sentinel",
-      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
-      "dartTestName": "cancels an SSE response after the DONE sentinel",
-      "status": "implemented",
-      "upstreamAssertions": [],
-      "actualAssertions": [
-        "expect(chunks, hasLength(1))",
-        "expect(chunks.single['type'], 'RUN_FINISHED')",
-        "expect(body.cancelled, isTrue)"
-      ]
     },
     {
       "upstreamFile": "sse-parser-cleanup.test.ts",

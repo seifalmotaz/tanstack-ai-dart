@@ -1,6 +1,6 @@
 {
-  "version": "0.40.0",
-  "commit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "version": "1.0.1",
+  "commit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "surfaces": {
     "index": [
       {
@@ -796,18 +796,6 @@
         "source": "@tanstack/ai/client"
       },
       {
-        "name": "RealtimeAdapter",
-        "sourceName": "RealtimeAdapter",
-        "typeOnly": true,
-        "source": "./realtime-types"
-      },
-      {
-        "name": "RealtimeConnection",
-        "sourceName": "RealtimeConnection",
-        "typeOnly": true,
-        "source": "./realtime-types"
-      },
-      {
         "name": "RealtimeClientOptions",
         "sourceName": "RealtimeClientOptions",
         "typeOnly": true,
@@ -894,6 +882,18 @@
       {
         "name": "ConnectConnectionAdapter",
         "sourceName": "ConnectConnectionAdapter",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ChatHydrateOptions",
+        "sourceName": "ChatHydrateOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ChatHydrationResult",
+        "sourceName": "ChatHydrationResult",
         "typeOnly": true,
         "source": "./connection-adapters"
       },
@@ -1488,6 +1488,182 @@
         "sourceName": "RegisteredUIInterrupt",
         "typeOnly": true,
         "source": "./ui/types"
+      }
+    ],
+    "devtools": [
+      {
+        "name": "AIDevtoolsDisplayOptions",
+        "sourceName": "AIDevtoolsDisplayOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsClientMetadata",
+        "sourceName": "AIDevtoolsClientMetadata",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationProgress",
+        "sourceName": "AIDevtoolsGenerationProgress",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationMediaItem",
+        "sourceName": "AIDevtoolsGenerationMediaItem",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationVideoJob",
+        "sourceName": "AIDevtoolsGenerationVideoJob",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationPreview",
+        "sourceName": "AIDevtoolsGenerationPreview",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationRunStatus",
+        "sourceName": "AIDevtoolsGenerationRunStatus",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationRunSnapshot",
+        "sourceName": "AIDevtoolsGenerationRunSnapshot",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationPreviewInput",
+        "sourceName": "AIDevtoolsGenerationPreviewInput",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsChatSnapshot",
+        "sourceName": "AIDevtoolsChatSnapshot",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "createAIDevtoolsGenerationPreview",
+        "sourceName": "createAIDevtoolsGenerationPreview",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsToolFixture",
+        "sourceName": "AIDevtoolsToolFixture",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsBridgeOptions",
+        "sourceName": "AIDevtoolsBridgeOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "ClientDevtoolsBridge",
+        "sourceName": "ClientDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "ChatDevtoolsBridgeOptions",
+        "sourceName": "ChatDevtoolsBridgeOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "ChatDevtoolsBridge",
+        "sourceName": "ChatDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationSnapshotBase",
+        "sourceName": "AIDevtoolsGenerationSnapshotBase",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "GenerationDevtoolsBridgeOptions",
+        "sourceName": "GenerationDevtoolsBridgeOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "GenerationDevtoolsCoreState",
+        "sourceName": "GenerationDevtoolsCoreState",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "GenerationRunPatch",
+        "sourceName": "GenerationRunPatch",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "GenerationDevtoolsBridge",
+        "sourceName": "GenerationDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsVideoSnapshotBase",
+        "sourceName": "AIDevtoolsVideoSnapshotBase",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "VideoDevtoolsCoreState",
+        "sourceName": "VideoDevtoolsCoreState",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "VideoDevtoolsBridgeOptions",
+        "sourceName": "VideoDevtoolsBridgeOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "VideoRunPatch",
+        "sourceName": "VideoRunPatch",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "VideoDevtoolsBridge",
+        "sourceName": "VideoDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "createChatDevtoolsBridge",
+        "sourceName": "createChatDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "createGenerationDevtoolsBridge",
+        "sourceName": "createGenerationDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "createVideoDevtoolsBridge",
+        "sourceName": "createVideoDevtoolsBridge",
+        "typeOnly": false,
+        "source": "./devtools"
       }
     ]
   }

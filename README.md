@@ -13,11 +13,11 @@ model-provider adapters belong to your backend.
 <!-- compatibility:start -->
 | Compatibility | Supported target |
 | --- | --- |
-| Dart package API | `0.3.1` |
+| Dart package API | `0.4.0` |
 | Dart SDK | `>=3.6.2 <4.0.0` |
-| Official client | `@tanstack/ai-client 0.40.0` |
-| Official core protocol | `@tanstack/ai 0.70.0` |
-| Upstream source | [`7095ebbf1b59175f0cd339c1c477d6af55b312de`](https://github.com/TanStack/ai/tree/7095ebbf1b59175f0cd339c1c477d6af55b312de) |
+| Official client | `@tanstack/ai-client 1.0.1` |
+| Official core protocol | `@tanstack/ai 1.0.1` |
+| Upstream source | [`a7eb58459ebd528bbcc4166cc68377b777989462`](https://github.com/TanStack/ai/tree/a7eb58459ebd528bbcc4166cc68377b777989462) |
 <!-- compatibility:end -->
 
 ## Install
@@ -36,7 +36,7 @@ Or add it to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  tanstack_ai_dart: ^0.3.1
+  tanstack_ai_dart: ^0.4.0
 ```
 
 Run `dart pub get` or `flutter pub get` after editing `pubspec.yaml` manually.

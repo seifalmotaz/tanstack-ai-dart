@@ -34,13 +34,8 @@ bool isNdjsonEnvelope(Object? value) {
 
 /// Parse SSE lines into events, pairing chunks with their `id:` offset.
 Stream<StreamEvent> linesToSseEvents(
-  Stream<String> lines, {
-  String? fallbackThreadId,
-  String? fallbackRunId,
-}) async* {
-  String? lastThreadId;
-  String? lastRunId;
-  String? lastModel;
+  Stream<String> lines,
+) async* {
   String? pendingId;
 
   await for (final line in lines) {
@@ -55,24 +50,6 @@ Stream<StreamEvent> linesToSseEvents(
       continue;
     }
     final data = parseSseDataLine(line);
-    if (data == '[DONE]') {
-      yield StreamEvent(
-        withTanstackMetadata(
-          {
-            'type': 'RUN_FINISHED',
-            'threadId': lastThreadId ?? fallbackThreadId ?? '',
-            'runId': lastRunId ?? fallbackRunId ?? '',
-            'timestamp': DateTime.now().millisecondsSinceEpoch,
-          },
-          {
-            'finishReason': 'stop',
-            if (lastModel != null) 'model': lastModel,
-          },
-        ),
-      );
-      return;
-    }
-
     final decoded = jsonDecode(data);
     if (decoded is! Map) {
       throw FormatException('SSE data must be a JSON object: $data');
@@ -80,14 +57,6 @@ Stream<StreamEvent> linesToSseEvents(
     final chunk = restoreInboundChunk(
       decoded.map((key, value) => MapEntry('$key', value)),
     );
-    if (chunk['threadId'] is String) {
-      lastThreadId = chunk['threadId'] as String;
-    }
-    if (chunk['runId'] is String) {
-      lastRunId = chunk['runId'] as String;
-    }
-    final model = _sseChunkModel(chunk);
-    if (model != null) lastModel = model;
     final id = pendingId;
     pendingId = null;
     yield StreamEvent(chunk, id: id);
@@ -157,11 +126,13 @@ Stream<StreamChunk> resumableStream(
       }
     } catch (error) {
       if (signal?.isCancelled ?? false) return;
-      final resumable =
-          (error is StreamTruncatedError || error is StreamReadError) &&
-              tracker.lastEventId != null;
+      final resumable = (error is StreamTruncatedError ||
+              error is StreamReadError ||
+              isTemporaryStatusError(error)) &&
+          tracker.lastEventId != null;
       if (resumable) {
-        await tracker.waitBeforeReconnect(progressed, signal);
+        await tracker.waitBeforeReconnect(
+            progressed, signal, retryAfterForError(error));
         continue;
       }
       rethrow;
@@ -181,15 +152,4 @@ Stream<StreamChunk> resumableStream(
 
     return;
   }
-}
-
-String? _sseChunkModel(StreamChunk chunk) {
-  final tanstackModel = tanstackMetadata(chunk)?['model'];
-  if (tanstackModel is String) return tanstackModel;
-  final usage = chunk['usage'];
-  if (usage is List && usage.isNotEmpty && usage.first is Map) {
-    final model = (usage.first as Map)['model'];
-    if (model is String) return model;
-  }
-  return null;
 }

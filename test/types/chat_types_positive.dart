@@ -17,11 +17,11 @@ import 'package:tanstack_ai_dart/connections.dart' as conn;
 void positiveCases() {
   // Transport variants. Exactly one of connection/fetcher/transport is passed.
   final connection = conn.ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
+    connect: (messages, {data, signal, required runContext}) async* {
       yield <String, dynamic>{
         'type': 'RUN_FINISHED',
-        'runId': runContext?.runId ?? '',
-        'threadId': runContext?.threadId ?? '',
+        'runId': runContext.runId,
+        'threadId': runContext.threadId,
         'outcome': <String, dynamic>{'type': 'success'},
       };
     },
@@ -115,7 +115,7 @@ void positiveCases() {
     ),
     history: const ChatHistoryConfig(pageSize: 20),
     hydrate: (threadId, options) async =>
-        const ChatHydrationResult(messages: <AssistantTurn>[]),
+        const LegacyChatHydrationResult(messages: <AssistantTurn>[]),
     context: <String, dynamic>{'tenant': 'acme'},
     tools: <ChatClientTool>[
       ChatClientTool(
@@ -159,9 +159,11 @@ void positiveCases() {
   );
 
   final serverPersistence = ChatPersistenceOptions.server(
-      threadId: 'support-42', history: const ChatHistoryConfig(pageSize: 50));
+      history: const ChatHistoryConfig(pageSize: 50));
   final typedServerClient = ChatClient.legacy(
-      connection: connection, persistenceOptions: serverPersistence);
+      threadId: 'support-42',
+      connection: connection,
+      persistenceOptions: serverPersistence);
   final booleanServerClient = ChatClient.legacy(
       options: ChatClientOptions(
           connection: connection, persistence: true, threadId: 'support-42'));
@@ -181,7 +183,7 @@ void positiveCases() {
   configured.subscribe(restart: true);
   configured.cancelQueued('queued-1');
   configured.addToolResult(toolCallId: 'tc', output: 1);
-  configured.addToolApprovalResponse(id: 'a1', approved: true);
+  configured.addLegacyToolApprovalResponse(id: 'a1', approved: true);
   configured.resumeInterruptsUnsafe(
     const <Map<String, dynamic>>[
       <String, dynamic>{'interruptId': 'i1', 'status': 'resolved'},

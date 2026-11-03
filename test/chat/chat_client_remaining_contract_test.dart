@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/platform.dart' as platform;
 import 'package:test/test.dart';
 import 'package:tanstack_ai_dart/connections.dart' as connections;
 
@@ -166,7 +167,7 @@ void main() {
       final transport = FakeChatTransport();
       final client = interrupted(transport);
       await pump();
-      await client.resumeInterrupts(<Map<String, dynamic>>[
+      await client.resumeInterruptsLegacy(<Map<String, dynamic>>[
         <String, dynamic>{'interruptId': 'i1', 'status': 'resolved'},
       ]);
       final ids = (transport.bodies[1]['messages'] as List)
@@ -177,28 +178,283 @@ void main() {
     });
   });
 
+  test('continues a frontend tool call emitted by a native resume', () async {
+    final contexts = <connections.RunAgentInputContext>[];
+    final inputs = <Object?>[];
+    final connection = connections.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+      contexts.add(runContext);
+      final index = contexts.length;
+      yield {
+        'type': 'RUN_STARTED',
+        'runId': runContext.runId,
+        'threadId': runContext.threadId
+      };
+      if (index == 1) {
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {
+            'type': 'interrupt',
+            'interrupts': [
+              {
+                'id': 'interrupt-1',
+                'reason': 'confirmation',
+                'metadata': {
+                  'tanstack:interruptBinding': {
+                    'v': 1,
+                    'kind': 'generic',
+                    'interruptId': 'interrupt-1',
+                    'interruptedRunId': runContext.runId,
+                    'generation': 0,
+                    'responseSchemaHash': 'none'
+                  }
+                }
+              }
+            ]
+          }
+        };
+      } else if (index == 2) {
+        yield {
+          'type': 'TOOL_CALL_START',
+          'toolCallId': 'frontend-tool-call',
+          'toolCallName': 'lookup'
+        };
+        yield {
+          'type': 'TOOL_CALL_ARGS',
+          'toolCallId': 'frontend-tool-call',
+          'delta': '{"query":"answer"}'
+        };
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {'type': 'success'}
+        };
+      } else {
+        yield {
+          'type': 'TEXT_MESSAGE_CONTENT',
+          'messageId': 'done',
+          'delta': 'done'
+        };
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {'type': 'success'}
+        };
+      }
+    });
+    final client =
+        ChatClient(connection: connection, threadId: 'thread-1', tools: [
+      ClientTool<dynamic, dynamic>(
+          name: 'lookup',
+          execute: (input, _) {
+            inputs.add(input);
+            return {'answer': 42};
+          })
+    ]);
+    await client.sendText('hi');
+    client.getInterrupts().single.resolveInterrupt({'answer': 'continue'});
+    await waitFor(() => contexts.length == 3);
+    expect(inputs, [
+      {'query': 'answer'}
+    ]);
+    expect(contexts[1].parentRunId, contexts[0].runId);
+    expect(contexts[1].resume!.single['interruptId'], 'interrupt-1');
+    expect(contexts[2].resume, isNull);
+    await client.dispose();
+  });
+
+  test('modern auto tool defers a bound resume until parent stream settles',
+      () async {
+    final contexts = <connections.RunAgentInputContext>[];
+    const schema = RawJsonSchema({
+      'type': 'object',
+      'properties': {
+        'answer': {'type': 'number'}
+      },
+      'required': ['answer']
+    });
+    final responseSchema = <String, dynamic>{
+      'type': 'object',
+      'properties': {
+        'answer': {'type': 'number'}
+      },
+      'required': ['answer']
+    };
+    final responseHash = platform
+        .digestInterruptJson(platform.canonicalInterruptJson(responseSchema));
+    final connection = connections.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+      contexts.add(runContext);
+      yield {
+        'type': 'RUN_STARTED',
+        'runId': runContext.runId,
+        'threadId': runContext.threadId
+      };
+      if (contexts.length == 1) {
+        yield {
+          'type': 'TOOL_CALL_START',
+          'toolCallId': 'call-1',
+          'toolCallName': 'lookup'
+        };
+        yield {
+          'type': 'TOOL_CALL_ARGS',
+          'toolCallId': 'call-1',
+          'delta': '{"query":"first"}'
+        };
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {
+            'type': 'interrupt',
+            'interrupts': [
+              {
+                'id': 'client-1',
+                'reason': 'tanstack:client_tool_execution',
+                'toolCallId': 'call-1',
+                'responseSchema': responseSchema,
+                'metadata': {
+                  'kind': 'client_tool',
+                  'toolName': 'lookup',
+                  'input': {'query': 'first'},
+                  'tanstack:interruptBinding': {
+                    'v': 1,
+                    'kind': 'client-tool-execution',
+                    'interruptId': 'client-1',
+                    'interruptedRunId': runContext.runId,
+                    'generation': 0,
+                    'toolName': 'lookup',
+                    'toolCallId': 'call-1',
+                    'outputSchemaHash': platform.hashSchemaInput(schema),
+                    'responseSchemaHash': responseHash
+                  }
+                }
+              }
+            ]
+          }
+        };
+      } else {
+        yield {
+          'type': 'RUN_FINISHED',
+          'runId': runContext.runId,
+          'threadId': runContext.threadId,
+          'outcome': {'type': 'success'}
+        };
+      }
+    });
+    final client =
+        ChatClient(connection: connection, threadId: 'thread-1', tools: [
+      ClientTool<dynamic, dynamic>(
+          name: 'lookup',
+          outputSchema: schema,
+          execute: (_, __) => {'answer': 42})
+    ]);
+    await client.sendText('hi');
+    await waitFor(() => contexts.length == 2 && !client.isLoading);
+    expect(contexts.last.parentRunId, contexts.first.runId);
+    expect(contexts.last.resume, [
+      {
+        'interruptId': 'client-1',
+        'status': 'resolved',
+        'payload': {'answer': 42}
+      }
+    ]);
+    expect(client.getInterruptState().interruptErrors, isEmpty);
+    await client.dispose();
+  });
+
   group('ChatClient resume', () {
     test('resumes canonicalization failures as client-tool output errors',
         () async {
-      final manager = InterruptManager();
-      manager.hydrate(
-        const ChatHydrationInterrupts(
-          runId: 'r',
-          pending: <Map<String, dynamic>>[
-            <String, dynamic>{
-              'id': 'i1',
-              'reason': 'client_tool_input',
+      final contexts = <connections.RunAgentInputContext>[];
+      final responseHash = platform.digestInterruptJson(
+          platform.canonicalInterruptJson(<String, dynamic>{}));
+      final connection = connections.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+          contexts.add(runContext);
+          final runId = runContext.runId;
+          yield {
+            'type': 'RUN_STARTED',
+            'runId': runId,
+            'threadId': runContext.threadId
+          };
+          if (contexts.length == 1) {
+            yield {
+              'type': 'TOOL_CALL_START',
               'toolCallId': 'tc',
-              'metadata': <String, dynamic>{
-                'kind': 'client_tool',
-                'toolName': 'lookup',
-              },
-            },
-          ],
-        ),
+              'toolCallName': 'lookup'
+            };
+            yield {'type': 'TOOL_CALL_ARGS', 'toolCallId': 'tc', 'delta': '{}'};
+            yield {
+              'type': 'RUN_FINISHED',
+              'runId': runId,
+              'threadId': runContext.threadId,
+              'outcome': {
+                'type': 'interrupt',
+                'interrupts': [
+                  {
+                    'id': 'i1',
+                    'reason': 'tanstack:client_tool_execution',
+                    'toolCallId': 'tc',
+                    'responseSchema': <String, dynamic>{},
+                    'metadata': {
+                      'kind': 'client_tool',
+                      'toolName': 'lookup',
+                      'input': <String, dynamic>{},
+                      'tanstack:interruptBinding': {
+                        'v': 1,
+                        'kind': 'client-tool-execution',
+                        'interruptId': 'i1',
+                        'interruptedRunId': runId,
+                        'generation': 0,
+                        'toolName': 'lookup',
+                        'toolCallId': 'tc',
+                        'outputSchemaHash': platform.hashSchemaInput(null),
+                        'responseSchemaHash': responseHash
+                      }
+                    }
+                  }
+                ]
+              }
+            };
+          } else {
+            yield {
+              'type': 'TEXT_MESSAGE_CONTENT',
+              'messageId': 'answer',
+              'delta': 'continued'
+            };
+            yield {
+              'type': 'RUN_FINISHED',
+              'runId': runId,
+              'threadId': runContext.threadId
+            };
+          }
+        },
       );
-      manager.resolveClientToolOutput('tc', Object());
-      expect(manager.getInterrupts().single.status, ChatInterruptStatus.error);
+      final client = ChatClient(
+        connection: connection,
+        threadId: 'thread-1',
+        tools: <ClientTool>[
+          ClientTool<dynamic, dynamic>(
+              name: 'lookup', execute: (_, __) => {'value': Object()}),
+        ],
+      );
+      await client.sendText('hi');
+      await waitFor(() => contexts.length == 2);
+      final resolution = contexts[1].resume!.single;
+      expect(resolution['interruptId'], 'i1');
+      expect((resolution['payload'] as Map)['error'], isA<String>());
+      expect((resolution['metadata'] as Map)['tanstack'],
+          {'state': 'output-error'});
+      expect(
+          client.messages
+              .any((message) => message.answer.contains('continued')),
+          isTrue);
+      await client.dispose();
     });
 
     test('continues a legacy client tool emitted by a native resume', () async {
@@ -218,7 +474,7 @@ void main() {
         ],
       );
       await pump();
-      await client.resumeInterrupts(<Map<String, dynamic>>[
+      await client.resumeInterruptsLegacy(<Map<String, dynamic>>[
         <String, dynamic>{'interruptId': 'i1', 'status': 'resolved'},
       ]);
       expect(transport.bodies, hasLength(2));
@@ -230,25 +486,100 @@ void main() {
     test(
         'keeps native interrupt ownership when a sequential client tool resume fails',
         () async {
-      final manager = InterruptManager();
-      manager.hydrate(
-        const ChatHydrationInterrupts(
-          runId: 'r',
-          pending: <Map<String, dynamic>>[
-            <String, dynamic>{
-              'id': 'i1',
-              'reason': 'client_tool_input',
-              'toolCallId': 'tc',
-              'metadata': <String, dynamic>{
-                'kind': 'client_tool',
-                'toolName': 'lookup',
-              },
-            },
-          ],
-        ),
+      final contexts = <connections.RunAgentInputContext>[];
+      const outputSchema = RawJsonSchema({
+        'type': 'object',
+        'properties': {
+          'answer': {'type': 'number'}
+        },
+        'required': ['answer']
+      });
+      final responseSchema = <String, dynamic>{
+        'type': 'object',
+        'properties': {
+          'answer': {'type': 'number'}
+        },
+        'required': ['answer']
+      };
+      final responseHash = platform
+          .digestInterruptJson(platform.canonicalInterruptJson(responseSchema));
+      final connection = connections.ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+          contexts.add(runContext);
+          if (contexts.length == 3) throw StateError('resume failed');
+          final call = 'call-${contexts.length}';
+          final query = contexts.length == 1 ? 'first' : 'second';
+          final runId = runContext.runId;
+          yield {
+            'type': 'RUN_STARTED',
+            'runId': runId,
+            'threadId': runContext.threadId
+          };
+          yield {
+            'type': 'TOOL_CALL_START',
+            'toolCallId': call,
+            'toolCallName': 'lookup'
+          };
+          yield {
+            'type': 'TOOL_CALL_ARGS',
+            'toolCallId': call,
+            'delta': '{"query":"$query"}'
+          };
+          yield {
+            'type': 'RUN_FINISHED',
+            'runId': runId,
+            'threadId': runContext.threadId,
+            'outcome': {
+              'type': 'interrupt',
+              'interrupts': [
+                {
+                  'id': 'interrupt-$call',
+                  'reason': 'tanstack:client_tool_execution',
+                  'toolCallId': call,
+                  'responseSchema': responseSchema,
+                  'metadata': {
+                    'kind': 'client_tool',
+                    'toolName': 'lookup',
+                    'input': {'query': query},
+                    'tanstack:interruptBinding': {
+                      'v': 1,
+                      'kind': 'client-tool-execution',
+                      'interruptId': 'interrupt-$call',
+                      'interruptedRunId': runId,
+                      'generation': 0,
+                      'toolName': 'lookup',
+                      'toolCallId': call,
+                      'outputSchemaHash':
+                          platform.hashSchemaInput(outputSchema),
+                      'responseSchemaHash': responseHash
+                    }
+                  }
+                }
+              ]
+            }
+          };
+        },
       );
-      manager.resolveClientToolError('tc', 'boom');
-      expect(manager.getInterrupts().single.resolution, isNotNull);
+      final client =
+          ChatClient(connection: connection, threadId: 'thread-1', tools: [
+        ClientTool<dynamic, dynamic>(
+            name: 'lookup',
+            outputSchema: outputSchema,
+            execute: (input, _) =>
+                {'answer': (input as Map)['query'] == 'first' ? 42 : 43}),
+      ]);
+      await client.sendText('hi');
+      await waitFor(() =>
+          contexts.length == 3 &&
+          client.getInterruptState().interruptErrors.isNotEmpty);
+      expect(contexts[0].resume, isNull);
+      expect(contexts[1].parentRunId, contexts[0].runId);
+      expect(contexts[1].resume!.single['payload'], {'answer': 42});
+      expect(contexts[2].parentRunId, contexts[1].runId);
+      expect(contexts[2].resume!.single['payload'], {'answer': 43});
+      expect(client.getInterruptState().interruptErrors.first['code'],
+          'transport');
+      await client.dispose();
     });
   });
 
@@ -258,7 +589,7 @@ void main() {
       var calls = 0;
       final client =
           ChatClient.legacy(connection: connections.ConnectionAdapter.connect(
-        connect: (_, {data, signal, runContext}) async* {
+        connect: (_, {data, signal, required runContext}) async* {
           calls++;
           yield {
             'type': 'RUN_STARTED',

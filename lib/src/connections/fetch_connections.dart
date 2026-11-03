@@ -131,8 +131,6 @@ ConnectionAdapter createHttpConnectionProvider({
     required String target,
     required Map<String, String> headers,
     String? body,
-    String? fallbackThreadId,
-    String? fallbackRunId,
   }) {
     return (extraHeaders, signal) async* {
       final request = http.AbortableRequest(
@@ -156,8 +154,6 @@ ConnectionAdapter createHttpConnectionProvider({
       if (sse) {
         yield* linesToSseEvents(
           lines,
-          fallbackThreadId: fallbackThreadId,
-          fallbackRunId: fallbackRunId,
         );
       } else {
         yield* linesToNdjsonEvents(lines);
@@ -166,7 +162,7 @@ ConnectionAdapter createHttpConnectionProvider({
   }
 
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) =>
+    connect: (messages, {data, signal, required runContext}) =>
         _requestStream((localSignal) async* {
       final target = await resolveUrl();
       final resolved = await resolveOptions();
@@ -185,8 +181,8 @@ ConnectionAdapter createHttpConnectionProvider({
           'Content-Type': 'application/json',
           if (sse) 'Accept': 'text/event-stream',
           ..._mergeHeaders(resolved.headers),
-          ..._mergeHeaders(runContext?.headers),
-          if (runContext != null) 'X-Run-Id': runContext.runId,
+          ..._mergeHeaders(runContext.headers),
+          'X-Run-Id': runContext.runId,
         };
         final body = buildRunAgentInputBody(
           messages,
@@ -201,8 +197,6 @@ ConnectionAdapter createHttpConnectionProvider({
             target: target,
             headers: headers,
             body: jsonEncode(body),
-            fallbackThreadId: runContext?.threadId,
-            fallbackRunId: runContext?.runId,
           ),
           activeSignal,
           resolved.reconnect,
@@ -236,7 +230,6 @@ ConnectionAdapter createHttpConnectionProvider({
             method: 'GET',
             target: joinUrl,
             headers: _mergeHeaders(resolved.headers),
-            fallbackRunId: runId,
           ),
           activeSignal,
           resolved.reconnect,

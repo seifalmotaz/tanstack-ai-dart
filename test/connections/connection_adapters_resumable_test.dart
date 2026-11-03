@@ -1,6 +1,9 @@
 // Ported from
 // packages/ai-client/tests/connection-adapters-resumable.test.ts
 // Test names and groups intentionally mirror the upstream file.
+import 'dart:async';
+
+import 'package:http/http.dart' as http;
 import 'package:tanstack_ai_dart/connections.dart';
 import 'package:test/test.dart';
 
@@ -19,6 +22,109 @@ String emptyIdEvent(String delta) => 'id:\n${sseData(
 
 void main() {
   group('resumable SSE connection adapter', () {
+    test('retries temporary HTTP failures after obtaining an offset', () async {
+      late FakeHttpClient client;
+      var cancelled = false;
+      client = FakeHttpClient((_) async {
+        switch (client.requests.length) {
+          case 1:
+            return rawResponse(contentEvent('run@1', 'one'));
+          case 2:
+            final body =
+                StreamController<List<int>>(onCancel: () => cancelled = true);
+            return http.StreamedResponse(body.stream, 503,
+                headers: {'retry-after': '0'});
+          default:
+            expect(cancelled, isTrue);
+            return rawResponse(finishedEvent('run@2'));
+        }
+      });
+      final adapter = fetchServerSentEvents('/api/chat',
+          options: FetchConnectionOptions(
+              client: client,
+              reconnect: const ReconnectOptions(initialDelay: Duration.zero)));
+      final chunks = await collect(adapter.connect!(const [],
+          runContext: const RunAgentInputContext(threadId: 't', runId: 'r')));
+      expect(chunks.last['type'], 'RUN_FINISHED');
+      expect(client.requests.length, 3);
+    });
+
+    for (final status in [408, 429, 502, 503, 504]) {
+      test('retries reconnect status $status until the run finishes', () async {
+        late FakeHttpClient client;
+        client = FakeHttpClient((request) async {
+          if (client.requests.length == 1) {
+            return rawResponse(contentEvent('run@1', 'one'));
+          }
+          expect(request.headers['Last-Event-ID'], 'run@1');
+          if (client.requests.length < 4) {
+            return rawResponse('', status: status);
+          }
+          return rawResponse(finishedEvent('run@2'));
+        });
+        final adapter = fetchServerSentEvents('/api/chat',
+            options: FetchConnectionOptions(
+                client: client,
+                reconnect:
+                    const ReconnectOptions(initialDelay: Duration.zero)));
+        final chunks = await collect(adapter.connect!(const [],
+            runContext: const RunAgentInputContext(threadId: 't', runId: 'r')));
+        expect(chunks.last['type'], 'RUN_FINISHED');
+        expect(client.requests, hasLength(4));
+      });
+    }
+
+    test('budget allows recovery after more than five failed reconnects',
+        () async {
+      late FakeHttpClient client;
+      client = FakeHttpClient((_) async {
+        if (client.requests.length == 1) {
+          return rawResponse(contentEvent('run@1', 'one'));
+        }
+        if (client.requests.length < 9) return rawResponse('', status: 503);
+        return rawResponse(finishedEvent('run@2'));
+      });
+      final adapter = fetchServerSentEvents('/api/chat',
+          options: FetchConnectionOptions(
+              client: client,
+              reconnect: const ReconnectOptions(
+                  initialDelay: Duration.zero, budget: Duration(seconds: 2))));
+      final chunks = await collect(adapter.connect!(const [],
+          runContext: const RunAgentInputContext(threadId: 't', runId: 'r')));
+      expect(chunks.last['type'], 'RUN_FINISHED');
+      expect(client.requests, hasLength(9));
+    });
+
+    test('stops retrying 503 responses at the attempt ceiling', () async {
+      late FakeHttpClient client;
+      client = FakeHttpClient((_) async => client.requests.length == 1
+          ? rawResponse(contentEvent('run@1', 'one'))
+          : rawResponse('', status: 503));
+      final adapter = fetchServerSentEvents('/api/chat',
+          options: FetchConnectionOptions(
+              client: client,
+              reconnect: const ReconnectOptions(
+                  initialDelay: Duration.zero, maxAttempts: 2)));
+      await expectLater(
+          collect(adapter.connect!(const [],
+              runContext:
+                  const RunAgentInputContext(threadId: 't', runId: 'r'))),
+          throwsA(isA<StreamReconnectLimitError>()));
+      expect(client.requests, hasLength(4));
+    });
+
+    test('does not retry a temporary HTTP failure on the initial request',
+        () async {
+      final client = FakeHttpClient((_) async => rawResponse('', status: 503));
+      final adapter = fetchServerSentEvents('/api/chat',
+          options: FetchConnectionOptions(client: client));
+      await expectLater(
+          collect(adapter.connect!(const [],
+              runContext:
+                  const RunAgentInputContext(threadId: 't', runId: 'r'))),
+          throwsA(isA<HttpStatusException>()));
+      expect(client.requests.length, 1);
+    });
     test('reconnects with Last-Event-ID and de-dupes already-seen chunks',
         () async {
       late FakeHttpClient client;
@@ -489,7 +595,8 @@ void main() {
       expect(client.requests, hasLength(1));
     });
 
-    test('does not retry HTTP setup failures after earlier progress', () async {
+    test('does not retry permanent HTTP failures after earlier progress',
+        () async {
       late FakeHttpClient client;
       client = FakeHttpClient((_) async {
         if (client.requests.length == 1) {
@@ -497,8 +604,8 @@ void main() {
         }
         return rawResponse(
           '',
-          status: 503,
-          reasonPhrase: 'Unavailable',
+          status: 400,
+          reasonPhrase: 'Bad Request',
         );
       });
       final adapter = fetchServerSentEvents(
@@ -518,7 +625,7 @@ void main() {
         )),
         throwsA(
           predicate<Object>(
-            (error) => error.toString().contains('503 Unavailable'),
+            (error) => error.toString().contains('400 Bad Request'),
           ),
         ),
       );
@@ -527,6 +634,24 @@ void main() {
   });
 
   group('createReconnectTracker', () {
+    test('bounds no-progress attempts and resets on progress', () async {
+      final tracker = createReconnectTracker(
+          const ReconnectOptions(maxAttempts: 1, initialDelay: Duration.zero));
+      await tracker.waitBeforeReconnect(false);
+      await expectLater(tracker.waitBeforeReconnect(false),
+          throwsA(isA<StreamReconnectLimitError>()));
+      await tracker.waitBeforeReconnect(true);
+      await tracker.waitBeforeReconnect(false);
+    });
+
+    test('stops before a retry would exceed the time budget', () async {
+      final tracker = createReconnectTracker(const ReconnectOptions(
+        initialDelay: Duration(seconds: 1),
+        budget: Duration(milliseconds: 1),
+      ));
+      await expectLater(tracker.waitBeforeReconnect(false),
+          throwsA(isA<StreamReconnectLimitError>()));
+    });
     test('de-dupes ids, tracks lastEventId, and resets on empty id', () {
       final tracker = createReconnectTracker();
       expect(tracker.note('a'), ReconnectNote.fresh);

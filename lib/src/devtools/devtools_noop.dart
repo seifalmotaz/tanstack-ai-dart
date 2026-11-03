@@ -6,6 +6,7 @@
 library;
 
 import '../platform/events.dart';
+import '../identity.dart';
 import 'devtools.dart';
 import 'devtools_types.dart';
 
@@ -108,9 +109,7 @@ mixin _NoOpGenerationSurface<TOutput> on GenerationDevtoolsBridge<TOutput> {
   void dispose() {}
 
   @override
-  String beginRun(Object? input) =>
-      'noop-run-${DateTime.now().millisecondsSinceEpoch}-'
-      '${DateTime.now().microsecond.remainder(1000000)}';
+  String beginRun(Object? input) => generateIdentity('run');
   @override
   void ensureRunStarted(String runId) {}
   @override

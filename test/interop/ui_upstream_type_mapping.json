@@ -1,7 +1,7 @@
 {
   "upstreamPackage": "@tanstack/ai-client",
-  "upstreamVersion": "0.40.0",
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamVersion": "1.0.1",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "upstreamFiles": [
     "tests/ui-types.test-d.ts",
     "tests/infer-chat-messages.test.ts",

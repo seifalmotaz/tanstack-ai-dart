@@ -22,10 +22,8 @@ String parseSseDataLine(String line) {
 /// Parse a response body as Server-Sent Events into stream chunks.
 ///
 /// This is the generation-friendly variant (same as upstream `sse-parser.ts`):
-/// malformed JSON and the legacy `[DONE]` marker are skipped instead of
-/// failing the stream. The connection adapters use the stricter event parser
-/// in `resumable_stream.dart`, which reports malformed JSON and synthesizes a
-/// terminal for `[DONE]`.
+/// malformed JSON is skipped instead of failing the stream. The connection
+/// adapters use the stricter event parser in `resumable_stream.dart`.
 Stream<StreamChunk> parseSseResponse(
   http.StreamedResponse response, {
   CancellationSignal? signal,
@@ -38,13 +36,6 @@ Stream<StreamChunk> parseSseResponse(
       signal: signal,
     )) {
       final data = parseSseDataLine(line);
-      if (data == '[DONE]') {
-        onWarning?.call(
-          'Received [DONE] sentinel. This is deprecated — RUN_FINISHED is the '
-          'stream terminator.',
-        );
-        continue;
-      }
       try {
         final decoded = jsonDecode(data);
         if (decoded is Map) {

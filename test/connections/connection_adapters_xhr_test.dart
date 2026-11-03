@@ -15,6 +15,27 @@ import 'test_utils.dart';
 
 void main() {
   group('xhr connection adapters', () {
+    test('retries transient HTTP errors on a durable XHR reconnect', () async {
+      late FakeHttpClient client;
+      client = FakeHttpClient((request) async {
+        if (client.requests.length == 1) {
+          return rawResponse(sseEvent(contentChunk('one'), id: 'offset-1'));
+        }
+        expect(request.headers['Last-Event-ID'], 'offset-1');
+        if (client.requests.length == 2) {
+          return rawResponse('', status: 503, headers: {'retry-after': '0'});
+        }
+        return rawResponse(sseEvent(finishedChunk(), id: 'offset-2'));
+      });
+      final adapter = xhrServerSentEvents('/api/chat',
+          options: XhrConnectionOptions(
+              client: client,
+              reconnect: const ReconnectOptions(initialDelay: Duration.zero)));
+      final result = await collect(adapter.connect!([],
+          runContext: const RunAgentInputContext(threadId: 't', runId: 'r')));
+      expect(result.last['type'], 'RUN_FINISHED');
+      expect(client.requests, hasLength(3));
+    });
     group('xhrServerSentEvents', () {
       test(
           'parses split SSE chunks across multiple progress events and sends '
@@ -110,76 +131,9 @@ void main() {
 
         expect(jsonBodyOf(client.requests.single)['resume'], resume);
 
-        body.write('data: [DONE]\n\n');
+        body.write(sseEvent(finishedChunk()));
         expect(await nextChunk, isTrue);
         expect(iterator.current['type'], 'RUN_FINISHED');
-        await iterator.cancel();
-      });
-
-      test('synthesizes RUN_FINISHED for [DONE] and ignores later bytes',
-          () async {
-        final body = ControlledResponse();
-        final client = FakeHttpClient((_) async => body.response);
-        final adapter = xhrServerSentEvents(
-          '/api/chat',
-          options: XhrConnectionOptions(client: client),
-        );
-        final iterator = StreamIterator<StreamChunk>(
-          adapter.connect!(
-            [],
-            runContext: const RunAgentInputContext(
-              threadId: 'thread-1',
-              runId: 'run-1',
-            ),
-          ),
-        );
-        final nextChunk = iterator.moveNext();
-        await tick();
-
-        body.write('data: [DONE]\n\n');
-        body.write(
-          'data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"late",'
-          '"timestamp":1,"delta":"late","content":"late"}\n\n',
-        );
-
-        expect(await nextChunk, isTrue);
-        expect(iterator.current['type'], 'RUN_FINISHED');
-        expect(iterator.current['threadId'], 'thread-1');
-        expect(iterator.current['runId'], 'run-1');
-        expect(
-          (iterator.current['metadata'] as Map)['tanstack']['finishReason'],
-          'stop',
-        );
-        expect(await iterator.moveNext(), isFalse);
-        await iterator.cancel();
-      });
-
-      test('aborts the XHR after [DONE] so late bytes stop downloading',
-          () async {
-        final body = ControlledResponse();
-        final client = FakeHttpClient((_) async => body.response);
-        final adapter = xhrServerSentEvents(
-          '/api/chat',
-          options: XhrConnectionOptions(client: client),
-        );
-        final iterator = StreamIterator<StreamChunk>(
-          adapter.connect!(
-            [],
-            runContext: const RunAgentInputContext(
-              threadId: 'thread-1',
-              runId: 'run-1',
-            ),
-          ),
-        );
-        final nextChunk = iterator.moveNext();
-        await tick();
-
-        body.write('data: [DONE]\n\n');
-
-        expect(await nextChunk, isTrue);
-        expect(iterator.current['type'], 'RUN_FINISHED');
-        expect(await iterator.moveNext(), isFalse);
-        expect(body.cancelled, isTrue);
         await iterator.cancel();
       });
 
@@ -191,7 +145,11 @@ void main() {
           options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
-          adapter.connect!([]),
+          adapter.connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         final nextChunk = iterator.moveNext();
         await tick();
@@ -213,7 +171,11 @@ void main() {
           '/api/chat',
           options: XhrConnectionOptions(client: client),
         );
-        final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
+        final iterator = StreamIterator<StreamChunk>(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         final nextChunk = iterator.moveNext();
         await tick();
 
@@ -236,7 +198,11 @@ void main() {
           options: XhrConnectionOptions(client: client),
         );
         await expectLater(
-          collect(adapter.connect!([])),
+          collect(adapter.connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(
             predicate<Object>(
               (error) =>
@@ -261,7 +227,11 @@ void main() {
           '/api/chat',
           options: XhrConnectionOptions(client: client),
         );
-        final error = await captureError(() => collect(adapter.connect!([])));
+        final error = await captureError(() => collect(adapter.connect!(
+              [],
+              runContext: const RunAgentInputContext(
+                  threadId: 'test-thread', runId: 'test-run'),
+            )));
         expect(
           error.toString(),
           'XHR error! status: 500 Internal Server Error',
@@ -279,7 +249,12 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([], signal: controller.signal),
+          adapter.connect!(
+            [],
+            signal: controller.signal,
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks, isEmpty);
@@ -297,7 +272,12 @@ void main() {
           options: XhrConnectionOptions(client: client),
         );
         final iterator = StreamIterator<StreamChunk>(
-          adapter.connect!([], signal: controller.signal),
+          adapter.connect!(
+            [],
+            signal: controller.signal,
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         final nextChunk = iterator.moveNext();
         await tick();
@@ -317,12 +297,17 @@ void main() {
           xhrServerSentEvents(
             '/api/chat',
             options: XhrConnectionOptions(client: success),
-          ).connect!([]),
+          ).connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         final next = successIterator.moveNext();
         await tick();
-        successBody.write('data: [DONE]\n\n');
+        successBody.write(sseEvent(finishedChunk()));
         await next;
+        unawaited(successBody.close());
         await successIterator.moveNext();
         expect(successBody.cancelled, isTrue);
 
@@ -332,7 +317,11 @@ void main() {
           xhrServerSentEvents(
             '/api/chat',
             options: XhrConnectionOptions(client: failure),
-          ).connect!([]),
+          ).connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         final failureNext = failureIterator.moveNext();
         await tick();
@@ -355,7 +344,11 @@ void main() {
           options: XhrConnectionOptions(client: client),
         );
         await expectLater(
-          collect(adapter.connect!([])),
+          collect(adapter.connect!(
+            [],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(isA<StreamTruncatedError>()),
         );
       });
@@ -370,7 +363,11 @@ void main() {
           '/api/chat',
           options: XhrConnectionOptions(client: client),
         );
-        final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
+        final iterator = StreamIterator<StreamChunk>(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         final nextChunk = iterator.moveNext();
         await tick();
 
@@ -392,7 +389,11 @@ void main() {
           '/api/chat',
           options: XhrConnectionOptions(client: client),
         );
-        final iterator = StreamIterator<StreamChunk>(adapter.connect!([]));
+        final iterator = StreamIterator<StreamChunk>(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         final nextChunk = iterator.moveNext();
         await tick();
 
@@ -416,7 +417,11 @@ void main() {
           '/api/chat',
           options: XhrConnectionOptions(client: client),
         );
-        final error = await captureError(() => collect(adapter.connect!([])));
+        final error = await captureError(() => collect(adapter.connect!(
+              [],
+              runContext: const RunAgentInputContext(
+                  threadId: 'test-thread', runId: 'test-run'),
+            )));
         expect(
           error.toString(),
           'XHR error! status: 500 Internal Server Error',
@@ -434,7 +439,12 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([], signal: controller.signal),
+          adapter.connect!(
+            [],
+            signal: controller.signal,
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks, isEmpty);

@@ -1,5 +1,5 @@
 /// Standalone platform-library barrel for the pure-Dart port of the TanStack
-/// AI client 0.40.0 platform surfaces.
+/// AI client platform surfaces.
 ///
 /// Native/browser-only capabilities are injected through the `*Platform`
 /// interfaces in each module. Passkey keyring cryptography has a real Dart

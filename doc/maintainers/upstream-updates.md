@@ -73,6 +73,19 @@ pnpm --filter @tanstack/ai-client test:types
 cd ../..
 ```
 
+For the 0.40.0 to 1.0.1 comparison, pass the archived baseline explicitly
+when collecting or classifying the executed candidate report:
+
+```sh
+node tool/collect_upstream_inventory.cjs .dart_tool/upstream-ai .dart_tool/upstream-ai/.dart_tool/ai-client-vitest.json tool/upstream_tests_0_40_0.json > .dart_tool/candidate-inventory.json
+node tool/review_upstream_mechanical.cjs .dart_tool/upstream-ai .dart_tool/candidate-inventory.json tool/upstream_tests_0_40_0.json > .dart_tool/mechanical-review.json
+node tool/prepare_candidate_audit.cjs .dart_tool/candidate-inventory.json .dart_tool/candidate-audit
+```
+
+The preparer writes only to an owned child of `.dart_tool`. Run the parity
+audit from that directory against a VM JSON report. Its provisional results
+are review evidence and do not automatically update the supported manifests.
+
 The report path is relative to `packages/ai-client`, so the JSON report lands in
 `.dart_tool/upstream-ai/.dart_tool/ai-client-vitest.json`. Confirm the file exists
 and the commands passed. If candidate scripts or configuration changed, adjust
@@ -82,6 +95,39 @@ Run relevant protocol/dependency tests too when the reviewed change reaches
 those packages. Keep Vitest runtime registrations, Vitest type assertions, and
 separate `.test-d.ts` declarations distinct. Record failures and skips rather
 than treating a partial upstream run as a new passing baseline.
+
+To reproduce the mixed server/client tool stream fixture at the pinned 1.0.1
+candidate, from the Dart package root with the candidate's Node and pnpm on
+`PATH` and its dependencies installed:
+
+```sh
+cp tool/capture_upstream_mixed.test.ts .dart_tool/upstream-ai/.dart_tool/capture-mixed.test.ts
+cp tool/capture_upstream_mixed.config.mts .dart_tool/upstream-ai/.dart_tool/capture.config.mts
+(cd .dart_tool/upstream-ai && pnpm exec vitest --run --config .dart_tool/capture.config.mts)
+node tool/verify_upstream_mixed.cjs .dart_tool/upstream-ai/.dart_tool/mixed-chunks.json
+```
+
+To reproduce the separate unbound-interrupt behavior probe, copy
+`tool/probe_upstream_unbound.test.ts` to the same `capture-mixed.test.ts` path
+and run the same Vitest command. It is outside the official suite inventory.
+
+To reproduce the captured child-agent approval streams, run:
+
+```sh
+node tool/capture_upstream_subagent.cjs
+cp tool/capture_upstream_subagent.config.mts .dart_tool/upstream-ai/.dart_tool/capture-subagent.config.mts
+(cd .dart_tool/upstream-ai && pnpm exec vitest --run --config .dart_tool/capture-subagent.config.mts)
+node tool/verify_upstream_subagent.cjs .dart_tool/upstream-ai/.dart_tool/subagent-chunks.json
+```
+
+The upstream integration test itself checks server tool execution. The Dart test
+replays its normalized wire chunks and checks approval, continuation and child
+card state; it does not run a Dart server.
+
+The comparison normalizes generated identifiers, timestamps, and creation
+dates; the fixture retains the remaining upstream event content. These files
+stay under the upstream checkout's ignored `.dart_tool`, outside its sources
+and normal test inventory.
 
 ## 4. Port behavior and update evidence
 
@@ -93,12 +139,21 @@ than treating a partial upstream run as a new passing baseline.
    test name. Add analyzer fixtures for representable static guarantees.
 5. Describe adaptations and unsupported language/host behavior honestly.
 
-There is no checked-in upstream inventory collector today. Review exports and
-executed test results to update `tool/upstream_api.json` and
-`tool/upstream_tests.json`. Do not invent a collector command or use
-`parity_audit.dart` as one; the audit consumes those inventories and mappings.
-A future collector must preserve test identity and prove its output against
-actual source/results before replacing this manual step.
+The candidate collector reads the executed Vitest report and source exports.
+It requires TypeScript 5.9.3 in an isolated local toolchain:
+
+```sh
+npm install --prefix .dart_tool/toolchain typescript@5.9.3
+node tool/collect_upstream_inventory_test.cjs
+node tool/collect_upstream_inventory.cjs .dart_tool/upstream-ai .dart_tool/upstream-ai/.dart_tool/ai-client-vitest.json > .dart_tool/candidate-inventory.json
+```
+
+It reports added and removed identities, flags retained cases in changed files,
+and compares literal test bodies where it can resolve them. Dynamic or
+ambiguous cases remain unresolved; matching bodies still require review of
+their surrounding fixtures. This output is a review aid, not proof of Dart
+coverage; `parity_audit.dart` consumes the separately reviewed inventories and
+mappings. Review re-export declarations and case bodies before advancing them.
 
 Do not silently discard renamed or deleted cases. Record the change in the PR
 and changelog. Keep gaps explicit. If the port is incomplete, retain the old

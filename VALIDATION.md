@@ -1,52 +1,56 @@
 # Validation
 
-Dart API revision 0.3.0 validated on 2026-11-03 on macOS arm64.
-The counts below record that API validation snapshot; subsequent documentation
-checks and examples are verified separately by CI. The official
-TanStack client baseline remains pinned; no CRM credentials or production calls
-are needed for these checks.
+The 0.4.0 working tree was validated on 2026-11-03 on macOS arm64. It targets
+`@tanstack/ai-client` and `@tanstack/ai` 1.0.1 at commit
+`a7eb58459ebd528bbcc4166cc68377b777989462`. This records local validation of the 0.4.0 source candidate; GitHub CI and
+release status are tracked separately.
 
-| Check | Dart 3.13.3 | Minimum Dart 3.6.2 |
-| --- | --- | --- |
-| Full VM suite | 2,457 passed; no failures or skips | 2,457 passed; no failures or skips |
-| Full Chrome suite | 1,722 passed; no failures or skips | Not repeated for API revision 0.3 |
-| Static rejection assertions | 56 checked; positive fixtures clean | 56 checked; positive fixtures clean |
-| Package analysis | No issues | No issues |
+| Check | Result |
+| --- | --- |
+| Dart 3.13.3 VM | 2,493 visible tests passed; no failures or skips |
+| Dart 3.6.2 VM | 2,493 visible tests passed; no failures or skips |
+| Chrome, Dart 3.13.3 | 1,754 visible tests passed; no failures or skips |
+| Static analyzer fixtures | 61 rejection assertions checked on both SDKs; positive fixtures passed |
+| Package analyzer | No issues on both SDKs |
+| Formatter and platform test policy | Passed |
+| Real Chrome HTTP checks | 2 passed: streaming/credentials and abort before headers |
+| Documentation generation/check | Passed; 20 source pages |
+| Dartdoc | 9 public libraries, zero warnings or errors |
 
-Stable SDK checks also include clean formatting, the platform test policy and two
-real Chrome HTTP checks covering Arabic/cookies and cancellation before headers.
-The runnable modern example was checked without an endpoint, so it prints usage
-without making a request. CI repeats minimum/stable VM, analyzer fixtures, full
-Chrome and real browser HTTP checks on Linux.
+Counts exclude hidden test-loader events. The minimum-SDK run used an isolated
+copy refreshed with `rsync -a --delete` for the owned source/test/tool/doc
+folders, its own package configuration, Dart 3.6.2 and a separate pub cache.
+The stable and minimum JSON reports, full Chrome report and parity report were
+produced with `dart test -r json` and `dart run tool/parity_audit.dart`.
 
-## Upstream comparison
+The official 1.0.1 client runtime suite passed 1,014 registrations with no
+failures or skips; its separate TypeScript suite passed. Focused core tests passed
+38 interrupt/wire cases and 357 stream, subagent, protocol, resume and request
+parameter cases. The published npm source files were compared to the pinned
+checkout: all 35 client and 168 core source files matched. See
+[upstream-1.0.1-review.md](validation/upstream-1.0.1-review.md) for the
+identity delta and review method.
 
-The pinned baseline contains 1,011 Vitest registrations, including 45
-TypeScript type-assertion cases, plus separate `.test-d.ts` assertions. All are
-mapped. The audit links 966 to actual passing Dart tests, with zero missing,
-failed, skipped, title-only or orphan runtime mappings.
+The Dart audit maps all 1,014 client registrations: 971 have a passing Dart
+runtime test, 43 are classified non-runtime, and there are no unmapped cases,
+runtime gaps or orphan mappings. Its 46 compile mappings, 177 adaptation
+entries and 25 nonrepresentable entries can overlap and are not extra test
+counts. [parity-summary.json](validation/parity-summary.json) records the
+machine-readable result. The API inventory covers 276 slots across the root,
+BYOK, UI and devtools paths; [API_COMPATIBILITY.md](API_COMPATIBILITY.md)
+describes the boundaries.
 
-The other 45 registrations have explicit static/language adaptations. Two were
-runtime-invalid JavaScript connection configurations: required named Dart
-constructors now reject them during analysis. Actual negative fixtures verify
-both partial and mixed modes; metadata/test names alone are not evidence.
-Mapping categories overlap and are not additional test counts.
-See [parity-summary.json](validation/parity-summary.json).
+The pre-commit `dart pub publish --dry-run` exited 65 with two warnings: the intentionally
+uncommitted modified tree and the tracked, deleted
+`test/connections/sse_done_model_test.dart` being ignored while still tracked by
+Git. The archive inspection found the archived prior inventory and review tools
+needed to reproduce the comparison; no production data or credentials were
+used. Re-run the dry run after an authorized commit removes that tracked file.
 
-The existing upstream scenarios retain their assertions through explicit legacy
-entry points where the JavaScript signature itself is under test. New Dart API
-tests exercise the same engine through typed construction, state streams, typed
-message input, immutable state and configuration setters. Generation tests cover
-value/stream/HTTP variants, persistence metadata, bad HTTP status and cancellation
-of a quiet stream. Part-view tests cover exhaustive switching, unknown wire fields
-and nested read-only data.
-
-[API_COMPATIBILITY.md](API_COMPATIBILITY.md) records all 247 upstream exports;
-all 67 runtime exports remain reachable through public package barrels. This is
-behavior/protocol compatibility, not identical JavaScript call signatures or
-TypeScript conditional/literal/tuple inference.
-
-Host interfaces are tested with controlled implementations. Real microphone,
-WebAuthn, device storage and MCP host integration were not exercised. WebSocket
-connections require an injected platform factory. No pub.dev publication was
-performed. [MIGRATION.md](MIGRATION.md) lists the pre-publication breaking changes.
+Dart deliberately does not automatically execute a client tool for an unbound
+interrupt; a separate upstream probe confirms that the pinned JavaScript client
+does. Dart's immutable `ChatInterrupt` uses a runtime kind rather than a
+statically discriminated TypeScript union. Native XHR handler teardown is not
+directly observable through the injected-client cleanup test. Microphone,
+WebAuthn, device storage and real MCP/WebMCP host integration were not tested;
+websocket use requires an injected platform implementation.

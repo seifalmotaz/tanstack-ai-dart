@@ -111,7 +111,7 @@ void main() {
       var joins = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
           },
@@ -144,7 +144,7 @@ void main() {
       var joins = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
           },
@@ -169,7 +169,7 @@ void main() {
       var hydrates = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           hydrate: (threadId, {options}) async {
             hydrates++;
             return const conn.ChatHydrationResult(
@@ -198,7 +198,7 @@ void main() {
       var requests = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             requests++;
           },
         ),
@@ -214,7 +214,7 @@ void main() {
       var joins = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
           },
@@ -241,7 +241,7 @@ void main() {
       var hydrates = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           hydrate: (threadId, {options}) {
             hydrates++;
             return gate.future;
@@ -264,7 +264,7 @@ void main() {
       var joins = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             joins++;
           },

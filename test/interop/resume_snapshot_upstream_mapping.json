@@ -18,14 +18,6 @@
     },
     {
       "upstreamFile": "resume-snapshot.test.ts",
-      "upstreamName": "ChatPersistor combined record normalizes a legacy bare-array record on read",
-      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
-      "dartTestName": "ChatPersistor combined record normalizes a legacy bare-array record on read",
-      "status": "implemented",
-      "adaptation": "ChatPersistor.readInitial normalizes a List of message maps to ChatPersistedState with no resume pointer."
-    },
-    {
-      "upstreamFile": "resume-snapshot.test.ts",
       "upstreamName": "localStoragePersistence ergonomics needs no type arg or codec and round-trips a ChatPersistedState",
       "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
       "dartTestName": "localStoragePersistence ergonomics needs no type arg or codec and round-trips a ChatPersistedState",

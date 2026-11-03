@@ -35,7 +35,7 @@ Future<void> waitForCondition(void Function() assertion) async {
 
 ConnectionAdapter mockConnection(List<StreamChunk> chunks) =>
     ConnectionAdapter.connect(
-      connect: (messages, {data, signal, runContext}) async* {
+      connect: (messages, {data, signal, required runContext}) async* {
         for (final chunk in chunks) {
           yield chunk;
         }
