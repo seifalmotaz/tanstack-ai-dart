@@ -3162,7 +3162,7 @@ class ChatClient {
         // Keep notifying the remaining listeners.
       }
     }
-    if (!_disposed) _stateEvents.emit(snapshot);
+    if (!_disposed && _stateEvents.hasListener) _stateEvents.emit(snapshot);
     _devtools.emitSnapshot();
   }
 

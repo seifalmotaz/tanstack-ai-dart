@@ -9,12 +9,14 @@ void main() {
       () async {
     var current = 0;
     final state = SnapshotStream(() => current);
+    expect(state.hasListener, isFalse);
     final first = <int>[];
     final a = state.stream.listen(first.add)..pause();
     current = 1;
     state.emit(current);
     final second = <int>[];
     final b = state.stream.listen(second.add);
+    expect(state.hasListener, isTrue);
     current = 2;
     state.emit(current);
     await Future<void>.delayed(Duration.zero);
@@ -27,6 +29,7 @@ void main() {
     current = 3;
     state.emit(current);
     state.close();
+    expect(state.hasListener, isFalse);
     state.close();
     await Future<void>.delayed(Duration.zero);
     expect(second, [1, 2, 3]);

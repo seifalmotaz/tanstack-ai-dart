@@ -9,6 +9,8 @@ final class SnapshotStream<T> {
   final _listeners = <MultiStreamController<T>>{};
   bool _closed = false;
 
+  bool get hasListener => _listeners.isNotEmpty;
+
   late final Stream<T> stream = Stream<T>.multi((listener) {
     if (_closed) {
       listener.close();
