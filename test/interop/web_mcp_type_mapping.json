@@ -1,6 +1,6 @@
 {
   "source": "packages/ai-client/tests/web-mcp-tools-types.test.ts",
-  "upstream_version": "0.40.0",
+  "upstream_version": "1.0.1",
   "dart_surface": "lib/src/platform/web_mcp_tools.dart",
   "fixtures": {
     "positive": "test/types/web_mcp_positive.dart",
@@ -12,14 +12,18 @@
       "upstream": "requires a lifecycle signal",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["MISSING_REQUIRED_ARGUMENT"],
+      "assertions": [
+        "MISSING_REQUIRED_ARGUMENT"
+      ],
       "notes": "RegisterWebMCPToolsOptions.signal is a required CancellationSignal."
     },
     {
       "upstream": "signal is an abort signal, not an arbitrary value",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "assertions": [
+        "ARGUMENT_TYPE_NOT_ASSIGNABLE"
+      ],
       "notes": "Passing a String for signal is rejected by the analyzer."
     },
     {
@@ -34,7 +38,9 @@
       "upstream": "per-tool options values are WebMCPToolOptions",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["MAP_VALUE_TYPE_NOT_ASSIGNABLE"],
+      "assertions": [
+        "MAP_VALUE_TYPE_NOT_ASSIGNABLE"
+      ],
       "notes": "The Map<String, WebMcpToolOptions> value type is enforced by the analyzer."
     },
     {
@@ -49,14 +55,18 @@
       "upstream": "annotations are WebMCPToolAnnotations with boolean hints",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "assertions": [
+        "ARGUMENT_TYPE_NOT_ASSIGNABLE"
+      ],
       "notes": "readOnlyHint and untrustedContentHint are bool?; a String is rejected."
     },
     {
       "upstream": "tool option and annotation objects expose only documented fields",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["UNDEFINED_NAMED_PARAMETER"],
+      "assertions": [
+        "UNDEFINED_NAMED_PARAMETER"
+      ],
       "notes": "WebMcpToolOptions accepts title/annotations; WebMcpToolAnnotations accepts readOnlyHint/untrustedContentHint. Unknown named parameters are rejected."
     },
     {
@@ -79,21 +89,27 @@
       "upstream": "does not expose cross-origin registration options",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["UNDEFINED_NAMED_PARAMETER"],
+      "assertions": [
+        "UNDEFINED_NAMED_PARAMETER"
+      ],
       "notes": "RegisterWebMCPToolsOptions has no exposedTo parameter."
     },
     {
       "upstream": "tool list argument is typed",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["ARGUMENT_TYPE_NOT_ASSIGNABLE"],
+      "assertions": [
+        "ARGUMENT_TYPE_NOT_ASSIGNABLE"
+      ],
       "notes": "registerWebMCPTools takes List<ClientTool>, not List<Object>."
     },
     {
       "upstream": "registration options are required",
       "status": "representable",
       "fixture": "test/types/web_mcp_negative.dart",
-      "assertions": ["NOT_ENOUGH_POSITIONAL_ARGUMENTS"],
+      "assertions": [
+        "NOT_ENOUGH_POSITIONAL_ARGUMENTS"
+      ],
       "notes": "registerWebMCPTools expects two positional arguments (tools, options); calling with only tools is rejected."
     }
   ],

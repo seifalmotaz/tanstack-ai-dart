@@ -59,14 +59,13 @@ class ChatClient {
   factory ChatClient({
     required ConnectionAdapter connection,
     List<AssistantTurn> initialMessages = const [],
-    String? threadId,
+    required String threadId,
     ChatPersistenceOptions persistence =
         const ChatPersistenceOptions.ephemeral(),
     ChatQueueConfig queue = const ChatQueueConfig(),
     Object? context,
     List<ClientTool> tools = const [],
     List<ChatInterruptDefinition> interrupts = const [],
-    Map<String, dynamic>? body,
     Map<String, dynamic>? forwardedProps,
     ChatResumeSnapshot? initialResumeSnapshot,
     byok_api.ByokClient? byok,
@@ -80,10 +79,8 @@ class ChatClient {
     void Function(Map<String, dynamic> chunk)? onFinish,
     void Function(Map<String, dynamic> event, Object? context)? onCustomEvent,
   }) {
-    if (threadId != null &&
-        persistence.threadId != null &&
-        threadId != persistence.threadId) {
-      throw ArgumentError('threadId must match persistence.threadId');
+    if (threadId.isEmpty) {
+      throw ArgumentError('threadId must not be empty');
     }
     return ChatClient.legacy(
       connection: connection,
@@ -94,7 +91,6 @@ class ChatClient {
       context: context,
       tools: List<ClientTool>.of(tools),
       interrupts: List<ChatInterruptDefinition>.of(interrupts),
-      body: body,
       forwardedProps: forwardedProps,
       initialResumeSnapshot: initialResumeSnapshot,
       byok: byok,
@@ -204,7 +200,7 @@ class ChatClient {
     _onSubscriptionChange = onSubscriptionChange ?? opts.onSubscriptionChange;
     _onConnectionStatusChange =
         onConnectionStatusChange ?? opts.onConnectionStatusChange;
-    _threadId = threadId ?? opts.threadId ?? persistenceSettings?.threadId;
+    _threadId = threadId ?? opts.threadId;
     final persistenceConfig =
         persistence ?? persistenceSettings?.persistence ?? opts.persistence;
     _queueConfig = queue ?? opts.queue ?? const ChatQueueConfig();
@@ -331,7 +327,7 @@ class ChatClient {
   void _restoreStoredResume(storage.ChatResumeSnapshot snapshot) {
     if (_disposed) return;
     _resumeState = snapshot.resumeState;
-    _threadId = snapshot.resumeState.threadId;
+    _threadId ??= snapshot.resumeState.threadId;
     _runId = snapshot.resumeState.runId;
     if (snapshot.pendingInterrupts.isNotEmpty) {
       _interruptManager.hydrate(
@@ -479,7 +475,7 @@ class ChatClient {
   bool _disposed = false;
   bool _detached = false;
   Future<void>? _hydrateFuture;
-  ChatHydrationResult? _desiredHydration;
+  LegacyChatHydrationResult? _desiredHydration;
   bool _pendingToolContinuation = false;
   bool _resumeWasResume = false;
   List<Map<String, dynamic>>? _pendingResumeItems;
@@ -537,8 +533,8 @@ class ChatClient {
 
   List<ChatInterrupt> getInterrupts() => _interruptManager.getInterrupts();
 
-  List<ChatInterrupt> getPendingInterrupts() =>
-      _interruptManager.getState().pendingInterrupts;
+  List<ChatInterrupt> getLegacyPendingInterrupts() =>
+      _interruptManager.getState().interrupts;
 
   ChatInterruptState getInterruptState() => _interruptManager.getState();
 
@@ -746,7 +742,7 @@ class ChatClient {
   }
 
   void _applyHydration(
-    ChatHydrationResult result, {
+    LegacyChatHydrationResult result, {
     required String source,
   }) {
     _error = null;
@@ -761,7 +757,6 @@ class ChatClient {
     final interrupts = result.interrupts;
     if (run != null) {
       _resumeState = run;
-      _threadId = run.threadId;
       _runId = run.runId;
       _activeRunIds.add(run.runId);
     }
@@ -856,7 +851,7 @@ class ChatClient {
     if (_interruptManager.hasPending) {
       throw StateError(
         'ChatClient: cannot append normal input while pending interrupts '
-        'exist. Use resumeInterrupts() instead.',
+        'exist. Resolve the interrupts first.',
       );
     }
     if (message.role == 'system') return;
@@ -1056,7 +1051,7 @@ class ChatClient {
     if (_interruptManager.hasPending) {
       throw StateError(
         'ChatClient: cannot send normal input while pending interrupts exist. '
-        'Use resumeInterrupts() instead.',
+        'Resolve the interrupts first.',
       );
     }
     final resolvedBody = <String, dynamic>{
@@ -1193,6 +1188,10 @@ class ChatClient {
 
   /// Marks [part]'s approval and streams the continuation.
   Future<void> approve(AssistantPart part, bool approved) async {
+    if (_interruptManager.getInterrupts().any(
+        (item) => item.id == part.approval?.id && item.kind == 'unbound')) {
+      return;
+    }
     final owned = _messages.expand((turn) => turn.parts).where(
           (candidate) => candidate.id == part.id && candidate.type == part.type,
         );
@@ -1205,11 +1204,6 @@ class ChatClient {
     }
     approval.approved = approved;
     part.state = 'approval-responded';
-    _devtools.bridge.events.toolApprovalResponded(
-      approval.id,
-      part.id,
-      approved,
-    );
     _notify();
 
     // Native interrupt path: resolve the descriptor and resume when complete.
@@ -1224,7 +1218,7 @@ class ChatClient {
   }
 
   /// Responds by approval id (upstream `addToolApprovalResponse`).
-  Future<void> addToolApprovalResponse({
+  Future<void> addLegacyToolApprovalResponse({
     required String id,
     required bool approved,
   }) async {
@@ -1352,7 +1346,6 @@ class ChatClient {
     _desiredHydration = null;
     _resumeState = null;
     _runId = null;
-    _threadId = _threadId; // cleared state keeps the configured thread id
     _interruptManager.reset();
     _subagentHandles.clear();
     _stoppedSubagentIds.clear();
@@ -1402,7 +1395,7 @@ class ChatClient {
     }
     if (_processor != null) _syncProcessorMessages();
     try {
-      if (isLoading) {
+      if (isStreaming) {
         _pendingResumeItems = submission.resolutions;
         final completion = _pendingResumeCompletion = Completer<void>();
         await completion.future;
@@ -1445,7 +1438,7 @@ class ChatClient {
   void retryInterrupts() => _interruptManager.retry();
 
   /// Sends AG-UI resume entries with the interrupted run context.
-  Future<void> resumeInterrupts(List<Map<String, dynamic>> items) async {
+  Future<void> resumeInterruptsLegacy(List<Map<String, dynamic>> items) async {
     _pendingResumeItems = null;
     final state = _resumeState;
     if (state == null) {
@@ -1470,7 +1463,6 @@ class ChatClient {
   }) async {
     _pendingResumeItems = null;
     _resumeState = ChatResumeState(threadId: threadId, runId: runId);
-    _threadId = threadId;
     _runId = runId;
     _resumeWasResume = true;
     final assistant = AssistantTurn.assistant(createdAt: DateTime.now());
@@ -1946,9 +1938,6 @@ class ChatClient {
     if (type == 'CUSTOM') {
       final name = _str(event['name']);
       if (!const <String>{
-        'approval-requested',
-        'tool-approval-requested',
-        'tool-input-available',
         'structured-output.start',
         'structured-output.delta',
         'structured-output.chunk',
@@ -2006,7 +1995,11 @@ class ChatClient {
         if (!interrupted && effectiveRun != null) {
           _interruptManager.trackRunSettled(effectiveRun);
         }
-        if (_resumeState != null &&
+        if (_resumeWasResume && effectiveRun == _runId) {
+          _resumeState = null;
+          _resumeWasResume = false;
+          _interruptManager.reset();
+        } else if (_resumeState != null &&
             _interruptManager.isRunAnswered(_resumeState!.runId)) {
           _resumeState = null;
           _resumeWasResume = false;
@@ -2036,6 +2029,11 @@ class ChatClient {
       }
       if (runId.isEmpty) {
         _activeRunIds.clear();
+        if (_activeInterruptSubmission == null) {
+          _resumeState = null;
+          _resumeWasResume = false;
+          _interruptManager.reset();
+        }
       } else {
         _activeRunIds.remove(runId);
         _clearedTracker.onRunSettled(runId);
@@ -2044,12 +2042,14 @@ class ChatClient {
 
     _syncSubagents();
     _emitDevtoolsChunk(event, _currentTurn(fallback));
+    final outcome = event['outcome'];
+    final pendingIds = outcome is Map && outcome['pendingToolCallIds'] is List
+        ? (outcome['pendingToolCallIds'] as List).whereType<String>().toSet()
+        : <String>{};
     _maybeExecuteTools(
       _currentTurn(fallback),
-      canRun: type == 'TOOL_CALL_END' ||
-          type == 'TOOL_CALL_RESULT' ||
-          type == 'RUN_FINISHED' ||
-          type == 'CUSTOM',
+      canRun: type == 'RUN_FINISHED' && !_isIntermediateToolTurn(event),
+      allowedToolCallIds: pendingIds.isEmpty ? null : pendingIds,
     );
     _options.onChunk?.call(event);
     _notify();
@@ -2224,9 +2224,6 @@ class ChatClient {
     if (type == 'CUSTOM') {
       final name = _str(event['name']);
       if (!const <String>{
-        'approval-requested',
-        'tool-approval-requested',
-        'tool-input-available',
         'structured-output.start',
         'structured-output.delta',
         'structured-output.chunk',
@@ -2381,27 +2378,6 @@ class ChatClient {
     final value = event['value'] is Map
         ? Map<String, dynamic>.from(event['value'] as Map)
         : const <String, dynamic>{};
-    if (name == 'approval-requested' || name == 'tool-approval-requested') {
-      final toolCallId = _str(value['toolCallId']);
-      final part = _findDevtoolsPart(turn, toolCallId);
-      final approval = value['approval'] is Map
-          ? Map<String, dynamic>.from(value['approval'] as Map)
-          : const <String, dynamic>{};
-      final approvalId = _str(approval['id']);
-      if (streamId != null && toolCallId.isNotEmpty && approvalId.isNotEmpty) {
-        events.approvalRequested(
-          streamId,
-          messageId,
-          toolCallId,
-          _str(value['toolName']).isEmpty
-              ? (part?.name ?? 'unknown')
-              : _str(value['toolName']),
-          value['input'] ?? part?.input,
-          approvalId,
-        );
-      }
-      return;
-    }
     if (name.startsWith('structured-output.')) {
       if (_processor != null) return;
       final phase = name.substring('structured-output.'.length);
@@ -2527,12 +2503,19 @@ class ChatClient {
   bool get _hasExecutingTools =>
       _executingTools.values.any((generation) => generation == _generation);
 
-  void _maybeExecuteTools(AssistantTurn turn, {required bool canRun}) {
+  void _maybeExecuteTools(
+    AssistantTurn turn, {
+    required bool canRun,
+    Set<String>? allowedToolCallIds,
+  }) {
     if (!canRun) return;
     final tools = _options.tools;
     if (tools == null || tools.isEmpty) return;
     for (final part in turn.parts) {
       if (part.type != 'tool-call') continue;
+      if (allowedToolCallIds != null && !allowedToolCallIds.contains(part.id)) {
+        continue;
+      }
       if (part.hasOutput || part.output != null) continue;
       if (part.state == 'error' ||
           part.state == 'approval-requested' ||
@@ -2541,6 +2524,7 @@ class ChatClient {
       }
       if (part.input == null && part.arguments.trim().isEmpty) continue;
       if (part.approval != null) continue;
+      if (!_interruptManager.mayExecuteClientTool(part.id)) continue;
       if (_startedTools.contains(part.id)) {
         if (_executingTools[part.id] == _generation && !part.hasOutput) {
           part.state = 'executing';
@@ -2578,8 +2562,12 @@ class ChatClient {
             validatedInput.issues.map((issue) => issue.message).join('; '));
       }
       if (stale()) return;
-      final toolContext =
-          ToolCallContext(abortSignal: signal, context: context);
+      final toolContext = ToolCallContext(
+        abortSignal: signal,
+        context: context,
+        threadId: _threadId,
+        toolCallId: part.id,
+      );
       var output = await Future.sync(
           () => tool.invoke(validatedInput.data, toolContext));
       final validatedOutput = tool.outputSchema == null
@@ -2610,11 +2598,7 @@ class ChatClient {
 
       _processor?.addToolResult(part.id, output);
       if (_processor != null) _syncProcessorMessages();
-      if (_interruptManager.resolveClientToolOutput(part.id, output)) {
-        if (_interruptManager.isComplete) {
-          _pendingToolContinuation = true;
-        }
-      } else {
+      if (!_interruptManager.resolveClientToolOutput(part.id, output)) {
         _pendingToolContinuation = true;
       }
     } catch (e) {
@@ -3062,6 +3046,7 @@ class ChatClient {
       isSubscribed: _subscribed,
       connectionStatus: ChatConnectionState.values.byName(_connectionStatus),
       runId: _runId,
+      resumeState: _resumeState,
       interruptState: _interruptManager.getState(),
       status: state,
       isLoading: isLoading,
@@ -3179,8 +3164,9 @@ class ChatClient {
   }
 
   set context(Object? value) => updateLegacyOptions(context: value);
-  set body(Map<String, dynamic>? value) => updateLegacyOptions(body: value);
-  Map<String, dynamic>? get body => _bodyOption == null
+  set legacyBody(Map<String, dynamic>? value) =>
+      updateLegacyOptions(body: value);
+  Map<String, dynamic>? get legacyBody => _bodyOption == null
       ? null
       : Map<String, dynamic>.unmodifiable(_bodyOption!);
   set forwardedProps(Map<String, dynamic>? value) =>

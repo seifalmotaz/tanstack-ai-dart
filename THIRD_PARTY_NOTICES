@@ -3,8 +3,8 @@ by, or published by TanStack.
 
 Portions of this package and its tests are adapted from TanStack AI.
 Upstream: https://github.com/TanStack/ai
-Release: @tanstack/ai-client 0.40.0
-Commit: 7095ebbf1b59175f0cd339c1c477d6af55b312de
+Release: @tanstack/ai-client 1.0.1 and @tanstack/ai 1.0.1
+Commit: a7eb58459ebd528bbcc4166cc68377b777989462
 
 MIT License
 

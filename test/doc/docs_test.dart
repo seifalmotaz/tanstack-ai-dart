@@ -53,6 +53,7 @@ void main() {
       'CHANGELOG.md',
       'NEXT_STEPS.md',
       'validation/parity-summary.json',
+      'validation/upstream-1.0.1-review.md',
       '.github/PULL_REQUEST_TEMPLATE.md',
       'test/interop/public_export_inventory_test.dart',
     ];

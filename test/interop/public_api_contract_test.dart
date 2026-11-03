@@ -10,8 +10,8 @@ void main() {
     final tool = ClientTool<int, String>(
         name: 'lookup', execute: (input, context) => '$input');
     final adapter = ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
-      yield {'type': 'RUN_FINISHED', 'runId': runContext!.runId};
+        connect: (messages, {data, signal, required runContext}) async* {
+      yield {'type': 'RUN_FINISHED', 'runId': runContext.runId};
     });
     final chat = ChatClient.legacy(
         connection: adapter,

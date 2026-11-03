@@ -18,7 +18,7 @@ class PushConnection {
   late final conn.ConnectionAdapter adapter =
       conn.ConnectionAdapter.subscription(
     subscribe: ({signal}) => controller.stream,
-    send: (messages, {data, signal, runContext}) async {
+    send: (messages, {data, signal, required runContext}) async {
       sent.add(messages);
     },
   );

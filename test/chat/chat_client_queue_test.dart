@@ -1,8 +1,42 @@
 // Upstream reference: packages/ai-client/tests/chat-client-queue.test.ts
+import 'dart:async';
+
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'package:test/test.dart';
 
 import 'support.dart';
+
+class _ModernQueueConnection extends FakeChatTransport {
+  final contexts = <conn.RunAgentInputContext>[];
+  late final adapter = conn.ConnectionAdapter.connect(
+    connect: (messages, {data, signal, required runContext}) {
+      contexts.add(runContext);
+      final result = stream({'messages': messages, 'forwardedProps': data});
+      final controller = controllers.last;
+      signal?.whenCancelled.then((_) {
+        if (!controller.isClosed) unawaited(controller.close());
+      });
+      return result;
+    },
+  );
+
+  @override
+  void emit(Map<String, dynamic> event) {
+    final type = event['type'];
+    if ((type == 'RUN_STARTED' ||
+            type == 'RUN_FINISHED' ||
+            type == 'RUN_ERROR') &&
+        contexts.isNotEmpty) {
+      event = {
+        ...event,
+        'runId': contexts.last.runId,
+        'threadId': contexts.last.threadId
+      };
+    }
+    super.emit(event);
+  }
+}
 
 void main() {
   group('normalizeQueueOption', () {
@@ -57,13 +91,15 @@ void main() {
     test(
         'enqueues (not drops) a send while streaming and reports via onQueueChange',
         () async {
-      final transport = FakeChatTransport();
+      final transport = _ModernQueueConnection();
       final reports = <List<QueuedMessage>>[];
       final client = ChatClient.legacy(
-        transport: transport,
+        connection: transport.adapter,
+        threadId: 'thread-1',
         onQueueChange: reports.add,
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       expect(client.getQueue().single.content, 'second');
       expect(reports, isNotEmpty);
@@ -72,9 +108,11 @@ void main() {
     });
 
     test('cancelQueued removes a queued item before it drains', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       final id = client.getQueue().single.id;
       client.cancelQueued(id);
@@ -86,12 +124,14 @@ void main() {
     });
 
     test("whenBusy: 'drop' ignores a mid-stream send", () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.drop),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       expect(client.getQueue(), isEmpty);
       await emitAll(transport, textChunks('done'));
@@ -103,9 +143,11 @@ void main() {
 
   group('ChatClient queue drain', () {
     test('drains FIFO after the stream settles, in order', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.sendText('third');
       await emitAll(transport, textChunks('one'));
@@ -126,12 +168,14 @@ void main() {
     });
 
     test('batch drain merges string queued items with newlines', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('a');
       await client.sendText('b');
       await emitAll(transport, textChunks('one'));
@@ -143,26 +187,21 @@ void main() {
     });
 
     test('batch drain flattens multimodal queued items', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
-      await client.sendText('first');
-      await client.sendLegacyMessage(
-        const ChatMessageInput.legacy(
-          content: <Map<String, dynamic>>[
-            <String, dynamic>{'type': 'text', 'content': 'look'},
-            <String, dynamic>{
-              'type': 'image',
-              'source': <String, dynamic>{
-                'type': 'url',
-                'value': 'https://example.com/a.png',
-              },
-            },
-          ],
-        ),
-      );
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
+      await client.sendMessage(ChatMessageInput.parts([
+        AssistantPart.text('look'),
+        AssistantPart.fromJson({
+          'type': 'image',
+          'source': {'type': 'url', 'value': 'https://example.com/a.png'},
+        }),
+      ]));
       await client.sendText('tail');
       await emitAll(transport, textChunks('one'));
       await transport.close();
@@ -178,18 +217,22 @@ void main() {
     });
 
     test('flushes the queue on stop()', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.stop();
       expect(client.getQueue(), isEmpty);
     });
 
     test('flushes the queue when the stream errors', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       transport.emit(<String, dynamic>{
         'type': 'RUN_ERROR',
@@ -201,28 +244,36 @@ void main() {
     });
 
     test('flushes the queue on clear()', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.clear();
       expect(client.getQueue(), isEmpty);
     });
 
     test('flushes the queue on reload()', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
-      await client.reload();
+      final reload = client.reload();
+      await waitFor(() => transport.bodies.length == 2);
       expect(client.getQueue(), isEmpty);
       await client.stop();
+      await reload;
     });
 
     test('flushes the queue on unsubscribe()', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.unsubscribe();
       expect(client.getQueue(), isEmpty);
@@ -233,13 +284,16 @@ void main() {
     test(
         "whenBusy: 'interrupt' aborts the in-flight stream and sends immediately",
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.interrupt),
       );
-      await client.sendText('first');
-      await client.sendText('second');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
+      final second = client.sendText('second');
+      await waitFor(() => transport.bodies.length == 2);
       expect(transport.bodies, hasLength(2));
       expect(client.getQueue(), isEmpty);
       expect(
@@ -249,15 +303,18 @@ void main() {
         2,
       );
       await client.stop();
+      await second;
     });
 
     test('per-call whenBusy override beats the client default', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(whenBusy: QueueWhenBusy.drop),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText(
         'second',
         options: const ChatSendOptions(whenBusy: QueueWhenBusy.queue),
@@ -267,12 +324,14 @@ void main() {
     });
 
     test("maxSize + onOverflow: 'reject' drops the newest when full", () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(maxSize: 1),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.sendText('third');
       expect(client.getQueue().single.content, 'second');
@@ -280,15 +339,17 @@ void main() {
     });
 
     test("maxSize + onOverflow: 'drop-oldest' rotates the queue", () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(
           maxSize: 1,
           onOverflow: QueueOverflow.dropOldest,
         ),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.sendText('third');
       expect(client.getQueue().single.content, 'third');
@@ -296,15 +357,17 @@ void main() {
     });
 
     test('maxSize: 0 never enqueues under drop-oldest', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(
           maxSize: 0,
           onOverflow: QueueOverflow.dropOldest,
         ),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       expect(client.getQueue(), isEmpty);
       await client.stop();
@@ -312,9 +375,10 @@ void main() {
 
     test('QueueStrategy pending.id matches the enqueued item id', () async {
       final seen = <String>[];
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: ChatQueueConfig(
           strategy: (input) {
             seen.add(input.pending.id);
@@ -322,7 +386,8 @@ void main() {
           },
         ),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       expect(seen, hasLength(1));
       expect(client.getQueue().single.id, seen.single);
@@ -330,14 +395,16 @@ void main() {
     });
 
     test('QueueStrategy drop and per-call whenBusy override', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: ChatQueueConfig(
           strategy: (_) => QueueWhenBusy.drop,
         ),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       expect(client.getQueue(), isEmpty);
       await client.sendText(
@@ -349,11 +416,13 @@ void main() {
     });
 
     test('preserves per-message body through FIFO drain', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
-      await client.sendLegacyMessage(
-        'second',
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
+      await client.sendMessage(
+        const ChatMessageInput.text('second'),
         body: <String, dynamic>{'model': 'gpt-5.5'},
       );
       await emitAll(transport, textChunks('one'));
@@ -365,9 +434,11 @@ void main() {
     });
 
     test('preserves sendOptions.body for queued sends', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText(
         'second',
         options: const ChatSendOptions(
@@ -383,9 +454,11 @@ void main() {
     });
 
     test('error during FIFO drain flushes remaining queued items', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.sendText('third');
       await emitAll(transport, textChunks('one'));
@@ -402,13 +475,15 @@ void main() {
 
     test('concurrent rapid sends do not strand user messages without streams',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await Future.wait(<Future<void>>[
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      final sends = Future.wait(<Future<void>>[
         client.sendText('a'),
         client.sendText('b'),
         client.sendText('c'),
       ]);
+      await waitFor(() => transport.bodies.isNotEmpty);
       await emitAll(transport, textChunks('one'));
       await transport.close();
       await waitFor(() => transport.bodies.length >= 2);
@@ -417,6 +492,7 @@ void main() {
       await waitFor(() => transport.bodies.length >= 3);
       await emitAll(transport, textChunks('three', runId: 'run-3'));
       await transport.closeAt(2);
+      await sends;
       await pump(8);
       final users = client
           .getMessages()
@@ -430,12 +506,14 @@ void main() {
     test(
         'batch drain does not strand messages enqueued during the batch stream',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
-      await client.sendText('first');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('q1');
       await emitAll(transport, textChunks('one'));
       await transport.close();
@@ -460,46 +538,55 @@ void main() {
     test(
         'interrupt during FIFO drain keeps remaining items for after the interrupt',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('first');
+      final transport = _ModernQueueConnection();
+      final client =
+          ChatClient(connection: transport.adapter, threadId: 'thread-1');
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
       await client.sendText('second');
       await client.sendText('third');
       await emitAll(transport, textChunks('one'));
       await transport.close();
       await waitFor(() => transport.bodies.length == 2);
-      await client.sendText(
+      final interrupted = client.sendText(
         'interrupt',
         options: const ChatSendOptions(whenBusy: QueueWhenBusy.interrupt),
       );
+      await waitFor(() => transport.bodies.length == 3);
       expect(client.getQueue(), isNotEmpty);
       await emitAll(transport, textChunks('interrupted', runId: 'run-2'));
-      await transport.closeAt(1);
-      await pump(8);
+      await transport.closeAt(2);
+      await interrupted;
+      await waitFor(() => transport.bodies.length == 4);
+      await emitAll(transport, textChunks('third', runId: 'run-4'));
+      await transport.closeAt(3);
+      await waitFor(() => client.getQueue().isEmpty && !client.isLoading);
       expect(
         client
             .getMessages()
             .where((m) => m.role == 'user')
             .map((m) => m.answer),
-        contains('interrupt'),
+        ['first', 'second', 'interrupt', 'third'],
       );
       await client.stop();
     });
 
     test('preserves per-message body through FIFO drain and batch last-wins',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
+      final transport = _ModernQueueConnection();
+      final client = ChatClient(
+        connection: transport.adapter,
+        threadId: 'thread-1',
         queue: const ChatQueueConfig(drain: QueueDrainMode.batch),
       );
-      await client.sendText('first');
-      await client.sendLegacyMessage(
-        'a',
+      unawaited(client.sendText('first'));
+      await waitFor(() => transport.bodies.isNotEmpty && client.isLoading);
+      await client.sendMessage(
+        const ChatMessageInput.text('a'),
         body: <String, dynamic>{'temperature': 0.1, 'keep': true},
       );
-      await client.sendLegacyMessage(
-        'b',
+      await client.sendMessage(
+        const ChatMessageInput.text('b'),
         body: <String, dynamic>{'temperature': 0.9},
       );
       await emitAll(transport, textChunks('one'));

@@ -9,7 +9,7 @@ import 'types.dart';
 export 'types.dart';
 
 /// State machine that turns an AG-UI / TanStack AI chunk stream into UI
-/// messages. Port of `StreamProcessor` from `@tanstack/ai` 0.70.0.
+/// messages. Port of `StreamProcessor` from `@tanstack/ai`.
 class StreamProcessor {
   final ChunkStrategy chunkStrategy;
   final StreamProcessorEvents events;
@@ -22,8 +22,6 @@ class StreamProcessor {
   final Set<String> _activeMessageIds = <String>{};
   final Map<String, String> _toolCallToMessage = <String, String>{};
   String? _pendingManualMessageId;
-  bool _legacyManualMessage = false;
-  String? _pendingThinkingStepId;
   _OpenChunk? _openChunk;
 
   final Set<String> _structuredMessageIds = <String>{};
@@ -132,14 +130,6 @@ class StreamProcessor {
   }
 
   void prepareAssistantMessage() => _resetStreamState();
-
-  String startAssistantMessage([String? messageId]) {
-    prepareAssistantMessage();
-    final result = _ensureAssistantMessage(messageId);
-    _pendingManualMessageId = result.messageId;
-    _legacyManualMessage = true;
-    return result.messageId;
-  }
 
   String? getCurrentAssistantMessageId() {
     String? lastId;
@@ -268,7 +258,6 @@ class StreamProcessor {
     if (_pendingManualMessageId != null &&
         !keptIds.contains(_pendingManualMessageId)) {
       _pendingManualMessageId = null;
-      _legacyManualMessage = false;
     }
     for (final ids in _callMessageIds.values) {
       ids.removeWhere((id) => !keptIds.contains(id));
@@ -294,7 +283,6 @@ class StreamProcessor {
     _structuredMessageIds.clear();
     _structuredOutputUpdateBatches.clear();
     _pendingManualMessageId = null;
-    _legacyManualMessage = false;
     _sealedMessageIds.clear();
     _thinkingOwners.clear();
     _openChunk = null;
@@ -375,12 +363,6 @@ class StreamProcessor {
       case 'RUN_ERROR':
         _handleRunError(chunk);
         break;
-      case 'STEP_STARTED':
-        _handleStepStarted(chunk);
-        break;
-      case 'STEP_FINISHED':
-        _handleStepFinished(chunk);
-        break;
       case 'MESSAGES_SNAPSHOT':
         _handleMessagesSnapshot(chunk);
         break;
@@ -388,8 +370,10 @@ class StreamProcessor {
         _handleCustomEvent(chunk);
         break;
       case 'REASONING_MESSAGE_START':
+        final target = _unscopedAssistant(chunk);
+        final current = target.id == null ? null : _getMessageState(target.id!);
+        if (current != null) current.currentThinkingStepId = null;
         if (chunk['metadata'] != null) {
-          final target = _unscopedAssistant(chunk);
           final result = _ensureAssistantMessage(
             target.id,
             fallbackToActive: !target.create,
@@ -619,17 +603,6 @@ class StreamProcessor {
   MessageStreamState? _getMessageState(String messageId) =>
       _messageStates[messageId];
 
-  void _consumePendingThinkingStep(MessageStreamState state) {
-    final stepId = _pendingThinkingStepId;
-    if (stepId == null) return;
-    state.currentThinkingStepId = stepId;
-    if (!state.thinkingSteps.containsKey(stepId)) {
-      state.thinkingSteps[stepId] = '';
-      state.thinkingStepOrder.add(stepId);
-    }
-    _pendingThinkingStepId = null;
-  }
-
   String? _getActiveAssistantMessageId() {
     bool belongsToCurrentCall(String id) {
       return _activeRuns.isEmpty ||
@@ -745,7 +718,6 @@ class StreamProcessor {
       final pendingId = _pendingManualMessageId;
       if (pendingId != null &&
           pendingId != targetId &&
-          !_legacyManualMessage &&
           _messageStates[pendingId]?.isComplete == false &&
           !_messages.any((message) => message['id'] == targetId)) {
         _renameMessage(pendingId, targetId);
@@ -1175,7 +1147,6 @@ class StreamProcessor {
         pendingRun != null && targetRun != null && pendingRun != targetRun;
     if (pendingId != null && !separateRuns) {
       _pendingManualMessageId = null;
-      _legacyManualMessage = false;
       if (pendingId != messageId) _renameMessage(pendingId, messageId);
       var pendingState = _messageStates[messageId];
       if (pendingState == null) {
@@ -1688,10 +1659,7 @@ class StreamProcessor {
       _warn("TEXT_MESSAGE_CONTENT: Dropped text for '$messageId'");
       return;
     }
-    final preferredId = _legacyManualMessage && _pendingManualMessageId != null
-        ? _pendingManualMessageId
-        : messageId;
-    final result = _ensureAssistantMessage(preferredId);
+    final result = _ensureAssistantMessage(messageId);
     final id = result.messageId;
     final state = result.state;
     _mergeMessageMetadata(id, chunk['metadata']);
@@ -1944,7 +1912,6 @@ class StreamProcessor {
     if (_pendingManualMessageId != null &&
         ids.contains(_pendingManualMessageId)) {
       _pendingManualMessageId = null;
-      _legacyManualMessage = false;
     }
     _callMessageIds.remove(runId);
     for (final id in ids) {
@@ -2062,7 +2029,7 @@ class StreamProcessor {
           ? metadata['input']
           : <String, dynamic>{};
 
-      if (kind == 'approval' || interrupt['reason'] == 'approval_required') {
+      if (kind == 'approval') {
         if (owner != null) {
           if (emit) {
             events.onApprovalRequest?.call(<String, dynamic>{
@@ -2096,7 +2063,7 @@ class StreamProcessor {
         continue;
       }
 
-      if (kind == 'client_tool' || interrupt['reason'] == 'client_tool_input') {
+      if (kind == 'client_tool') {
         if (hasGeneric || !emit) continue;
         _toolCallsSentToClient.add(toolCallId);
         events.onToolCall?.call(<String, dynamic>{
@@ -2165,7 +2132,6 @@ class StreamProcessor {
     if (_pendingManualMessageId != null &&
         ids.contains(_pendingManualMessageId)) {
       _pendingManualMessageId = null;
-      _legacyManualMessage = false;
     }
     if (runId != null) _callMessageIds.remove(runId);
     for (final id in ids) {
@@ -2192,59 +2158,6 @@ class StreamProcessor {
     events.onError?.call(error);
   }
 
-  void _handleStepStarted(Map<String, dynamic> chunk) {
-    final stepId = _string(chunk['stepName'], generateMessageId());
-    final target = _unscopedAssistant(chunk);
-    final activeId = target.create ? null : target.id;
-    if (activeId != null) {
-      final state = _getMessageState(activeId);
-      if (state != null) {
-        state.currentThinkingStepId = stepId;
-        if (!state.thinkingSteps.containsKey(stepId)) {
-          state.thinkingSteps[stepId] = '';
-          state.thinkingStepOrder.add(stepId);
-        }
-        _rememberThinking(activeId, stepId);
-        _pendingThinkingStepId = null;
-        return;
-      }
-    }
-    _pendingThinkingStepId = stepId;
-  }
-
-  void _handleStepFinished(Map<String, dynamic> chunk) {
-    final metadataSignature = tanstackMetadata(chunk)?['signature'];
-    final signature = chunk['signature'] is String
-        ? chunk['signature'] as String
-        : metadataSignature is String
-            ? metadataSignature
-            : null;
-    if (signature == null) return;
-
-    final namedStep = (chunk['stepId'] ?? chunk['stepName']) as String?;
-    if (_applyKnownSignature(namedStep, signature)) return;
-
-    final target = _unscopedAssistant(chunk);
-    final result = _ensureAssistantMessage(
-      target.id,
-      fallbackToActive: !target.create,
-    );
-    final stepId = result.state.currentThinkingStepId ?? namedStep;
-    if (stepId == null) return;
-    _rememberThinking(result.messageId, stepId);
-    final thinking = result.state.thinkingSteps[stepId];
-    if (thinking == null) return;
-    result.state.thinkingStepSignatures[stepId] = signature;
-    _messages = _updateThinkingPart(
-      _messages,
-      result.messageId,
-      stepId,
-      thinking,
-      signature,
-    );
-    _emitMessagesChange();
-  }
-
   void _handleReasoningContent(Map<String, dynamic> chunk) {
     final target = _unscopedAssistant(chunk);
     final result = _ensureAssistantMessage(
@@ -2255,9 +2168,7 @@ class StreamProcessor {
     final state = result.state;
     _mergeMessageMetadata(messageId, chunk['metadata']);
 
-    state.hasSeenReasoningEvents = true;
     final delta = _string(chunk['delta']);
-    _consumePendingThinkingStep(state);
     final stepId = state.currentThinkingStepId ?? chunk['messageId'] as String;
     if (!state.thinkingSteps.containsKey(stepId)) {
       state.thinkingSteps[stepId] = '';
@@ -2406,40 +2317,6 @@ class StreamProcessor {
       _structuredMessageIds.remove(result.messageId);
       _emitStructuredOutputChange(result.messageId, 'complete');
       _emitMessagesChange();
-    }
-
-    if (name == 'tool-input-available' && value is Map) {
-      final toolCallId = value['toolCallId'] as String;
-      _toolCallsSentToClient.add(toolCallId);
-      events.onToolCall?.call(<String, dynamic>{
-        'toolCallId': toolCallId,
-        'toolName': value['toolName'],
-        'input': value['input'],
-      });
-      return;
-    }
-
-    if (name == 'approval-requested' && value is Map) {
-      final toolCallId = value['toolCallId'] as String;
-      final approval = (value['approval'] as Map).cast<String, dynamic>();
-      final resolvedMessageId =
-          activeMessageId ?? _toolCallToMessage[toolCallId];
-      if (resolvedMessageId != null) {
-        _messages = _updateToolCallApproval(
-          _messages,
-          resolvedMessageId,
-          toolCallId,
-          approval['id'] as String,
-        );
-        _emitMessagesChange();
-      }
-      events.onApprovalRequest?.call(<String, dynamic>{
-        'toolCallId': toolCallId,
-        'toolName': value['toolName'],
-        'input': value['input'],
-        'approvalId': approval['id'],
-      });
-      return;
     }
 
     if (name == 'ui-resource' && value is Map) {
@@ -2888,8 +2765,6 @@ class StreamProcessor {
     _structuredMessageIds.clear();
     _structuredOutputUpdateBatches.clear();
     _pendingManualMessageId = null;
-    _legacyManualMessage = false;
-    _pendingThinkingStepId = null;
     _sealedMessageIds.clear();
     _thinkingOwners.clear();
     _openChunk = null;

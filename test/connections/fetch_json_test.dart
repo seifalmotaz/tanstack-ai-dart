@@ -137,9 +137,18 @@ void main() {
     });
 
     test('restores usage and extras on each chunk, in order', () async {
+      final terminal = wireFinishedChunk();
+      terminal['metadata'] = {
+        'tanstack': {
+          'finishReason': 'stop',
+          'usage': {
+            'promptTokensDetails': {'cacheWrite1hTokens': 2}
+          }
+        }
+      };
       final client = sequence([
         jsonResponse({
-          'chunks': [contentChunk('Hello'), wireFinishedChunk()],
+          'chunks': [contentChunk('Hello'), terminal],
           'done': true,
         }),
       ]);
@@ -156,6 +165,7 @@ void main() {
         'promptTokens': 3,
         'completionTokens': 5,
         'totalTokens': 8,
+        'promptTokensDetails': {'cacheWrite1hTokens': 2},
       });
     });
 
@@ -192,6 +202,28 @@ void main() {
       ]);
       expect(requestAt(client, 1).method, 'GET');
       expect(requestAt(client, 1).headers['Accept'], 'application/json');
+    });
+
+    test('retries a transient 503 while polling a durable run', () async {
+      final client = sequence([
+        jsonResponse({
+          'chunks': [contentChunk('a')],
+          'offset': '1',
+          'done': false
+        }),
+        rawResponse('', status: 503, headers: {'retry-after': '0'}),
+        jsonResponse({
+          'chunks': [wireFinishedChunk()],
+          'done': true
+        }),
+      ]);
+      final chunks = await collect(connectWith(client));
+      expect(chunks.last['type'], 'RUN_FINISHED');
+      expect(requestedUrls(client), [
+        '/api/chat',
+        '/api/chat?runId=run-1&offset=1',
+        '/api/chat?runId=run-1&offset=1'
+      ]);
     });
 
     test('throws the HTTP status on a non-2xx reply', () async {

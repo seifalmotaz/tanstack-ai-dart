@@ -12,7 +12,7 @@ void main() {
     final client = ChatClient.legacy(
         connection: ConnectionAdapter.subscription(
             subscribe: ({signal}) => source.stream,
-            send: (messages, {data, signal, runContext}) async {
+            send: (messages, {data, signal, required runContext}) async {
               if (!sent.isCompleted) sent.complete();
             }),
         onSubscriptionChange: subscriptions.add,

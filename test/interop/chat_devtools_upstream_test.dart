@@ -10,7 +10,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:tanstack_ai_dart/chat.dart';
-import 'package:tanstack_ai_dart/connections.dart' hide ChatHydrationResult;
+import 'package:tanstack_ai_dart/connections.dart';
 import 'package:tanstack_ai_dart/src/devtools/devtools.dart';
 import 'package:tanstack_ai_dart/src/devtools/devtools_factories.dart';
 import 'package:tanstack_ai_dart/src/devtools/devtools_types.dart';
@@ -53,19 +53,6 @@ List<Map<String, dynamic>> _latestMessages() =>
         .map((map) => map.map((key, value) => MapEntry('$key', value)))
         .toList();
 
-Map<String, dynamic>? _findToolCall(String id) {
-  for (final message in _latestMessages()) {
-    final parts = message['parts'];
-    if (parts is! List) continue;
-    for (final part in parts.whereType<Map>()) {
-      if (part['type'] == 'tool-call' && part['id'] == id) {
-        return part.map((key, value) => MapEntry('$key', value));
-      }
-    }
-  }
-  return null;
-}
-
 Map<String, dynamic>? _findStructuredPart(String messageId) {
   for (final message in _latestMessages()) {
     if (message['id'] != messageId) continue;
@@ -86,8 +73,8 @@ ConnectionAdapter _adapter(
 }) {
   var calls = 0;
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
-      if (runContext != null) contexts?.add(runContext);
+    connect: (messages, {data, signal, required runContext}) async* {
+      contexts?.add(runContext);
       final chunks =
           calls < runs.length ? runs[calls] : const <Map<String, dynamic>>[];
       calls += 1;
@@ -105,8 +92,8 @@ class _ManualConnection {
   final List<RunAgentInputContext> contexts = <RunAgentInputContext>[];
 
   late final ConnectionAdapter adapter = ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) {
-      if (runContext != null) contexts.add(runContext);
+    connect: (messages, {data, signal, required runContext}) {
+      contexts.add(runContext);
       return controller.stream;
     },
   );
@@ -282,6 +269,25 @@ void main() {
       expect(registered, hasLength(1));
       expect(registered.single.payload['hookId'], 'thread-1');
       expect(registered.single.payload['lifecycle'], 'mounted');
+      await client.dispose();
+    });
+
+    test('modern chat registers thread identity and metadata', () async {
+      final client = ChatClient(
+        threadId: 'thread-1',
+        connection: _adapter(const []),
+        devtools: const AIDevtoolsClientMetadata(
+            name: 'Skills', framework: 'react', hookName: 'useChat'),
+        devtoolsBridgeFactory: (options) => ChatDevtoolsBridge(options),
+      );
+      client.mountDevtools();
+      final registered = _payload('hook:registered');
+      expect(registered['hookId'], 'thread-1');
+      expect(registered['displayName'], 'Skills');
+      expect(registered['lifecycle'], 'mounted');
+      final created = _payload('client:created');
+      expect(created['hookId'], 'thread-1');
+      expect(created['clientId'], 'thread-1');
       await client.dispose();
     });
 
@@ -898,7 +904,7 @@ void main() {
 
     test('emits snapshots for manual messages, hydration and reload', () async {
       final client = _client(
-        hydrate: (threadId, options) async => ChatHydrationResult(
+        hydrate: (threadId, options) async => LegacyChatHydrationResult(
           messages: <AssistantTurn>[
             _user('hydrated-user', 'loaded'),
             _assistantText('hydrated-assistant', 'loaded'),
@@ -1620,113 +1626,6 @@ void main() {
       expect(second!['status'], 'complete');
       expect(second['data'], secondObject);
       expect(_emitted('structured-output:completed'), hasLength(2));
-    });
-
-    test('emits approval requests that arrive after run finish', () async {
-      final contexts = <RunAgentInputContext>[];
-      final client = _client(
-        connection: _adapter(<List<Map<String, dynamic>>>[
-          <Map<String, dynamic>>[
-            ..._toolChunks(
-              toolCallId: 'approval-call-1',
-              toolName: 'addToCart',
-              arguments: '{"guitarId":"6","quantity":1}',
-              messageId: 'msg-approval',
-              includeRunStarted: false,
-            ),
-            {
-              'type': 'CUSTOM',
-              'metadata': {
-                'tanstack': {'model': 'test'}
-              },
-              'name': 'approval-requested',
-              'value': {
-                'toolCallId': 'approval-call-1',
-                'toolName': 'addToCart',
-                'input': {'guitarId': '6', 'quantity': 1},
-                'approval': {
-                  'id': 'approval-approval-call-1',
-                  'needsApproval': true,
-                },
-              },
-            },
-          ]
-        ], contexts: contexts),
-      );
-      addTearDown(client.dispose);
-      _sink.clear();
-
-      await client.sendLegacyMessage('add it to cart');
-      await _waitFor(() => _emitted('tools:approval:requested').isNotEmpty);
-
-      final requested = _payload('tools:approval:requested');
-      expect(requested['hookId'], 'thread-1');
-      expect(requested['clientId'], 'thread-1');
-      expect(requested['threadId'], contexts.first.threadId);
-      expect(requested['runId'], contexts.first.runId);
-      expect(requested['streamId'], isNotEmpty);
-      expect(requested['messageId'], isNotEmpty);
-      expect(requested['toolCallId'], 'approval-call-1');
-      expect(requested['toolName'], 'addToCart');
-      expect(requested['input'], {'guitarId': '6', 'quantity': 1});
-      expect(requested['approvalId'], 'approval-approval-call-1');
-
-      await _waitFor(() {
-        final call = _findToolCall('approval-call-1');
-        return call != null &&
-            call['state'] == 'approval-requested' &&
-            (call['approval'] as Map?)?['id'] == 'approval-approval-call-1';
-      });
-    });
-
-    test('emits approval responses and snapshots the approval decision',
-        () async {
-      final contexts = <RunAgentInputContext>[];
-      final client = _client(
-        connection: _adapter(<List<Map<String, dynamic>>>[
-          _textChunks('approved', messageId: 'msg-after-approval')
-        ], contexts: contexts),
-        initialMessages: <AssistantTurn>[
-          _user('msg-user', 'Hello'),
-          AssistantTurn(
-            id: 'msg-approval',
-            role: 'assistant',
-            parts: <AssistantPart>[
-              AssistantPart.tool(
-                id: 'approval-call-1',
-                name: 'addToCart',
-                arguments: '{"guitarId":"6","quantity":1}',
-                input: {'guitarId': '6', 'quantity': 1},
-                state: 'approval-requested',
-                approval: AssistantApproval(
-                  id: 'approval-approval-call-1',
-                  needsApproval: true,
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-      addTearDown(client.dispose);
-      _sink.clear();
-
-      await client.addToolApprovalResponse(
-        id: 'approval-approval-call-1',
-        approved: true,
-      );
-
-      final responded = _payload('tools:approval:responded');
-      expect(responded['hookId'], 'thread-1');
-      expect(responded['clientId'], 'thread-1');
-      expect(responded['toolCallId'], 'approval-call-1');
-      expect(responded['approvalId'], 'approval-approval-call-1');
-      expect(responded['approved'], true);
-      await _waitFor(() {
-        final call = _findToolCall('approval-call-1');
-        return call != null &&
-            call['state'] == 'approval-responded' &&
-            (call['approval'] as Map?)?['approved'] == true;
-      });
     });
 
     test(

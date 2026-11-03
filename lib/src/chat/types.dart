@@ -234,22 +234,23 @@ class ChatInterrupt {
   final String threadId;
   final String interruptedRunId;
   final int generation;
-  dynamic originalArgs;
-  dynamic responseSchema;
-  String? expiresAt;
-  ClientTool? tool;
-  ChatInterruptDefinition? definition;
-  int validationGeneration;
-  ChatInterruptStatus status;
-  String? definitionId;
-  String? key;
-  int? batchIndex;
-  bool canResolve;
-  Map<String, dynamic>? error;
-  Map<String, dynamic>? resolution;
-  Object? Function(dynamic response, [dynamic options])? onResolveInterrupt;
-  void Function()? onCancel;
-  void Function()? onClearResolution;
+  final dynamic originalArgs;
+  final dynamic responseSchema;
+  final String? expiresAt;
+  final ClientTool? tool;
+  final ChatInterruptDefinition? definition;
+  final int validationGeneration;
+  final ChatInterruptStatus status;
+  final String? definitionId;
+  final String? key;
+  final int? batchIndex;
+  final bool canResolve;
+  final Map<String, dynamic>? legacyError;
+  final Map<String, dynamic>? resolution;
+  final Object? Function(dynamic response, [dynamic options])?
+      onResolveInterrupt;
+  final void Function()? onCancel;
+  final void Function()? onClearResolution;
 
   ChatInterrupt({
     required this.id,
@@ -272,33 +273,33 @@ class ChatInterrupt {
     this.definition,
     this.validationGeneration = 0,
     this.status = ChatInterruptStatus.pending,
-    this.canResolve = true,
+    bool canResolve = true,
     this.definitionId,
     this.key,
     this.batchIndex,
-    this.error,
+    this.legacyError,
     this.resolution,
     this.onResolveInterrupt,
     this.onCancel,
     this.onClearResolution,
-  });
+  }) : canResolve = kind != 'unbound' && canResolve;
 
   bool get resumable => canResolve && status != ChatInterruptStatus.error;
 
-  List<Map<String, dynamic>> get errors => error == null
+  List<Map<String, dynamic>> get errors => legacyError == null
       ? const <Map<String, dynamic>>[]
-      : <Map<String, dynamic>>[error!];
+      : List<Map<String, dynamic>>.unmodifiable([legacyError!]);
 
   dynamic resolveInterrupt(dynamic response, [dynamic options]) {
+    if (kind == 'unbound') return null;
     final handler = onResolveInterrupt;
     if (handler != null) return handler(response, options);
     if (!canResolve) return null;
-    resolution = <String, dynamic>{
+    return <String, dynamic>{
       'interruptId': id,
       'status': 'resolved',
       if (response != null) 'payload': response,
     };
-    return resolution;
   }
 
   dynamic resolveApproval(bool approved) => resolveInterrupt(
@@ -306,22 +307,14 @@ class ChatInterrupt {
       );
 
   dynamic cancel() {
+    if (kind == 'unbound') return null;
     final handler = onCancel;
     if (handler != null) return handler();
-    resolution = <String, dynamic>{
-      'interruptId': id,
-      'status': 'cancelled',
-    };
-    return resolution;
+    return <String, dynamic>{'interruptId': id, 'status': 'cancelled'};
   }
 
   void clearResolution() {
-    final handler = onClearResolution;
-    if (handler != null) {
-      handler();
-      return;
-    }
-    resolution = null;
+    onClearResolution?.call();
   }
 
   ChatInterrupt copy() => ChatInterrupt(
@@ -349,7 +342,7 @@ class ChatInterrupt {
         definitionId: definitionId,
         key: key,
         batchIndex: batchIndex,
-        error: error,
+        legacyError: legacyError,
         resolution: resolution,
         onResolveInterrupt: onResolveInterrupt,
         onCancel: onCancel,
@@ -362,33 +355,30 @@ enum ChatInterruptStatus { pending, validating, staged, submitting, error }
 /// Immutable interrupt state snapshot.
 class ChatInterruptState {
   final List<ChatInterrupt> interrupts;
-  final List<ChatInterrupt> pendingInterrupts;
   final List<Map<String, dynamic>> interruptErrors;
   final bool resuming;
 
   const ChatInterruptState({
     required this.interrupts,
-    required this.pendingInterrupts,
     required this.interruptErrors,
     required this.resuming,
   });
 
   static const empty = ChatInterruptState(
     interrupts: <ChatInterrupt>[],
-    pendingInterrupts: <ChatInterrupt>[],
     interruptErrors: <Map<String, dynamic>>[],
     resuming: false,
   );
 }
 
 /// Older-page hydration result.
-class ChatHydrationResult {
+class LegacyChatHydrationResult {
   final List<AssistantTurn> messages;
   final ChatResumeState? activeRun;
   final ChatHydrationInterrupts? interrupts;
   final ChatHydrationPage? page;
 
-  const ChatHydrationResult({
+  const LegacyChatHydrationResult({
     required this.messages,
     this.activeRun,
     this.interrupts,
@@ -436,6 +426,9 @@ class ChatSnapshot {
   final bool isSubscribed;
   final ChatConnectionState connectionStatus;
   final String? runId;
+
+  /// Durable thread/run pointer for the current interrupted run, if any.
+  final ChatResumeState? resumeState;
   final ChatInterruptState interruptState;
 
   const ChatSnapshot({
@@ -451,12 +444,13 @@ class ChatSnapshot {
     this.isSubscribed = false,
     this.connectionStatus = ChatConnectionState.disconnected,
     this.runId,
+    this.resumeState,
     this.interruptState = ChatInterruptState.empty,
   });
 }
 
 /// Hydration callback (server or storage).
-typedef ChatHydrateCallback = FutureOr<ChatHydrationResult> Function(
+typedef ChatHydrateCallback = FutureOr<LegacyChatHydrationResult> Function(
   String threadId,
   ChatHydrateOptions options,
 );
@@ -490,20 +484,16 @@ class ChatMessageInput {
   });
 }
 
-/// Typed persistence choices retain thread-id/history constraints in Dart.
+/// Typed persistence choices keep history exclusive to server persistence.
 class ChatPersistenceOptions {
-  final String? threadId;
   final Object persistence;
   final ChatHistoryConfig? history;
 
-  const ChatPersistenceOptions.ephemeral({this.threadId})
+  const ChatPersistenceOptions.ephemeral()
       : persistence = false,
         history = null;
-  const ChatPersistenceOptions.server(
-      {required String this.threadId, this.history})
-      : persistence = true;
-  const ChatPersistenceOptions.stored(
-      {required String this.threadId, required ChatClientPersistence adapter})
+  const ChatPersistenceOptions.server({this.history}) : persistence = true;
+  const ChatPersistenceOptions.stored({required ChatClientPersistence adapter})
       : persistence = adapter,
         history = null;
 }

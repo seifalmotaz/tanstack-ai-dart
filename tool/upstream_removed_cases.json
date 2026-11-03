@@ -1,0 +1,201 @@
+{
+  "baseline": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "candidate": "a7eb58459ebd528bbcc4166cc68377b777989462",
+  "description": "Cases removed or renamed in the candidate report. Their absence is not parity evidence; review successors separately.",
+  "cases": [
+    {
+      "file": "chat-client-context.test.ts",
+      "name": "ChatClient runtime context passes client-local context to client tool execution without serializing it"
+    },
+    {
+      "file": "chat-client-identity.test.ts",
+      "name": "ChatClient identity mints a thread id on first send when none is provided, and reuses it"
+    },
+    {
+      "file": "chat-client-identity.test.ts",
+      "name": "ChatClient identity throws when persistence is set without a threadId"
+    },
+    {
+      "file": "chat-client-identity.test.ts",
+      "name": "ChatClient identity throws when persistence: true is set without a threadId"
+    },
+    {
+      "file": "chat-client-interrupts.test.ts",
+      "name": "InterruptManager hydration keeps deprecated approval and client-tool reason aliases compatible"
+    },
+    {
+      "file": "chat-client-interrupts.test.ts",
+      "name": "InterruptManager transactions resolves pre-binding client-tool fallback with raw output"
+    },
+    {
+      "file": "chat-client-reasoning-rejoin.test.ts",
+      "name": "keeps activity when replay starts with 'step signature'"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume resumeInterrupts sends AG-UI resume entries with the interrupted run context"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume resumeInterrupts reconnects with the full current message history"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume addToolApprovalResponse sends a compatibility resume item"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume addToolApprovalResponse waits for all pending approval interrupts before resuming"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume restores pending interrupts from an initial resume snapshot"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume addToolResult for pending client-tool input sends a resume item"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume addToolResult waits for all pending client-tool interrupts before resuming"
+    },
+    {
+      "file": "chat-client-resume.test.ts",
+      "name": "ChatClient resume continues a legacy client tool emitted by a native resume"
+    },
+    {
+      "file": "chat-client-stop-continuation.test.ts",
+      "name": "stop() vs queued continuation does not auto-continue a legacy approval queued before stop()"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient multimodal sendMessage should merge per-message body with base body"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient multimodal sendMessage merges chat body, positional body, and sendOptions.body with sendOptions.body winning conflicts"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient multimodal sendMessage updateOptions({ forwardedProps }) leaves a previously-set body intact"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient multimodal sendMessage updateOptions({ body }) leaves a previously-set forwardedProps intact"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient multimodal sendMessage should merge body and forwardedProps with forwardedProps winning"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient custom events should NOT call onCustomEvent for system events like tool-input-available"
+    },
+    {
+      "file": "chat-client.test.ts",
+      "name": "ChatClient chained tool approvals should continue after second approval arrives during active continuation stream"
+    },
+    {
+      "file": "chat-persistence-types.test.ts",
+      "name": "ChatClient persistence requires a threadId leaves threadId optional for ephemeral chats"
+    },
+    {
+      "file": "connection-adapters-cleanup.test.ts",
+      "name": "cancels an SSE response after the DONE sentinel"
+    },
+    {
+      "file": "connection-adapters-resumable.test.ts",
+      "name": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress"
+    },
+    {
+      "file": "connection-adapters-xhr.test.ts",
+      "name": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes"
+    },
+    {
+      "file": "connection-adapters-xhr.test.ts",
+      "name": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading"
+    },
+    {
+      "file": "connection-adapters.test.ts",
+      "name": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading"
+    },
+    {
+      "file": "connection-adapters.test.ts",
+      "name": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field for backward-compat"
+    },
+    {
+      "file": "devtools.test.ts",
+      "name": "ChatClient devtools bridge registers a generated hookId when construct had no threadId"
+    },
+    {
+      "file": "devtools.test.ts",
+      "name": "ChatClient devtools bridge emits approval requests that arrive after run finish"
+    },
+    {
+      "file": "devtools.test.ts",
+      "name": "ChatClient devtools bridge emits approval responses and snapshots the approval decision"
+    },
+    {
+      "file": "events.test.ts",
+      "name": "events DefaultChatClientEventEmitter emits tools:approval:responded with user-visible envelope and run context"
+    },
+    {
+      "file": "generation-client.test.ts",
+      "name": "GenerationClient fetcher mode should pass abort signal to fetcher"
+    },
+    {
+      "file": "generation-persistence-types.test.ts",
+      "name": "GenerationClient persistence requires a threadId leaves threadId optional for ephemeral generations"
+    },
+    {
+      "file": "resume-snapshot.test.ts",
+      "name": "ChatPersistor combined record normalizes a legacy bare-array record on read"
+    },
+    {
+      "file": "sse-done-model.test.ts",
+      "name": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop"
+    },
+    {
+      "file": "video-generation-client.test.ts",
+      "name": "VideoGenerationClient fetcher mode should pass abort signal to fetcher"
+    }
+  ],
+  "coreRemovedCases": [
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should handle REASONING_MESSAGE_CONTENT without prior STEP_STARTED"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should clear pendingThinkingStepId when a later STEP_STARTED arrives with an active message"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should fire onToolCall when tool-input-available CUSTOM event arrives"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should handle approval-requested CUSTOM event"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should NOT forward system custom events (tool-input-available) to onCustomEvent"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should NOT forward system custom events (approval-requested) to onCustomEvent"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should support deprecated startAssistantMessage for backwards compatibility"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "replay should consume legacy approval-requested CUSTOM chunks after RUN_FINISHED"
+    },
+    {
+      "file": "packages/ai/tests/stream-processor.test.ts",
+      "name": "should attribute reasoning content to pending STEP_STARTED stepId"
+    }
+  ]
+}

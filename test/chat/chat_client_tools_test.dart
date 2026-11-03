@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/connections.dart';
 import 'package:test/test.dart';
 
 import 'support.dart';
@@ -37,6 +38,142 @@ List<Map<String, dynamic>> toolChunks({
 
 void main() {
   group('ChatClient runtime context', () {
+    test('executes only explicitly pending tool calls on a successful run',
+        () async {
+      final executed = <String>[];
+      final connection = ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+          yield {
+            'type': 'RUN_STARTED',
+            'threadId': runContext.threadId,
+            'runId': runContext.runId
+          };
+          for (final id in ['one', 'two']) {
+            yield {
+              'type': 'TOOL_CALL_START',
+              'toolCallId': id,
+              'toolCallName': id
+            };
+            yield {'type': 'TOOL_CALL_ARGS', 'toolCallId': id, 'delta': '{}'};
+          }
+          yield {
+            'type': 'RUN_FINISHED',
+            'threadId': runContext.threadId,
+            'runId': runContext.runId,
+            'outcome': {
+              'type': 'success',
+              'pendingToolCallIds': ['two']
+            }
+          };
+        },
+      );
+      final client =
+          ChatClient(connection: connection, threadId: 'thread-1', tools: [
+        for (final name in ['one', 'two'])
+          ClientTool<dynamic, dynamic>(
+              name: name,
+              execute: (_, __) {
+                executed.add(name);
+                return 1;
+              }),
+      ]);
+      await client.sendText('hi');
+      await pump();
+      expect(executed, ['two']);
+      await client.dispose();
+    });
+    test(
+        'unbound tool interrupt does not execute or resume, but accepts local output',
+        () async {
+      var sends = 0;
+      var executions = 0;
+      final connection = ConnectionAdapter.connect(
+        connect: (_, {data, signal, required runContext}) async* {
+          sends++;
+          yield {
+            'type': 'RUN_STARTED',
+            'threadId': runContext.threadId,
+            'runId': runContext.runId
+          };
+          yield {
+            'type': 'TOOL_CALL_START',
+            'toolCallId': 'tc1',
+            'toolCallName': 'lookup'
+          };
+          yield {'type': 'TOOL_CALL_ARGS', 'toolCallId': 'tc1', 'delta': '{}'};
+          yield {'type': 'TOOL_CALL_END', 'toolCallId': 'tc1'};
+          yield {
+            'type': 'RUN_FINISHED',
+            'threadId': runContext.threadId,
+            'runId': runContext.runId,
+            'outcome': {
+              'type': 'interrupt',
+              'interrupts': [
+                {
+                  'id': 'unbound',
+                  'toolCallId': 'tc1',
+                  'reason': 'client_tool_input',
+                  'metadata': {
+                    'kind': 'client_tool',
+                    'toolName': 'lookup',
+                    'input': <String, dynamic>{}
+                  }
+                }
+              ]
+            }
+          };
+        },
+      );
+      final client =
+          ChatClient(connection: connection, threadId: 'thread-1', tools: [
+        ClientTool<dynamic, dynamic>(
+            name: 'lookup',
+            execute: (_, __) {
+              executions++;
+              return 1;
+            }),
+      ]);
+      await client.sendText('hi');
+      expect(executions, 0);
+      expect(client.getInterrupts().single.kind, 'unbound');
+      await client.addToolResult(toolCallId: 'tc1', output: 42);
+      await pump();
+      expect(sends, 1);
+      final part = client
+          .getMessages()
+          .expand((m) => m.parts)
+          .firstWhere((p) => p.id == 'tc1');
+      expect(part.output, 42);
+      await client.dispose();
+    });
+    test('passes thread and tool call identity to typed tool execution',
+        () async {
+      final transport = FakeChatTransport();
+      ToolCallContext? seen;
+      final client = ChatClient.legacy(
+        transport: transport,
+        threadId: 'thread-1',
+        context: {'tenantId': 't1'},
+        tools: <ClientTool>[
+          ClientTool<dynamic, dynamic>(
+            name: 'lookup',
+            execute: (input, context) {
+              seen = context;
+              return {'found': true};
+            },
+          ),
+        ],
+      );
+      await client.sendText('hi');
+      await emitAll(transport, toolChunks());
+      await transport.close();
+      await waitFor(() => seen != null);
+      expect(seen!.threadId, 'thread-1');
+      expect(seen!.toolCallId, 'tc1');
+      expect(seen!.context, {'tenantId': 't1'});
+      expect(transport.bodies.first.toString(), isNot(contains('tenantId')));
+      await client.stop();
+    });
     test(
         'passes client-local context to client tool execution without serializing it',
         () async {
@@ -67,27 +204,62 @@ void main() {
 
     test('clears client-local context when updateOptions receives null',
         () async {
-      final transport = FakeChatTransport();
-      Object? seen = 'unset';
-      final client = ChatClient.legacy(
-        transport: transport,
-        context: <String, dynamic>{'tenantId': 't1'},
-        tools: <ChatClientTool>[
-          ChatClientTool(
+      final outputs = <Object?>[];
+      var calls = 0;
+      final connection = ConnectionAdapter.connect(
+          connect: (_, {data, signal, required runContext}) async* {
+        final index = calls++;
+        yield {
+          'type': 'RUN_STARTED',
+          'threadId': runContext.threadId,
+          'runId': runContext.runId
+        };
+        if (index.isEven) {
+          yield {
+            'type': 'TOOL_CALL_START',
+            'toolCallId': 'call-$index',
+            'toolCallName': 'lookup'
+          };
+          yield {
+            'type': 'TOOL_CALL_ARGS',
+            'toolCallId': 'call-$index',
+            'delta': '{}'
+          };
+        } else {
+          yield {
+            'type': 'TEXT_MESSAGE_CONTENT',
+            'messageId': 'm-$index',
+            'delta': 'done'
+          };
+        }
+        yield {
+          'type': 'RUN_FINISHED',
+          'threadId': runContext.threadId,
+          'runId': runContext.runId,
+          'outcome': {'type': 'success'}
+        };
+      });
+      final client =
+          ChatClient(connection: connection, threadId: 'thread-1', context: {
+        'tenantId': 't1'
+      }, tools: [
+        ClientTool<dynamic, dynamic>(
             name: 'lookup',
-            execute: (input, context) {
-              seen = context;
-              return null;
-            },
-          ),
-        ],
-      );
-      client.updateLegacyOptions(context: null);
-      await client.sendText('hi');
-      await emitAll(transport, toolChunks());
-      await pump(8);
-      expect(seen, isNull);
-      await client.stop();
+            execute: (_, context) {
+              outputs.add(context.context);
+              return {'ok': true};
+            })
+      ]);
+      await client.sendText('first');
+      await waitFor(() => calls >= 2);
+      client.context = null;
+      await client.sendText('second');
+      await waitFor(() => calls >= 4);
+      expect(outputs, [
+        {'tenantId': 't1'},
+        null
+      ]);
+      await client.dispose();
     });
 
     test(

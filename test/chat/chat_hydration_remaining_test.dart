@@ -16,7 +16,7 @@ void main() {
       var errors = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           hydrate: (threadId, {options}) => gate.future,
         ),
         options: const ChatClientOptions(threadId: 't1', persistence: true),
@@ -35,7 +35,7 @@ void main() {
       var errors = 0;
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           hydrate: (threadId, {options}) async =>
               const conn.ChatHydrationResult(messages: <conn.WireMessage>[]),
         ),
@@ -68,7 +68,7 @@ void main() {
       late ChatClient client;
       client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {},
+          connect: (messages, {data, signal, required runContext}) async* {},
           joinRun: (runId, {signal}) async* {
             await joinGate.future;
           },

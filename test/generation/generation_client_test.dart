@@ -61,7 +61,8 @@ ConnectionAdapter hydratingConnection(
   Map<String, dynamic> result,
 ) =>
     ConnectionAdapter.connect(
-      connect: (messages, {data, signal, runContext}) => const Stream.empty(),
+      connect: (messages, {data, signal, required runContext}) =>
+          const Stream.empty(),
       hydrateGeneration: (_) async => GenerationHydrationResult(
         resumeSnapshot: result['resumeSnapshot'] as Map<String, dynamic>?,
         activeRun: result['activeRun'] == null
@@ -130,13 +131,16 @@ void main() {
         expect(states, [true, false]);
       });
 
-      test('should pass abort signal to fetcher', () async {
+      test('should pass abort signal, threadId and runId to fetcher', () async {
         GenerationFetcherOptions? captured;
         var calls = 0;
+        Object? capturedInput;
 
         final client = GenerationClient.legacy(
+          threadId: 'thread-1',
           fetcher: (input, options) async {
             calls++;
+            capturedInput = input;
             captured = options;
             return {'id': '1'};
           },
@@ -147,6 +151,9 @@ void main() {
         expect(calls, 1);
         expect(captured, isNotNull);
         expect(captured!.signal.isCancelled, isFalse);
+        expect(captured!.threadId, 'thread-1');
+        expect(captured!.runId, isNotEmpty);
+        expect(capturedInput, {'prompt': 'test'});
       });
 
       test('should not allow concurrent requests', () async {
@@ -213,7 +220,7 @@ void main() {
           runFinished('run-1'),
         ];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield chunks[0];
             await gate.promise;
             for (final chunk in chunks.skip(1)) {
@@ -310,7 +317,7 @@ void main() {
         RunAgentInputContext? context;
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             calls.add(data);
             context = runContext;
             yield custom(GenerationEvents.result, {'id': '1'});
@@ -319,6 +326,7 @@ void main() {
         );
 
         final client = GenerationClient.legacy(
+          threadId: 'thread-1',
           connection: connection,
           body: {'model': 'dall-e-3'},
         );
@@ -330,8 +338,8 @@ void main() {
           'prompt': 'sunset',
           'size': '1024x1024',
         });
-        expect(context?.threadId, matches(RegExp(r'^generation-')));
-        expect(context?.runId, isNotEmpty);
+        expect(context?.threadId, 'thread-1');
+        expect(context?.runId, matches(RegExp(r'^run-')));
       });
     });
 
@@ -400,7 +408,7 @@ void main() {
         final calls = <Map<String, dynamic>?>[];
         RunAgentInputContext? context;
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             calls.add(data);
             context = runContext;
             yield runFinished('run-1');
@@ -408,6 +416,7 @@ void main() {
         );
 
         final client = GenerationClient.legacy(
+          threadId: 'thread-1',
           connection: connection,
           body: {'model': 'old'},
         );
@@ -416,8 +425,8 @@ void main() {
         await client.generate({'prompt': 'test'});
 
         expect(calls.single, {'model': 'new', 'prompt': 'test'});
-        expect(context?.threadId, matches(RegExp(r'^generation-')));
-        expect(context?.runId, isNotEmpty);
+        expect(context?.threadId, 'thread-1');
+        expect(context?.runId, matches(RegExp(r'^run-')));
       });
     });
 
@@ -427,7 +436,7 @@ void main() {
         final aborted = Deferred<bool>();
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
             await aborted.promise;
@@ -462,7 +471,7 @@ void main() {
         final aborted = Deferred<bool>();
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
             await aborted.promise;
@@ -499,7 +508,7 @@ void main() {
         final signals = <CancellationSignal?>[];
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             signals.add(signal);
             if (data?['prompt'] == 'first') {
               yield runStarted('run-1');
@@ -551,7 +560,7 @@ void main() {
         final aborted = Deferred<bool>();
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted('run-1');
             signal?.addListener(() => aborted.resolve(true));
             await aborted.promise;
@@ -596,7 +605,7 @@ void main() {
         final signals = <CancellationSignal?>[];
 
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             signals.add(signal);
             if (data?['prompt'] == 'first') {
               yield runStarted('run-1');
@@ -1067,13 +1076,18 @@ void main() {
       test('should pass input type-safely (fetcher receives typed input)',
           () async {
         GenerationFetcherOptions? captured;
+        Object? capturedInput;
+        var calls = 0;
         final response = sseResponse([
           jsonEncode(custom(GenerationEvents.result, {'id': '1'})),
           jsonEncode(runFinished('run-1')),
         ]);
 
         final client = GenerationClient.legacy(
+          threadId: 'thread-1',
           fetcher: (input, options) async {
+            calls++;
+            capturedInput = input;
             captured = options;
             return response;
           },
@@ -1082,6 +1096,11 @@ void main() {
         await client.generate({'prompt': 'sunset'});
 
         expect(captured, isNotNull);
+        expect(calls, 1);
+        expect(capturedInput, {'prompt': 'sunset'});
+        expect(captured!.signal.isCancelled, isFalse);
+        expect(captured!.threadId, 'thread-1');
+        expect(captured!.runId, isNotEmpty);
         expect(client.getResult(), {'id': '1'});
       });
     });
@@ -1129,7 +1148,7 @@ void main() {
           () async {
         final hydrateCalls = <String>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async {
             hydrateCalls.add(threadId);
@@ -1165,8 +1184,8 @@ void main() {
         final hydrateCalls = <String>[];
         final runThreadIds = <String>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
-            if (runContext != null) runThreadIds.add(runContext.threadId);
+          connect: (messages, {data, signal, required runContext}) async* {
+            runThreadIds.add(runContext.threadId);
             yield runStarted('run-1', 'thread-stable');
             yield runFinished('run-1', 'thread-stable');
           },
@@ -1250,7 +1269,7 @@ void main() {
         ];
         final joinCalls = <String>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -1288,7 +1307,7 @@ void main() {
           () async {
         const runId = 'run-gone-1';
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -1321,7 +1340,7 @@ void main() {
           () async {
         const runId = 'run-gone-2';
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -1385,7 +1404,7 @@ void main() {
           'does not stomp a run that a generate() started before hydration resolves',
           () async {
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runStarted('run-live', 'thread-server');
             yield runFinished('run-live', 'thread-server');
           },
@@ -1412,7 +1431,7 @@ void main() {
       test('adopts the server snapshot for the video client too', () async {
         final hydrateCalls = <String>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (threadId) async {
             hydrateCalls.add(threadId);
@@ -1580,7 +1599,7 @@ void main() {
           () async {
         final errors = <Object>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async {
             throw Exception('403 Forbidden');
@@ -1628,7 +1647,7 @@ void main() {
       test('surfaces a hydration failure for the video client too', () async {
         final errors = <Object>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async {
             throw Exception('503 Service Unavailable');
@@ -1685,7 +1704,7 @@ void main() {
         const runId = 'run-trunc-rejoin';
         final errors = <Object>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -1754,7 +1773,7 @@ void main() {
         const runId = 'run-video-trunc-rejoin';
         final errors = <Object>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -1799,7 +1818,7 @@ void main() {
         final errors = <Object>[];
         final client = GenerationClient.legacy(
           connection: ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
               yield runStarted('run-stop', 'thread-stop');
               await Future<void>.delayed(Duration.zero);
               if (signal?.isCancelled ?? false) return;
@@ -1823,7 +1842,7 @@ void main() {
     group('declined result reconstruction on restore', () {
       ConnectionAdapter resultOnlyHydratingConnection() =>
           ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) =>
+            connect: (messages, {data, signal, required runContext}) =>
                 const Stream.empty(),
             hydrateGeneration: (_) async => GenerationHydrationResult(
               resumeSnapshot: {
@@ -1841,7 +1860,7 @@ void main() {
         final client = GenerationClient.legacy(
           threadId: 'thread-unrestorable',
           connection: ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) =>
+            connect: (messages, {data, signal, required runContext}) =>
                 const Stream.empty(),
             hydrateGeneration: (_) async => GenerationHydrationResult(
               resumeSnapshot: {
@@ -1898,7 +1917,7 @@ void main() {
         const runId = 'run-still-live';
         final errors = <Object>[];
         final connection = ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) =>
+          connect: (messages, {data, signal, required runContext}) =>
               const Stream.empty(),
           hydrateGeneration: (_) async => GenerationHydrationResult(
             resumeSnapshot: {
@@ -2563,7 +2582,7 @@ void main() {
         test('should not publish a run id after onChunk stops the run',
             () async {
           final connection = ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
               yield runStarted('run-1');
             },
           );
@@ -2586,7 +2605,7 @@ void main() {
           var connectionCount = 0;
           final secondBlocked = Deferred<bool>();
           final connection = ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {
+            connect: (messages, {data, signal, required runContext}) async* {
               connectionCount++;
               if (connectionCount == 1) {
                 yield runStarted('run-1');

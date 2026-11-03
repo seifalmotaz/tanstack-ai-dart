@@ -6,14 +6,35 @@ import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('modern generation clients reject an empty thread ID', () {
+    final connection = stream((_) => const Stream.empty());
+    expect(
+        () => GenerationClient<String, String, String>(
+            connection: connection, threadId: ''),
+        throwsArgumentError);
+    expect(
+        () => GenerationClient<String, String, String>.fetcher(
+            threadId: '',
+            fetcher: (_, __) => const GenerationFetchResult.value('x')),
+        throwsArgumentError);
+    expect(
+        () => VideoGenerationClient<VideoGenerateResult>(
+            connection: connection, threadId: ''),
+        throwsArgumentError);
+    expect(
+        () => VideoGenerationClient<VideoGenerateResult>.fetcher(
+            threadId: '',
+            fetcher: (_, __) => const GenerationFetchResult.value(
+                VideoGenerateResult(jobId: 'j', url: 'url'))),
+        throwsArgumentError);
+  });
   test(
       'typed generation values preserve raw result and publish immutable state',
       () async {
     final raw = {'id': 'result', 'model': 'model'};
     final client = GenerationClient<String, Map<String, String>,
         Map<String, String>>.fetcher(
-      persistence:
-          const GenerationPersistenceOptions.ephemeral(threadId: 'thread'),
+      threadId: 'thread',
       fetcher: (input, options) => GenerationFetchResult.value(raw),
     );
     final states = <GenerationClientSnapshot<Map<String, String>>>[];
@@ -34,6 +55,7 @@ void main() {
 
   test('generation stream result parses the upstream chunk protocol', () async {
     final client = GenerationClient<String, String, String>.fetcher(
+      threadId: 'thread',
       fetcher: (_, options) =>
           GenerationFetchResult.stream(Stream.fromIterable([
         {'type': 'RUN_STARTED', 'threadId': 'thread', 'runId': 'run'},
@@ -49,6 +71,7 @@ void main() {
 
   test('typed HTTP generation preserves HTTP status failures', () async {
     final client = GenerationClient<String, String, String>.fetcher(
+      threadId: 'thread',
       fetcher: (_, options) => GenerationFetchResult.response(
           http.StreamedResponse(Stream.value(utf8.encode('unavailable')), 503,
               reasonPhrase: 'Unavailable')),
@@ -61,6 +84,7 @@ void main() {
 
   test('video typed values and streams use the same state lifecycle', () async {
     final client = VideoGenerationClient<VideoGenerateResult>.fetcher(
+      threadId: 'thread',
       fetcher: (_, options) => const GenerationFetchResult.value(
           VideoGenerateResult(
               jobId: 'job', url: 'https://example.test/video.mp4')),
@@ -80,6 +104,7 @@ void main() {
   test('typed video HTTP fetchers preserve non-success status errors',
       () async {
     final client = VideoGenerationClient<VideoGenerateResult>.fetcher(
+      threadId: 'thread',
       fetcher: (_, options) => GenerationFetchResult.response(
           http.StreamedResponse(Stream.value(utf8.encode('unavailable')), 503)),
     );
@@ -94,6 +119,7 @@ void main() {
     final listening = Completer<void>();
     source.onListen = listening.complete;
     final client = GenerationClient<String, String, String>.fetcher(
+      threadId: 'thread',
       fetcher: (_, options) => GenerationFetchResult.stream(source.stream),
     );
     final run = client.generate('prompt');

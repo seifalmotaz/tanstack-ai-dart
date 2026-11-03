@@ -331,7 +331,7 @@ void main() {
     final client = ChatClient.legacy(
       threadId: 'thread-history',
       transport: transport,
-      hydrate: (threadId, options) async => ChatHydrationResult(
+      hydrate: (threadId, options) async => LegacyChatHydrationResult(
         messages: <AssistantTurn>[
           AssistantTurn(
             id: 'hydrated-user',

@@ -376,21 +376,19 @@ ConnectionAdapter webSocketProvider({
       listeners.add(sink);
       return pipe.stream;
     },
-    send: (messages, {data, signal, runContext}) async {
+    send: (messages, {data, signal, required runContext}) async {
       final resolved = await resolveOptions();
       final base = await url();
-      final target = runContext?.runId == null
-          ? base
-          : withSearchParams(base, {'runId': runContext!.runId});
+      final target = withSearchParams(base, {'runId': runContext.runId});
       final ws = openOnce(target, 'run', resolved);
       await waitOpen(ws);
 
       final session = currentSession;
-      if (session == null || session.runId != runContext?.runId) {
+      if (session == null || session.runId != runContext.runId) {
         currentSession = _RunSession(
           ReconnectTracker(resolved.reconnect),
           signal,
-        )..runId = runContext?.runId;
+        )..runId = runContext.runId;
       } else {
         session.signal = signal;
         session.sawTerminal = false;

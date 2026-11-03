@@ -127,7 +127,7 @@ void main() {
   group('ChatClient isHydrating', () {
     test('is true from construction until the server transcript is applied',
         () async {
-      final gate = Completer<ChatHydrationResult>();
+      final gate = Completer<LegacyChatHydrationResult>();
       final seen = <({bool isHydrating, int messages})>[];
       late ChatClient client;
       client = ChatClient.legacy(
@@ -149,7 +149,7 @@ void main() {
       final attach = client.attach();
       expect(client.getIsHydrating(), isTrue);
       gate.complete(
-        ChatHydrationResult(
+        LegacyChatHydrationResult(
           messages: <AssistantTurn>[userMessage('m1', 'hi')],
         ),
       );
@@ -175,7 +175,7 @@ void main() {
 
     test('stays on across a detach and re-attach that reuse the same request',
         () async {
-      final gate = Completer<ChatHydrationResult>();
+      final gate = Completer<LegacyChatHydrationResult>();
       var calls = 0;
       final client = ChatClient.legacy(
         transport: FakeChatTransport(),
@@ -192,14 +192,15 @@ void main() {
       final reattach = client.attach();
       expect(calls, 1);
       expect(client.getIsHydrating(), isTrue);
-      gate.complete(const ChatHydrationResult(messages: <AssistantTurn>[]));
+      gate.complete(
+          const LegacyChatHydrationResult(messages: <AssistantTurn>[]));
       await Future.wait(<Future<void>>[attach, reattach]);
       expect(client.getIsHydrating(), isFalse);
     });
 
     test('turns off when a send takes over, and the late transcript is dropped',
         () async {
-      final gate = Completer<ChatHydrationResult>();
+      final gate = Completer<LegacyChatHydrationResult>();
       final transport = FakeChatTransport();
       final client = ChatClient.legacy(
         transport: transport,
@@ -213,7 +214,7 @@ void main() {
       await client.sendText('new turn');
       expect(client.getIsHydrating(), isFalse);
       gate.complete(
-        ChatHydrationResult(
+        LegacyChatHydrationResult(
           messages: <AssistantTurn>[userMessage('late', 'late')],
         ),
       );
@@ -225,7 +226,7 @@ void main() {
     });
 
     test('turns off when clear() drops a pending load', () async {
-      final gate = Completer<ChatHydrationResult>();
+      final gate = Completer<LegacyChatHydrationResult>();
       final client = ChatClient.legacy(
         transport: FakeChatTransport(),
         options: ChatClientOptions(
@@ -237,7 +238,8 @@ void main() {
       expect(client.getIsHydrating(), isTrue);
       await client.clear();
       expect(client.getIsHydrating(), isFalse);
-      gate.complete(const ChatHydrationResult(messages: <AssistantTurn>[]));
+      gate.complete(
+          const LegacyChatHydrationResult(messages: <AssistantTurn>[]));
       await attach;
     });
 
@@ -256,7 +258,7 @@ void main() {
           hydrate: (_, __) {
             attempt++;
             if (attempt == 1) throw StateError('server returned 500');
-            return const ChatHydrationResult(messages: <AssistantTurn>[]);
+            return const LegacyChatHydrationResult(messages: <AssistantTurn>[]);
           },
         ),
       );

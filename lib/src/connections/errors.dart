@@ -36,12 +36,14 @@ class DurableStreamIncompleteError implements Exception {
 /// A durable run exceeded its consecutive no-progress reconnect ceiling.
 class StreamReconnectLimitError implements Exception {
   final int attempts;
+  final Duration? budget;
 
-  const StreamReconnectLimitError(this.attempts);
+  const StreamReconnectLimitError(this.attempts, {this.budget});
 
   @override
-  String toString() =>
-      'Durable run exceeded its reconnect ceiling of $attempts attempts — giving up.';
+  String toString() => budget == null
+      ? 'Durable run exceeded its reconnect ceiling of $attempts attempts — giving up.'
+      : 'Durable run did not reconnect within its budget of ${budget!.inMilliseconds} ms ($attempts attempts) — giving up.';
 }
 
 /// A non-2xx streaming response. [message] preserves the upstream wording:
@@ -50,8 +52,9 @@ class HttpStatusException implements Exception {
   final int status;
   final String statusText;
   final String message;
+  final Duration? retryAfter;
 
-  const HttpStatusException(this.status, this.statusText)
+  const HttpStatusException(this.status, this.statusText, {this.retryAfter})
       : message = 'HTTP error! status: $status $statusText';
 
   @override
@@ -63,8 +66,9 @@ class XhrStatusException implements Exception {
   final int status;
   final String statusText;
   final String message;
+  final Duration? retryAfter;
 
-  const XhrStatusException(this.status, this.statusText)
+  const XhrStatusException(this.status, this.statusText, {this.retryAfter})
       : message = 'XHR error! status: $status $statusText';
 
   @override

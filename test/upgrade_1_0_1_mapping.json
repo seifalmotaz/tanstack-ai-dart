@@ -1,0 +1,298 @@
+{
+  "mapped": [
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient throws when threadId is \"\"",
+      "dartFile": "test/generation/dart_generation_api_test.dart",
+      "dartTestName": "modern generation clients reject an empty thread ID",
+      "dartAdaptation": "Both connection and fetcher constructors reject empty thread IDs."
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient throws when threadId is undefined",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "rejects persistence: true without a threadId",
+      "dartAdaptation": "The Dart analyzer fixture rejects missing required threadId for both generation client constructors."
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should pass abort signal, threadId and runId to fetcher",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "should pass abort signal, threadId and runId to fetcher",
+      "dartAdaptation": "Checks one call, input, non-cancelled signal, thread-1 and nonempty run ID."
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient throws when threadId is \"\"",
+      "dartFile": "test/generation/dart_generation_api_test.dart",
+      "dartTestName": "modern generation clients reject an empty thread ID",
+      "dartAdaptation": "Both connection and fetcher constructors reject empty thread IDs."
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient throws when threadId is undefined",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "rejects persistence: true without a threadId",
+      "dartAdaptation": "The Dart analyzer fixture rejects missing required threadId for both generation client constructors."
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should pass abort signal, threadId and runId to fetcher",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "should pass abort signal, threadId and runId to fetcher",
+      "dartAdaptation": "Checks one call, input, non-cancelled signal, thread-1 and nonempty run ID."
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context passes client-local context and the thread id to client tool execution without serializing the context",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "passes thread and tool call identity to typed tool execution",
+      "dartAdaptation": "Typed tool sees thread, tool-call and client-local context; outbound body excludes context."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status retries a reconnect answered 408",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "retries reconnect status 408 until the run finishes",
+      "dartAdaptation": "Three reconnects retain Last-Event-ID; two status failures precede the successful terminal event."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status retries a reconnect answered 429",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "retries reconnect status 429 until the run finishes",
+      "dartAdaptation": "Three reconnects retain Last-Event-ID; two status failures precede the successful terminal event."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status retries a reconnect answered 502",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "retries reconnect status 502 until the run finishes",
+      "dartAdaptation": "Three reconnects retain Last-Event-ID; two status failures precede the successful terminal event."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status retries a reconnect answered 503",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "retries reconnect status 503 until the run finishes",
+      "dartAdaptation": "Three reconnects retain Last-Event-ID; two status failures precede the successful terminal event."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status retries a reconnect answered 504",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "retries reconnect status 504 until the run finishes",
+      "dartAdaptation": "Three reconnects retain Last-Event-ID; two status failures precede the successful terminal event."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status still gives up after maxAttempts when every reconnect is a 503",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "stops retrying 503 responses at the attempt ceiling",
+      "dartAdaptation": "After the initial offset, repeated 503s fail at configured maximum and request count is checked."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff rides out a restart with a budget",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "budget allows recovery after more than five failed reconnects",
+      "dartAdaptation": "A budget permits seven failed 503 reconnects and a final successful terminal event; zero delay keeps test deterministic."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff rejects invalid backoff options",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "rejects invalid backoff options",
+      "dartAdaptation": "Rejects negative delays, negative attempts and zero budget; nonfinite JS numbers have no Dart Duration representation."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff stops at the budget with initialDelayMs 0, after many tries",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "a zero-delay reconnect loop still expires its budget",
+      "dartAdaptation": "Zero-delay retries stop with a budget error; a separate pure backoff assertion checks 2,000 attempts."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff keeps reconnecting for budgetMs when a budget is set",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "budget allows recovery after more than five failed reconnects",
+      "dartAdaptation": "Seven failed 503 reconnects precede recovery with budget and no implicit attempt ceiling."
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws when threadId is empty",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "modern chat rejects an empty thread ID with and without persistence",
+      "dartAdaptation": "Modern constructor rejects empty identity with and without persistence."
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws for an empty threadId even with persistence",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "modern chat rejects an empty thread ID with and without persistence",
+      "dartAdaptation": "Modern constructor rejects empty identity with and without persistence."
+    },
+    {
+      "upstreamFile": "client-persistor.test.ts",
+      "upstreamName": "ChatPersistor readInitial logs a 0.x bare-array record and does not overwrite it until a clear",
+      "dartFile": "test/platform/client_persistor_test.dart",
+      "dartTestName": "preserves legacy data until clear (async: false)",
+      "dartAdaptation": "Captures diagnostic with thread and clear guidance; asserts blocked writes and reset after clear. Async variant separately checks same behavior."
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter does not retry a non-temporary HTTP status after earlier progress",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "does not retry permanent HTTP failures after earlier progress",
+      "dartAdaptation": "A 400 response after an offset terminates rather than reconnecting."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters stream passes a run input that chatParamsFromRequestBody reads",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "should pass data to stream factory",
+      "dartAdaptation": "Checks complete outgoing input identity, resume entries, forwarded properties and message count; Dart has no upstream server parser."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters rpcStream passes a run input that chatParamsFromRequestBody reads",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "should pass messages and data to RPC call",
+      "dartAdaptation": "Checks complete outgoing input identity, resume entries, forwarded properties and message count; Dart has no upstream server parser."
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson retries a poll answered 503",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "retries a transient 503 while polling a durable run",
+      "dartAdaptation": "Checks initial chunk, retry after 503 and terminal chunk through actual polling adapter."
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable XHR transports xhrHttpStream retries a reconnect answered 503",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "xhrHttpStream retries a reconnect answered 503",
+      "dartAdaptation": "NDJSON XHR adapter resumes with Last-Event-ID after 503 and reaches RUN_FINISHED in three requests."
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws when threadId is missing",
+      "dartFile": "test/chat/chat_identity_types_test.dart",
+      "dartTestName": "modern chat requires a string thread ID",
+      "dartAdaptation": "Analyzer subprocess rejects both omitted and non-string constructor arguments."
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws when threadId is non-string",
+      "dartFile": "test/chat/chat_identity_types_test.dart",
+      "dartTestName": "modern chat requires a string thread ID",
+      "dartAdaptation": "Analyzer subprocess rejects both omitted and non-string constructor arguments."
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId requires threadId for ephemeral chats too",
+      "dartFile": "test/chat/chat_identity_types_test.dart",
+      "dartTestName": "modern chat requires a string thread ID",
+      "dartAdaptation": "Analyzer rejects omitted threadId for the default ephemeral configuration."
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId requires threadId for ephemeral generations too",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "rejects persistence: true without a threadId",
+      "dartAdaptation": "Analyzer fixture rejects four missing identities: persistent and ephemeral image and video clients; the positive fixture checks valid identities."
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration sends a client tool result through the generic fallback when the schemas differ",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "schema mismatch resolves client output through generic fallback",
+      "dartAdaptation": "Asserts generic classification, resolution payload and one actual submission."
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration gives the 0.x approval and client-tool reasons no special meaning",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "legacy approval and tool reasons do not imply a binding",
+      "dartAdaptation": "Hydrates both legacy reason-only descriptors and asserts both unbound."
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume resumeInterruptsUnsafe sends AG-UI resume entries with the interrupted run context",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "modern unsafe resume forwards history and interrupted context",
+      "dartAdaptation": "Modern connection captures parent and new run IDs, resume entries, user and assistant history, and terminal state."
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume resumeInterruptsUnsafe reconnects with the full current message history",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "modern unsafe resume forwards history and interrupted context",
+      "dartAdaptation": "Modern connection captures parent and new run IDs, resume entries, user and assistant history, and terminal state."
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume continues a frontend tool call emitted by a native resume",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "continues a frontend tool call emitted by a native resume",
+      "dartAdaptation": "Three actual connection runs exercise generic resume, tool execution, and ordinary continuation."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should merge per-message body with forwardedProps",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "modern chat merges forwarded properties and per-send body overrides",
+      "dartAdaptation": "Captures modern adapter data and checks base, per-call body and options precedence across five keys."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage merges forwardedProps, positional body, and sendOptions.body with sendOptions.body winning conflicts",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "modern chat merges forwarded properties and per-send body overrides",
+      "dartAdaptation": "Captures modern adapter data and checks base, per-call body and options precedence across five keys."
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers the threadId as the hookId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "modern chat registers thread identity and metadata",
+      "dartAdaptation": "Real modern ChatClient and devtools bridge emit mounted registration with display name, hook and client IDs."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff doubles the delay from 250 ms and still gives up after 5 reconnects",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "tracker waits within exponential jitter bounds before retrying",
+      "dartAdaptation": "Fake timers prove delays stay within jitter/cap bounds and five failures reach ceiling; pure backoff checks 250/500/1000 ms."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff caps the delay at maxDelayMs",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "tracker waits within exponential jitter bounds before retrying",
+      "dartAdaptation": "Fake timers prove delays stay within jitter/cap bounds and five failures reach ceiling; pure backoff checks 250/500/1000 ms."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect backoff adds jitter that never makes a delay longer",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "tracker waits within exponential jitter bounds before retrying",
+      "dartAdaptation": "Fake timers prove delays stay within jitter/cap bounds and five failures reach ceiling; pure backoff checks 250/500/1000 ms."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status waits for Retry-After, capped at maxDelayMs",
+      "dartFile": "test/connections/reconnect_backoff_test.dart",
+      "dartTestName": "retry waits for Retry-After capped at maxDelay",
+      "dartAdaptation": "Fake timers check delay remains pending until exactly the configured cap; separate header/parser and HTTP reconnect tests cover the transport path."
+    },
+    {
+      "upstreamFile": "connection-adapters-reconnect-backoff.test.ts",
+      "upstreamName": "reconnect on a temporary HTTP status fails at once on a status that is not temporary",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "does not retry permanent HTTP failures after earlier progress",
+      "dartAdaptation": "HTTP 400 after a durable offset terminates immediately and checks requests."
+    }
+  ]
+}

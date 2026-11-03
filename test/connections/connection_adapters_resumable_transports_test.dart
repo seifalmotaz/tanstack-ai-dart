@@ -16,6 +16,26 @@ String envelopeLine(String id, Map<String, dynamic> chunk) =>
 String bareLine(Map<String, dynamic> chunk) => ndjsonLine(chunk);
 
 void main() {
+  test('xhrHttpStream retries a reconnect answered 503', () async {
+    late FakeHttpClient client;
+    client = FakeHttpClient((request) async {
+      if (client.requests.length == 1) {
+        return rawResponse(envelopeLine('run@1', contentChunk('1')));
+      }
+      expect(request.headers['Last-Event-ID'], 'run@1');
+      if (client.requests.length == 2) return rawResponse('', status: 503);
+      return rawResponse(envelopeLine('run@2', finishedChunk()));
+    });
+    final adapter = xhrHttpStream('/api/chat',
+        options: XhrConnectionOptions(
+            client: client,
+            reconnect: const ReconnectOptions(initialDelay: Duration.zero)));
+    final chunks = await collect(adapter.connect!(const [],
+        runContext: const RunAgentInputContext(threadId: 't', runId: 'r')));
+    expect(chunks.last['type'], 'RUN_FINISHED');
+    expect(client.requests, hasLength(3));
+  });
+
   group('resumable NDJSON (fetchHttpStream)', () {
     test('reconnects with Last-Event-ID and de-dupes already-seen chunks',
         () async {

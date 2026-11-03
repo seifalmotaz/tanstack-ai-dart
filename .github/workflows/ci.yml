@@ -44,6 +44,13 @@ jobs:
           sdk: stable
       - run: dart pub get
       - run: dart run tool/verify_types.dart
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.8.0'
+          package-manager-cache: false
+      - run: npm install --prefix .dart_tool/toolchain typescript@5.9.3
+      - run: node tool/collect_upstream_inventory_test.cjs
+      - run: node tool/prepare_candidate_audit_test.cjs
 
   chrome:
     name: Chrome

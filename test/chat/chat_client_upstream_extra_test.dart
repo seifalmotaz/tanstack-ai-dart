@@ -4,9 +4,34 @@
 import 'dart:async';
 
 import 'package:tanstack_ai_dart/chat.dart';
+import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'package:test/test.dart';
 
 import 'support.dart';
+
+class _ImmediateCapture {
+  final requests = <Map<String, dynamic>?>[];
+  late final adapter = conn.ConnectionAdapter.connect(
+      connect: (_, {data, signal, required runContext}) async* {
+    requests.add(data);
+    yield {
+      'type': 'RUN_STARTED',
+      'runId': runContext.runId,
+      'threadId': runContext.threadId
+    };
+    yield {
+      'type': 'TEXT_MESSAGE_CONTENT',
+      'messageId': 'm-${requests.length}',
+      'delta': 'Response'
+    };
+    yield {
+      'type': 'RUN_FINISHED',
+      'runId': runContext.runId,
+      'threadId': runContext.threadId,
+      'outcome': {'type': 'success'}
+    };
+  });
+}
 
 ChatClient persistedClient(
   FakeChatTransport transport, {
@@ -224,7 +249,7 @@ void main() {
       ]);
       await transport.close();
       await pump();
-      expect(client.getPendingInterrupts(), hasLength(1));
+      expect(client.getLegacyPendingInterrupts(), hasLength(1));
     });
   });
 
@@ -555,43 +580,45 @@ void main() {
     test(
         'should merge sendOptions.body into the request (hook-style per-call body)',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText(
-        'x',
-        options:
-            const ChatSendOptions(body: <String, dynamic>{'temperature': 1}),
-      );
-      expect(
-        (transport.bodies.single['forwardedProps'] as Map)['temperature'],
-        1,
-      );
-      await client.stop();
+      final capture = _ImmediateCapture();
+      final client = ChatClient(
+          connection: capture.adapter,
+          threadId: 'thread-1',
+          forwardedProps: {'model': 'gpt-5.5', 'temperature': 0.7});
+      await client.sendText('Hello',
+          options: const ChatSendOptions(
+              body: {'model': 'gpt-6', 'maxTokens': 100}));
+      expect(capture.requests.single,
+          {'model': 'gpt-6', 'temperature': 0.7, 'maxTokens': 100});
+      await client.dispose();
     });
 
     test('reload does not replay a previous per-call body', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
-        messages: <AssistantTurn>[userMessage('u', 'hi')],
-      );
-      await client.sendLegacyMessage('x', body: <String, dynamic>{'temp': 1});
+      final capture = _ImmediateCapture();
+      final client = ChatClient(
+          connection: capture.adapter,
+          threadId: 'thread-1',
+          forwardedProps: {'provider': 'openai'});
+      await client.sendText('Hello',
+          options: const ChatSendOptions(body: {'tag': 'once'}));
       await client.reload();
-      final second = transport.bodies[1]['forwardedProps'] as Map?;
-      expect(second?['temp'], isNull);
-      await client.stop();
+      expect(capture.requests, hasLength(2));
+      expect(capture.requests.first, {'provider': 'openai', 'tag': 'once'});
+      expect(capture.requests.last, {'provider': 'openai'});
+      await client.dispose();
     });
 
     test('should accept forwardedProps option and merge into request body',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
-        forwardedProps: <String, dynamic>{'fp': true},
-      );
-      await client.sendText('x');
-      expect((transport.bodies.single['forwardedProps'] as Map)['fp'], isTrue);
-      await client.stop();
+      final capture = _ImmediateCapture();
+      final client = ChatClient(
+          connection: capture.adapter,
+          threadId: 'thread-1',
+          forwardedProps: {'provider': 'openai', 'model': 'gpt-5.5'});
+      await client.sendText('Hello');
+      expect(
+          capture.requests.single, {'provider': 'openai', 'model': 'gpt-5.5'});
+      await client.dispose();
     });
 
     test(
@@ -643,40 +670,38 @@ void main() {
     });
 
     test('should not auto-emit conversationId in merged body', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('x');
-      expect(transport.bodies.single.containsKey('conversationId'), isFalse);
-      await client.stop();
+      final capture = _ImmediateCapture();
+      final client =
+          ChatClient(connection: capture.adapter, threadId: 'thread-1');
+      await client.sendText('Hello');
+      expect(capture.requests.single?['conversationId'], isNull);
+      await client.dispose();
     });
 
     test('should pass through user-set conversationId via forwardedProps',
         () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(
-        transport: transport,
-        forwardedProps: <String, dynamic>{'conversationId': 'c1'},
-      );
-      await client.sendText('x');
-      expect(
-        (transport.bodies.single['forwardedProps'] as Map)['conversationId'],
-        'c1',
-      );
-      await client.stop();
+      final capture = _ImmediateCapture();
+      final client = ChatClient(
+          connection: capture.adapter,
+          threadId: 'thread-1',
+          forwardedProps: {'conversationId': 'user-supplied'});
+      await client.sendText('Hello');
+      expect(capture.requests.single?['conversationId'], 'user-supplied');
+      await client.dispose();
     });
 
     test('should clear per-message body after request', () async {
-      final transport = FakeChatTransport();
-      final client = ChatClient.legacy(transport: transport);
-      await client.sendText('x',
-          options: const ChatSendOptions(
-            body: <String, dynamic>{'once': 1},
-          ));
-      await client.stop();
-      await client.sendText('y');
-      final forwarded = transport.bodies[1]['forwardedProps'] as Map?;
-      expect(forwarded?['once'], isNull);
-      await client.stop();
+      final capture = _ImmediateCapture();
+      final client = ChatClient(
+          connection: capture.adapter,
+          threadId: 'thread-1',
+          forwardedProps: {'model': 'gpt-5.5'});
+      await client.sendText('First',
+          options: const ChatSendOptions(body: {'temperature': 0.9}));
+      await client.sendText('Second');
+      expect(capture.requests.first, {'model': 'gpt-5.5', 'temperature': 0.9});
+      expect(capture.requests.last, {'model': 'gpt-5.5'});
+      await client.dispose();
     });
 
     test('should emit events with multimodal content', () async {
@@ -732,26 +757,6 @@ void main() {
       transport.emit(<String, dynamic>{'type': 'CUSTOM', 'name': 'empty'});
       await pump();
       expect(calls, 1);
-      await client.stop();
-    });
-
-    test(
-        'should NOT call onCustomEvent for system events like tool-input-available',
-        () async {
-      final transport = FakeChatTransport();
-      var calls = 0;
-      final client = ChatClient.legacy(
-        transport: transport,
-        onCustomEvent: (_, __) => calls++,
-      );
-      await client.sendText('x');
-      transport.emit(<String, dynamic>{
-        'type': 'CUSTOM',
-        'name': 'tool-input-available',
-        'value': <String, dynamic>{'toolCallId': 'tc'},
-      });
-      await pump();
-      expect(calls, 0);
       await client.stop();
     });
 

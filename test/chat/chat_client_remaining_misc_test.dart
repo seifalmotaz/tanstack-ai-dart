@@ -2,6 +2,9 @@
 // chat-client-join-run-client-tool.test.ts, chat-client-reasoning-rejoin.test.ts,
 // chat-client-subagent-rejoin.test.ts and chat-client-subagent-interrupts.test.ts.
 import 'dart:async';
+import 'dart:convert';
+
+import '../processing/subagent_upstream_fixture.dart';
 import 'package:tanstack_ai_dart/chat.dart';
 import 'package:tanstack_ai_dart/connections.dart' as conn;
 import 'package:test/test.dart';
@@ -134,8 +137,8 @@ void main() {
           schema: schema);
       final hash = storage.hashSchemaInput(outputSchema);
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
-          contexts.add(runContext!);
+        connect: (messages, {data, signal, required runContext}) async* {
+          contexts.add(runContext);
           yield {
             'type': 'RUN_STARTED',
             'runId': runContext.runId,
@@ -298,6 +301,114 @@ void main() {
     });
   });
 
+  for (final encrypted in [false, true]) {
+    test(
+        'modern reasoning rejoin preserves replay activity (encrypted: $encrypted)',
+        () async {
+      List<conn.WireMessage>? sent;
+      final connection = conn.ConnectionAdapter.connect(
+          hydrate: (_, {options}) async =>
+              const conn.ChatHydrationResult(messages: [
+                {
+                  'id': 'u1',
+                  'role': 'user',
+                  'parts': [
+                    {'type': 'text', 'content': 'Build an app.'}
+                  ]
+                },
+                {
+                  'id': 'partial',
+                  'role': 'assistant',
+                  'parts': [
+                    {'type': 'thinking', 'content': 'Inspect'}
+                  ]
+                },
+              ], activeRun: conn.ActiveRun('r1')),
+          joinRun: (runId, {signal}) async* {
+            yield {'type': 'RUN_STARTED', 'runId': 'r1', 'threadId': 't1'};
+            yield encrypted
+                ? {
+                    'type': 'REASONING_ENCRYPTED_VALUE',
+                    'subtype': 'message',
+                    'entityId': 'thinking',
+                    'encryptedValue': 'signature'
+                  }
+                : {
+                    'type': 'REASONING_MESSAGE_CONTENT',
+                    'messageId': 'thinking',
+                    'delta': 'Inspect the files.'
+                  };
+            yield {
+              'type': 'TOOL_CALL_START',
+              'toolCallId': 'read',
+              'toolCallName': 'Read'
+            };
+            yield {
+              'type': 'TOOL_CALL_ARGS',
+              'toolCallId': 'read',
+              'delta': '{}'
+            };
+            yield {'type': 'TOOL_CALL_END', 'toolCallId': 'read'};
+            yield {
+              'type': 'TOOL_CALL_RESULT',
+              'toolCallId': 'read',
+              'messageId': 'result',
+              'content': 'file contents'
+            };
+            yield {
+              'type': 'TEXT_MESSAGE_START',
+              'messageId': 'reply',
+              'role': 'assistant'
+            };
+            yield {
+              'type': 'TEXT_MESSAGE_CONTENT',
+              'messageId': 'reply',
+              'delta': 'Built the app.'
+            };
+            yield {'type': 'TEXT_MESSAGE_END', 'messageId': 'reply'};
+            yield {'type': 'RUN_FINISHED', 'runId': 'r1', 'threadId': 't1'};
+          },
+          connect: (messages, {data, signal, required runContext}) async* {
+            sent = messages;
+            yield {
+              'type': 'RUN_FINISHED',
+              'runId': runContext.runId,
+              'threadId': runContext.threadId,
+              'outcome': {'type': 'success'}
+            };
+          });
+      final client = ChatClient(
+          connection: connection,
+          threadId: 't1',
+          persistence: const ChatPersistenceOptions.server());
+      await client.attach();
+      await waitFor(() => client.getMessages().any((message) => message.parts
+          .any((part) =>
+              part.type == 'text' && part.content == 'Built the app.')));
+      await client.sendText('Change the title.');
+      final rows = sent!;
+      final parts =
+          rows.expand((row) => row['parts'] as List).cast<Map>().toList();
+      expect(
+          parts.any((part) =>
+              part['type'] == 'thinking' &&
+              part['content'] == (encrypted ? '' : 'Inspect the files.')),
+          isTrue);
+      expect(
+          parts.any((part) =>
+              part['type'] == 'tool-call' &&
+              part['id'] == 'read' &&
+              part['output'] == 'file contents'),
+          isTrue);
+      expect(
+          parts.any((part) =>
+              part['type'] == 'text' && part['content'] == 'Built the app.'),
+          isTrue);
+      expect(rows.any((row) => row['id'] == 'partial'), isFalse);
+      await client.dispose();
+    });
+  }
+
   group('joinRun subagent replay', () {
     test(
         'rebuilds one subagent card from the stream instead of keeping the partial text',
@@ -326,7 +437,7 @@ void main() {
         ]
       };
       final connection = conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
         yield {'type': 'RUN_FINISHED', 'runId': 'unused', 'threadId': 't1'};
       }, joinRun: (runId, {signal}) async* {
         yield {'type': 'RUN_STARTED', 'runId': 'r1', 'threadId': 't1'};
@@ -382,37 +493,58 @@ void main() {
 
   group('ChatClient subagent interrupts', () {
     test('approves a child tool call and finishes the child', () async {
-      final transport = FakeChatTransport();
-      final part = AssistantPart.tool(
-        id: 'child-tool',
-        name: 'deleteFile',
-        approval: AssistantApproval(id: 'approval'),
-      );
-      final client = ChatClient.legacy(
-        transport: transport,
-        messages: <AssistantTurn>[
-          AssistantTurn(
-            id: 'a',
-            role: 'assistant',
-            parts: <AssistantPart>[
-              AssistantPart(
-                type: 'subagent',
-                id: 'sub-1',
-                subagent: <String, dynamic>{
-                  'id': 'sub-1',
-                  'name': 'child',
-                  'status': 'suspended',
-                  'messages': <dynamic>[],
-                },
-              ),
-              part,
-            ],
-          ),
-        ],
-      );
-      await client.approve(part, true);
-      expect(part.state, 'approval-responded');
-      await client.stop();
+      final batches = jsonDecode(upstreamSubagentFixture) as List;
+      final contexts = <conn.RunAgentInputContext>[];
+      final connection = conn.ConnectionAdapter.connect(
+          connect: (_, {data, signal, required runContext}) async* {
+        contexts.add(runContext);
+        final index = contexts.length - 1;
+        final encoded = jsonEncode(batches[index])
+            .replaceAll('run-${index + 1}', runContext.runId);
+        for (final chunk in jsonDecode(encoded) as List) {
+          yield Map<String, dynamic>.from(chunk as Map);
+        }
+      });
+      const schema = RawJsonSchema({
+        r'$schema': 'https://json-schema.org/draft/2020-12/schema',
+        'type': 'object',
+        'properties': {
+          'path': {'type': 'string'}
+        },
+        'required': ['path'],
+      });
+      final client = ChatClient(connection: connection, threadId: 't', tools: [
+        ClientTool<dynamic, dynamic>(
+            name: 'deleteFile', needsApproval: true, inputSchema: schema),
+      ]);
+      await client.sendText('Clean up');
+      expect(client.getInterrupts(), hasLength(1));
+      final interrupt = client.getInterrupts().single;
+      expect(interrupt.kind, 'tool-approval');
+      expect(client.getSubagents().single.name, 'cleaner');
+      expect(client.getSubagents().single.status, 'suspended');
+      expect(client.getSubagents().single['interruptIds'],
+          contains('approval_call_c'));
+      interrupt.resolveApproval(true);
+      await waitFor(() => contexts.length == 2 && !client.isLoading);
+      expect(contexts.last.parentRunId, contexts.first.runId);
+      expect(contexts.last.resume!.single['payload'], {'approved': true});
+      expect(client.getInterrupts(), isEmpty);
+      final card = client.getSubagents().single;
+      expect(card.status, 'finished');
+      final parts = card.messages
+          .expand((message) => (message as Map)['parts'] as List)
+          .cast<Map>()
+          .toList();
+      expect(
+          parts.any(
+              (part) => part['type'] == 'tool-call' && part['id'] == 'call_c'),
+          isTrue);
+      expect(
+          parts.any((part) =>
+              part['type'] == 'text' && part['content'] == 'Deleted a'),
+          isTrue);
+      await client.dispose();
     });
   });
 }

@@ -124,7 +124,176 @@ class ManagerFixture {
 }
 
 void main() {
+  test('a directly constructed unbound interrupt cannot resolve or cancel', () {
+    final item = ChatInterrupt(
+        id: 'foreign',
+        kind: 'unbound',
+        reason: 'foreign',
+        threadId: 't',
+        interruptedRunId: 'r',
+        generation: 0);
+    expect(item.canResolve, isFalse);
+    expect(item.resolveInterrupt({'answer': true}), isNull);
+    expect(item.cancel(), isNull);
+  });
+
+  test('interrupt snapshots protect nested data from caller mutation', () {
+    final manager = InterruptManager();
+    final raw = genericDescriptor('generic');
+    (raw['metadata'] as Map<String, dynamic>)['input'] = {
+      'items': [
+        <String, dynamic>{'value': 1}
+      ]
+    };
+    manager.hydrate(ChatHydrationInterrupts(
+        runId: 'run-1', threadId: 'thread-1', generation: 1, pending: [raw]));
+    final snapshot = manager.getInterrupts();
+    final item = snapshot.single;
+    final items = (item.input as Map<String, dynamic>)['items'] as List;
+    expect(() => (items.first as Map<String, dynamic>)['value'] = 2,
+        throwsUnsupportedError);
+    expect(() => items.add(3), throwsUnsupportedError);
+    expect(() => item.metadata!['new'] = true, throwsUnsupportedError);
+    expect(() => item.binding!['generation'] = 5, throwsUnsupportedError);
+    final descriptors = manager.getDescriptors();
+    expect(() => (descriptors.single['metadata'] as Map)['new'] = true,
+        throwsUnsupportedError);
+    expect(() => descriptors.clear(), throwsUnsupportedError);
+    manager.resolve(true);
+    final errors = manager.getInterruptErrors();
+    expect(errors, isNotEmpty);
+    expect(() => errors.clear(), throwsUnsupportedError);
+    expect(() => errors.first['code'] = 'changed', throwsUnsupportedError);
+    expect(manager.getInterruptErrors().first['code'], isNot('changed'));
+
+    expect(manager.getInterrupts().single.input['items'][0]['value'], 1);
+  });
+
+  test('legacy approval and tool reasons do not imply a binding', () {
+    final manager = InterruptManager(tools: tools);
+    manager.hydrate(const ChatHydrationInterrupts(
+        runId: 'run-1',
+        threadId: 'thread-1',
+        generation: 1,
+        pending: [
+          {
+            'id': 'approval-1',
+            'reason': 'approval_required',
+            'toolCallId': 'call-1'
+          },
+          {
+            'id': 'client-1',
+            'reason': 'client_tool_input',
+            'toolCallId': 'call-2'
+          },
+        ]));
+    expect(manager.getInterrupts().map((item) => item.kind),
+        ['unbound', 'unbound']);
+  });
+
+  test('schema mismatch resolves client output through generic fallback',
+      () async {
+    final fixture = ManagerFixture();
+    final manager = fixture.manager;
+    manager.hydrate(ChatHydrationInterrupts(
+        runId: 'run-1',
+        threadId: 'thread-1',
+        generation: 1,
+        pending: [
+          descriptor({
+            'v': 1,
+            'kind': 'client-tool-execution',
+            'interruptId': 'client-1',
+            'interruptedRunId': 'run-1',
+            'generation': 1,
+            'toolName': 'lookup',
+            'toolCallId': 'call-1',
+            'outputSchemaHash': 'sha256:server-schema',
+            'responseSchemaHash': 'sha256:server-schema',
+          })
+        ]));
+    expect(manager.getInterrupts().single.kind, 'generic');
+    expect(manager.getInterrupts().single.canResolve, isTrue);
+    expect(manager.resolveClientToolOutput('call-1', {'accountId': 'acct-1'}),
+        isTrue);
+    await settle();
+    expect(fixture.submissions, hasLength(1));
+    expect(fixture.submissions.single.resolutions.single,
+        containsPair('payload', {'accountId': 'acct-1'}));
+    expect(fixture.submissions.single.resolutions.single,
+        containsPair('interruptId', 'client-1'));
+    expect(fixture.submissions.single.resolutions.single,
+        containsPair('status', 'resolved'));
+  });
+
   group('InterruptManager foreign-interrupt handling', () {
+    test(
+        'defers client tool execution when a generic interrupt shares the batch',
+        () {
+      final manager = InterruptManager(tools: tools);
+      final outputHash = hashSchemaInput(lookupOutput);
+      manager.hydrate(ChatHydrationInterrupts(
+        runId: 'run-1',
+        threadId: 'thread-1',
+        generation: 1,
+        pending: [
+          genericDescriptor('generic'),
+          descriptor({
+            'v': 1,
+            'kind': 'client-tool-execution',
+            'interruptId': 'client',
+            'interruptedRunId': 'run-1',
+            'generation': 1,
+            'toolName': 'lookup',
+            'toolCallId': 'call',
+            'outputSchemaHash': outputHash,
+            'responseSchemaHash': outputHash
+          }),
+        ],
+      ));
+      expect(manager.mayExecuteClientTool('call'), isFalse);
+      expect(manager.mayExecuteClientTool('unmatched-call'), isFalse);
+      expect(manager.getInterrupts().single.kind, 'generic');
+    });
+    test('rejects malformed first-party and unsupported binding kinds', () {
+      final manager = InterruptManager();
+      manager.hydrate(ChatHydrationInterrupts(
+        runId: 'run-1',
+        threadId: 'thread-1',
+        generation: 1,
+        pending: [
+          {
+            'id': 'malformed',
+            'metadata': {
+              'tanstack:interruptBinding': {
+                'kind': 'client-tool-execution',
+                'interruptId': 'malformed',
+                'interruptedRunId': 'run-1',
+                'generation': 1,
+              }
+            }
+          },
+          {
+            'id': 'foreign',
+            'metadata': {
+              'tanstack:interruptBinding': {
+                'kind': 'vendor-extension',
+                'interruptId': 'foreign',
+                'interruptedRunId': 'run-1',
+                'generation': 1,
+              }
+            }
+          },
+        ],
+      ));
+      final items = manager.getInterrupts();
+      expect(items[0].kind, 'generic');
+      expect(items[0].status, ChatInterruptStatus.error);
+      expect(items[0].errors.single['code'], 'stale');
+      expect(items[0].canResolve, isFalse);
+      expect(items[1].kind, 'unbound');
+      expect(items[1].canResolve, isFalse);
+    });
     test(
         'surfaces an interrupt with no binding as unbound rather than resolvable generic',
         () {
@@ -357,7 +526,11 @@ void main() {
         'outputSchemaHash': expectedOutputSchemaHash,
         'responseSchemaHash': expectedResponseSchemaHash,
       };
-      final manager = InterruptManager(tools: tools);
+      final submissions = <InterruptManagerSubmission>[];
+      final manager = InterruptManager(
+        tools: tools,
+        submitSubmission: (submission) async => submissions.add(submission),
+      );
       manager.hydrate(ChatHydrationInterrupts(
         runId: 'core-run',
         threadId: 'core-thread',
@@ -368,13 +541,27 @@ void main() {
 
       final drift = Map<String, dynamic>.from(binding)
         ..['outputSchemaHash'] = 'sha256:configured-schema-drift';
-      manager.hydrate(ChatHydrationInterrupts(
-        runId: 'core-run',
-        threadId: 'core-thread',
-        generation: 0,
-        pending: <Map<String, dynamic>>[descriptor(drift)],
-      ));
+      final diagnostics = <String>[];
+      runZoned(() {
+        for (var i = 0; i < 2; i++) {
+          manager.hydrate(ChatHydrationInterrupts(
+            runId: 'core-run',
+            threadId: 'core-thread',
+            generation: 0,
+            pending: <Map<String, dynamic>>[descriptor(drift)],
+          ));
+        }
+      }, zoneSpecification: ZoneSpecification(print: (_, __, ___, line) {
+        diagnostics.add(line);
+      }));
+      expect(diagnostics, hasLength(1));
+      expect(diagnostics.single, contains('tool "lookup"'));
+      expect(diagnostics.single, contains('schemas differ'));
       expect(manager.getInterrupts().single.kind, 'generic');
+      expect(manager.resolveClientToolOutput('core-call', {'accountId': 'a'}),
+          isTrue);
+      expect(
+          submissions.single.resolutions.single['payload'], {'accountId': 'a'});
     });
 
     test('keeps deprecated approval and client-tool reason aliases compatible',
@@ -1202,7 +1389,7 @@ void main() {
           isTrue);
     });
 
-    test('resolves pre-binding client-tool fallback with raw output', () {
+    test('does not resolve pre-binding client-tool metadata', () {
       final submissions = <InterruptManagerSubmission>[];
       final manager = InterruptManager(
         tools: tools,
@@ -1225,18 +1412,12 @@ void main() {
           },
         ],
       ));
-      expect(manager.getInterrupts().single.kind, 'generic');
+      expect(manager.getInterrupts().single.kind, 'unbound');
       expect(
           manager.resolveClientToolOutput(
               'call-degraded', <String, dynamic>{'accountId': 'a'}),
-          isTrue);
-      expect(submissions.single.resolutions, <Map<String, dynamic>>[
-        <String, dynamic>{
-          'interruptId': 'client-degraded',
-          'status': 'resolved',
-          'payload': <String, dynamic>{'accountId': 'a'},
-        },
-      ]);
+          isFalse);
+      expect(submissions, isEmpty);
     });
 
     test(

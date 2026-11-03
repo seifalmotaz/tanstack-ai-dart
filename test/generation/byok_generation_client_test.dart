@@ -17,13 +17,17 @@ void main() {
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
       final calls = <Map<String, dynamic>>[];
-      final client = GenerationClient.legacy(
+      final client = GenerationClient<Map<String, dynamic>,
+          Map<String, dynamic>, Map<String, dynamic>>.fetcher(
+        threadId: 'thread-1',
         fetcher: (input, options) async {
           calls.add({
             'input': input,
             'headers': options.headers,
+            'threadId': options.threadId,
+            'runId': options.runId,
           });
-          return {'ok': true};
+          return const GenerationFetchResult.value({'ok': true});
         },
         byok: clientByok,
       );
@@ -31,6 +35,9 @@ void main() {
       client.updateOptions(byokProvider: () => 'elevenlabs');
       await client.generate({'prompt': 'hello'});
 
+      expect(calls.single['threadId'], 'thread-1');
+      expect(calls.single['runId'],
+          isA<String>().having((s) => s.isNotEmpty, 'not empty', isTrue));
       expect(calls.single['input'], {'prompt': 'hello'});
       expect(calls.single['headers'], {
         'x-byok-elevenlabs': elevenLabsKey,
@@ -44,7 +51,7 @@ void main() {
       await clientByok.update('elevenlabs', elevenLabsKey);
       RunAgentInputContext? context;
       final connection = ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           context = runContext;
           yield runFinished('run-1');
         },
@@ -187,18 +194,22 @@ void main() {
         byok.DefineByokOptions(storage: byok.memoryStorage()),
       );
       await clientByok.update('elevenlabs', elevenLabsKey);
-      final calls = <Map<String, String>?>[];
-      final client = GenerationClient.legacy(
+      final calls = <GenerationFetcherOptions>[];
+      final client = GenerationClient<Map<String, dynamic>,
+          Map<String, dynamic>, Map<String, dynamic>>.fetcher(
+        threadId: 'thread-1',
         fetcher: (input, options) async {
-          calls.add(options.headers);
-          return {'ok': true};
+          calls.add(options);
+          return const GenerationFetchResult.value({'ok': true});
         },
         byok: clientByok,
       );
 
       await client.generate({'prompt': 'hello'});
 
-      expect(calls.single, {'x-byok-elevenlabs': elevenLabsKey});
+      expect(calls.single.headers, {'x-byok-elevenlabs': elevenLabsKey});
+      expect(calls.single.threadId, 'thread-1');
+      expect(calls.single.runId, isNotEmpty);
     });
 
     test('does not send every stored key when no provider resolves', () async {

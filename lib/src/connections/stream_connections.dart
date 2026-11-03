@@ -8,20 +8,21 @@ import 'http_common.dart';
 import 'response_stream.dart';
 import 'resumable_stream.dart';
 import 'types.dart';
+import 'wire.dart';
 
-/// Direct stream factory (`stream()`).
-typedef StreamFactory = Stream<StreamChunk> Function(
-  List<WireMessage> messages,
-  Map<String, dynamic>? data,
-  CancellationSignal? signal,
-);
+/// Request passed to a direct or RPC stream factory.
+class StreamRequest {
+  final List<WireMessage> messages;
+  final Map<String, dynamic>? data;
+  final CancellationSignal? signal;
+  final Map<String, dynamic> input;
 
-/// RPC stream call (`rpcStream()`).
-typedef RpcStreamCall = Stream<StreamChunk> Function(
-  List<WireMessage> messages,
-  Map<String, dynamic>? data,
-  CancellationSignal? signal,
-);
+  const StreamRequest(
+      {required this.messages, this.data, this.signal, required this.input});
+}
+
+typedef StreamFactory = Stream<StreamChunk> Function(StreamRequest request);
+typedef RpcStreamCall = Stream<StreamChunk> Function(StreamRequest request);
 
 /// Optional persistence handlers for request-scoped adapters.
 class StreamConnectionHandlers {
@@ -42,8 +43,14 @@ ConnectionAdapter stream(
   StreamConnectionHandlers? handlers,
 ]) {
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
-      yield* _abortableStream(streamFactory(messages, data, signal), signal);
+    connect: (messages, {data, signal, required runContext}) async* {
+      yield* _abortableStream(
+          streamFactory(StreamRequest(
+              messages: messages,
+              data: data,
+              signal: signal,
+              input: buildRunAgentInputBody(messages, data, runContext))),
+          signal);
     },
     hydrate: handlers?.hydrate,
     hydrateGeneration: handlers?.hydrateGeneration,
@@ -57,8 +64,14 @@ ConnectionAdapter rpcStream(
   StreamConnectionHandlers? handlers,
 ]) {
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
-      yield* _abortableStream(rpcCall(messages, data, signal), signal);
+    connect: (messages, {data, signal, required runContext}) async* {
+      yield* _abortableStream(
+          rpcCall(StreamRequest(
+              messages: messages,
+              data: data,
+              signal: signal,
+              input: buildRunAgentInputBody(messages, data, runContext))),
+          signal);
     },
     hydrate: handlers?.hydrate,
     hydrateGeneration: handlers?.hydrateGeneration,
@@ -131,16 +144,10 @@ typedef ChatFetcher = FutureOr<ChatFetcherResult> Function(
 /// [ChatFetcherStreamResult] is yielded directly.
 ConnectionAdapter fetcherToConnectionAdapter(ChatFetcher fetcher) {
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
+    connect: (messages, {data, signal, required runContext}) async* {
       if (signal == null) {
         throw ArgumentError(
           'fetcherToConnectionAdapter requires a CancellationSignal — the '
-          'chat client always supplies one.',
-        );
-      }
-      if (runContext == null) {
-        throw ArgumentError(
-          'fetcherToConnectionAdapter requires a RunAgentInputContext — the '
           'chat client always supplies one.',
         );
       }
@@ -162,8 +169,6 @@ ConnectionAdapter fetcherToConnectionAdapter(ChatFetcher fetcher) {
           final lines = readResponseLines(response.stream, signal: signal);
           await for (final event in linesToSseEvents(
             lines,
-            fallbackThreadId: runContext.threadId,
-            fallbackRunId: runContext.runId,
           )) {
             yield event.chunk;
           }

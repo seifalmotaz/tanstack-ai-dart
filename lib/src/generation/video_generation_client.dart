@@ -1,5 +1,4 @@
-/// Ported from `packages/ai-client/src/video-generation-client.ts`
-/// (TanStack AI client 0.40.0).
+/// Ported from `packages/ai-client/src/video-generation-client.ts`.
 library;
 
 import 'dart:async';
@@ -97,6 +96,7 @@ class VideoGenerationClient<TOutput> {
 
   factory VideoGenerationClient({
     required ConnectionAdapter connection,
+    required String threadId,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -124,7 +124,7 @@ class VideoGenerationClient<TOutput> {
     void Function(GenerationResumeState? state)? onResumeStateChange,
   }) =>
       VideoGenerationClient.legacy(
-        threadId: persistence.threadId,
+        threadId: validateGenerationThreadId(threadId),
         connection: connection,
         body: body,
         byok: byok,
@@ -153,6 +153,7 @@ class VideoGenerationClient<TOutput> {
 
   factory VideoGenerationClient.fetcher({
     required GenerationFetcher<VideoGenerateInput, VideoGenerateResult> fetcher,
+    required String threadId,
     Map<String, dynamic>? body,
     platform_byok.ByokClient? byok,
     FutureOr<String?> Function()? byokProvider,
@@ -180,7 +181,7 @@ class VideoGenerationClient<TOutput> {
     void Function(GenerationResumeState? state)? onResumeStateChange,
   }) =>
       VideoGenerationClient.legacy(
-        threadId: persistence.threadId,
+        threadId: validateGenerationThreadId(threadId),
         fetcher: (input, options) async => await fetcher(input, options),
         body: body,
         byok: byok,
@@ -344,14 +345,21 @@ class VideoGenerationClient<TOutput> {
       if (_fetcher != null) {
         final raw = await _fetcher(
           input,
-          GenerationFetcherOptions(signal: signal, headers: headers),
+          GenerationFetcherOptions(
+            signal: signal,
+            threadId: _threadId,
+            runId: runId,
+            headers: headers,
+          ),
         );
         if (!_ownsRun(_abortController, abortController)) return;
         if (raw is GenerationFetchedStream<VideoGenerateResult>) {
           await _processStream(
-            connections.stream((_, data, signal) => raw.stream).connect!(
+            connections.stream((_) => raw.stream).connect!(
               const <WireMessage>[],
               signal: signal,
+              runContext:
+                  RunAgentInputContext(threadId: _threadId, runId: runId),
             ),
             runId,
             abortController,

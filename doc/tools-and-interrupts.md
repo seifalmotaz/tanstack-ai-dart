@@ -31,7 +31,7 @@ ClientTool<String, int> lengthTool() => ClientTool<String, int>(
 
 Register it with `client.tools = [lengthTool()]`, or pass the list to the chat
 constructor. Execution callbacks return `FutureOr<TOutput>` and receive a
-`ToolCallContext` containing caller context and cancellation.
+`ToolCallContext` containing caller context, thread and tool-call IDs, and cancellation.
 
 `RawJsonSchema` describes a schema but does not validate inputs. Use
 `StandardSchema` when validation or decoding is required. Output schemas can
@@ -42,16 +42,13 @@ callback contract; they do not derive a runtime validator from a Dart class.
 
 Set `needsApproval: true` on a tool whose execution requires the user's choice.
 Render pending approvals from the client's interrupt/tool state. When the user
-answers a known approval ID:
+answers an approval interrupt:
 
 <!-- example: example/recipes.dart#approval -->
 ```dart
-Future<void> answerApproval(
-  ChatClient client,
-  String approvalId,
-  bool approved,
-) =>
-    client.addToolApprovalResponse(id: approvalId, approved: approved);
+void answerApproval(ChatInterrupt interrupt, bool approved) {
+  interrupt.resolveApproval(approved);
+}
 ```
 <!-- /example -->
 
@@ -68,8 +65,8 @@ missing output and an output whose value is `null` are different protocol states
 `ChatInterruptDefinition` registers an interrupt and optional schemas/validation.
 Inspect `client.getInterruptState()` or `snapshot.interruptState` for pending
 items. `resolveInterrupts`, `cancelInterrupts`, and `retryInterrupts` operate on
-managed pending definitions. `resumeInterrupts` accepts serialized resolution
-entries for the active interrupted context.
+managed pending definitions. `resumeInterruptsUnsafe` accepts serialized
+resolution entries with an explicit interrupted thread and run for recovery.
 
 Keep the server's interrupt IDs and response shape intact. Low-level unsafe
 resume operations require explicit durable IDs and should be reserved for an

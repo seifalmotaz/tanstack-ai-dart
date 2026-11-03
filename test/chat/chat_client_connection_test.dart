@@ -13,7 +13,7 @@ void main() {
         () async {
       final sent = <List<conn.WireMessage>>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           sent.add(messages.map((m) => Map<String, dynamic>.from(m)).toList());
           yield <String, dynamic>{
             'type': 'RUN_STARTED',
@@ -86,7 +86,7 @@ void main() {
     test('hydrates through the canonical connection hydrate callback',
         () async {
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
             'runId': 'r',
@@ -132,7 +132,7 @@ void main() {
     test('re-joins an active hydrated run automatically', () async {
       final joined = <String>[];
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
             'runId': 'r',
@@ -190,10 +190,10 @@ void main() {
       final queue = StreamController<Map<String, dynamic>>.broadcast();
       final connection = conn.ConnectionAdapter.subscription(
         subscribe: ({signal}) => queue.stream,
-        send: (messages, {data, signal, runContext}) async {
+        send: (messages, {data, signal, required runContext}) async {
           queue.add(<String, dynamic>{
             'type': 'RUN_STARTED',
-            'runId': runContext!.runId,
+            'runId': runContext.runId,
             'threadId': runContext.threadId,
           });
           queue.add(<String, dynamic>{
@@ -228,11 +228,11 @@ void main() {
         () async {
       conn.RunAgentInputContext? seen;
       final connection = conn.ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           seen = runContext;
           yield <String, dynamic>{
             'type': 'RUN_FINISHED',
-            'runId': runContext!.runId,
+            'runId': runContext.runId,
             'threadId': runContext.threadId,
             'outcome': <String, dynamic>{'type': 'success'},
           };

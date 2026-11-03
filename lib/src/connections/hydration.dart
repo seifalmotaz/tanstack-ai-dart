@@ -48,12 +48,14 @@ class ChatHydrationResult {
   final List<WireMessage> messages;
   final ActiveRun? activeRun;
   final ChatInterrupts? interrupts;
+  final List<Object?>? pendingWaits;
   final ChatHydrationPage page;
 
   const ChatHydrationResult({
     required this.messages,
     this.activeRun,
     this.interrupts,
+    this.pendingWaits,
     this.page = const ChatHydrationPage.full(),
   });
 }
@@ -117,6 +119,9 @@ Future<ChatHydrationResult> fetchThreadHydration(
         : <WireMessage>[],
     activeRun: activeRun,
     interrupts: interrupts,
+    pendingWaits: map['pendingWaits'] is List
+        ? List<Object?>.unmodifiable(map['pendingWaits'] as List)
+        : null,
     page: _readPage(map['page']),
   );
 }

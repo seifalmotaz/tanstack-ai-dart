@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'mixed_upstream_fixture.dart';
+
 import 'package:tanstack_ai_dart/src/processing/processor.dart';
 import 'package:test/test.dart';
 
@@ -541,22 +543,6 @@ void main() {
   });
 
   test(
-      'should clear pendingThinkingStepId when a later STEP_STARTED arrives with an active message',
-      () {
-    final p = processor();
-    p.processChunk(stepStarted('step-a'));
-    p.processChunk(textStart());
-    p.processChunk(stepStarted('step-b'));
-    p.processChunk(reasoningContent('contentB'));
-    final thinking =
-        partsOf(p).where((part) => part['type'] == 'thinking').toList();
-    expect(thinking.any((part) => part['stepId'] == 'step-a'), isFalse);
-    expect(thinking, hasLength(1));
-    expect(thinking.single['stepId'], 'step-b');
-    expect(thinking.single['content'], 'contentB');
-  });
-
-  test(
       'should not update tool-call output when TOOL_CALL_END has no result (existing test)',
       () {
     final p = processor();
@@ -922,23 +908,18 @@ void main() {
         onStreamEnd: (_) => order.add('stream-end'),
       ),
     ));
-    for (final event in [
-      runStarted(),
-      toolStart('call_server', 'searchTools'),
-      toolArgs('call_server', '{"query":"hello"}'),
-      toolResult('call_server', '{"results":["a","b"]}'),
-      toolStart('call_client', 'showNotification'),
-      toolArgs('call_client', '{"message":"done"}'),
-      custom('tool-input-available', {
-        'toolCallId': 'call_client',
-        'toolName': 'showNotification',
-        'input': {'message': 'done'},
-      }),
-      runFinished('tool_calls'),
-    ]) {
+    // Captured from pinned upstream chat() with volatile ids and timestamps normalized.
+    final events = (jsonDecode(upstreamMixedStreamJson) as List)
+        .cast<Map<String, dynamic>>();
+    for (final event in events) {
       wrapped.processChunk(event);
     }
     expect(order, ['tool-call']);
+    expect(spy.toolCalls.single, {
+      'toolCallId': 'call_client',
+      'toolName': 'showNotification',
+      'input': {'message': 'done'}
+    });
     expect(p.getMessages(), isEmpty);
   });
 
@@ -1036,9 +1017,8 @@ void main() {
     final spy = Spy();
     final p = processor(spy);
     p.prepareAssistantMessage();
-    p.processChunk(stepStarted('step-1'));
-    p.processChunk(reasoningContent('Thinking'));
-    p.processChunk(reasoningContent(' more'));
+    p.processChunk(reasoningContent('Thinking', 'step-1'));
+    p.processChunk(reasoningContent(' more', 'step-1'));
     final id = p.getCurrentAssistantMessageId()!;
     expect(spy.thinking, [
       [id, 'step-1', 'Thinking'],
@@ -1091,13 +1071,6 @@ void main() {
     final p = processor(spy);
     p.processChunk(textContent('Hi'));
     expect(spy.starts, 1);
-  });
-
-  test('should still work when only startAssistantMessage is used', () {
-    final p = processor();
-    final id = p.startAssistantMessage();
-    p.processChunk(textContent('Hello', id));
-    expect(p.getMessages().single['id'], id);
   });
 
   test(
@@ -1714,9 +1687,9 @@ void main() {
       () {
     final p = processor();
     p.processChunk(runStarted());
-    p.processChunk(stepStarted('step-1'));
+    p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'rs_A'}));
     p.processChunk(reasoningContent('first', 'rs_A'));
-    p.processChunk(stepStarted('step-2'));
+    p.processChunk(chunk('REASONING_MESSAGE_START', {'messageId': 'rs_B'}));
     p.processChunk(reasoningContent('second', 'rs_B'));
     p.processChunk(chunk('REASONING_ENCRYPTED_VALUE', {
       'subtype': 'message',
@@ -1736,10 +1709,10 @@ void main() {
       {
         'type': 'thinking',
         'content': 'first',
-        'stepId': 'step-1',
+        'stepId': 'rs_A',
         'signature': 'sig-a-late',
       },
-      {'type': 'thinking', 'content': 'second', 'stepId': 'step-2'},
+      {'type': 'thinking', 'content': 'second', 'stepId': 'rs_B'},
     ]);
     expect(messages[1]['parts'], [
       {'type': 'thinking', 'content': 'next', 'stepId': 'rs_C'},

@@ -3,7 +3,7 @@ import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 import 'package:test/test.dart';
 
 ConnectionAdapter _connection() => ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
       yield {'type': 'TEXT_MESSAGE_CONTENT', 'messageId': 'm', 'delta': 'a'};
       yield {'type': 'TEXT_MESSAGE_CONTENT', 'messageId': 'm', 'delta': 'b'};
       yield {'type': 'RUN_FINISHED', 'runId': 'run-m', 'threadId': 'thread-m'};

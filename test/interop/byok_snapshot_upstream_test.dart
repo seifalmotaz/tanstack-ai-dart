@@ -1,4 +1,4 @@
-// Ported from the pinned @tanstack/ai-client 0.40.0 cases:
+// Ported from the upstream @tanstack/ai-client cases:
 // - packages/ai-client/tests/byok-headers.test.ts
 // - packages/ai-client/tests/client-snapshots.test.ts (generation/video slice)
 //
@@ -84,11 +84,16 @@ void main() {
 
     test('does not throw when a custom connect ignores headers', () async {
       final adapter = ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {},
+        connect: (messages, {data, signal, required runContext}) async* {},
       );
 
       await expectLater(
-        adapter.connect!(const <WireMessage>[]).toList(),
+        adapter.connect!(
+          const <WireMessage>[],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        )
+            .toList(),
         completes,
       );
     });

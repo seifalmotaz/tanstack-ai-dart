@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' show parseHttpDate;
 
 import '../platform/byok/errors.dart' as byok;
 import 'errors.dart';
@@ -23,12 +24,38 @@ Future<void> assertResponseOk(
   if (response.statusCode == 401) {
     final missing = await _readByok(response);
     if (missing != null) throw missing;
+  } else {
+    try {
+      await response.stream.listen(null).cancel();
+    } catch (_) {
+      // Preserve the HTTP status if transport cleanup fails.
+    }
   }
   final reason = response.reasonPhrase ?? '';
   final statusText = reason.isEmpty ? '' : reason;
+  final retryAfter = _parseRetryAfter(response.headers['retry-after']);
   throw xhr
-      ? XhrStatusException(response.statusCode, statusText)
-      : HttpStatusException(response.statusCode, statusText);
+      ? XhrStatusException(response.statusCode, statusText,
+          retryAfter: retryAfter)
+      : HttpStatusException(response.statusCode, statusText,
+          retryAfter: retryAfter);
+}
+
+Duration? _parseRetryAfter(String? value) {
+  if (value == null) return null;
+  final seconds = num.tryParse(value);
+  if (seconds != null && seconds.isFinite && seconds >= 0) {
+    const maxMicros = 0x1fffffffffffff;
+    final micros = seconds * Duration.microsecondsPerSecond;
+    return Duration(
+        microseconds: micros >= maxMicros ? maxMicros : micros.round());
+  }
+  try {
+    final wait = parseHttpDate(value).difference(DateTime.now().toUtc());
+    return wait.isNegative ? Duration.zero : wait;
+  } on FormatException {
+    return null;
+  }
 }
 
 Future<ByokMissingError?> _readByok(http.StreamedResponse response) async {

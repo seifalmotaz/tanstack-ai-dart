@@ -1,4 +1,4 @@
-/// Devtools surface for the pure-Dart TanStack AI client 0.40.0 port.
+/// Devtools surface for the pure-Dart TanStack AI client port.
 ///
 /// Faithful port of `packages/ai-client/src/devtools.ts` and
 /// `devtools-noop.ts`. Bridges are platform-neutral: an injected event sink

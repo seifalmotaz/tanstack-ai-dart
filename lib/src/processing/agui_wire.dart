@@ -4,7 +4,7 @@ import 'message_converters.dart';
 
 typedef _Json = Map<String, dynamic>;
 
-/// Serialize UI/model messages to the AG-UI wire format used by AI 0.70.0.
+/// Serialize UI/model messages to the AG-UI wire format used by AI.
 List<Map<String, dynamic>> uiMessagesToWire(
   List<Map<String, dynamic>> messages, {
   bool includeSnapshotStructuredOutput = false,

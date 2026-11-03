@@ -1,4 +1,4 @@
-/// Chat surface targeting TanStack AI client 0.40.0.
+/// Chat surface targeting TanStack AI client.
 ///
 /// The root barrel also exports this surface. This library exposes the chat client, queue/history/interrupt configuration, run
 /// ownership helpers and UI selectors.

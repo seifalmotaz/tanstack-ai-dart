@@ -1386,57 +1386,6 @@ void main() {
 
       harness.bridge.dispose();
     });
-
-    test('emits approval responses and snapshots the approval decision', () {
-      final harness = ChatHarness(
-        initialMessages: <Map<String, dynamic>>[
-          <String, dynamic>{
-            'id': 'msg-approval',
-            'role': 'assistant',
-            'parts': <Map<String, dynamic>>[
-              <String, dynamic>{
-                'type': 'tool-call',
-                'id': 'approval-call-1',
-                'name': 'addToCart',
-                'arguments': '{"guitarId":"6","quantity":1}',
-                'input': <String, dynamic>{'guitarId': '6', 'quantity': 1},
-                'state': 'approval-requested',
-                'approval': <String, dynamic>{
-                  'id': 'approval-approval-call-1',
-                  'needsApproval': true,
-                  'approved': null,
-                },
-              },
-            ],
-          },
-        ],
-      );
-      harness.bridge.mountWithTools(0);
-      harness.eventClient.clear();
-
-      harness.bridge.events.toolApprovalResponded(
-        'approval-approval-call-1',
-        'approval-call-1',
-        true,
-      );
-
-      final responded = harness.eventClient
-          .emitted('tools:approval:responded')
-          .single
-          .payload;
-      expect(responded['hookId'], 'thread-1');
-      expect(responded['clientId'], 'thread-1');
-      expect(responded['toolCallId'], 'approval-call-1');
-      expect(responded['approvalId'], 'approval-approval-call-1');
-      expect(responded['approved'], isTrue);
-
-      final message =
-          (latestState(harness.eventClient)['messages'] as List).single as Map;
-      final toolCall = (message['parts'] as List).single as Map;
-      expect(toolCall['state'], 'approval-requested');
-
-      harness.bridge.dispose();
-    });
   });
 
   group('createChatDevtoolsBridge by environment', () {

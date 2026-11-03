@@ -3,7 +3,7 @@
 // subscribe/send loop landed.
 //
 // Upstream reference:
-//   packages/ai-client/tests/chat-client.test.ts (commit 7095ebbf)
+//   packages/ai-client/tests/chat-client.test.ts (see tool/upstream_tests.json for the current pin)
 //
 // Every test below is a behavior test. Tests for API surfaces the Dart client
 // does not expose yet use a dynamic call and fail with an explicit
@@ -116,7 +116,7 @@ class PushConnection {
 
   late final ConnectionAdapter adapter = ConnectionAdapter.subscription(
     subscribe: ({signal}) => _controller.stream,
-    send: (messages, {data, signal, runContext}) async {
+    send: (messages, {data, signal, required runContext}) async {
       sent.add(messages);
       contexts.add(runContext);
     },
@@ -138,7 +138,7 @@ class GatedConnect {
   final List<List<Map<String, dynamic>>> requests =
       <List<Map<String, dynamic>>>[];
   late final ConnectionAdapter adapter = ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
+    connect: (messages, {data, signal, required runContext}) async* {
       requests.add(messages);
       await release.future;
       for (final chunk in textChunks('Delayed')) {
@@ -259,7 +259,7 @@ void main() {
         threadId: threadId,
         connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => controller.stream,
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
       );
 
@@ -779,7 +779,7 @@ void main() {
       final runContexts = <RunAgentInputContext?>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             runContexts.add(runContext);
             for (final chunk in textChunks('Hello')) {
               yield chunk;
@@ -807,7 +807,7 @@ void main() {
       final onChunk = <Map<String, dynamic>>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{
               'type': 'TEXT_MESSAGE_CONTENT',
               'messageId': 'public-message',
@@ -889,7 +889,7 @@ void main() {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => failingSubscription('subscription failed'),
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
       );
 
@@ -907,7 +907,7 @@ void main() {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => throw StateError('subscription failed'),
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
       );
 
@@ -955,7 +955,7 @@ void main() {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => controller.stream,
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
         onSessionGeneratingChange: generatingChanges.add,
       );
@@ -1171,7 +1171,7 @@ void main() {
             }
             throw StateError('subscription failed');
           })(),
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
         onSessionGeneratingChange: generatingChanges.add,
       );
@@ -1223,7 +1223,7 @@ void main() {
       final persistence = RecordingPersistence();
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             await Future<void>.delayed(const Duration(milliseconds: 10));
             for (final chunk in textChunks('Delayed')) {
               yield chunk;
@@ -1254,7 +1254,7 @@ void main() {
       final releaseFirst = Completer<void>();
       final persistence = RecordingPersistence();
       final connection = ConnectionAdapter.connect(
-        connect: (messages, {data, signal, runContext}) async* {
+        connect: (messages, {data, signal, required runContext}) async* {
           final text = messages
               .expand((message) => message['parts'] is List
                   ? (message['parts'] as List)
@@ -1402,16 +1402,6 @@ void main() {
           'timestamp': 1,
         },
         <String, dynamic>{
-          'type': 'CUSTOM',
-          'name': 'tool-input-available',
-          'value': <String, dynamic>{
-            'toolCallId': 'tc-1',
-            'toolName': 'tool_one',
-            'input': <String, dynamic>{},
-          },
-          'timestamp': 1,
-        },
-        <String, dynamic>{
           'type': 'TOOL_CALL_START',
           'toolCallId': 'tc-2',
           'toolCallName': 'tool_two',
@@ -1423,23 +1413,13 @@ void main() {
           'delta': '{}',
           'timestamp': 1,
         },
-        <String, dynamic>{
-          'type': 'CUSTOM',
-          'name': 'tool-input-available',
-          'value': <String, dynamic>{
-            'toolCallId': 'tc-2',
-            'toolName': 'tool_two',
-            'input': <String, dynamic>{},
-          },
-          'timestamp': 1,
-        },
-        runFinished('run-round-1', 'thread-msg-1', 'tool_calls'),
+        runFinished('run-round-1', 'thread-msg-1', 'stop'),
       ];
       final roundTwo = textChunks('Done!', messageId: 'msg-2');
       var callIndex = 0;
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             callIndex++;
             final chunks = callIndex == 1 ? roundOne : roundTwo;
             for (final chunk in chunks) {
@@ -1563,7 +1543,7 @@ void main() {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.subscription(
           subscribe: ({signal}) => failingSubscription('subscription exploded'),
-          send: (messages, {data, signal, runContext}) async {},
+          send: (messages, {data, signal, required runContext}) async {},
         ),
         onError: (error, _) => errors.add(error),
       );
@@ -1586,7 +1566,7 @@ void main() {
       Object? seenContext = 'unset';
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             for (final chunk in customChunks(<({String name, Object? value})>[
               (name: 'test-event', value: <String, dynamic>{'value': 42}),
             ])) {

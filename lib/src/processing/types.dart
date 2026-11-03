@@ -56,7 +56,6 @@ class MessageStreamState {
   String totalTextContent = '';
   String currentSegmentText = '';
   String lastEmittedText = '';
-  bool hasSeenReasoningEvents = false;
   final Map<String, String> thinkingSteps = <String, String>{};
   final Map<String, String> thinkingStepSignatures = <String, String>{};
   final List<String> thinkingStepOrder = <String>[];

@@ -81,5 +81,6 @@ void main() {
       {'type': 'RUN_STARTED', 'runId': 'run'},
     ]);
     expect(warnings, hasLength(2));
+    expect(warnings.last, 'Failed to parse SSE chunk: [DONE]');
   });
 }

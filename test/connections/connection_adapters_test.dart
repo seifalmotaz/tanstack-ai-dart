@@ -11,6 +11,40 @@ import 'test_utils.dart';
 
 void main() {
   group('connection-adapters', () {
+    test('preserves reasoning metadata and run error fields', () {
+      final error = <String, dynamic>{
+        'type': 'RUN_ERROR',
+        'message': 'failed',
+        'rawText': 'provider response',
+        'errorType': 'provider_error',
+        'requestId': 'request-1',
+        'metadata': {
+          'tanstack': {
+            'reasoningItem': {'id': 'reason-1'}
+          }
+        },
+      };
+      final restored = restoreInboundChunk(error);
+      expect(restored['rawText'], 'provider response');
+      expect(restored['errorType'], 'provider_error');
+      expect(restored['requestId'], 'request-1');
+      expect(restored['reasoningItem'], {'id': 'reason-1'});
+    });
+    test('does not synthesize legacy toolName when restoring inbound chunks',
+        () {
+      final chunk = <String, dynamic>{
+        'type': 'TOOL_CALL_START',
+        'toolCallName': 'search',
+        'extra': true,
+      };
+      expect(restoreInboundChunk(chunk), {
+        'type': 'TOOL_CALL_START',
+        'toolCallName': 'search',
+        'extra': true,
+      });
+      chunk['toolName'] = 'existing';
+      expect(restoreInboundChunk(chunk)['toolName'], 'existing');
+    });
     test('forwards resume on a fetcher adapter', () async {
       ChatFetcherInput? seen;
       final adapter = fetcherToConnectionAdapter(
@@ -137,9 +171,13 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks, hasLength(1));
@@ -165,9 +203,13 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks, hasLength(1));
@@ -202,9 +244,13 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks.map((chunk) => chunk['type']), [
@@ -227,28 +273,15 @@ void main() {
           options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         expect(chunks, hasLength(1));
-      });
-
-      test('should synthesize RUN_FINISHED on [DONE] and stop reading',
-          () async {
-        final client =
-            FakeHttpClient((_) async => rawResponse('data: [DONE]\n\n'));
-        final adapter = fetchServerSentEvents(
-          '/api/chat',
-          options: FetchConnectionOptions(client: client),
-        );
-        final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
-        );
-        expect(chunks, hasLength(1));
-        expect(chunks.single['type'], 'RUN_FINISHED');
       });
 
       test('should throw a FormatException on malformed JSON', () async {
@@ -260,11 +293,27 @@ void main() {
         );
 
         await expectLater(
-          collect(adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ])),
+          collect(adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(isA<FormatException>()),
         );
+      });
+
+      test('treats the old DONE sentinel as invalid JSON', () async {
+        final client =
+            FakeHttpClient((_) async => rawResponse('data: [DONE]\n\n'));
+        final adapter = fetchServerSentEvents('/api/chat',
+            options: FetchConnectionOptions(client: client));
+        await expectLater(
+            collect(adapter.connect!([],
+                runContext:
+                    const RunAgentInputContext(threadId: 't', runId: 'r'))),
+            throwsFormatException);
       });
 
       test('should handle HTTP errors', () async {
@@ -281,9 +330,13 @@ void main() {
         );
 
         await expectLater(
-          collect(adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ])),
+          collect(adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(
             predicate<Object>(
               (error) =>
@@ -304,7 +357,11 @@ void main() {
           ),
         );
 
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
 
         expect(
             headersOf(client.requests.single),
@@ -333,6 +390,8 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: {'key': 'value'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
           ),
         );
 
@@ -340,7 +399,7 @@ void main() {
         expect(body['forwardedProps'], containsPair('key', 'value'));
       });
 
-      test('should mirror forwardedProps under legacy `data` field', () async {
+      test('does not copy forwardedProps into legacy data field', () async {
         final client = FakeHttpClient((_) async => rawResponse(''));
         final adapter = fetchServerSentEvents(
           '/api/chat',
@@ -353,12 +412,14 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: {'provider': 'openai', 'model': 'gpt-4o'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
           ),
         );
 
         final body = jsonBodyOf(client.requests.single);
-        expect(body['data'], body['forwardedProps']);
-        expect(body['data'], containsPair('provider', 'openai'));
+        expect(body, isNot(contains('data')));
+        expect(body['forwardedProps'], containsPair('provider', 'openai'));
       });
 
       test('should use custom client when provided', () async {
@@ -369,9 +430,13 @@ void main() {
         );
 
         await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(client.requests, hasLength(1));
@@ -385,7 +450,11 @@ void main() {
           options: () => FetchConnectionOptions(client: client),
         );
 
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
 
         expect(client.requests.single.url.toString(), '/api/dynamic');
       });
@@ -400,7 +469,11 @@ void main() {
           ),
         );
 
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
 
         expect(
           client.requests.single.headers,
@@ -418,7 +491,11 @@ void main() {
           ),
         );
 
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
 
         expect(
           client.requests.single.headers,
@@ -443,6 +520,8 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: {'key': 'value'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
           ),
         );
 
@@ -476,7 +555,12 @@ void main() {
         );
 
         final chunks = await collect(
-          adapter.connect!([], data: {'prompt': 'test'}),
+          adapter.connect!(
+            [],
+            data: {'prompt': 'test'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(chunks, hasLength(3));
@@ -521,7 +605,11 @@ void main() {
           '/api/chat',
           options: FetchConnectionOptions(client: client),
         );
-        final error = await captureError(() => collect(adapter.connect!([])));
+        final error = await captureError(() => collect(adapter.connect!(
+              [],
+              runContext: const RunAgentInputContext(
+                  threadId: 'test-thread', runId: 'test-run'),
+            )));
         expect(
           error.toString(),
           'HTTP error! status: 500 Internal Server Error',
@@ -539,7 +627,11 @@ void main() {
             headers: {'Authorization': 'Bearer token'},
           ),
         );
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         expect(
           client.requests.single.headers['Authorization'],
           'Bearer token',
@@ -638,9 +730,13 @@ void main() {
           options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         expect(chunks, hasLength(1));
       });
@@ -653,9 +749,13 @@ void main() {
           options: FetchConnectionOptions(client: client),
         );
         await expectLater(
-          collect(adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ])),
+          collect(adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(isA<FormatException>()),
         );
       });
@@ -673,9 +773,13 @@ void main() {
           options: FetchConnectionOptions(client: client),
         );
         await expectLater(
-          collect(adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ])),
+          collect(adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          )),
           throwsA(
             predicate<Object>(
               (error) =>
@@ -691,7 +795,11 @@ void main() {
           '/api/chat',
           options: FetchConnectionOptions(client: client),
         );
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         expect(client.requests, hasLength(1));
       });
 
@@ -704,7 +812,11 @@ void main() {
             headers: {'Authorization': 'Bearer token'},
           ),
         );
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         expect(
             client.requests.single.headers,
             containsPair(
@@ -731,6 +843,8 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: {'key': 'value'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
           ),
         );
         expect(
@@ -745,7 +859,11 @@ void main() {
           url: () => '/api/dynamic',
           options: () => FetchConnectionOptions(client: client),
         );
-        await collect(adapter.connect!([]));
+        await collect(adapter.connect!(
+          [],
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
+        ));
         expect(client.requests.single.url.toString(), '/api/dynamic');
       });
 
@@ -773,7 +891,12 @@ void main() {
           options: FetchConnectionOptions(client: client),
         );
         final chunks = await collect(
-          adapter.connect!([], data: {'prompt': 'test'}),
+          adapter.connect!(
+            [],
+            data: {'prompt': 'test'},
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         expect(chunks, hasLength(3));
         expect(chunks[0]['type'], 'RUN_STARTED');
@@ -808,15 +931,19 @@ void main() {
     group('stream', () {
       test('should delegate to stream factory', () async {
         var called = false;
-        final adapter = stream((messages, data, signal) async* {
+        final adapter = stream((request) async* {
           called = true;
           yield contentChunk('Hello');
         });
 
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(called, isTrue);
@@ -826,9 +953,11 @@ void main() {
       test('should pass data to stream factory', () async {
         List<WireMessage>? seenMessages;
         Map<String, dynamic>? seenData;
-        final adapter = stream((messages, data, signal) async* {
-          seenMessages = messages;
-          seenData = data;
+        Map<String, dynamic>? seenInput;
+        final adapter = stream((request) async* {
+          seenMessages = request.messages;
+          seenData = request.data;
+          seenInput = request.input;
           yield finishedChunk();
         });
         final data = {'key': 'value'};
@@ -839,16 +968,33 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: data,
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread',
+                runId: 'test-run',
+                resume: [
+                  {'interruptId': 'int-1', 'status': 'resolved'}
+                ]),
           ),
         );
 
         expect(seenMessages, isNotNull);
         expect(seenData, data);
+        expect(seenInput!['threadId'], 'test-thread');
+        expect(seenInput!['runId'], 'test-run');
+        expect(seenInput!['resume'], [
+          {'interruptId': 'int-1', 'status': 'resolved'}
+        ]);
+        expect(seenInput!['forwardedProps'], data);
+        expect(seenInput!['messages'], hasLength(1));
+        expect(seenInput, isNot(contains('data')));
+        expect(seenInput!['messages'], isA<List>());
+        expect(seenInput!['tools'], isEmpty);
+        expect(seenInput!['context'], isEmpty);
       });
 
       test('should spread supplied persistence handlers onto the adapter', () {
         final adapter = stream(
-          (messages, data, signal) async* {},
+          (request) async* {},
           StreamConnectionHandlers(
             hydrate: (threadId, {options}) async =>
                 const ChatHydrationResult(messages: []),
@@ -864,7 +1010,7 @@ void main() {
       });
 
       test('should omit persistence handlers that are not supplied', () {
-        final adapter = stream((messages, data, signal) async* {});
+        final adapter = stream((request) async* {});
         expect(adapter.hydrate, isNull);
         expect(adapter.hydrateGeneration, isNull);
         expect(adapter.joinRun, isNull);
@@ -887,7 +1033,7 @@ void main() {
       test(
           'should synthesize RUN_FINISHED when wrapped connect stream has no '
           'terminal event', () async {
-        final base = stream((messages, data, signal) async* {
+        final base = stream((request) async* {
           yield contentChunk('Hi');
         });
         final adapter = normalizeConnectionAdapter(base);
@@ -912,7 +1058,7 @@ void main() {
 
       test('should synthesize RUN_ERROR when wrapped connect stream throws',
           () async {
-        final base = stream((messages, data, signal) async* {
+        final base = stream((request) async* {
           throw StateError('connect exploded');
         });
         final adapter = normalizeConnectionAdapter(base);
@@ -941,7 +1087,7 @@ void main() {
       test(
           'should not synthesize duplicate RUN_ERROR when stream already '
           'emitted one before throwing', () async {
-        final base = stream((messages, data, signal) async* {
+        final base = stream((request) async* {
           yield {'type': 'RUN_ERROR', 'message': 'already failed'};
           throw StateError('connect exploded');
         });
@@ -951,9 +1097,13 @@ void main() {
             adapter.subscribe(signal: controller.signal).take(1).toList();
 
         final error = await captureError(
-          () => adapter.send([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          () => adapter.send(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
         final received = await receivedFuture;
 
@@ -967,15 +1117,19 @@ void main() {
     group('rpcStream', () {
       test('should delegate to RPC call', () async {
         var called = false;
-        final adapter = rpcStream((messages, data, signal) async* {
+        final adapter = rpcStream((request) async* {
           called = true;
           yield contentChunk('Hello');
         });
 
         final chunks = await collect(
-          adapter.connect!([
-            {'role': 'user', 'content': 'Hello'},
-          ]),
+          adapter.connect!(
+            [
+              {'role': 'user', 'content': 'Hello'},
+            ],
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread', runId: 'test-run'),
+          ),
         );
 
         expect(called, isTrue);
@@ -986,9 +1140,11 @@ void main() {
       test('should pass messages and data to RPC call', () async {
         List<WireMessage>? seenMessages;
         Map<String, dynamic>? seenData;
-        final adapter = rpcStream((messages, data, signal) async* {
-          seenMessages = messages;
-          seenData = data;
+        Map<String, dynamic>? seenInput;
+        final adapter = rpcStream((request) async* {
+          seenMessages = request.messages;
+          seenData = request.data;
+          seenInput = request.input;
           yield finishedChunk();
         });
         final data = {'model': 'gpt-4o'};
@@ -999,16 +1155,30 @@ void main() {
               {'role': 'user', 'content': 'Hello'},
             ],
             data: data,
+            runContext: const RunAgentInputContext(
+                threadId: 'test-thread',
+                runId: 'test-run',
+                resume: [
+                  {'interruptId': 'int-1', 'status': 'resolved'}
+                ]),
           ),
         );
 
         expect(seenMessages, isNotNull);
         expect(seenData, data);
+        expect(seenInput!['threadId'], 'test-thread');
+        expect(seenInput!['runId'], 'test-run');
+        expect(seenInput!['resume'], [
+          {'interruptId': 'int-1', 'status': 'resolved'}
+        ]);
+        expect(seenInput!['forwardedProps'], data);
+        expect(seenInput!['messages'], hasLength(1));
+        expect(seenInput, isNot(contains('data')));
       });
 
       test('should spread supplied persistence handlers onto the adapter', () {
         final adapter = rpcStream(
-          (messages, data, signal) async* {},
+          (request) async* {},
           StreamConnectionHandlers(
             hydrate: (threadId, {options}) async =>
                 const ChatHydrationResult(messages: []),
@@ -1023,7 +1193,7 @@ void main() {
       });
 
       test('should omit persistence handlers that are not supplied', () {
-        final adapter = rpcStream((messages, data, signal) async* {});
+        final adapter = rpcStream((request) async* {});
         expect(adapter.hydrate, isNull);
         expect(adapter.hydrateGeneration, isNull);
         expect(adapter.joinRun, isNull);
@@ -1102,6 +1272,23 @@ void main() {
     });
 
     group('chat hydrate paging', () {
+      test('preserves pending waits in hydration responses', () async {
+        final client = FakeHttpClient((_) async => jsonResponse({
+              'messages': <Object>[],
+              'pendingWaits': [
+                {'kind': 'timer', 'delay': 10},
+                'unknown',
+              ],
+            }));
+        final adapter = fetchHttpStream('/api/chat',
+            options: FetchConnectionOptions(client: client));
+        final result = await adapter.hydrate!('thread-1');
+        expect(result.pendingWaits, [
+          {'kind': 'timer', 'delay': 10},
+          'unknown',
+        ]);
+        expect(() => result.pendingWaits!.clear(), throwsUnsupportedError);
+      });
       test(
           'includes limit and before as search params when hydrate options '
           'are passed', () async {
@@ -1182,7 +1369,7 @@ void main() {
         ChatHydrateOptions? seenOptions;
         final normalized = normalizeConnectionAdapter(
           ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) async* {},
+            connect: (messages, {data, signal, required runContext}) async* {},
             hydrate: (threadId, {options}) async {
               seenOptions = options;
               return hydration;

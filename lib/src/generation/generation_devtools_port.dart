@@ -7,6 +7,7 @@
 library;
 
 import '../devtools/devtools_types.dart';
+import '../identity.dart';
 
 export '../devtools/devtools_types.dart'
     show AIDevtoolsClientMetadata, AIDevtoolsGenerationProgress;
@@ -102,8 +103,7 @@ class NoOpGenerationDevtoolsBridgePort implements GenerationDevtoolsBridgePort {
   const NoOpGenerationDevtoolsBridgePort();
 
   @override
-  String beginRun(Object? input) =>
-      'noop-run-${DateTime.now().microsecondsSinceEpoch}';
+  String beginRun(Object? input) => generateIdentity('run');
 
   @override
   void ensureRunStarted(String runId) {}

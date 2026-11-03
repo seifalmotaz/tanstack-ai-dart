@@ -2,16 +2,16 @@
   "schemaVersion": "platform-upstream-mapping/v1",
   "generatedFrom": "tool/upstream_tests.json",
   "upstreamPackage": "@tanstack/ai-client",
-  "upstreamVersion": "0.40.0",
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamVersion": "1.0.1",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "inventory": {
-    "files": 69,
-    "runtimeCases": 1011,
-    "sha256": "sha256:1cc1ac6ac75ca032d928860cefc96de579840ebd86eea0d82412015cf4632f49"
+    "files": 68,
+    "runtimeCases": 1014,
+    "sha256": "sha256:b4ccaf3002f6a64071513465f60100a98adc36d2ce7e9e8dfd4f7557d6c80cf8"
   },
   "reviewMethod": "Read each paired Dart test body and recorded its actual expect/expectLater/expectEmit statements; titles were used only to locate candidates. Compile-adapted cases run dart analyze on temporary fixtures under .dart_tool/platform_type_fixtures.",
   "mainImplementationHashes": {
-    "lib/platform.dart": "sha256:8bb2d61cba10878ec9dec3fa0c9b344ba0b6c83580fce7ef63c2ad94e2037bdd",
+    "lib/platform.dart": "sha256:e9ae2136ea7832df00f783b7c54bbd0f4ae6ea504b115bd566e0241a89553dbf",
     "lib/src/cancellation.dart": "sha256:569dac447b74a04351ff03588a95352dc49ab96d1a6630835f4d0a8cd3b18a44",
     "lib/src/crypto/keyring_crypto.dart": "sha256:e5008010435f255ecc1fd43469a728b388ca1b2ff41d8a9b7179e092411fef06",
     "lib/src/crypto/passkey_crypto.dart": "sha256:2702ad17503ff519985be59697ae9099326aefa4369695c2eb2a214d243aa117",
@@ -23,8 +23,8 @@
     "lib/src/platform/byok/providers.dart": "sha256:cebe147cda39dfb7668128e709799aa31f12ac69a876659ef26854896f464169",
     "lib/src/platform/byok/resolve.dart": "sha256:3ec4e870da6e155197cc2b1961a0d9f44c124a9f166f95b62aedcecfad0b87aa",
     "lib/src/platform/byok/storage.dart": "sha256:f097acc6f05c71374258126bd2f850738de74a0a4f72903e0e51e84e00362605",
-    "lib/src/platform/client_persistor.dart": "sha256:a625f7c13e9bbf9265dfbe0d292d5f18116a7142731bc1bbb119cdb3626f955e",
-    "lib/src/platform/events.dart": "sha256:c42b35e8615ab87f72b8917f86a90837194ae608ed43d911aa7ce22a0b48e637",
+    "lib/src/platform/client_persistor.dart": "sha256:602a5a4db1406abf582e2e2c0b70a5ef8e8330151158515ac28c494e4a874015",
+    "lib/src/platform/events.dart": "sha256:edbf424d0081e10bcfe3a2b76a56ab1f29e33a7f1f566558a64252e54788695d",
     "lib/src/platform/interrupt_schema.dart": "sha256:ec265b9f5b122876792eb7977c6fde45e6e9b7496e7a1e5b8ce934f1aea31d08",
     "lib/src/platform/mcp_app_bridge.dart": "sha256:6f0ae2308126c3b09b239ad7c264673584af01dffb756d47346ec7d7c39c84c1",
     "lib/src/platform/message_date_normalizer.dart": "sha256:4b6977cba4881567c1267b4fbd6612c7a124f74d250a0dbbd7d07c8a4b14b38b",
@@ -33,7 +33,7 @@
     "lib/src/platform/realtime_types.dart": "sha256:5c9b7e3383f449b40e3645620d8dfa286128d67e5c35a196cd21e8a92ccd81bf",
     "lib/src/platform/snapshot_atom.dart": "sha256:478ed722dab0e7efc1abd5c0ce595ae5c15f4d725d4938cc6bdfa49a26cd8074",
     "lib/src/platform/storage_adapters.dart": "sha256:ca62711e1f4bee40c6102474e64563b430545578be6cd8804eebfc430cd76b79",
-    "lib/src/platform/tool_types.dart": "sha256:0b67c9bfa0b887a9694f1bae6c8be393b48d362fd74e4ee3625980f7e42cec96",
+    "lib/src/platform/tool_types.dart": "sha256:c0735ca6eeabbcc751dd6aab3f51a0e22649c29706a79c96191fe0df7e16ab28",
     "lib/src/platform/web_mcp_tools.dart": "sha256:f39a627565d7f4a95053d58ead674843349220fd25553f43fde730a1648d97c6"
   },
   "scope": {
@@ -57,7 +57,7 @@
       "web-mcp-tools-types.test.ts",
       "web-mcp-tools.test.ts"
     ],
-    "caseCount": 242,
+    "caseCount": 241,
     "domains": [
       "audio-recorder",
       "byok-client",
@@ -77,11 +77,11 @@
     "notes": "Includes platform-owned files plus BYOK flow files and the sessionGenerating slice of chat-client.test.ts because the requested platform domain names them. tool-types.test.ts and byok-headers.test.ts are included as honest missing cases."
   },
   "summary": {
-    "totalCases": 242,
+    "totalCases": 241,
     "implemented": 217,
     "compileAdapted": 4,
-    "missing": 7,
-    "runtime": 224,
+    "missing": 6,
+    "runtime": 223,
     "static": 18,
     "notRepresentable": 14
   },
@@ -2245,19 +2245,6 @@
       "runtimeVsStatic": "runtime",
       "actualAssertions": [
         "expectEmit(0, 'tools:result:added', { 'toolCallId': 'call-1', 'toolName': 'get_weather', 'output': {'temp': 72}, 'state': 'output-available', 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:result:added', 'user-visible'), })"
-      ]
-    },
-    {
-      "domain": "events",
-      "upstreamFile": "events.test.ts",
-      "upstreamName": "events DefaultChatClientEventEmitter emits tools:approval:responded with user-visible envelope and run context",
-      "upstreamTitle": "emits tools:approval:responded with user-visible envelope and run context",
-      "dartFile": "test/platform/events_test.dart",
-      "dartTestName": "emits tools:approval:responded with user-visible envelope and run context",
-      "status": "implemented",
-      "runtimeVsStatic": "runtime",
-      "actualAssertions": [
-        "expectEmit(0, 'tools:approval:responded', { 'approvalId': 'approval-1', 'toolCallId': 'call-1', 'approved': true, 'threadId': 'thread-1', 'runId': 'run-1', ...expectedEnvelope('tools:approval:responded', 'user-visible'), })"
       ]
     },
     {

@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
   "target": {
-    "aiClient": "0.40.0",
-    "ai": "0.70.0",
-    "commit": "7095ebbf1b59175f0cd339c1c477d6af55b312de"
+    "aiClient": "1.0.1",
+    "ai": "1.0.1",
+    "commit": "a7eb58459ebd528bbcc4166cc68377b777989462"
   },
   "publicBarrels": {
     "index": "lib/tanstack_ai_dart.dart",
     "byok": "lib/byok.dart",
-    "ui": "lib/ui.dart"
+    "ui": "lib/ui.dart",
+    "devtools": "lib/devtools.dart"
   },
   "surfaces": {
     "index": {
@@ -430,8 +431,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatClientPersistence",
-          "reason": "Dart erases the tools generic and accepts Object? from getItem for legacy message arrays.",
-          "evidence": "lib/src/platform/persistence_types.dart:81",
+          "reason": "Dart adapters return Object? at the boundary, but ChatPersistor rejects legacy bare arrays and protects them from writes until cleared; stored records use ChatPersistedState.",
+          "evidence": "lib/src/platform/client_persistor.dart; test/platform/client_persistor_test.dart",
           "public": true
         },
         {
@@ -450,8 +451,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "Object persistence / ChatPersistenceOptions",
-          "reason": "Dart accepts bool, adapter or persistence options through Object plus the ChatPersistenceOptions factory constructors.",
-          "evidence": "lib/src/chat/types.dart:475; lib/src/chat/types.dart:520",
+          "reason": "The modern constructor accepts ChatPersistenceOptions named variants. Explicit legacy constructors additionally retain the older bool or adapter call shape.",
+          "evidence": "lib/src/chat/types.dart; lib/src/client.dart",
           "public": true
         },
         {
@@ -460,8 +461,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatPersistenceOptions",
-          "reason": "Dart class holds Object persistence plus threadId/history; upstream is a generic union of ephemeral/server/stored options.",
-          "evidence": "lib/src/chat/types.dart:494",
+          "reason": "Named ephemeral, server and stored choices carry storage/history only; the client constructor requires the thread ID once.",
+          "evidence": "lib/src/chat/types.dart; test/types/chat_types_negative.dart",
           "public": true
         },
         {
@@ -630,8 +631,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "Map<String,dynamic>",
-          "reason": "Wire request bodies stay JSON maps; assistantChatBody builds the same shape.",
-          "evidence": "lib/src/protocol.dart:1304",
+          "reason": "Modern adapters build the canonical RunAgentInput JSON map with required thread and run identity, resume entries and forwardedProps.",
+          "evidence": "lib/src/connections/stream_connections.dart; test/connections/connection_adapters_test.dart",
           "public": true
         },
         {
@@ -660,8 +661,8 @@
           "kind": "type",
           "status": "dart-adapted",
           "dart": "ChatSnapshot",
-          "reason": "Dart publishes ChatSnapshot from ChatClient.getSnapshot(); same fields with String status/connectionStatus.",
-          "evidence": "lib/src/chat/types.dart:424",
+          "reason": "Dart publishes ChatSnapshot with enum states, immutable interrupt state and an additional resumeState pointer for the atomic states stream.",
+          "evidence": "lib/src/chat/types.dart; test/chat/chat_client_resume_test.dart",
           "public": true
         },
         {
@@ -720,8 +721,8 @@
           "kind": "type",
           "status": "name-collision",
           "dart": "ChatTransport",
-          "reason": "The exported Dart ChatTransport is the legacy 0.42 stream transport, not the upstream connection/fetcher XOR type. Use ChatClientOptions.connection/fetcher and ConnectionAdapter for the 0.40 contract.",
-          "evidence": "lib/src/transport.dart:76",
+          "reason": "Dart uses named ConnectionAdapter variants and fetcherToConnectionAdapter for the modern contract; ChatTransport remains an explicit legacy stream seam.",
+          "evidence": "lib/src/connections/connection_adapter.dart; lib/src/connections/stream_connections.dart",
           "public": true
         },
         {
@@ -898,10 +899,10 @@
           "name": "GenerationFetcherOptions",
           "source": "./generation-types",
           "kind": "type",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "GenerationFetcherOptions",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/generation/generation_types.dart:494",
+          "reason": "Dart uses CancellationSignal and requires threadId and runId on the typed fetcher options, with optional BYOK headers.",
+          "evidence": "lib/src/generation/generation_types.dart; test/generation/generation_client_test.dart",
           "public": true
         },
         {
@@ -1335,26 +1336,6 @@
           "public": true
         },
         {
-          "name": "RealtimeAdapter",
-          "source": "./realtime-types",
-          "kind": "type",
-          "status": "dart-equivalent",
-          "dart": "RealtimeAdapter",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/platform/realtime_types.dart:459",
-          "public": true
-        },
-        {
-          "name": "RealtimeConnection",
-          "source": "./realtime-types",
-          "kind": "type",
-          "status": "dart-equivalent",
-          "dart": "RealtimeConnection",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/platform/realtime_types.dart:467",
-          "public": true
-        },
-        {
           "name": "RealtimeClientOptions",
           "source": "./realtime-types",
           "kind": "type",
@@ -1505,6 +1486,26 @@
           "public": true
         },
         {
+          "name": "ChatHydrateOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatHydrateOptions",
+          "reason": "A named Dart hydration value is exported from the root and connections barrels.",
+          "evidence": "lib/src/connections/hydration.dart:39; test/types/chat_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "ChatHydrationResult",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatHydrationResult",
+          "reason": "A named Dart hydration value is exported from the root and connections barrels.",
+          "evidence": "lib/src/connections/hydration.dart:47; test/types/chat_types_positive.dart",
+          "public": true
+        },
+        {
           "name": "ConnectionAdapter",
           "source": "./connection-adapters",
           "kind": "type",
@@ -1568,10 +1569,10 @@
           "name": "RunAgentInputContext",
           "source": "./connection-adapters",
           "kind": "type",
-          "status": "dart-equivalent",
+          "status": "dart-adapted",
           "dart": "RunAgentInputContext",
-          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
-          "evidence": "lib/src/connections/types.dart:32",
+          "reason": "Dart named fields require threadId and runId; adapter connect and send callbacks require this value.",
+          "evidence": "lib/src/connections/types.dart; test/types/connections_types_negative.dart",
           "public": true
         },
         {
@@ -1864,14 +1865,7 @@
           "evidence": "lib/src/processing/types.dart:99",
           "public": true
         }
-      ],
-      "counts": {
-        "platform-interface": 7,
-        "dart-adapted": 74,
-        "dart-equivalent": 88,
-        "language-limitation": 15,
-        "name-collision": 1
-      }
+      ]
     },
     "byok": {
       "total": 21,
@@ -1972,8 +1966,8 @@
           "kind": "type",
           "status": "server-out-of-scope",
           "dart": null,
-          "reason": "Declared by the @tanstack/ai/byok server package (ai 0.70.0); the pinned client snapshot does not vendor its definition. The client port implements the ByokProvider descriptor and defineByokProvider only.",
-          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/byok.ts:9",
+          "reason": "The provider initializer is declared by the @tanstack/ai/byok server package; the Dart client exposes ByokProvider and defineByokProvider instead.",
+          "evidence": ".dart_tool/upstream-ai/packages/ai/src/byok/define-provider.ts; lib/src/platform/byok/providers.dart",
           "public": false
         },
         {
@@ -2086,12 +2080,7 @@
           "evidence": "lib/src/platform/byok/passkey.dart:111",
           "public": true
         }
-      ],
-      "counts": {
-        "dart-equivalent": 17,
-        "server-out-of-scope": 1,
-        "platform-interface": 3
-      }
+      ]
     },
     "ui": {
       "total": 41,
@@ -2506,12 +2495,302 @@
           "evidence": "lib/src/chat/types.dart:222",
           "public": true
         }
-      ],
-      "counts": {
-        "dart-equivalent": 13,
-        "language-limitation": 20,
-        "dart-adapted": 8
-      }
+      ]
+    },
+    "devtools": {
+      "total": 29,
+      "records": [
+        {
+          "name": "AIDevtoolsDisplayOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsDisplayOptions",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:17; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsClientMetadata",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsClientMetadata",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:23; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationProgress",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationProgress",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:38; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationMediaItem",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationMediaItem",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:59; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationVideoJob",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationVideoJob",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:97; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationPreview",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationPreview",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:129; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationRunStatus",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationRunStatus",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:261; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationRunSnapshot",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationRunSnapshot",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:269; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationPreviewInput",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationPreviewInput",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:381; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsChatSnapshot",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsChatSnapshot",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:393; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "createAIDevtoolsGenerationPreview",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "createAIDevtoolsGenerationPreview",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:850; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsToolFixture",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsToolFixture",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:502; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsBridgeOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsBridgeOptions",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:642; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "ClientDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "ClientDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools.dart:78; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "ChatDevtoolsBridgeOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatDevtoolsBridgeOptions",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:680; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "ChatDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "ChatDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools.dart:329; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationSnapshotBase",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationSnapshotBase",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:317; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "GenerationDevtoolsBridgeOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "GenerationDevtoolsBridgeOptions",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:707; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "GenerationDevtoolsCoreState",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationCoreState",
+          "reason": "Dart uses a named typed value and an AIDevtools-prefixed name for this core state or run patch.",
+          "evidence": "lib/src/devtools/devtools_types.dart:433; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "GenerationRunPatch",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsGenerationRunPatch",
+          "reason": "Dart uses a named typed value and an AIDevtools-prefixed name for this core state or run patch.",
+          "evidence": "lib/src/devtools/devtools_types.dart:591; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "GenerationDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "GenerationDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools.dart:865; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsVideoSnapshotBase",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsVideoSnapshotBase",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:354; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "VideoDevtoolsCoreState",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsVideoCoreState",
+          "reason": "Dart uses a named typed value and an AIDevtools-prefixed name for this core state or run patch.",
+          "evidence": "lib/src/devtools/devtools_types.dart:455; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "VideoDevtoolsBridgeOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "VideoDevtoolsBridgeOptions",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_types.dart:728; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "VideoRunPatch",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AIDevtoolsVideoRunPatch",
+          "reason": "Dart uses a named typed value and an AIDevtools-prefixed name for this core state or run patch.",
+          "evidence": "lib/src/devtools/devtools_types.dart:619; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "VideoDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "VideoDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools.dart:1188; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "createChatDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "createChatDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_factories.dart:19; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "createGenerationDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "createGenerationDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_factories.dart:29; test/types/devtools_types_positive.dart",
+          "public": true
+        },
+        {
+          "name": "createVideoDevtoolsBridge",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-adapted",
+          "dart": "createVideoDevtoolsBridge",
+          "reason": "Dart exposes this declaration through its devtools barrel with typed Dart values and an injected event sink where applicable.",
+          "evidence": "lib/src/devtools/devtools_factories.dart:39; test/types/devtools_types_positive.dart",
+          "public": true
+        }
+      ]
     }
   },
   "summary": {
@@ -2533,5 +2812,5 @@
       "dart-adapted": 8
     }
   },
-  "dartApiRevision": "0.3.0"
+  "dartApiRevision": "0.4.0"
 }

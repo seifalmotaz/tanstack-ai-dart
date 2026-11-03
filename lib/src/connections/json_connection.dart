@@ -100,7 +100,7 @@ ConnectionAdapter fetchJsonProvider({
   Future<FetchJsonOptions> resolveOptions() => _resolveJsonOptions(options);
 
   return ConnectionAdapter.connect(
-    connect: (messages, {data, signal, runContext}) async* {
+    connect: (messages, {data, signal, required runContext}) async* {
       final target = await resolveUrl();
       final resolved = await resolveOptions();
       final client = resolved.client ??
@@ -129,8 +129,8 @@ ConnectionAdapter fetchJsonProvider({
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...?resolved.headers,
-          ...?runContext?.headers,
-          if (runContext != null) 'X-Run-Id': runContext.runId,
+          ...?runContext.headers,
+          'X-Run-Id': runContext.runId,
         })
         ..body = jsonEncode(requestBody);
       try {
@@ -293,10 +293,12 @@ Future<_JsonRunBody> _getJsonRunBody(
         options.signal,
       );
     } catch (error) {
-      final isTransportDrop =
-          error is StreamReadError && !(options.signal?.isCancelled ?? false);
-      if (!isTransportDrop) rethrow;
-      await tracker.waitBeforeReconnect(false, options.signal);
+      if ((options.signal?.isCancelled ?? false) ||
+          (error is! StreamReadError && !isTemporaryStatusError(error))) {
+        rethrow;
+      }
+      await tracker.waitBeforeReconnect(
+          false, options.signal, retryAfterForError(error));
       if (options.signal?.isCancelled ?? false) rethrow;
     }
   }

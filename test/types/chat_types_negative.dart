@@ -13,7 +13,14 @@ import 'package:tanstack_ai_dart/chat.dart';
 import 'package:tanstack_ai_dart/platform.dart' show ChatPersistedState;
 import 'package:tanstack_ai_dart/connections.dart' as conn;
 
-void negativeCases() {
+void negativeCases(ChatInterrupt interrupt) {
+  // expect-error: assignment_to_final
+  interrupt.status = ChatInterruptStatus.error;
+  // expect-error: assignment_to_final
+  interrupt.canResolve = false;
+  // expect-error: assignment_to_final
+  interrupt.resolution = {};
+
   // Upstream: `id` is not a ChatClientOptions field; `threadId` is.
   // expect-error: undefined_named_parameter (id)
   ChatClientOptions(id: 'thread-1');
@@ -22,19 +29,10 @@ void negativeCases() {
   // expect-error: argument_type_not_assignable (int to String?)
   ChatClientOptions(threadId: 1);
 
-  // Dart's typed persistence constructors enforce the JS conditional contract.
-  // expect-error: missing_required_argument
-  ChatPersistenceOptions.server();
-
-  // expect-error: missing_required_argument
-  ChatPersistenceOptions.stored(adapter: _Store());
-
   // History belongs to server-authoritative persistence, never a custom store.
   // expect-error: undefined_named_parameter
   ChatPersistenceOptions.stored(
-      threadId: 't',
-      adapter: _Store(),
-      history: const ChatHistoryConfig(pageSize: 20));
+      adapter: _Store(), history: const ChatHistoryConfig(pageSize: 20));
 
   // Upstream: queue accepts ChatQueueConfig, not the string shorthand here.
   // expect-error: argument_type_not_assignable (String to ChatQueueConfig?)

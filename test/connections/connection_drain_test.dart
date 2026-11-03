@@ -10,7 +10,7 @@ void main() {
     final releaseGate = Completer<void>();
     final controller = CancellationController();
     final adapter = normalizeConnectionAdapter(
-      stream((messages, data, signal) async* {
+      stream((request) async* {
         yield {
           'type': 'RUN_FINISHED',
           'threadId': 'thread',
@@ -27,7 +27,11 @@ void main() {
       }
     }();
     var settled = false;
-    final sending = adapter.send([]).then((_) => settled = true);
+    final sending = adapter.send(
+      [],
+      runContext: const RunAgentInputContext(
+          threadId: 'test-thread', runId: 'test-run'),
+    ).then((_) => settled = true);
 
     await Future<void>.delayed(const Duration(milliseconds: 20));
     expect(settled, isFalse);
@@ -42,7 +46,7 @@ void main() {
 
   test('does not wait for a subscriber that has exited', () async {
     final adapter = normalizeConnectionAdapter(
-      stream((messages, data, signal) async* {
+      stream((request) async* {
         yield {
           'type': 'RUN_FINISHED',
           'threadId': 'thread',
@@ -56,7 +60,11 @@ void main() {
         break;
       }
     }();
-    await adapter.send([]);
+    await adapter.send(
+      [],
+      runContext: const RunAgentInputContext(
+          threadId: 'test-thread', runId: 'test-run'),
+    );
     await consuming;
   });
 }

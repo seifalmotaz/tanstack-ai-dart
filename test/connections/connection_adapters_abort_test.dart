@@ -27,9 +27,11 @@ void main() {
           {'role': 'user', 'content': 'Hello'},
         ],
         signal: controller.signal,
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
       ));
       await tick();
-      body.write('data: [DONE]\n\n');
+      body.write(sseEvent(finishedChunk()));
       await tick();
       controller.cancel();
       final chunks = await result.timeout(const Duration(seconds: 2));
@@ -43,7 +45,7 @@ void main() {
       final provided = CancellationController();
       final options = CancellationController();
       final client = FakeHttpClient(
-        (_) async => rawResponse('data: [DONE]\n\n'),
+        (_) async => rawResponse(sseEvent(finishedChunk())),
       );
       final adapter = fetchServerSentEvents(
         '/api/chat',
@@ -56,6 +58,8 @@ void main() {
             {'role': 'user', 'content': 'Hello'},
           ],
           signal: provided.signal,
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
         ),
       );
 
@@ -76,6 +80,8 @@ void main() {
           {'role': 'user', 'content': 'Hello'},
         ],
         signal: controller.signal,
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
       ));
       await Future<void>.delayed(const Duration(milliseconds: 10));
       body.write(sseData('{"type":"TEXT_MESSAGE_CONTENT","delta":"Hello"}'));
@@ -101,6 +107,8 @@ void main() {
           {'role': 'user', 'content': 'Hello'},
         ],
         signal: controller.signal,
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
       ));
       await Future<void>.delayed(const Duration(milliseconds: 10));
       controller.cancel();
@@ -126,6 +134,8 @@ void main() {
             {'role': 'user', 'content': 'Hello'},
           ],
           signal: controller.signal,
+          runContext: const RunAgentInputContext(
+              threadId: 'test-thread', runId: 'test-run'),
         ),
       );
 
@@ -147,6 +157,8 @@ void main() {
           {'role': 'user', 'content': 'Hello'},
         ],
         signal: controller.signal,
+        runContext: const RunAgentInputContext(
+            threadId: 'test-thread', runId: 'test-run'),
       ));
       await Future<void>.delayed(const Duration(milliseconds: 10));
       body.write(ndjsonLine(contentChunk('Hello')));

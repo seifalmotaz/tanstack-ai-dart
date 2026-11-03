@@ -25,7 +25,7 @@ void main() {
           history: const ChatHistoryConfig(pageSize: 50),
           hydrate: (threadId, options) {
             calls.add(options);
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[userMessage('m-newest', 'latest')],
               page: const ChatHydrationPage(
                 truncated: true,
@@ -49,12 +49,12 @@ void main() {
           history: const ChatHistoryConfig(pageSize: 50),
           hydrate: (threadId, options) {
             if (options.before == 'm2') {
-              return ChatHydrationResult(
+              return LegacyChatHydrationResult(
                 messages: <AssistantTurn>[userMessage('m1', 'one')],
                 page: const ChatHydrationPage(),
               );
             }
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[
                 userMessage('m2', 'two'),
                 assistantMessage(
@@ -88,7 +88,7 @@ void main() {
         options: ChatClientOptions(
           threadId: 't1',
           history: const ChatHistoryConfig(pageSize: 50),
-          hydrate: (_, __) => ChatHydrationResult(
+          hydrate: (_, __) => LegacyChatHydrationResult(
             messages: <AssistantTurn>[
               userMessage('old-1', 'earlier'),
               assistantMessage(
@@ -118,7 +118,7 @@ void main() {
         transport: transport,
         options: ChatClientOptions(
           threadId: 't1',
-          hydrate: (_, __) => ChatHydrationResult(
+          hydrate: (_, __) => LegacyChatHydrationResult(
             messages: <AssistantTurn>[
               userMessage('old-1', 'earlier'),
               assistantMessage(
@@ -153,7 +153,7 @@ void main() {
             if (fail && options.before != null) {
               throw StateError('network');
             }
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[userMessage('m2', 'two')],
               page: const ChatHydrationPage(
                 truncated: true,
@@ -182,12 +182,12 @@ void main() {
             calls++;
             if (options.before != null) {
               await gate.future;
-              return ChatHydrationResult(
+              return LegacyChatHydrationResult(
                 messages: <AssistantTurn>[userMessage('m1', 'one')],
                 page: const ChatHydrationPage(),
               );
             }
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[userMessage('m2', 'two')],
               page: const ChatHydrationPage(
                 truncated: true,
@@ -214,7 +214,7 @@ void main() {
         options: ChatClientOptions(
           threadId: 't1',
           history: const ChatHistoryConfig(pageSize: 50),
-          hydrate: (_, __) => ChatHydrationResult(
+          hydrate: (_, __) => LegacyChatHydrationResult(
             messages: <AssistantTurn>[
               userMessage('u1', 'ask'),
               assistantMessage(
@@ -241,7 +241,7 @@ void main() {
         options: ChatClientOptions(
           threadId: 't1',
           history: const ChatHistoryConfig(pageSize: 50),
-          hydrate: (_, __) => ChatHydrationResult(
+          hydrate: (_, __) => LegacyChatHydrationResult(
             messages: <AssistantTurn>[
               userMessage('u1', 'ask'),
               assistantMessage(
@@ -288,12 +288,12 @@ void main() {
           history: const ChatHistoryConfig(pageSize: 50),
           hydrate: (_, options) {
             if (options.before == 'm2') {
-              return ChatHydrationResult(
+              return LegacyChatHydrationResult(
                 messages: <AssistantTurn>[userMessage('m1', 'one')],
                 page: const ChatHydrationPage(),
               );
             }
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[
                 userMessage('m2', 'two'),
                 assistantMessage(
@@ -326,7 +326,7 @@ void main() {
         options: ChatClientOptions(
           threadId: 't1',
           history: const ChatHistoryConfig(pageSize: 50),
-          hydrate: (_, options) => ChatHydrationResult(
+          hydrate: (_, options) => LegacyChatHydrationResult(
             messages: options.before == null
                 ? <AssistantTurn>[userMessage('m2', 'two')]
                 : const <AssistantTurn>[],
@@ -352,7 +352,7 @@ void main() {
         options: ChatClientOptions(
           threadId: 't1',
           history: const ChatHistoryConfig(pageSize: 50),
-          hydrate: (_, options) => ChatHydrationResult(
+          hydrate: (_, options) => LegacyChatHydrationResult(
             messages: options.before == null
                 ? <AssistantTurn>[userMessage('m2', 'two')]
                 : <AssistantTurn>[userMessage('m1', 'one')],
@@ -381,11 +381,11 @@ void main() {
           hydrate: (_, options) async {
             if (options.before != null) {
               await gate.future;
-              return ChatHydrationResult(
+              return LegacyChatHydrationResult(
                 messages: <AssistantTurn>[userMessage('m1', 'one')],
               );
             }
-            return ChatHydrationResult(
+            return LegacyChatHydrationResult(
               messages: <AssistantTurn>[userMessage('m2', 'two')],
               page: const ChatHydrationPage(
                 truncated: true,

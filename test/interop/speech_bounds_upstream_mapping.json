@@ -1,5 +1,5 @@
 {
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "cases": [
     {
       "upstreamFile": "connection-adapters-resumable.test.ts",

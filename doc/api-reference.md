@@ -38,7 +38,7 @@ Qualify domain imports when using both chat and wire-level hydration together.
 | Page history | `hasOlderMessages`, `await loadOlderMessages()` |
 | Replace transcript | `setMessagesManually(...)` |
 | Replace transport | `replaceConnection(...)` |
-| Respond to tool approval | `await addToolApprovalResponse(...)` |
+| Respond to tool approval | `interrupt.resolveApproval(...)` |
 | Submit a manual tool result | `await addToolResult(...)` |
 | Resolve managed interrupts | `resolveInterrupts(...)`, `cancelInterrupts()`, `retryInterrupts()` |
 

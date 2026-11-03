@@ -118,7 +118,7 @@ void main() {
       CancellationSignal? receivedSignal;
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             receivedSignal = signal;
             yield <String, dynamic>{
               'type': 'TEXT_MESSAGE_CONTENT',
@@ -150,7 +150,7 @@ void main() {
       CancellationSignal? receivedSignal;
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) {
+          connect: (messages, {data, signal, required runContext}) {
             receivedSignal = signal;
             return controller.stream;
           },
@@ -182,7 +182,7 @@ void main() {
       final chunks = <Map<String, dynamic>>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) {
+          connect: (messages, {data, signal, required runContext}) {
             receivedSignal = signal;
             return controller.stream;
           },
@@ -216,7 +216,7 @@ void main() {
       final errors = <Object>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) {
+          connect: (messages, {data, signal, required runContext}) {
             receivedSignal = signal;
             return controller.stream;
           },
@@ -248,7 +248,7 @@ void main() {
       CancellationSignal? receivedSignal;
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) {
+          connect: (messages, {data, signal, required runContext}) {
             receivedSignal = signal;
             return controller.stream;
           },
@@ -278,7 +278,7 @@ void main() {
       final signals = <CancellationSignal?>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             signals.add(signal);
             yield runFinished();
           },
@@ -302,7 +302,7 @@ void main() {
       late ChatClient client;
       client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             connectCalled = true;
             yield runFinished();
           },
@@ -332,7 +332,7 @@ void main() {
       late ChatClient client;
       client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             signals.add(signal);
             yield runFinished();
           },
@@ -500,7 +500,7 @@ void main() {
       final onMessagesChange = <List<AssistantTurn>>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{
               'type': 'ACTIVITY_SNAPSHOT',
               'messageId': 'act-1',
@@ -556,7 +556,7 @@ void main() {
       final sent = <List<Map<String, dynamic>>>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             sent.add(messages);
             yield <String, dynamic>{
               'type': 'ACTIVITY_SNAPSHOT',
@@ -591,7 +591,7 @@ void main() {
       var connectCalls = 0;
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             connectCalls++;
             yield runFinished();
           },
@@ -624,7 +624,7 @@ void main() {
     test('exposes initial activity messages', () async {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield runFinished();
           },
         ),
@@ -684,7 +684,7 @@ void main() {
       );
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             sent.add(messages);
             for (final chunk in textRun('next answer')) {
               yield chunk;
@@ -751,7 +751,7 @@ void main() {
       );
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{
               'type': 'MESSAGES_SNAPSHOT',
               'messages': <Map<String, dynamic>>[
@@ -792,7 +792,7 @@ void main() {
         () async {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{
               'type': 'MESSAGES_SNAPSHOT',
               'messages': <Map<String, dynamic>>[
@@ -846,7 +846,7 @@ void main() {
       final sent = <List<Map<String, dynamic>>>[];
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             sent.add(messages);
             for (final chunk in textRun('response')) {
               yield chunk;
@@ -977,7 +977,7 @@ void main() {
     test('should append a UIMessage', () async {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;
             }
@@ -1004,7 +1004,7 @@ void main() {
     test('should convert and append a ModelMessage', () async {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;
             }
@@ -1031,7 +1031,7 @@ void main() {
     test('should generate id and createdAt if missing', () async {
       final client = ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             for (final chunk in textRun('Response')) {
               yield chunk;
             }

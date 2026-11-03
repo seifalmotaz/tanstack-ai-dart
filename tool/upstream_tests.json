@@ -1,9 +1,9 @@
 {
   "package": "@tanstack/ai-client",
-  "version": "0.40.0",
-  "commit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
-  "runtimeTests": 1011,
-  "baselinePassed": 1011,
+  "version": "1.0.1",
+  "commit": "a7eb58459ebd528bbcc4166cc68377b777989462",
+  "runtimeTests": 1014,
+  "baselinePassed": 1014,
   "files": [
     {
       "file": "activity-types.test.ts",
@@ -589,8 +589,8 @@
       "file": "chat-client-context.test.ts",
       "tests": [
         {
-          "name": "ChatClient runtime context passes client-local context to client tool execution without serializing it",
-          "title": "passes client-local context to client tool execution without serializing it",
+          "name": "ChatClient runtime context passes client-local context and the thread id to client tool execution without serializing the context",
+          "title": "passes client-local context and the thread id to client tool execution without serializing the context",
           "baselineStatus": "passed"
         },
         {
@@ -724,23 +724,28 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient identity mints a thread id on first send when none is provided, and reuses it",
-          "title": "mints a thread id on first send when none is provided, and reuses it",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "ChatClient identity uses the provided threadId on the wire",
           "title": "uses the provided threadId on the wire",
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient identity throws when persistence is set without a threadId",
-          "title": "throws when persistence is set without a threadId",
+          "name": "ChatClient identity throws when threadId is empty",
+          "title": "throws when threadId is empty",
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient identity throws when persistence: true is set without a threadId",
-          "title": "throws when persistence: true is set without a threadId",
+          "name": "ChatClient identity throws when threadId is missing",
+          "title": "throws when threadId is missing",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "ChatClient identity throws when threadId is non-string",
+          "title": "throws when threadId is non-string",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "ChatClient identity throws for an empty threadId even with persistence",
+          "title": "throws for an empty threadId even with persistence",
           "baselineStatus": "passed"
         }
       ]
@@ -849,8 +854,13 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "InterruptManager hydration keeps deprecated approval and client-tool reason aliases compatible",
-          "title": "keeps deprecated approval and client-tool reason aliases compatible",
+          "name": "InterruptManager hydration sends a client tool result through the generic fallback when the schemas differ",
+          "title": "sends a client tool result through the generic fallback when the schemas differ",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "InterruptManager hydration gives the 0.x approval and client-tool reasons no special meaning",
+          "title": "gives the 0.x approval and client-tool reasons no special meaning",
           "baselineStatus": "passed"
         },
         {
@@ -936,11 +946,6 @@
         {
           "name": "InterruptManager transactions reports client-tool canonicalization failures as invalid output",
           "title": "reports client-tool canonicalization failures as invalid output",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "InterruptManager transactions resolves pre-binding client-tool fallback with raw output",
-          "title": "resolves pre-binding client-tool fallback with raw output",
           "baselineStatus": "passed"
         },
         {
@@ -1267,11 +1272,6 @@
           "name": "keeps activity when replay starts with 'encrypted reasoning'",
           "title": "keeps activity when replay starts with 'encrypted reasoning'",
           "baselineStatus": "passed"
-        },
-        {
-          "name": "keeps activity when replay starts with 'step signature'",
-          "title": "keeps activity when replay starts with 'step signature'",
-          "baselineStatus": "passed"
         }
       ]
     },
@@ -1299,8 +1299,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient resume resumeInterrupts sends AG-UI resume entries with the interrupted run context",
-          "title": "resumeInterrupts sends AG-UI resume entries with the interrupted run context",
+          "name": "ChatClient resume resumeInterruptsUnsafe sends AG-UI resume entries with the interrupted run context",
+          "title": "resumeInterruptsUnsafe sends AG-UI resume entries with the interrupted run context",
           "baselineStatus": "passed"
         },
         {
@@ -1319,8 +1319,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient resume resumeInterrupts reconnects with the full current message history",
-          "title": "resumeInterrupts reconnects with the full current message history",
+          "name": "ChatClient resume resumeInterruptsUnsafe reconnects with the full current message history",
+          "title": "resumeInterruptsUnsafe reconnects with the full current message history",
           "baselineStatus": "passed"
         },
         {
@@ -1354,31 +1354,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient resume addToolApprovalResponse sends a compatibility resume item",
-          "title": "addToolApprovalResponse sends a compatibility resume item",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient resume addToolApprovalResponse waits for all pending approval interrupts before resuming",
-          "title": "addToolApprovalResponse waits for all pending approval interrupts before resuming",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient resume restores pending interrupts from an initial resume snapshot",
-          "title": "restores pending interrupts from an initial resume snapshot",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient resume addToolResult for pending client-tool input sends a resume item",
-          "title": "addToolResult for pending client-tool input sends a resume item",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient resume addToolResult waits for all pending client-tool interrupts before resuming",
-          "title": "addToolResult waits for all pending client-tool interrupts before resuming",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "ChatClient resume auto-executed client tool during parent stream defers resume until isLoading clears",
           "title": "auto-executed client tool during parent stream defers resume until isLoading clears",
           "baselineStatus": "passed"
@@ -1389,23 +1364,13 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient resume continues a legacy client tool emitted by a native resume",
-          "title": "continues a legacy client tool emitted by a native resume",
+          "name": "ChatClient resume continues a frontend tool call emitted by a native resume",
+          "title": "continues a frontend tool call emitted by a native resume",
           "baselineStatus": "passed"
         },
         {
           "name": "ChatClient resume keeps native interrupt ownership when a sequential client tool resume fails",
           "title": "keeps native interrupt ownership when a sequential client tool resume fails",
-          "baselineStatus": "passed"
-        }
-      ]
-    },
-    {
-      "file": "chat-client-stop-continuation.test.ts",
-      "tests": [
-        {
-          "name": "stop() vs queued continuation does not auto-continue a legacy approval queued before stop()",
-          "title": "does not auto-continue a legacy approval queued before stop()",
           "baselineStatus": "passed"
         }
       ]
@@ -2059,8 +2024,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient multimodal sendMessage should merge per-message body with base body",
-          "title": "should merge per-message body with base body",
+          "name": "ChatClient multimodal sendMessage should merge per-message body with forwardedProps",
+          "title": "should merge per-message body with forwardedProps",
           "baselineStatus": "passed"
         },
         {
@@ -2069,8 +2034,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient multimodal sendMessage merges chat body, positional body, and sendOptions.body with sendOptions.body winning conflicts",
-          "title": "merges chat body, positional body, and sendOptions.body with sendOptions.body winning conflicts",
+          "name": "ChatClient multimodal sendMessage merges forwardedProps, positional body, and sendOptions.body with sendOptions.body winning conflicts",
+          "title": "merges forwardedProps, positional body, and sendOptions.body with sendOptions.body winning conflicts",
           "baselineStatus": "passed"
         },
         {
@@ -2086,21 +2051,6 @@
         {
           "name": "ChatClient multimodal sendMessage should accept forwardedProps option and merge into request body",
           "title": "should accept forwardedProps option and merge into request body",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient multimodal sendMessage updateOptions({ forwardedProps }) leaves a previously-set body intact",
-          "title": "updateOptions({ forwardedProps }) leaves a previously-set body intact",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient multimodal sendMessage updateOptions({ body }) leaves a previously-set forwardedProps intact",
-          "title": "updateOptions({ body }) leaves a previously-set forwardedProps intact",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient multimodal sendMessage should merge body and forwardedProps with forwardedProps winning",
-          "title": "should merge body and forwardedProps with forwardedProps winning",
           "baselineStatus": "passed"
         },
         {
@@ -2139,11 +2089,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient custom events should NOT call onCustomEvent for system events like tool-input-available",
-          "title": "should NOT call onCustomEvent for system events like tool-input-available",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "ChatClient custom events should work when onCustomEvent is not provided",
           "title": "should work when onCustomEvent is not provided",
           "baselineStatus": "passed"
@@ -2161,11 +2106,6 @@
         {
           "name": "ChatClient custom events should preserve event data exactly as received from stream",
           "title": "should preserve event data exactly as received from stream",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient chained tool approvals should continue after second approval arrives during active continuation stream",
-          "title": "should continue after second approval arrives during active continuation stream",
           "baselineStatus": "passed"
         },
         {
@@ -2379,8 +2319,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient persistence requires a threadId leaves threadId optional for ephemeral chats",
-          "title": "leaves threadId optional for ephemeral chats",
+          "name": "ChatClient persistence requires a threadId requires threadId for ephemeral chats too",
+          "title": "requires threadId for ephemeral chats too",
           "baselineStatus": "passed"
         },
         {
@@ -2441,6 +2381,11 @@
         {
           "name": "ChatPersistor readInitial returns the promise from an asynchronous getItem",
           "title": "returns the promise from an asynchronous getItem",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "ChatPersistor readInitial logs a 0.x bare-array record and does not overwrite it until a clear",
+          "title": "logs a 0.x bare-array record and does not overwrite it until a clear",
           "baselineStatus": "passed"
         },
         {
@@ -2777,10 +2722,85 @@
           "name": "NDJSON response cleanup drains a normally closed response without canceling its source",
           "title": "drains a normally closed response without canceling its source",
           "baselineStatus": "passed"
+        }
+      ]
+    },
+    {
+      "file": "connection-adapters-reconnect-backoff.test.ts",
+      "tests": [
+        {
+          "name": "reconnect backoff doubles the delay from 250 ms and still gives up after 5 reconnects",
+          "title": "doubles the delay from 250 ms and still gives up after 5 reconnects",
+          "baselineStatus": "passed"
         },
         {
-          "name": "cancels an SSE response after the DONE sentinel",
-          "title": "cancels an SSE response after the DONE sentinel",
+          "name": "reconnect backoff caps the delay at maxDelayMs",
+          "title": "caps the delay at maxDelayMs",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect backoff adds jitter that never makes a delay longer",
+          "title": "adds jitter that never makes a delay longer",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect backoff keeps reconnecting for budgetMs when a budget is set",
+          "title": "keeps reconnecting for budgetMs when a budget is set",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect backoff rides out a restart with a budget",
+          "title": "rides out a restart with a budget",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect backoff stops at the budget with initialDelayMs 0, after many tries",
+          "title": "stops at the budget with initialDelayMs 0, after many tries",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect backoff rejects invalid backoff options",
+          "title": "rejects invalid backoff options",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status retries a reconnect answered 408",
+          "title": "retries a reconnect answered 408",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status retries a reconnect answered 429",
+          "title": "retries a reconnect answered 429",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status retries a reconnect answered 502",
+          "title": "retries a reconnect answered 502",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status retries a reconnect answered 503",
+          "title": "retries a reconnect answered 503",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status retries a reconnect answered 504",
+          "title": "retries a reconnect answered 504",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status waits for Retry-After, capped at maxDelayMs",
+          "title": "waits for Retry-After, capped at maxDelayMs",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status fails at once on a status that is not temporary",
+          "title": "fails at once on a status that is not temporary",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "reconnect on a temporary HTTP status still gives up after maxAttempts when every reconnect is a 503",
+          "title": "still gives up after maxAttempts when every reconnect is a 503",
           "baselineStatus": "passed"
         }
       ]
@@ -2811,6 +2831,11 @@
         {
           "name": "resumable XHR transports xhrHttpStream reconnects after an onerror socket drop (held offset)",
           "title": "xhrHttpStream reconnects after an onerror socket drop (held offset)",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "resumable XHR transports xhrHttpStream retries a reconnect answered 503",
+          "title": "xhrHttpStream retries a reconnect answered 503",
           "baselineStatus": "passed"
         },
         {
@@ -2899,8 +2924,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress",
-          "title": "does not retry HTTP setup failures after earlier progress",
+          "name": "resumable SSE connection adapter does not retry a non-temporary HTTP status after earlier progress",
+          "title": "does not retry a non-temporary HTTP status after earlier progress",
           "baselineStatus": "passed"
         },
         {
@@ -3004,16 +3029,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
-          "title": "synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading",
-          "title": "aborts the XHR after [DONE] so late bytes stop downloading",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "xhr connection adapters xhrServerSentEvents parses SSE data frames without a space after the colon",
           "title": "parses SSE data frames without a space after the colon",
           "baselineStatus": "passed"
@@ -3109,11 +3124,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading",
-          "title": "should synthesize RUN_FINISHED on [DONE] and stop reading",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "connection-adapters fetchServerSentEvents should throw a SyntaxError on malformed JSON",
           "title": "should throw a SyntaxError on malformed JSON",
           "baselineStatus": "passed"
@@ -3151,11 +3161,6 @@
         {
           "name": "connection-adapters fetchServerSentEvents should pass data to request body forwardedProps",
           "title": "should pass data to request body forwardedProps",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field for backward-compat",
-          "title": "should mirror forwardedProps under legacy `data` field for backward-compat",
           "baselineStatus": "passed"
         },
         {
@@ -3244,6 +3249,11 @@
           "baselineStatus": "passed"
         },
         {
+          "name": "connection-adapters stream passes a run input that chatParamsFromRequestBody reads",
+          "title": "passes a run input that chatParamsFromRequestBody reads",
+          "baselineStatus": "passed"
+        },
+        {
           "name": "connection-adapters stream should delegate to stream factory",
           "title": "should delegate to stream factory",
           "baselineStatus": "passed"
@@ -3291,6 +3301,11 @@
         {
           "name": "connection-adapters normalizeConnectionAdapter should not synthesize duplicate RUN_ERROR when stream already emitted one before throwing",
           "title": "should not synthesize duplicate RUN_ERROR when stream already emitted one before throwing",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "connection-adapters rpcStream passes a run input that chatParamsFromRequestBody reads",
+          "title": "passes a run input that chatParamsFromRequestBody reads",
           "baselineStatus": "passed"
         },
         {
@@ -3374,8 +3389,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
-          "title": "registers a generated hookId when construct had no threadId",
+          "name": "ChatClient devtools bridge registers the threadId as the hookId",
+          "title": "registers the threadId as the hookId",
           "baselineStatus": "passed"
         },
         {
@@ -3554,16 +3569,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatClient devtools bridge emits approval requests that arrive after run finish",
-          "title": "emits approval requests that arrive after run finish",
-          "baselineStatus": "passed"
-        },
-        {
-          "name": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
-          "title": "emits approval responses and snapshots the approval decision",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
           "title": "keeps delayed client tool results linked to their original run context",
           "baselineStatus": "passed"
@@ -3699,11 +3704,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "events DefaultChatClientEventEmitter emits tools:approval:responded with user-visible envelope and run context",
-          "title": "emits tools:approval:responded with user-visible envelope and run context",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "events DefaultChatClientEventEmitter emits devtools:tool-fixture:applied with a user-visible envelope",
           "title": "emits devtools:tool-fixture:applied with a user-visible envelope",
           "baselineStatus": "passed"
@@ -3754,6 +3754,11 @@
           "baselineStatus": "passed"
         },
         {
+          "name": "fetchJson retries a poll answered 503",
+          "title": "retries a poll answered 503",
+          "baselineStatus": "passed"
+        },
+        {
           "name": "fetchJson gives up on a poll after the reconnect ceiling",
           "title": "gives up on a poll after the reconnect ceiling",
           "baselineStatus": "passed"
@@ -3784,6 +3789,16 @@
       "file": "generation-client.test.ts",
       "tests": [
         {
+          "name": "GenerationClient throws when threadId is \"\"",
+          "title": "throws when threadId is \"\"",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "GenerationClient throws when threadId is undefined",
+          "title": "throws when threadId is undefined",
+          "baselineStatus": "passed"
+        },
+        {
           "name": "GenerationClient fetcher mode should generate a result using fetcher",
           "title": "should generate a result using fetcher",
           "baselineStatus": "passed"
@@ -3799,8 +3814,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "GenerationClient fetcher mode should pass abort signal to fetcher",
-          "title": "should pass abort signal to fetcher",
+          "name": "GenerationClient fetcher mode should pass abort signal, threadId and runId to fetcher",
+          "title": "should pass abort signal, threadId and runId to fetcher",
           "baselineStatus": "passed"
         },
         {
@@ -4459,8 +4474,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "GenerationClient persistence requires a threadId leaves threadId optional for ephemeral generations",
-          "title": "leaves threadId optional for ephemeral generations",
+          "name": "GenerationClient persistence requires a threadId requires threadId for ephemeral generations too",
+          "title": "requires threadId for ephemeral generations too",
           "baselineStatus": "passed"
         },
         {
@@ -4789,11 +4804,6 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "ChatPersistor combined record normalizes a legacy bare-array record on read",
-          "title": "normalizes a legacy bare-array record on read",
-          "baselineStatus": "passed"
-        },
-        {
           "name": "localStoragePersistence ergonomics needs no type arg or codec and round-trips a ChatPersistedState",
           "title": "needs no type arg or codec and round-trips a ChatPersistedState",
           "baselineStatus": "passed"
@@ -4936,16 +4946,6 @@
         {
           "name": "snapshot-atom cloneSnapshotValue copies plain values and keeps other objects",
           "title": "cloneSnapshotValue copies plain values and keeps other objects",
-          "baselineStatus": "passed"
-        }
-      ]
-    },
-    {
-      "file": "sse-done-model.test.ts",
-      "tests": [
-        {
-          "name": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
-          "title": "copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
           "baselineStatus": "passed"
         }
       ]
@@ -5174,6 +5174,16 @@
       "file": "video-generation-client.test.ts",
       "tests": [
         {
+          "name": "VideoGenerationClient throws when threadId is \"\"",
+          "title": "throws when threadId is \"\"",
+          "baselineStatus": "passed"
+        },
+        {
+          "name": "VideoGenerationClient throws when threadId is undefined",
+          "title": "throws when threadId is undefined",
+          "baselineStatus": "passed"
+        },
+        {
           "name": "VideoGenerationClient fetcher mode should generate a result using fetcher",
           "title": "should generate a result using fetcher",
           "baselineStatus": "passed"
@@ -5189,8 +5199,8 @@
           "baselineStatus": "passed"
         },
         {
-          "name": "VideoGenerationClient fetcher mode should pass abort signal to fetcher",
-          "title": "should pass abort signal to fetcher",
+          "name": "VideoGenerationClient fetcher mode should pass abort signal, threadId and runId to fetcher",
+          "title": "should pass abort signal, threadId and runId to fetcher",
           "baselineStatus": "passed"
         },
         {
@@ -5405,14 +5415,5 @@
         }
       ]
     }
-  ],
-  "typecheckBaseline": {
-    "command": "tsc --noEmit --project tsconfig.json",
-    "typescript": "7.0.2",
-    "passed": true,
-    "compileOnlyFixtures": [
-      "interrupts-types.test-d.ts",
-      "ui-types.test-d.ts"
-    ]
-  }
+  ]
 }

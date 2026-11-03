@@ -6,9 +6,11 @@ import 'package:tanstack_ai_dart/tanstack_ai_dart.dart';
 // #docregion refresh
 ChatClient authenticatedChat(
   String endpoint,
+  String threadId,
   Future<String> Function() readAccessToken,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: fetchServerSentEventsProvider(
         url: () => endpoint,
         options: () async => FetchConnectionOptions(
@@ -20,6 +22,7 @@ ChatClient authenticatedChat(
 
 // #docregion fetcher
 ChatClient customHttpChat(
+  String threadId,
   Future<http.StreamedResponse> Function(
     ChatFetcherInput input,
     CancellationSignal? signal,
@@ -27,6 +30,7 @@ ChatClient customHttpChat(
   ) request,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: fetcherToConnectionAdapter(
         (input, {signal, headers}) async => ChatFetcherResult.response(
           await request(input, signal, headers),
@@ -36,7 +40,9 @@ ChatClient customHttpChat(
 // #enddocregion fetcher
 
 // #docregion queue
-ChatClient queuedChat(ConnectionAdapter connection) => ChatClient(
+ChatClient queuedChat(ConnectionAdapter connection, String threadId) =>
+    ChatClient(
+      threadId: threadId,
       connection: connection,
       queue: const ChatQueueConfig(
         whenBusy: QueueWhenBusy.queue,
@@ -59,9 +65,9 @@ Future<void> sendParts(ChatClient client) => client.sendMessage(
 // #docregion server-persistence
 ChatClient serverHistory(ConnectionAdapter connection, String threadId) =>
     ChatClient(
+      threadId: threadId,
       connection: connection,
       persistence: ChatPersistenceOptions.server(
-        threadId: threadId,
         history: const ChatHistoryConfig(pageSize: 20),
       ),
     );
@@ -74,9 +80,9 @@ ChatClient storedHistory(
   String threadId,
 ) =>
     ChatClient(
+      threadId: threadId,
       connection: connection,
       persistence: ChatPersistenceOptions.stored(
-        threadId: threadId,
         adapter: storage,
       ),
     );
@@ -99,12 +105,9 @@ ClientTool<String, int> lengthTool() => ClientTool<String, int>(
 // #enddocregion tool
 
 // #docregion approval
-Future<void> answerApproval(
-  ChatClient client,
-  String approvalId,
-  bool approved,
-) =>
-    client.addToolApprovalResponse(id: approvalId, approved: approved);
+void answerApproval(ChatInterrupt interrupt, bool approved) {
+  interrupt.resolveApproval(approved);
+}
 // #enddocregion approval
 
 // #docregion rendering
@@ -125,8 +128,10 @@ String summarizePart(ChatPart part) => switch (part) {
 Future<String?> generateText(
   Future<String> Function(String prompt, CancellationSignal signal) request,
   String prompt,
+  String threadId,
 ) async {
   final generator = GenerationClient<String, String, String>.fetcher(
+    threadId: threadId,
     fetcher: (input, options) async => GenerationFetchResult.value(
       await request(input, options.signal),
     ),
@@ -143,12 +148,14 @@ Future<String?> generateText(
 
 // #docregion video
 VideoGenerationClient<VideoGenerateResult> videoClient(
+  String threadId,
   Future<VideoGenerateResult> Function(
     VideoGenerateInput input,
     GenerationFetcherOptions options,
   ) request,
 ) =>
     VideoGenerationClient<VideoGenerateResult>.fetcher(
+      threadId: threadId,
       fetcher: (input, options) async => GenerationFetchResult.value(
         await request(input, options),
       ),

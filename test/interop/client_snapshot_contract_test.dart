@@ -6,10 +6,10 @@ void main() {
   test('snapshots expose lifecycle and freeze queued content and body',
       () async {
     final client = ChatClient.legacy(connection: ConnectionAdapter.connect(
-      connect: (_, {data, signal, runContext}) async* {
+      connect: (_, {data, signal, required runContext}) async* {
         yield {
           'type': 'RUN_STARTED',
-          'runId': runContext!.runId,
+          'runId': runContext.runId,
           'threadId': runContext.threadId
         };
         await signal!.whenCancelled;
@@ -75,7 +75,7 @@ void main() {
 
   ChatClient clientWith(AssistantTurn turn) => ChatClient.legacy(
         connection: ConnectionAdapter.connect(
-            connect: (messages, {data, signal, runContext}) =>
+            connect: (messages, {data, signal, required runContext}) =>
                 const Stream.empty()),
         messages: [turn],
       );

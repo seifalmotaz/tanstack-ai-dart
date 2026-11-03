@@ -268,7 +268,7 @@ void main() {
       final client = ChatClient.legacy(
         processingScheduler: StreamProcessingScheduler(now: () => 0),
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield* Stream<Map<String, dynamic>>.fromIterable(
               textChunks('ab'),
             );
@@ -293,7 +293,7 @@ void main() {
       );
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'};
             for (var i = 0; i < 20; i++) {
               await Future<void>.delayed(const Duration(milliseconds: 1));
@@ -326,7 +326,7 @@ void main() {
       final deltas = <String>[];
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             for (final delta in <String>['a', 'b', 'c']) {
               await Future<void>.delayed(const Duration(milliseconds: 1));
               yield <String, dynamic>{
@@ -359,7 +359,7 @@ void main() {
     test('processes a synchronous burst without dropping chunks', () async {
       final client = ChatClient.legacy(
         connection: conn.ConnectionAdapter.connect(
-          connect: (messages, {data, signal, runContext}) async* {
+          connect: (messages, {data, signal, required runContext}) async* {
             yield <String, dynamic>{'type': 'RUN_STARTED', 'runId': 'r'};
             for (var i = 0; i < 500; i++) {
               yield <String, dynamic>{

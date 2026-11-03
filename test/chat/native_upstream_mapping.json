@@ -1,7 +1,7 @@
 {
   "generatedFrom": "test/chat/upstream_mapping.json",
   "upstreamSource": "packages/ai-client/tests/chat-client.test.ts",
-  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamCommit": "a7eb58459ebd528bbcc4166cc68377b777989462",
   "ownedFiles": [
     "test/chat/native_upstream_parity_test.dart",
     "test/chat/native_upstream_mapping.json"
@@ -12,7 +12,7 @@
   "review": {
     "method": "Each upstream it() body was read from the pinned chat-client.test.ts and compared line by line with the Dart test body: connection mode, push ordering, clear timing, persistence callbacks, callback lists, and exact expected values. Names were used only to pair candidates.",
     "nativeMode": "Cases that upstream drives through subscribe/send use a real ConnectionAdapter(subscribe + send) with a pushable broadcast stream. Gated / non-cooperative cases use ConnectionAdapter(connect), as upstream does.",
-    "persistence": "Upstream ChatPersistence keys are adaptation-only in Dart: the adapter is constructed with the thread id and getItem/setItem/removeItem take no key. Assertions compare transcript rows instead of object identity.",
+    "persistence": "Legacy storage adapter shape remains isolated; modern persistence derives the key from the required client thread ID.",
     "failingPolicy": "All 37 ported cases pass in the final verified run. Earlier failures were implementation gaps and were kept as failing evidence until Codex closed them; no case was deleted, skipped, or weakened."
   },
   "cases": [

@@ -1,7 +1,7 @@
 /// Data types for the TanStack AI devtools surface.
 ///
-/// Ported from `packages/ai-client/src/devtools.ts` (TanStack AI client
-/// 0.40.0). The browser event client, chat client and generation clients are
+/// Ported from `packages/ai-client/src/devtools.ts`. The browser event client,
+/// chat client and generation clients are
 /// replaced by injected event sinks, snapshot readers and tool callbacks so
 /// this library stays platform-neutral.
 library;

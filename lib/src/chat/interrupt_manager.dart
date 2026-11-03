@@ -94,8 +94,9 @@ class _Transaction {
 
 /// Port of upstream `interrupt-manager.ts`.
 class InterruptManager {
+  final Set<String> _warnedSchemaMismatches = <String>{};
   ChatHydrationInterrupts? _hydration;
-  List<ChatInterrupt> _items = <ChatInterrupt>[];
+  List<_RuntimeInterrupt> _items = <_RuntimeInterrupt>[];
   List<ChatInterrupt> _snapshot = const <ChatInterrupt>[];
   List<Map<String, dynamic>> _rootErrors = <Map<String, dynamic>>[];
   List<Map<String, dynamic>> _submissionRootErrors = <Map<String, dynamic>>[];
@@ -186,7 +187,7 @@ class InterruptManager {
       final index = binding['batchIndex'] as int;
       firstPartyIndexes[index] = (firstPartyIndexes[index] ?? 0) + 1;
     }
-    _items = <ChatInterrupt>[
+    _items = <_RuntimeInterrupt>[
       for (final raw in hydration.pending)
         _classify(raw, hydration, firstPartyIndexes),
     ];
@@ -224,9 +225,12 @@ class InterruptManager {
   ChatInterruptState getState() => _state;
 
   List<Map<String, dynamic>> getDescriptors() =>
-      _hydration?.pending ?? const <Map<String, dynamic>>[];
+      List<Map<String, dynamic>>.unmodifiable(
+        (_hydration?.pending ?? const <Map<String, dynamic>>[])
+            .map((item) => _freezeJson(item) as Map<String, dynamic>),
+      );
 
-  List<Map<String, dynamic>> getInterruptErrors() => _rootErrors;
+  List<Map<String, dynamic>> getInterruptErrors() => _state.interruptErrors;
 
   bool getResuming() => _resuming;
 
@@ -240,6 +244,13 @@ class InterruptManager {
 
   bool get hasResolvable => _items.any((item) => item.resumable);
 
+  bool mayExecuteClientTool(String toolCallId) {
+    if (_items.any((item) => item.kind == 'generic')) return false;
+    final matching = _items.where((item) => item.toolCallId == toolCallId);
+    if (matching.isEmpty) return true;
+    return matching.any((item) => item.kind == 'client-tool-execution');
+  }
+
   bool hasValidatedFirstPartyGenericBatch() =>
       _items.any((item) => item.kind == 'generic' && item.definition != null);
 
@@ -249,7 +260,7 @@ class InterruptManager {
   }) {
     _submission++;
     _hydration = null;
-    _items = <ChatInterrupt>[];
+    _items = <_RuntimeInterrupt>[];
     _snapshot = const <ChatInterrupt>[];
     if (!preserveRootErrors) {
       _rootErrors = <Map<String, dynamic>>[];
@@ -320,7 +331,7 @@ class InterruptManager {
         'payload': <String, dynamic>{'approved': approved},
       }) as Map<String, dynamic>;
       item.status = ChatInterruptStatus.staged;
-      item.error = null;
+      item.legacyError = null;
     }
     _publish();
     _maybeSubmit();
@@ -332,7 +343,7 @@ class InterruptManager {
         _Checkpoint(
           item.status,
           _cloneMap(item.resolution) as Map<String, dynamic>?,
-          _cloneMap(item.error) as Map<String, dynamic>?,
+          _cloneMap(item.legacyError) as Map<String, dynamic>?,
           item.validationGeneration,
         ),
     ];
@@ -398,7 +409,7 @@ class InterruptManager {
       final checkpoint = checkpoints[index];
       item.status = checkpoint.status;
       item.resolution = checkpoint.resolution;
-      item.error = checkpoint.error;
+      item.legacyError = checkpoint.error;
       item.validationGeneration = checkpoint.validationGeneration + 1;
     }
     _publish();
@@ -415,7 +426,7 @@ class InterruptManager {
         'status': 'cancelled',
       })) as Map<String, dynamic>;
       item.status = ChatInterruptStatus.staged;
-      item.error = null;
+      item.legacyError = null;
     }
     _publish();
     _maybeSubmit();
@@ -440,10 +451,7 @@ class InterruptManager {
   bool resolveToolApprovalDecision(String interruptId, bool approved) {
     final item = _find(interruptId);
     if (item == null) return false;
-    final legacy = item.kind == 'generic' &&
-        item.reason == 'approval_required' &&
-        _isLegacyApprovalMetadata(item.metadata);
-    if (item.kind != 'tool-approval' && !legacy) return false;
+    if (item.kind != 'tool-approval') return false;
     _resolveItem(item.id, <String, dynamic>{'approved': approved});
     return true;
   }
@@ -470,7 +478,7 @@ class InterruptManager {
     Object? output,
     String? errorText,
   }) {
-    ChatInterrupt? item;
+    _RuntimeInterrupt? item;
     for (final candidate in _items) {
       if (candidate.kind == 'client-tool-execution' &&
           candidate.binding?['kind'] == 'client-tool-execution' &&
@@ -478,29 +486,18 @@ class InterruptManager {
         item = candidate;
         break;
       }
-      if (candidate.kind == 'generic' &&
-          (candidate.reason == 'tanstack:client_tool_execution' ||
-              candidate.reason == 'client_tool_input') &&
-          candidate.toolCallId == toolCallId &&
-          _isLegacyClientToolMetadata(candidate.metadata)) {
-        item = candidate;
-        break;
+    }
+    if (item == null) {
+      for (final candidate in _items) {
+        if (candidate.kind == 'generic' &&
+            candidate.canResolve &&
+            candidate.toolCallId == toolCallId) {
+          item = candidate;
+          break;
+        }
       }
     }
     if (item == null) return false;
-    if (item.kind != 'client-tool-execution') {
-      if (!available) {
-        _resolveItem(item.id, <String, dynamic>{'error': errorText});
-        return true;
-      }
-      try {
-        final canonical = jsonDecode(canonicalInterruptJson(output));
-        _resolveItem(item.id, canonical);
-      } catch (error) {
-        _failClientTool(item, 'invalid-tool-output', '$error');
-      }
-      return true;
-    }
     if (available) {
       _resolveItem(item.id, output);
       return true;
@@ -509,12 +506,12 @@ class InterruptManager {
     return true;
   }
 
-  void _stageClientToolError(ChatInterrupt item, String errorText) {
+  void _stageClientToolError(_RuntimeInterrupt item, String errorText) {
     _assertItemMutable();
     _invalidateRetry();
     if (!item.resumable) {
       item.status = ChatInterruptStatus.error;
-      item.error = _itemError(
+      item.legacyError = _itemError(
         item.id,
         'invalid-response-schema',
         'The interrupt response schema is invalid and cannot be resolved.',
@@ -533,37 +530,12 @@ class InterruptManager {
     };
     item.resolution = _cloneMap(resolution) as Map<String, dynamic>;
     item.status = ChatInterruptStatus.staged;
-    item.error = null;
+    item.legacyError = null;
     _publish();
     _maybeSubmit();
   }
 
-  void _failClientTool(ChatInterrupt item, String code, String message) {
-    item.status = ChatInterruptStatus.error;
-    item.resolution = null;
-    final error = _itemError(item.id, code, message);
-    item.error = error;
-    _rootErrors = <Map<String, dynamic>>[
-      ..._rootErrors.where(
-        (existing) => !(existing['code'] == 'item-validation-failed' &&
-            (existing['interruptIds'] as List?)?.contains(item.id) == true),
-      ),
-      <String, dynamic>{
-        'scope': 'batch',
-        'code': 'item-validation-failed',
-        'message': message,
-        'source': 'client',
-        'retryable': false,
-        'interruptIds': <String>[item.id],
-        'threadId': error['threadId'],
-        'interruptedRunId': error['interruptedRunId'],
-        'generation': error['generation'],
-      },
-    ];
-    _publish();
-  }
-
-  ChatInterrupt? _find(String id) {
+  _RuntimeInterrupt? _find(String id) {
     for (final item in _items) {
       if (item.id == id) return item;
     }
@@ -581,7 +553,7 @@ class InterruptManager {
     _invalidateRetry();
     if (!item.canResolve) {
       item.status = ChatInterruptStatus.error;
-      item.error = _itemError(
+      item.legacyError = _itemError(
         interruptId,
         'invalid-response-schema',
         'The interrupt response schema is invalid and cannot be resolved.',
@@ -593,7 +565,7 @@ class InterruptManager {
     final validation = _validateCandidate(item, payload);
     if (validation is Future<_ValidationResult>) {
       item.status = ChatInterruptStatus.validating;
-      item.error = null;
+      item.legacyError = null;
       if (transaction == null) _publish();
       validation.then(
         (result) {
@@ -634,7 +606,7 @@ class InterruptManager {
       'status': 'cancelled',
     })) as Map<String, dynamic>;
     item.status = ChatInterruptStatus.staged;
-    item.error = null;
+    item.legacyError = null;
     if (transaction == null) {
       _publish();
       _maybeSubmit();
@@ -648,13 +620,13 @@ class InterruptManager {
     _invalidateRetry();
     item.validationGeneration++;
     item.resolution = null;
-    item.error = null;
+    item.legacyError = null;
     item.status = ChatInterruptStatus.pending;
     if (transaction == null) _publish();
   }
 
   void _applyValidation(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     _ValidationResult result, [
     _Transaction? transaction,
   ]) {
@@ -665,7 +637,7 @@ class InterruptManager {
         result.code ?? _validationCode(item),
         result.message ?? 'Schema validation failed.',
       );
-      item.error = error;
+      item.legacyError = error;
       if (item.kind == 'client-tool-execution') {
         _rootErrors = <Map<String, dynamic>>[
           ..._rootErrors.where(
@@ -694,7 +666,7 @@ class InterruptManager {
       'payload': result.payload,
     })) as Map<String, dynamic>;
     item.status = ChatInterruptStatus.staged;
-    item.error = null;
+    item.legacyError = null;
     if (transaction == null) {
       _publish();
       _maybeSubmit();
@@ -702,7 +674,7 @@ class InterruptManager {
   }
 
   FutureOr<_ValidationResult> _validateCandidate(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     Object? payload,
   ) {
     if (item.kind == 'generic') {
@@ -715,7 +687,7 @@ class InterruptManager {
   }
 
   FutureOr<_ValidationResult> _validateGeneric(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     ChatInterruptDefinition? definition,
     Object? payload,
   ) {
@@ -744,7 +716,7 @@ class InterruptManager {
   }
 
   FutureOr<_ValidationResult> _validateClientTool(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     Object? payload,
   ) {
     final validation = _validateWithSchema(
@@ -770,7 +742,7 @@ class InterruptManager {
   }
 
   FutureOr<_ValidationResult> _validateApproval(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     Object? payload,
   ) {
     if (payload is! Map || payload['approved'] is! bool) {
@@ -809,7 +781,7 @@ class InterruptManager {
   }
 
   FutureOr<_ValidationResult> _validateApprovalPayload(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     Map payload,
     Object? validatedEditedArgs,
   ) {
@@ -879,7 +851,7 @@ class InterruptManager {
     return approval;
   }
 
-  String _validationCode(ChatInterrupt item) =>
+  String _validationCode(_RuntimeInterrupt item) =>
       item.kind == 'client-tool-execution'
           ? 'invalid-tool-output'
           : 'invalid-payload';
@@ -1003,7 +975,7 @@ class InterruptManager {
         for (final item in _items) {
           if (item.resumable && item.id == id) {
             item.status = ChatInterruptStatus.error;
-            item.error = Map<String, dynamic>.from(submissionError);
+            item.legacyError = Map<String, dynamic>.from(submissionError);
           }
         }
       } else {
@@ -1106,7 +1078,6 @@ class InterruptManager {
       'expired',
       'stale',
       'conflict',
-      'legacy-unsupported',
     };
     const batchCodes = <String>{
       'incomplete-batch',
@@ -1122,7 +1093,6 @@ class InterruptManager {
       'expired',
       'stale',
       'conflict',
-      'legacy-submit-failed',
     };
     if (scope == 'item') {
       return itemCodes.contains(code) &&
@@ -1219,8 +1189,8 @@ class InterruptManager {
       _snapshot = const <ChatInterrupt>[];
       _state = ChatInterruptState(
         interrupts: _snapshot,
-        pendingInterrupts: _snapshot,
-        interruptErrors: List<Map<String, dynamic>>.unmodifiable(_rootErrors),
+        interruptErrors: List<Map<String, dynamic>>.unmodifiable(_rootErrors
+            .map((error) => _freezeJson(error) as Map<String, dynamic>)),
         resuming: _resuming,
       );
       onChange?.call(_state, source);
@@ -1229,8 +1199,8 @@ class InterruptManager {
     _snapshot = _buildSnapshot();
     _state = ChatInterruptState(
       interrupts: _snapshot,
-      pendingInterrupts: _snapshot,
-      interruptErrors: List<Map<String, dynamic>>.unmodifiable(_rootErrors),
+      interruptErrors: List<Map<String, dynamic>>.unmodifiable(_rootErrors
+          .map((error) => _freezeJson(error) as Map<String, dynamic>)),
       resuming: _resuming,
     );
     onChange?.call(_state, source);
@@ -1276,16 +1246,16 @@ class InterruptManager {
         message: item.message,
         toolName: item.toolName,
         toolCallId: item.toolCallId,
-        input: _cloneJson(item.input),
-        payload: _cloneJson(item.payload),
-        metadata: _cloneMap(item.metadata) as Map<String, dynamic>?,
+        input: _freezeJson(item.input),
+        payload: _freezeJson(item.payload),
+        metadata: _freezeJson(item.metadata) as Map<String, dynamic>?,
         binding:
-            unbound ? null : _cloneMap(item.binding) as Map<String, dynamic>?,
+            unbound ? null : _freezeJson(item.binding) as Map<String, dynamic>?,
         threadId: item.threadId,
         interruptedRunId: item.interruptedRunId,
         generation: item.generation,
-        originalArgs: _cloneJson(item.originalArgs),
-        responseSchema: _cloneJson(item.responseSchema),
+        originalArgs: _freezeJson(item.originalArgs),
+        responseSchema: _freezeJson(item.responseSchema),
         expiresAt: item.expiresAt,
         tool: item.tool,
         definition: item.definition,
@@ -1295,8 +1265,8 @@ class InterruptManager {
         definitionId: item.definitionId,
         key: item.key,
         batchIndex: item.batchIndex,
-        error: _cloneMap(item.error) as Map<String, dynamic>?,
-        resolution: _cloneMap(item.resolution) as Map<String, dynamic>?,
+        legacyError: _freezeJson(item.legacyError) as Map<String, dynamic>?,
+        resolution: _freezeJson(item.resolution) as Map<String, dynamic>?,
         onResolveInterrupt: resolve,
         onCancel: cancel,
         onClearResolution: clear,
@@ -1305,7 +1275,7 @@ class InterruptManager {
     return List<ChatInterrupt>.unmodifiable(next);
   }
 
-  ChatInterrupt _classify(
+  _RuntimeInterrupt _classify(
     Map<String, dynamic> raw,
     ChatHydrationInterrupts hydration,
     Map<int, int> firstPartyIndexes,
@@ -1314,16 +1284,14 @@ class InterruptManager {
         ? _cloneMap(raw['metadata']) as Map<String, dynamic>
         : <String, dynamic>{};
     final bindingRaw = metadata['tanstack:interruptBinding'];
-    final binding = bindingRaw is Map
-        ? _cloneMap(bindingRaw) as Map<String, dynamic>
-        : null;
+    final binding = _bindingOf(raw);
     final id = _str(raw['id']);
     final reason = _str(raw['reason']);
     final threadId = hydration.effectiveThreadId;
     final interruptedRunId = hydration.runId;
     final generation = hydration.generation;
 
-    ChatInterrupt base({
+    _RuntimeInterrupt base({
       required String kind,
       bool canResolve = true,
       String? toolName,
@@ -1339,7 +1307,7 @@ class InterruptManager {
       bool clearBinding = false,
       ChatInterruptStatus status = ChatInterruptStatus.pending,
     }) =>
-        ChatInterrupt(
+        _RuntimeInterrupt(
           id: id,
           kind: kind,
           reason: reason,
@@ -1364,27 +1332,29 @@ class InterruptManager {
           definitionId: definitionId,
           key: key,
           batchIndex: batchIndex,
-          error: error,
+          legacyError: error,
         );
 
     Map<String, dynamic> derivedGenericBinding() =>
         _deriveGenericBinding(raw, hydration, binding);
 
     if (binding == null) {
-      final legacy = _isLegacyApprovalMetadata(metadata) ||
-          _isLegacyClientToolMetadata(metadata);
-      if (!legacy) {
+      if (bindingRaw is Map && _hasReservedBindingMarker(bindingRaw)) {
         return base(
-          kind: 'unbound',
+          kind: 'generic',
           canResolve: false,
-          clearBinding: true,
+          status: ChatInterruptStatus.error,
+          effectiveBinding: derivedGenericBinding(),
+          error: _itemError(
+              id, 'stale', 'The interrupt binding is invalid or incomplete.'),
         );
       }
       return base(
-        kind: 'generic',
-        toolName: _str(metadata['toolName']),
-        toolCallId: _str(raw['toolCallId']),
-        effectiveBinding: derivedGenericBinding(),
+        kind: 'unbound',
+        canResolve: false,
+        toolCallId:
+            raw['toolCallId'] is String ? raw['toolCallId'] as String : null,
+        clearBinding: true,
       );
     }
 
@@ -1393,6 +1363,8 @@ class InterruptManager {
       return base(
         kind: 'unbound',
         canResolve: false,
+        toolCallId:
+            raw['toolCallId'] is String ? raw['toolCallId'] as String : null,
         clearBinding: true,
       );
     }
@@ -1443,28 +1415,32 @@ class InterruptManager {
       final tool = _toolNamed(_str(binding['toolName']));
       if (tool != null &&
           tool.needsApproval &&
-          _str(raw['toolCallId']) == _str(binding['toolCallId']) &&
-          _toolApprovalHashesMatch(binding, tool)) {
-        return base(
-          kind: 'tool-approval',
-          toolName: tool.name,
-          toolCallId: _str(binding['toolCallId']),
-          tool: tool,
-        );
+          _str(raw['toolCallId']) == _str(binding['toolCallId'])) {
+        if (_toolApprovalHashesMatch(binding, tool)) {
+          return base(
+            kind: 'tool-approval',
+            toolName: tool.name,
+            toolCallId: _str(binding['toolCallId']),
+            tool: tool,
+          );
+        }
+        _warnSchemaMismatch(id, tool.name);
       }
     }
 
     if (structurallyCorrelated && kind == 'client-tool-execution') {
       final tool = _toolNamed(_str(binding['toolName']));
       if (tool != null &&
-          _str(raw['toolCallId']) == _str(binding['toolCallId']) &&
-          _clientToolHashMatches(binding, tool)) {
-        return base(
-          kind: 'client-tool-execution',
-          toolName: tool.name,
-          toolCallId: _str(binding['toolCallId']),
-          tool: tool,
-        );
+          _str(raw['toolCallId']) == _str(binding['toolCallId'])) {
+        if (_clientToolHashMatches(binding, tool)) {
+          return base(
+            kind: 'client-tool-execution',
+            toolName: tool.name,
+            toolCallId: _str(binding['toolCallId']),
+            tool: tool,
+          );
+        }
+        _warnSchemaMismatch(id, tool.name);
       }
     }
 
@@ -1513,18 +1489,26 @@ class InterruptManager {
       }
     }
 
-    final resumable = _isLegacyInterruptMetadata(metadata) ||
-        (candidateId == id &&
-            candidateRun == interruptedRunId &&
-            candidateGeneration == generation &&
-            (kind != 'generic' ||
-                rawSchemaHash == null ||
-                bindingHash == rawSchemaHash));
+    final resumable = candidateId == id &&
+        candidateRun == interruptedRunId &&
+        candidateGeneration == generation &&
+        (kind != 'generic' ||
+            rawSchemaHash == null ||
+            bindingHash == rawSchemaHash);
     return base(
       kind: 'generic',
       canResolve: resumable,
+      toolCallId:
+          raw['toolCallId'] is String ? raw['toolCallId'] as String : null,
       effectiveBinding: derivedGenericBinding(),
     );
+  }
+
+  void _warnSchemaMismatch(String interruptId, String toolName) {
+    if (!_warnedSchemaMismatches.add(interruptId)) return;
+    print('[TanStack AI] Interrupt "$interruptId" for tool "$toolName": '
+        'server and client schemas differ, so it is handled as a generic '
+        'interrupt. Use the same tool definition on both sides.');
   }
 
   bool _toolApprovalHashesMatch(
@@ -1603,7 +1587,7 @@ class InterruptManager {
   }
 
   Map<String, dynamic> _withContinuation(
-    ChatInterrupt item,
+    _RuntimeInterrupt item,
     Map<String, dynamic> resolution,
   ) {
     if (item.definitionId == null ||
@@ -1647,23 +1631,72 @@ class InterruptManager {
     final metadata = raw['metadata'];
     if (metadata is! Map) return null;
     final binding = metadata['tanstack:interruptBinding'];
-    return binding is Map ? Map<String, dynamic>.from(binding) : null;
+    if (binding is! Map) return null;
+    if (binding.keys.any((key) => key is! String)) return null;
+    final value = Map<String, dynamic>.from(binding);
+    bool nonempty(String key) =>
+        value[key] is String && (value[key] as String).isNotEmpty;
+    bool nonnegativeInteger(String key) {
+      final number = value[key];
+      return number is num && number.isFinite && number >= 0 && number % 1 == 0;
+    }
+
+    if ((value.containsKey('v') && value['v'] != 1) ||
+        !nonempty('interruptId') ||
+        value['interruptId'] != raw['id'] ||
+        !nonempty('interruptedRunId') ||
+        !nonnegativeInteger('generation') ||
+        value['responseSchemaHash'] == '') {
+      return null;
+    }
+    final expiresAt = value['expiresAt'];
+    if (expiresAt is String && DateTime.tryParse(expiresAt) == null) {
+      return null;
+    }
+    final kind = value['kind'];
+    if (kind == 'generic') {
+      final firstParty = [
+        'definitionId',
+        'key',
+        'batchIndex',
+        'payloadSchemaHash'
+      ].any(value.containsKey);
+      if (firstParty &&
+          (!nonempty('definitionId') ||
+              !nonempty('key') ||
+              !nonnegativeInteger('batchIndex'))) {
+        return null;
+      }
+    } else if (kind == 'client-tool-execution' || kind == 'tool-approval') {
+      if (!nonempty('toolName') ||
+          !nonempty('toolCallId') ||
+          !nonempty('responseSchemaHash')) {
+        return null;
+      }
+      if (kind == 'client-tool-execution' && !nonempty('outputSchemaHash')) {
+        return null;
+      }
+      if (kind == 'tool-approval' &&
+          (!nonempty('inputSchemaHash') || !nonempty('approvalSchemaHash'))) {
+        return null;
+      }
+    } else {
+      return null;
+    }
+    value['generation'] = (value['generation'] as num).toInt();
+    if (value['batchIndex'] is num) {
+      value['batchIndex'] = (value['batchIndex'] as num).toInt();
+    }
+    return value;
   }
 
-  static bool _isLegacyApprovalMetadata(Map? metadata) =>
-      metadata != null &&
-      metadata['kind'] == 'approval' &&
-      metadata['toolName'] is String &&
-      metadata.containsKey('input');
-
-  static bool _isLegacyClientToolMetadata(Map? metadata) =>
-      metadata != null &&
-      metadata['kind'] == 'client_tool' &&
-      metadata['toolName'] is String;
-
-  static bool _isLegacyInterruptMetadata(Map? metadata) =>
-      _isLegacyApprovalMetadata(metadata) ||
-      _isLegacyClientToolMetadata(metadata);
+  static bool _hasReservedBindingMarker(Map binding) {
+    if (binding.containsKey('v') && binding['v'] != 1) return false;
+    return const {'generic', 'tool-approval', 'client-tool-execution'}
+            .contains(binding['kind']) ||
+        const ['definitionId', 'key', 'batchIndex', 'payloadSchemaHash']
+            .any(binding.containsKey);
+  }
 
   static bool _hasFirstPartyGenericMarker(Map<String, dynamic> binding) {
     if (binding['kind'] != 'generic') return false;
@@ -1678,12 +1711,15 @@ class InterruptManager {
     return value is String ? value : null;
   }
 
-  static Object? _cloneJson(Object? value) {
-    try {
-      return jsonDecode(canonicalInterruptJson(value));
-    } catch (_) {
-      return value;
+  static Object? _freezeJson(Object? value) {
+    if (value is Map) {
+      return Map<String, dynamic>.unmodifiable(value
+          .map((key, value) => MapEntry(key as String, _freezeJson(value))));
     }
+    if (value is List) {
+      return List<Object?>.unmodifiable(value.map(_freezeJson));
+    }
+    return value;
   }
 
   static Object? _cloneMap(Object? value) {
@@ -1703,7 +1739,7 @@ class InterruptManager {
   void dispose() {
     _disposed = true;
     _submission++;
-    _items = <ChatInterrupt>[];
+    _items = <_RuntimeInterrupt>[];
     _hydration = null;
     _snapshot = const <ChatInterrupt>[];
     _resuming = false;
@@ -1731,4 +1767,63 @@ class InterruptManager {
       'generation': hydration?.generation ?? 0,
     };
   }
+}
+
+class _RuntimeInterrupt {
+  final String id;
+  final String
+      kind; // tool-approval | generic | client-tool-execution | unbound
+  final String reason;
+  final String? message;
+  final String? toolName;
+  final String? toolCallId;
+  final dynamic input;
+  final dynamic payload;
+  final Map<String, dynamic>? metadata;
+  final Map<String, dynamic>? binding;
+  final String threadId;
+  final String interruptedRunId;
+  final int generation;
+  dynamic originalArgs;
+  dynamic responseSchema;
+  String? expiresAt;
+  ClientTool? tool;
+  ChatInterruptDefinition? definition;
+  int validationGeneration = 0;
+  ChatInterruptStatus status;
+  String? definitionId;
+  String? key;
+  int? batchIndex;
+  bool canResolve;
+  Map<String, dynamic>? legacyError;
+  Map<String, dynamic>? resolution;
+
+  _RuntimeInterrupt({
+    required this.id,
+    required this.kind,
+    required this.reason,
+    this.message,
+    this.toolName,
+    this.toolCallId,
+    this.input,
+    this.payload,
+    this.metadata,
+    this.binding,
+    required this.threadId,
+    required this.interruptedRunId,
+    required this.generation,
+    this.originalArgs,
+    this.responseSchema,
+    this.expiresAt,
+    this.tool,
+    this.definition,
+    this.status = ChatInterruptStatus.pending,
+    this.canResolve = true,
+    this.definitionId,
+    this.key,
+    this.batchIndex,
+    this.legacyError,
+  });
+
+  bool get resumable => canResolve && status != ChatInterruptStatus.error;
 }
