@@ -1,0 +1,1494 @@
+{
+  "version": "0.40.0",
+  "commit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "surfaces": {
+    "index": [
+      {
+        "name": "AudioRecorder",
+        "sourceName": "AudioRecorder",
+        "typeOnly": false,
+        "source": "./audio-recorder"
+      },
+      {
+        "name": "AudioRecorderOptions",
+        "sourceName": "AudioRecorderOptions",
+        "typeOnly": true,
+        "source": "./audio-recorder"
+      },
+      {
+        "name": "AudioRecorderState",
+        "sourceName": "AudioRecorderState",
+        "typeOnly": true,
+        "source": "./audio-recorder"
+      },
+      {
+        "name": "AudioRecording",
+        "sourceName": "AudioRecording",
+        "typeOnly": true,
+        "source": "./audio-recorder"
+      },
+      {
+        "name": "InferAudioRecordingOutput",
+        "sourceName": "InferAudioRecordingOutput",
+        "typeOnly": true,
+        "source": "./audio-recorder"
+      },
+      {
+        "name": "ChatClient",
+        "sourceName": "ChatClient",
+        "typeOnly": false,
+        "source": "./chat-client"
+      },
+      {
+        "name": "InterruptManager",
+        "sourceName": "InterruptManager",
+        "typeOnly": false,
+        "source": "./interrupt-manager"
+      },
+      {
+        "name": "InterruptManagerHydration",
+        "sourceName": "InterruptManagerHydration",
+        "typeOnly": true,
+        "source": "./interrupt-manager"
+      },
+      {
+        "name": "InterruptManagerOptions",
+        "sourceName": "InterruptManagerOptions",
+        "typeOnly": true,
+        "source": "./interrupt-manager"
+      },
+      {
+        "name": "InterruptManagerSubmission",
+        "sourceName": "InterruptManagerSubmission",
+        "typeOnly": true,
+        "source": "./interrupt-manager"
+      },
+      {
+        "name": "createMcpAppBridge",
+        "sourceName": "createMcpAppBridge",
+        "typeOnly": false,
+        "source": "./mcp-app-bridge"
+      },
+      {
+        "name": "McpAppBridge",
+        "sourceName": "McpAppBridge",
+        "typeOnly": true,
+        "source": "./mcp-app-bridge"
+      },
+      {
+        "name": "CreateMcpAppBridgeOptions",
+        "sourceName": "CreateMcpAppBridgeOptions",
+        "typeOnly": true,
+        "source": "./mcp-app-bridge"
+      },
+      {
+        "name": "getWebMCPTools",
+        "sourceName": "getWebMCPTools",
+        "typeOnly": false,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "registerWebMCPTools",
+        "sourceName": "registerWebMCPTools",
+        "typeOnly": false,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "subscribeWebMCPTools",
+        "sourceName": "subscribeWebMCPTools",
+        "typeOnly": false,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "GetWebMCPToolsOptions",
+        "sourceName": "GetWebMCPToolsOptions",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "RegisterWebMCPToolsOptions",
+        "sourceName": "RegisterWebMCPToolsOptions",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "SubscribeWebMCPToolsOptions",
+        "sourceName": "SubscribeWebMCPToolsOptions",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "WebMCPPageTool",
+        "sourceName": "WebMCPPageTool",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "WebMCPToolAnnotations",
+        "sourceName": "WebMCPToolAnnotations",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "WebMCPToolOptions",
+        "sourceName": "WebMCPToolOptions",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "WebMCPToolOptionsByName",
+        "sourceName": "WebMCPToolOptionsByName",
+        "typeOnly": true,
+        "source": "./web-mcp-tools"
+      },
+      {
+        "name": "RealtimeClient",
+        "sourceName": "RealtimeClient",
+        "typeOnly": false,
+        "source": "./realtime-client"
+      },
+      {
+        "name": "GenerationClient",
+        "sourceName": "GenerationClient",
+        "typeOnly": false,
+        "source": "./generation-client"
+      },
+      {
+        "name": "VideoGenerationClient",
+        "sourceName": "VideoGenerationClient",
+        "typeOnly": false,
+        "source": "./video-generation-client"
+      },
+      {
+        "name": "UIMessage",
+        "sourceName": "UIMessage",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "MessagePart",
+        "sourceName": "MessagePart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "TextPart",
+        "sourceName": "TextPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ToolCallPart",
+        "sourceName": "ToolCallPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ToolResultPart",
+        "sourceName": "ToolResultPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ThinkingPart",
+        "sourceName": "ThinkingPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ActivityPart",
+        "sourceName": "ActivityPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "StructuredOutputPart",
+        "sourceName": "StructuredOutputPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentPart",
+        "sourceName": "SubagentPart",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentPartOf",
+        "sourceName": "SubagentPartOf",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentHandle",
+        "sourceName": "SubagentHandle",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentHandleOf",
+        "sourceName": "SubagentHandleOf",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentHandles",
+        "sourceName": "SubagentHandles",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentClientAgent",
+        "sourceName": "SubagentClientAgent",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SubagentStatus",
+        "sourceName": "SubagentStatus",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatClientPersistence",
+        "sourceName": "ChatClientPersistence",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatPersistedState",
+        "sourceName": "ChatPersistedState",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatPersistenceOption",
+        "sourceName": "ChatPersistenceOption",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatPersistenceOptions",
+        "sourceName": "ChatPersistenceOptions",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatStorageAdapter",
+        "sourceName": "ChatStorageAdapter",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatClientOptions",
+        "sourceName": "ChatClientOptions",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatPendingInterrupt",
+        "sourceName": "ChatPendingInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "BoundInterruptBase",
+        "sourceName": "BoundInterruptBase",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "BoundInterrupts",
+        "sourceName": "BoundInterrupts",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatInterrupt",
+        "sourceName": "ChatInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatInterruptState",
+        "sourceName": "ChatInterruptState",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "GenericAGUIInterrupt",
+        "sourceName": "GenericAGUIInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "GenericInterrupt",
+        "sourceName": "GenericInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "RegisteredGenericInterrupt",
+        "sourceName": "RegisteredGenericInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ResolvableChatInterrupt",
+        "sourceName": "ResolvableChatInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "UnboundInterrupt",
+        "sourceName": "UnboundInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "InterruptItemStatus",
+        "sourceName": "InterruptItemStatus",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ToolApprovalInterrupt",
+        "sourceName": "ToolApprovalInterrupt",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ClientContextOptionFromTools",
+        "sourceName": "ClientContextOptionFromTools",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatResumeState",
+        "sourceName": "ChatResumeState",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatRequestBody",
+        "sourceName": "ChatRequestBody",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "InferChatMessages",
+        "sourceName": "InferChatMessages",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "InferredClientContext",
+        "sourceName": "InferredClientContext",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatClientSnapshot",
+        "sourceName": "ChatClientSnapshot",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatClientState",
+        "sourceName": "ChatClientState",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ConnectionStatus",
+        "sourceName": "ConnectionStatus",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatFetcher",
+        "sourceName": "ChatFetcher",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatFetcherInput",
+        "sourceName": "ChatFetcherInput",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatFetcherOptions",
+        "sourceName": "ChatFetcherOptions",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "ChatTransport",
+        "sourceName": "ChatTransport",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "DistributedOmit",
+        "sourceName": "DistributedOmit",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "MultimodalContent",
+        "sourceName": "MultimodalContent",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "QueuedMessage",
+        "sourceName": "QueuedMessage",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "WhenBusy",
+        "sourceName": "WhenBusy",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "QueueBusyReason",
+        "sourceName": "QueueBusyReason",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "QueueConfig",
+        "sourceName": "QueueConfig",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "QueueStrategy",
+        "sourceName": "QueueStrategy",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "QueueOption",
+        "sourceName": "QueueOption",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "SendMessageOptions",
+        "sourceName": "SendMessageOptions",
+        "typeOnly": true,
+        "source": "./types"
+      },
+      {
+        "name": "InferGenerationOutput",
+        "sourceName": "InferGenerationOutput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "InferGenerationOutputFromReturn",
+        "sourceName": "InferGenerationOutputFromReturn",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationClientSnapshot",
+        "sourceName": "GenerationClientSnapshot",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationClientState",
+        "sourceName": "GenerationClientState",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "VideoGenerationClientSnapshot",
+        "sourceName": "VideoGenerationClientSnapshot",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationPersistenceOptions",
+        "sourceName": "GenerationPersistenceOptions",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationClientOptions",
+        "sourceName": "GenerationClientOptions",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationFetcher",
+        "sourceName": "GenerationFetcher",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationFetcherOptions",
+        "sourceName": "GenerationFetcherOptions",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationTransport",
+        "sourceName": "GenerationTransport",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "VideoGenerationClientOptions",
+        "sourceName": "VideoGenerationClientOptions",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "VideoStatusInfo",
+        "sourceName": "VideoStatusInfo",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "VideoGenerateResult",
+        "sourceName": "VideoGenerateResult",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "ImageGenerateInput",
+        "sourceName": "ImageGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "AudioGenerateInput",
+        "sourceName": "AudioGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "SpeechGenerateInput",
+        "sourceName": "SpeechGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "TranscriptionGenerateInput",
+        "sourceName": "TranscriptionGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "SummarizeGenerateInput",
+        "sourceName": "SummarizeGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "VideoGenerateInput",
+        "sourceName": "VideoGenerateInput",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GenerationRestoredResult",
+        "sourceName": "GenerationRestoredResult",
+        "typeOnly": true,
+        "source": "./generation-types"
+      },
+      {
+        "name": "GENERATION_EVENTS",
+        "sourceName": "GENERATION_EVENTS",
+        "typeOnly": false,
+        "source": "./generation-types"
+      },
+      {
+        "name": "reconstructImageResult",
+        "sourceName": "reconstructImageResult",
+        "typeOnly": false,
+        "source": "./generation-reconstruct"
+      },
+      {
+        "name": "reconstructAudioResult",
+        "sourceName": "reconstructAudioResult",
+        "typeOnly": false,
+        "source": "./generation-reconstruct"
+      },
+      {
+        "name": "reconstructSpeechResult",
+        "sourceName": "reconstructSpeechResult",
+        "typeOnly": false,
+        "source": "./generation-reconstruct"
+      },
+      {
+        "name": "reconstructTranscriptionResult",
+        "sourceName": "reconstructTranscriptionResult",
+        "typeOnly": false,
+        "source": "./generation-reconstruct"
+      },
+      {
+        "name": "reconstructSummarizeResult",
+        "sourceName": "reconstructSummarizeResult",
+        "typeOnly": false,
+        "source": "./generation-reconstruct"
+      },
+      {
+        "name": "UnsupportedResponseStreamError",
+        "sourceName": "UnsupportedResponseStreamError",
+        "typeOnly": false,
+        "source": "./response-stream"
+      },
+      {
+        "name": "clientTools",
+        "sourceName": "clientTools",
+        "typeOnly": false,
+        "source": "./types"
+      },
+      {
+        "name": "createChatClientOptions",
+        "sourceName": "createChatClientOptions",
+        "typeOnly": false,
+        "source": "./types"
+      },
+      {
+        "name": "localStoragePersistence",
+        "sourceName": "localStoragePersistence",
+        "typeOnly": false,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "sessionStoragePersistence",
+        "sourceName": "sessionStoragePersistence",
+        "typeOnly": false,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "indexedDBPersistence",
+        "sourceName": "indexedDBPersistence",
+        "typeOnly": false,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "StorageUnavailableError",
+        "sourceName": "StorageUnavailableError",
+        "typeOnly": false,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "WebStoragePersistenceOptions",
+        "sourceName": "WebStoragePersistenceOptions",
+        "typeOnly": true,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "IndexedDBPersistenceOptions",
+        "sourceName": "IndexedDBPersistenceOptions",
+        "typeOnly": true,
+        "source": "./storage-adapters"
+      },
+      {
+        "name": "createAIDevtoolsGenerationPreview",
+        "sourceName": "createAIDevtoolsGenerationPreview",
+        "typeOnly": false,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsClientMetadata",
+        "sourceName": "AIDevtoolsClientMetadata",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsDisplayOptions",
+        "sourceName": "AIDevtoolsDisplayOptions",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationMediaItem",
+        "sourceName": "AIDevtoolsGenerationMediaItem",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationPreview",
+        "sourceName": "AIDevtoolsGenerationPreview",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationProgress",
+        "sourceName": "AIDevtoolsGenerationProgress",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "AIDevtoolsGenerationVideoJob",
+        "sourceName": "AIDevtoolsGenerationVideoJob",
+        "typeOnly": true,
+        "source": "./devtools"
+      },
+      {
+        "name": "ExtractToolNames",
+        "sourceName": "ExtractToolNames",
+        "typeOnly": true,
+        "source": "./tool-types"
+      },
+      {
+        "name": "ExtractToolInput",
+        "sourceName": "ExtractToolInput",
+        "typeOnly": true,
+        "source": "./tool-types"
+      },
+      {
+        "name": "ExtractToolOutput",
+        "sourceName": "ExtractToolOutput",
+        "typeOnly": true,
+        "source": "./tool-types"
+      },
+      {
+        "name": "AnyClientTool",
+        "sourceName": "AnyClientTool",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "Interrupt",
+        "sourceName": "Interrupt",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "PersistedArtifactActivity",
+        "sourceName": "PersistedArtifactActivity",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "PersistedArtifactRef",
+        "sourceName": "PersistedArtifactRef",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "PersistedArtifactRole",
+        "sourceName": "PersistedArtifactRole",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "RunAgentResumeItem",
+        "sourceName": "RunAgentResumeItem",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "RunFinishedOutcome",
+        "sourceName": "RunFinishedOutcome",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "RealtimeAdapter",
+        "sourceName": "RealtimeAdapter",
+        "typeOnly": true,
+        "source": "./realtime-types"
+      },
+      {
+        "name": "RealtimeConnection",
+        "sourceName": "RealtimeConnection",
+        "typeOnly": true,
+        "source": "./realtime-types"
+      },
+      {
+        "name": "RealtimeClientOptions",
+        "sourceName": "RealtimeClientOptions",
+        "typeOnly": true,
+        "source": "./realtime-types"
+      },
+      {
+        "name": "RealtimeClientState",
+        "sourceName": "RealtimeClientState",
+        "typeOnly": true,
+        "source": "./realtime-types"
+      },
+      {
+        "name": "RealtimeStateChangeCallback",
+        "sourceName": "RealtimeStateChangeCallback",
+        "typeOnly": true,
+        "source": "./realtime-types"
+      },
+      {
+        "name": "fetchServerSentEvents",
+        "sourceName": "fetchServerSentEvents",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "fetchHttpStream",
+        "sourceName": "fetchHttpStream",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "fetchJson",
+        "sourceName": "fetchJson",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "xhrServerSentEvents",
+        "sourceName": "xhrServerSentEvents",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "xhrHttpStream",
+        "sourceName": "xhrHttpStream",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "stream",
+        "sourceName": "stream",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "rpcStream",
+        "sourceName": "rpcStream",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "webSocket",
+        "sourceName": "webSocket",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "StreamTruncatedError",
+        "sourceName": "StreamTruncatedError",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "DurableStreamIncompleteError",
+        "sourceName": "DurableStreamIncompleteError",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "StreamReconnectLimitError",
+        "sourceName": "StreamReconnectLimitError",
+        "typeOnly": false,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ConnectConnectionAdapter",
+        "sourceName": "ConnectConnectionAdapter",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ConnectionAdapter",
+        "sourceName": "ConnectionAdapter",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "GenerationHydrationResult",
+        "sourceName": "GenerationHydrationResult",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "FetchConnectionOptions",
+        "sourceName": "FetchConnectionOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "FetchJsonOptions",
+        "sourceName": "FetchJsonOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ReconnectOptions",
+        "sourceName": "ReconnectOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "ResumableConnectConnectionAdapter",
+        "sourceName": "ResumableConnectConnectionAdapter",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "RunAgentInputContext",
+        "sourceName": "RunAgentInputContext",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "StreamConnectionHandlers",
+        "sourceName": "StreamConnectionHandlers",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "SubscribeConnectionAdapter",
+        "sourceName": "SubscribeConnectionAdapter",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "WebSocketConnectionOptions",
+        "sourceName": "WebSocketConnectionOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "XhrConnectionOptions",
+        "sourceName": "XhrConnectionOptions",
+        "typeOnly": true,
+        "source": "./connection-adapters"
+      },
+      {
+        "name": "uiMessageToModelMessages",
+        "sourceName": "uiMessageToModelMessages",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "modelMessageToUIMessage",
+        "sourceName": "modelMessageToUIMessage",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "modelMessagesToUIMessages",
+        "sourceName": "modelMessagesToUIMessages",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "convertMessagesToModelMessages",
+        "sourceName": "convertMessagesToModelMessages",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "normalizeToUIMessage",
+        "sourceName": "normalizeToUIMessage",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "generateMessageId",
+        "sourceName": "generateMessageId",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "StreamProcessor",
+        "sourceName": "StreamProcessor",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ImmediateStrategy",
+        "sourceName": "ImmediateStrategy",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "PunctuationStrategy",
+        "sourceName": "PunctuationStrategy",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "BatchStrategy",
+        "sourceName": "BatchStrategy",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "WordBoundaryStrategy",
+        "sourceName": "WordBoundaryStrategy",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "CompositeStrategy",
+        "sourceName": "CompositeStrategy",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "parsePartialJSON",
+        "sourceName": "parsePartialJSON",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "PartialJSONParser",
+        "sourceName": "PartialJSONParser",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "defaultJSONParser",
+        "sourceName": "defaultJSONParser",
+        "typeOnly": false,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ChunkStrategy",
+        "sourceName": "ChunkStrategy",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "StreamProcessorOptions",
+        "sourceName": "StreamProcessorOptions",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "StreamProcessorEvents",
+        "sourceName": "StreamProcessorEvents",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "InternalToolCallState",
+        "sourceName": "InternalToolCallState",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ToolCallState",
+        "sourceName": "ToolCallState",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ToolResultState",
+        "sourceName": "ToolResultState",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "JSONParser",
+        "sourceName": "JSONParser",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ChunkRecording",
+        "sourceName": "ChunkRecording",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ProcessorResult",
+        "sourceName": "ProcessorResult",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      },
+      {
+        "name": "ProcessorState",
+        "sourceName": "ProcessorState",
+        "typeOnly": true,
+        "source": "@tanstack/ai/client"
+      }
+    ],
+    "byok": [
+      {
+        "name": "defineByok",
+        "sourceName": "defineByok",
+        "typeOnly": false,
+        "source": "./byok/client"
+      },
+      {
+        "name": "ByokClient",
+        "sourceName": "ByokClient",
+        "typeOnly": false,
+        "source": "./byok/client"
+      },
+      {
+        "name": "EMPTY_BYOK_SNAPSHOT",
+        "sourceName": "EMPTY_BYOK_SNAPSHOT",
+        "typeOnly": false,
+        "source": "./byok/client"
+      },
+      {
+        "name": "ByokPrompt",
+        "sourceName": "ByokPrompt",
+        "typeOnly": true,
+        "source": "./byok/client"
+      },
+      {
+        "name": "ByokSnapshot",
+        "sourceName": "ByokSnapshot",
+        "typeOnly": true,
+        "source": "./byok/client"
+      },
+      {
+        "name": "DefineByokOptions",
+        "sourceName": "DefineByokOptions",
+        "typeOnly": true,
+        "source": "./byok/client"
+      },
+      {
+        "name": "KeyStatus",
+        "sourceName": "KeyStatus",
+        "typeOnly": true,
+        "source": "./byok/client"
+      },
+      {
+        "name": "defineByokProvider",
+        "sourceName": "defineByokProvider",
+        "typeOnly": false,
+        "source": "@tanstack/ai/byok"
+      },
+      {
+        "name": "ByokProvider",
+        "sourceName": "ByokProvider",
+        "typeOnly": true,
+        "source": "@tanstack/ai/byok"
+      },
+      {
+        "name": "ByokProviderInit",
+        "sourceName": "ByokProviderInit",
+        "typeOnly": true,
+        "source": "@tanstack/ai/byok"
+      },
+      {
+        "name": "memoryStorage",
+        "sourceName": "memoryStorage",
+        "typeOnly": false,
+        "source": "./byok/storage"
+      },
+      {
+        "name": "KeyPreview",
+        "sourceName": "KeyPreview",
+        "typeOnly": true,
+        "source": "./byok/storage"
+      },
+      {
+        "name": "Keyring",
+        "sourceName": "Keyring",
+        "typeOnly": true,
+        "source": "./byok/storage"
+      },
+      {
+        "name": "KeyringStorage",
+        "sourceName": "KeyringStorage",
+        "typeOnly": true,
+        "source": "./byok/storage"
+      },
+      {
+        "name": "defaultByokStorage",
+        "sourceName": "defaultByokStorage",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "decryptKeyring",
+        "sourceName": "decryptKeyring",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "deriveAesKey",
+        "sourceName": "deriveAesKey",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "encryptKeyring",
+        "sourceName": "encryptKeyring",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "isPasskeyStorageSupported",
+        "sourceName": "isPasskeyStorageSupported",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "passkeyStorage",
+        "sourceName": "passkeyStorage",
+        "typeOnly": false,
+        "source": "./byok/passkey"
+      },
+      {
+        "name": "PasskeyStorageOptions",
+        "sourceName": "PasskeyStorageOptions",
+        "typeOnly": true,
+        "source": "./byok/passkey"
+      }
+    ],
+    "ui": [
+      {
+        "name": "partTypeToKey",
+        "sourceName": "partTypeToKey",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "selectChatUI",
+        "sourceName": "selectChatUI",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "automaticPartsForMessage",
+        "sourceName": "automaticPartsForMessage",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "collectInlineToolNames",
+        "sourceName": "collectInlineToolNames",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "resolveInterruptComponent",
+        "sourceName": "resolveInterruptComponent",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "selectMessageUI",
+        "sourceName": "selectMessageUI",
+        "typeOnly": false,
+        "source": "./ui/selectors"
+      },
+      {
+        "name": "ChatUIApprovalToolName",
+        "sourceName": "ChatUIApprovalToolName",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIApprovalToolsOf",
+        "sourceName": "ChatUIApprovalToolsOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIData",
+        "sourceName": "ChatUIData",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIHasNamedInterrupts",
+        "sourceName": "ChatUIHasNamedInterrupts",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIHasNamedSubagents",
+        "sourceName": "ChatUIHasNamedSubagents",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIHasNamedTools",
+        "sourceName": "ChatUIHasNamedTools",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIInterrupt",
+        "sourceName": "ChatUIInterrupt",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIInterruptName",
+        "sourceName": "ChatUIInterruptName",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIInterruptOf",
+        "sourceName": "ChatUIInterruptOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIInterruptsOf",
+        "sourceName": "ChatUIInterruptsOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUINamedInterruptId",
+        "sourceName": "ChatUINamedInterruptId",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIMessages",
+        "sourceName": "ChatUIMessages",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIPartKey",
+        "sourceName": "ChatUIPartKey",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIPartOf",
+        "sourceName": "ChatUIPartOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIPartTypeByKey",
+        "sourceName": "ChatUIPartTypeByKey",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIRegisteredInterruptId",
+        "sourceName": "ChatUIRegisteredInterruptId",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISchemaOf",
+        "sourceName": "ChatUISchemaOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectInput",
+        "sourceName": "ChatUISelectInput",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedGenericPart",
+        "sourceName": "ChatUISelectedGenericPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedMessage",
+        "sourceName": "ChatUISelectedMessage",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedPart",
+        "sourceName": "ChatUISelectedPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedPartOf",
+        "sourceName": "ChatUISelectedPartOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedResultPart",
+        "sourceName": "ChatUISelectedResultPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelectedToolPart",
+        "sourceName": "ChatUISelectedToolPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISelection",
+        "sourceName": "ChatUISelection",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISubagentName",
+        "sourceName": "ChatUISubagentName",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISubagentOf",
+        "sourceName": "ChatUISubagentOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISubagentOptions",
+        "sourceName": "ChatUISubagentOptions",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUISubagentsOf",
+        "sourceName": "ChatUISubagentsOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIStructuredPart",
+        "sourceName": "ChatUIStructuredPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIToolApproval",
+        "sourceName": "ChatUIToolApproval",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIToolName",
+        "sourceName": "ChatUIToolName",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIToolPart",
+        "sourceName": "ChatUIToolPart",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "ChatUIToolsOf",
+        "sourceName": "ChatUIToolsOf",
+        "typeOnly": true,
+        "source": "./ui/types"
+      },
+      {
+        "name": "RegisteredUIInterrupt",
+        "sourceName": "RegisteredUIInterrupt",
+        "typeOnly": true,
+        "source": "./ui/types"
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+include: package:lints/recommended.yaml
+analyzer:
+  exclude:
+    # These intentionally invalid fixtures are checked by tool/verify_types.dart.
+    - test/types/*negative.dart

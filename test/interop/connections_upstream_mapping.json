@@ -1,0 +1,2856 @@
+{
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "reviewMethod": {
+    "method": "Each candidate was compared by upstream and Dart test bodies, not title alone. actualAssertions list the Dart expect/expectLater calls verbatim (whitespace-normalized, truncated at 360 chars). Upstream assertions are included for review.",
+    "adaptations": "TypeScript SyntaxError maps to Dart FormatException; AbortSignal/AbortController map to CancellationSignal/CancellationController; Headers maps to Map<String,String>; fetchClient maps to client; ReadableStream lock/cancel semantics map to Dart stream cancellation. Missing normalize/merge/wire cases are marked missing rather than silently claimed.",
+    "sseCleanup": "The seven sse-parser-cleanup cases are mapped to test/interop/client_boundaries_upstream_test.dart, which drives the real GenerationClient with http.StreamedResponse and is reported 7/7 passing."
+  },
+  "cases": [
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters forwards resume on a fetcher adapter",
+      "upstreamTitle": "forwards resume on a fetcher adapter",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters forwards resume on a fetcher adapter",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetcher)"
+      ],
+      "actualAssertions": [
+        "expect(seen?.threadId, 'thread-1')",
+        "expect(seen?.runId, 'resume-run')",
+        "expect(seen?.parentRunId, 'interrupted-run')",
+        "expect(seen?.resume, resume)",
+        "expect(seen?.data, {'source': 'test'})"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents sends generic continuation on resume metadata, not state",
+      "upstreamTitle": "sends generic continuation on resume metadata, not state",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents sends generic continuation on resume metadata, not state",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(body.resume)",
+        "expect(body.state)"
+      ],
+      "actualAssertions": [
+        "expect(body['resume'], resume)",
+        "expect(body['state'], {})"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle SSE format with data: prefix",
+      "upstreamTitle": "should handle SSE format with data: prefix",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle SSE format with data: prefix",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0])"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single, { 'type': 'TEXT_MESSAGE_CONTENT', 'messageId': 'msg-1', 'model': 'test', 'timestamp': 123, 'delta': 'Hello', 'content': 'Hello', })"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle SSE format with data: prefix and no space",
+      "upstreamTitle": "should handle SSE format with data: prefix and no space",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle SSE format with data: prefix and no space",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0])"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['delta'], 'Hello')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents does not truncate an agentic run at the first RUN_FINISHED (multiple terminals per run)",
+      "upstreamTitle": "does not truncate an agentic run at the first RUN_FINISHED (multiple terminals per run)",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents does not truncate an agentic run at the first RUN_FINISHED (multiple terminals per run)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks.map((c) => c.type))"
+      ],
+      "actualAssertions": [
+        "expect(chunks.map((chunk) => chunk['type']), [ 'RUN_STARTED', 'TOOL_CALL_END', 'RUN_FINISHED', 'TOOL_CALL_RESULT', 'RUN_STARTED', 'TEXT_MESSAGE_CONTENT', 'RUN_FINISHED', ])"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle SSE format without data: prefix",
+      "upstreamTitle": "should handle SSE format without data: prefix",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle SSE format without data: prefix",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading",
+      "upstreamTitle": "should synthesize RUN_FINISHED on [DONE] and stop reading",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should synthesize RUN_FINISHED on [DONE] and stop reading",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0]!.type)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should throw a SyntaxError on malformed JSON",
+      "upstreamTitle": "should throw a SyntaxError on malformed JSON",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should throw a FormatException on malformed JSON",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([ {'role': 'user', 'content': 'Hello'}, ])), throwsA(isA<FormatException>()), )"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"should throw a SyntaxError on malformed JSON\" to \"should throw a FormatException on malformed JSON\"."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle HTTP errors",
+      "upstreamTitle": "should handle HTTP errors",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle HTTP errors",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([ {'role': 'user', 'content': 'Hello'}, ])), throwsA( predicate<Object>( (error) => error.toString() == 'HTTP error! status: 500 Internal Server Error', ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle missing response body",
+      "upstreamTitle": "should handle missing response body",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle missing response body",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expect( () => requireResponseBody(null), throwsA( isA<UnsupportedResponseStreamError>().having( (error) => error.missingFeature, 'missingFeature', UnsupportedResponseStreamError.responseBody, ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should throw an actionable unsupported-stream error when getReader is missing",
+      "upstreamTitle": "should throw an actionable unsupported-stream error when getReader is missing",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should throw an actionable unsupported-stream error when getReader is missing",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expect(error.missingFeature, 'Response.body.getReader')",
+        "expect(error.toString(), contains('streaming chunks'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should preserve HTTP errors before stream capability checks",
+      "upstreamTitle": "should preserve HTTP errors before stream capability checks",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should preserve HTTP errors before stream capability checks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(consume())",
+        "expect(consume())"
+      ],
+      "actualAssertions": [
+        "expect( error.toString(), 'HTTP error! status: 500 Internal Server Error', )",
+        "expect(error, isNot(isA<UnsupportedResponseStreamError>()))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should merge custom headers",
+      "upstreamTitle": "should merge custom headers",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should merge custom headers",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)",
+        "expect(call?.[1]?.headers)"
+      ],
+      "actualAssertions": [
+        "expect( headersOf(client.requests.single), containsPair( 'Content-Type', 'application/json', ))",
+        "expect( headersOf(client.requests.single), containsPair( 'Authorization', 'Bearer token', ))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle Headers object",
+      "upstreamTitle": "should handle Headers object",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle Headers object",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)",
+        "expect(headersObj)",
+        "expect(headersObj['Content-Type'])",
+        "expect(authValue)"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.headers['Authorization'], 'Bearer token', )",
+        "expect( client.requests.single.headers['Content-Type'], 'application/json', )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should pass data to request body forwardedProps",
+      "upstreamTitle": "should pass data to request body forwardedProps",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should pass data to request body forwardedProps",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)",
+        "expect(body.forwardedProps)"
+      ],
+      "actualAssertions": [
+        "expect(body['forwardedProps'], containsPair('key', 'value'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field for backward-compat",
+      "upstreamTitle": "should mirror forwardedProps under legacy `data` field for backward-compat",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should mirror forwardedProps under legacy `data` field",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(body.data)",
+        "expect(body.data)"
+      ],
+      "actualAssertions": [
+        "expect(body['data'], body['forwardedProps'])",
+        "expect(body['data'], containsPair('provider', 'openai'))"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"should mirror forwardedProps under legacy `data` field for backward-compat\" to \"should mirror forwardedProps under legacy `data` field\"."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should use custom fetchClient when provided",
+      "upstreamTitle": "should use custom fetchClient when provided",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should use custom client when provided",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(customFetch)",
+        "expect(fetchMock)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests, hasLength(1))",
+        "expect(client.requests.single.url.toString(), '/api/chat')"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"should use custom fetchClient when provided\" to \"should use custom client when provided\"."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should resolve dynamic URL from function",
+      "upstreamTitle": "should resolve dynamic URL from function",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should resolve dynamic URL from function",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests.single.url.toString(), '/api/dynamic')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should resolve dynamic options from sync function",
+      "upstreamTitle": "should resolve dynamic options from sync function",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should resolve dynamic options from sync function",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(call?.[1]?.headers)"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.headers, containsPair('X-Custom', 'dynamic'), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should resolve dynamic options from async function",
+      "upstreamTitle": "should resolve dynamic options from async function",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should resolve dynamic options from async function",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(call?.[1]?.headers)"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.headers, containsPair('X-Async', 'token'), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should merge options.body into request body forwardedProps",
+      "upstreamTitle": "should merge options.body into request body forwardedProps",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should merge options.body into request body forwardedProps",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(body.forwardedProps)"
+      ],
+      "actualAssertions": [
+        "expect(jsonBodyOf(client.requests.single)['forwardedProps'], { 'model': 'gpt-4o', 'provider': 'openai', 'key': 'value', })"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchServerSentEvents should handle multiple chunks across multiple reads",
+      "upstreamTitle": "should handle multiple chunks across multiple reads",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchServerSentEvents should handle multiple chunks across multiple reads",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0]!.type)",
+        "expect(chunks[1]!.type)",
+        "expect(chunks[2]!.type)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(3))",
+        "expect(chunks[0]['type'], 'RUN_STARTED')",
+        "expect(chunks[1]['type'], 'CUSTOM')",
+        "expect(chunks[2]['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream normalizes only owned dates during fetch hydration",
+      "upstreamTitle": "normalizes only owned dates during fetch hydration",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream normalizes only owned dates during fetch hydration",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.messages[0]?.createdAt)",
+        "expect(result.messages[0]?.parts[0])",
+        "expect(result.messages[0]?.metadata)",
+        "expect(part)",
+        "expect(part)",
+        "expect(result.messages[1])",
+        "expect(result.messages[1]?.parts[0])"
+      ],
+      "actualAssertions": [
+        "expect( result.messages[0]['createdAt'], DateTime.parse('2026-08-20T00:00:00.000Z'), )",
+        "expect( (result.messages[0]['parts'] as List).first['createdAt'], DateTime.parse('2026-08-20T00:00:01.000Z'), )",
+        "expect(result.messages[0]['metadata'], metadata)",
+        "expect(part['metadata'], {'createdAt': 'part-metadata'})",
+        "expect(part['content'], content)",
+        "expect(result.messages[1].containsKey('createdAt'), isFalse)",
+        "expect( ((result.messages[1]['parts'] as List).first as Map) .containsKey('createdAt'), isFalse, )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should parse newline-delimited JSON",
+      "upstreamTitle": "should parse newline-delimited JSON",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should parse newline-delimited JSON",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should throw a SyntaxError on malformed JSON",
+      "upstreamTitle": "should throw a SyntaxError on malformed JSON",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should throw a FormatException on malformed JSON",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([ {'role': 'user', 'content': 'Hello'}, ])), throwsA(isA<FormatException>()), )"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"should throw a SyntaxError on malformed JSON\" to \"should throw a FormatException on malformed JSON\"."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should handle HTTP errors",
+      "upstreamTitle": "should handle HTTP errors",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should handle HTTP errors",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([ {'role': 'user', 'content': 'Hello'}, ])), throwsA( predicate<Object>( (error) => error.toString() == 'HTTP error! status: 404 Not Found', ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should use custom fetchClient when provided",
+      "upstreamTitle": "should use custom fetchClient when provided",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should use custom client when provided",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(customFetch)",
+        "expect(fetchMock)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests, hasLength(1))"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"should use custom fetchClient when provided\" to \"should use custom client when provided\"."
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should handle missing response body",
+      "upstreamTitle": "should handle missing response body",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should handle missing response body",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expect( () => requireResponseBody(null), throwsA( isA<UnsupportedResponseStreamError>().having( (error) => error.missingFeature, 'missingFeature', UnsupportedResponseStreamError.responseBody, ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should throw an actionable unsupported-stream error when TextDecoder is missing",
+      "upstreamTitle": "should throw an actionable unsupported-stream error when TextDecoder is missing",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should throw an actionable unsupported-stream error when TextDecoder is missing",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( (async () => { for await (const _ of adapter.connect([ { role: 'user', content: 'Hello' }, ])) { // Consume } })(), )"
+      ],
+      "actualAssertions": [
+        "expect(error.missingFeature, 'TextDecoder')",
+        "expect(error.toString(), contains('TextDecoder'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should merge custom headers",
+      "upstreamTitle": "should merge custom headers",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should merge custom headers",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(call?.[1]?.headers)"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.headers, containsPair( 'Content-Type', 'application/json', ))",
+        "expect( client.requests.single.headers, containsPair( 'Authorization', 'Bearer token', ))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should pass data to request body forwardedProps",
+      "upstreamTitle": "should pass data to request body forwardedProps",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should pass data to request body forwardedProps",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(body.forwardedProps)"
+      ],
+      "actualAssertions": [
+        "expect( jsonBodyOf(client.requests.single)['forwardedProps'], containsPair('key', 'value'), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should resolve dynamic URL from function",
+      "upstreamTitle": "should resolve dynamic URL from function",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should resolve dynamic URL from function",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests.single.url.toString(), '/api/dynamic')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters fetchHttpStream should handle multiple chunks across multiple reads",
+      "upstreamTitle": "should handle multiple chunks across multiple reads",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters fetchHttpStream should handle multiple chunks across multiple reads",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0]!.type)",
+        "expect(chunks[1]!.type)",
+        "expect(chunks[2]!.type)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(3))",
+        "expect(chunks[0]['type'], 'RUN_STARTED')",
+        "expect(chunks[1]['type'], 'CUSTOM')",
+        "expect(chunks[2]['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters stream should delegate to stream factory",
+      "upstreamTitle": "should delegate to stream factory",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters stream should delegate to stream factory",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(streamFactory)",
+        "expect(chunks)"
+      ],
+      "actualAssertions": [
+        "expect(called, isTrue)",
+        "expect(chunks, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters stream should pass data to stream factory",
+      "upstreamTitle": "should pass data to stream factory",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters stream should pass data to stream factory",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(streamFactory)"
+      ],
+      "actualAssertions": [
+        "expect(seenMessages, isNotNull)",
+        "expect(seenData, data)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters stream should spread supplied persistence handlers onto the adapter",
+      "upstreamTitle": "should spread supplied persistence handlers onto the adapter",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters stream should spread supplied persistence handlers onto the adapter",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrate)",
+        "expect(adapter.hydrateGeneration)",
+        "expect(adapter.joinRun)"
+      ],
+      "actualAssertions": [
+        "expect(adapter.hydrate, isNotNull)",
+        "expect(adapter.hydrateGeneration, isNotNull)",
+        "expect(adapter.joinRun, isNotNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters stream should omit persistence handlers that are not supplied",
+      "upstreamTitle": "should omit persistence handlers that are not supplied",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters stream should omit persistence handlers that are not supplied",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrate)",
+        "expect(adapter.hydrateGeneration)",
+        "expect(adapter.joinRun)"
+      ],
+      "actualAssertions": [
+        "expect(adapter.hydrate, isNull)",
+        "expect(adapter.hydrateGeneration, isNull)",
+        "expect(adapter.joinRun, isNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should throw when connection is not provided",
+      "upstreamTitle": "should throw when connection is not provided",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should throw when connection is not provided",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(() => normalizeConnectionAdapter(undefined))"
+      ],
+      "actualAssertions": [
+        "expect( () => normalizeConnectionAdapter(null), throwsA( predicate<Object>( (error) => error.toString().contains('Connection adapter is required'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should throw when subscribe/send are partially implemented",
+      "upstreamTitle": "should throw when subscribe/send are partially implemented",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should throw when subscribe/send are partially implemented",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(() => normalizeConnectionAdapter(adapter as any))"
+      ],
+      "actualAssertions": [
+        "expect( () => normalizeConnectionAdapter(adapter), throwsA( predicate<Object>( (error) => error .toString() .contains('either connect or both subscribe and send'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should throw when both connection modes are provided",
+      "upstreamTitle": "should throw when both connection modes are provided",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should throw when both connection modes are provided",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(() => normalizeConnectionAdapter(invalidAdapter as any))"
+      ],
+      "actualAssertions": [
+        "expect( () => normalizeConnectionAdapter(adapter), throwsA( predicate<Object>( (error) => error.toString().contains('not both modes'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should synthesize RUN_FINISHED when wrapped connect stream has no terminal event",
+      "upstreamTitle": "should synthesize RUN_FINISHED when wrapped connect stream has no terminal event",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should synthesize RUN_FINISHED when wrapped connect stream has no terminal event",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received)",
+        "expect(received[1]?.type)"
+      ],
+      "actualAssertions": [
+        "expect(received, hasLength(2))",
+        "expect(received[1]['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should synthesize RUN_ERROR when wrapped connect stream throws",
+      "upstreamTitle": "should synthesize RUN_ERROR when wrapped connect stream throws",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should synthesize RUN_ERROR when wrapped connect stream throws",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( adapter.send( [{ role: 'user', content: 'Hello' }], undefined, undefined, { threadId: 'thread-test', runId: 'run-test' }, ), )",
+        "expect(received)",
+        "expect(received[0]?.type)"
+      ],
+      "actualAssertions": [
+        "expect(error.toString(), contains('connect exploded'))",
+        "expect(received, hasLength(1))",
+        "expect(received.single['type'], 'RUN_ERROR')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters normalizeConnectionAdapter should not synthesize duplicate RUN_ERROR when stream already emitted one before throwing",
+      "upstreamTitle": "should not synthesize duplicate RUN_ERROR when stream already emitted one before throwing",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters normalizeConnectionAdapter should not synthesize duplicate RUN_ERROR when stream already emitted one before throwing",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( adapter.send([{ role: 'user', content: 'Hello' }]), )",
+        "expect(received)",
+        "expect(received[0]?.type)",
+        "expect(received[0].message)"
+      ],
+      "actualAssertions": [
+        "expect(error.toString(), contains('connect exploded'))",
+        "expect(received, hasLength(1))",
+        "expect(received.single['type'], 'RUN_ERROR')",
+        "expect(received.single['message'], 'already failed')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters rpcStream should delegate to RPC call",
+      "upstreamTitle": "should delegate to RPC call",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters rpcStream should delegate to RPC call",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(rpcCall)",
+        "expect(chunks)",
+        "expect(chunks[0])"
+      ],
+      "actualAssertions": [
+        "expect(called, isTrue)",
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['delta'], 'Hello')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters rpcStream should pass messages and data to RPC call",
+      "upstreamTitle": "should pass messages and data to RPC call",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters rpcStream should pass messages and data to RPC call",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(rpcCall)"
+      ],
+      "actualAssertions": [
+        "expect(seenMessages, isNotNull)",
+        "expect(seenData, data)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters rpcStream should spread supplied persistence handlers onto the adapter",
+      "upstreamTitle": "should spread supplied persistence handlers onto the adapter",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters rpcStream should spread supplied persistence handlers onto the adapter",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrate)",
+        "expect(adapter.hydrateGeneration)",
+        "expect(adapter.joinRun)"
+      ],
+      "actualAssertions": [
+        "expect(adapter.hydrate, isNotNull)",
+        "expect(adapter.hydrateGeneration, isNotNull)",
+        "expect(adapter.joinRun, isNotNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters rpcStream should omit persistence handlers that are not supplied",
+      "upstreamTitle": "should omit persistence handlers that are not supplied",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters rpcStream should omit persistence handlers that are not supplied",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrate)",
+        "expect(adapter.hydrateGeneration)",
+        "expect(adapter.joinRun)"
+      ],
+      "actualAssertions": [
+        "expect(adapter.hydrate, isNull)",
+        "expect(adapter.hydrateGeneration, isNull)",
+        "expect(adapter.joinRun, isNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters hydrateGeneration maps a populated body to the hydration result",
+      "upstreamTitle": "maps a populated body to the hydration result",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters hydrateGeneration maps a populated body to the hydration result",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.activeRun)",
+        "expect(result.resumeSnapshot)",
+        "expect(fetchClient.mock.calls[0]![0])"
+      ],
+      "actualAssertions": [
+        "expect(result.activeRun?.runId, 'r1')",
+        "expect(result.resumeSnapshot?['status'], 'running')",
+        "expect(client.requests.single.url.toString(), contains('threadId=t1'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters hydrateGeneration treats a 200 carrying null as a genuine miss",
+      "upstreamTitle": "treats a 200 carrying null as a genuine miss",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters hydrateGeneration treats a 200 carrying null as a genuine miss",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrateGeneration!('t1'))"
+      ],
+      "actualAssertions": [
+        "expect(result.resumeSnapshot, isNull)",
+        "expect(result.activeRun, isNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters hydrateGeneration rejects a non-object body instead of reporting a fresh thread",
+      "upstreamTitle": "rejects a non-object body instead of reporting a fresh thread",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters hydrateGeneration rejects a non-object body instead of reporting a fresh thread",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(adapter.hydrateGeneration!('t1'))",
+        "expect(arrayAdapter.hydrateGeneration!('t1'))"
+      ],
+      "actualAssertions": [
+        "expectLater( adapter.hydrateGeneration!('t1'), throwsA( predicate<Object>( (error) => error.toString().contains('expected a JSON object'), ), ), )",
+        "expectLater( arrayAdapter.hydrateGeneration!('t1'), throwsA( predicate<Object>( (error) => error.toString().contains('an array'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters chat hydrate paging includes limit and before as search params when hydrate options are passed",
+      "upstreamTitle": "includes limit and before as search params when hydrate options are passed",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters chat hydrate paging includes limit and before as search params when hydrate options are passed",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock.mock.calls[0]?.[0])",
+        "expect(result.page)"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.url.toString(), '/api/chat?threadId=thread-1&limit=50&before=cursor-a', )",
+        "expect(result.page.truncated, isTrue)",
+        "expect(result.page.cursor, 'c1')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters chat hydrate paging treats truncated true without a cursor as a full list",
+      "upstreamTitle": "treats truncated true without a cursor as a full list",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters chat hydrate paging treats truncated true without a cursor as a full list",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.page)"
+      ],
+      "actualAssertions": [
+        "expect(result.page.truncated, isFalse)",
+        "expect(result.page.cursor, isNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters chat hydrate paging treats a missing page as a full list",
+      "upstreamTitle": "treats a missing page as a full list",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters chat hydrate paging treats a missing page as a full list",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock.mock.calls[0]?.[0])",
+        "expect(result.page)",
+        "expect(result.messages.map((message) => message.id))"
+      ],
+      "actualAssertions": [
+        "expect(client.requests.single.url.toString(), '/api/chat?threadId=thread-1')",
+        "expect(result.page.truncated, isFalse)",
+        "expect(result.messages.map((message) => message['id']), ['m1'])"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters.test.ts",
+      "upstreamName": "connection-adapters chat hydrate paging forwards hydrate paging options through normalizeConnectionAdapter",
+      "upstreamTitle": "forwards hydrate paging options through normalizeConnectionAdapter",
+      "dartFile": "test/connections/connection_adapters_test.dart",
+      "dartTestName": "connection-adapters chat hydrate paging forwards hydrate paging options through normalizeConnectionAdapter",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result)",
+        "expect(hydrate)"
+      ],
+      "actualAssertions": [
+        "expect(result, same(hydration))",
+        "expect(seenOptions?.limit, 50)",
+        "expect(seenOptions?.before, 'c1')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchServerSentEvents should pass abortSignal to fetch",
+      "upstreamTitle": "should pass abortSignal to fetch",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should pass abortSignal to fetch",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)",
+        "expect(fetchCall?.[1]?.signal)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests, hasLength(1))",
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchServerSentEvents should use provided abortSignal over options.signal",
+      "upstreamTitle": "should use provided abortSignal over options.signal",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should use provided abortSignal over options.signal",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchCall?.[1]?.signal)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchServerSentEvents should stop reading stream when aborted",
+      "upstreamTitle": "should stop reading stream when aborted",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should stop reading stream when aborted",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(readCount)",
+        "expect(mockReader.releaseLock)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchServerSentEvents should check abortSignal before each read",
+      "upstreamTitle": "should check abortSignal before each read",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should check abortSignal before each read",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(readCount)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, isEmpty)",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchHttpStream should pass abortSignal to fetch",
+      "upstreamTitle": "should pass abortSignal to fetch",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should pass abortSignal to fetch",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetchMock)",
+        "expect(fetchCall?.[1]?.signal)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests, hasLength(1))",
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-abort.test.ts",
+      "upstreamName": "Connection Adapters - Abort Signal Handling fetchHttpStream should stop reading stream when aborted",
+      "upstreamTitle": "should stop reading stream when aborted",
+      "dartFile": "test/connections/connection_adapters_abort_test.dart",
+      "dartTestName": "Connection Adapters - Abort Signal Handling should stop reading stream when aborted",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(readCount)",
+        "expect(mockReader.releaseLock)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "upstreamTitle": "reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(String(url))",
+        "expect(new Headers(init?.headers).get('X-Run-Id'))",
+        "expect(new Headers(init?.headers).get('Last-Event-ID'))",
+        "expect(deltas)",
+        "expect(chunks[chunks.length - 1]?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(request.url.toString(), '/api/chat')",
+        "expect(request.headers['X-Run-Id'], 'r')",
+        "expect(request.headers['Last-Event-ID'], 'run@3')",
+        "expect(deltasOf(chunks), ['1', '2', '3', '4'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter leaves the request URL untouched and sends the run id as a header",
+      "upstreamTitle": "leaves the request URL untouched and sends the run id as a header",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter leaves the request URL untouched and sends the run id as a header",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(String(fetchClient.mock.calls[0]![0]))",
+        "expect( new Headers(fetchClient.mock.calls[0]![1]?.headers).get('X-Run-Id'), )"
+      ],
+      "actualAssertions": [
+        "expect( client.requests.single.url.toString(), '/api/chat?provider=openai&runId=stale#response', )",
+        "expect(client.requests.single.headers['X-Run-Id'], 'current')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter joinRun opens the stream from the start with ?offset=-1",
+      "upstreamTitle": "joinRun opens the stream from the start with ?offset=-1",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter joinRun opens the stream from the start with ?offset=-1",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(calledUrl)",
+        "expect(calledUrl)",
+        "expect(chunks.map((c) => c.type))"
+      ],
+      "actualAssertions": [
+        "expect(calledUrl.queryParameters['offset'], '-1')",
+        "expect(calledUrl.queryParameters['runId'], 'run-x')",
+        "expect(chunks.map((chunk) => chunk['type']), contains('RUN_FINISHED'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter surfaces an error when a durable run ends without a terminal and cannot progress",
+      "upstreamTitle": "surfaces an error when a durable run ends without a terminal and cannot progress",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter surfaces an error when a durable run ends without a terminal and cannot progress",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(async () => { for await (const chunk of adapter.connect( [{ role: 'user', content: 'hi' }], undefined, undefined, { threadId: 't', runId: 'r' }, )) { if (chunk.type === EventType.TEXT_MESSAGE_CONTENT) { deltas.push(chunk.delta) } } })",
+        "expect(deltas)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(error, isA<DurableStreamIncompleteError>())",
+        "expect(deltas, ['1', '2'])",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter reconnects after a body reader failure and resumes exactly once",
+      "upstreamTitle": "reconnects after a body reader failure and resumes exactly once",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter reconnects after a body reader failure and resumes exactly once",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(new Headers(init?.headers).get('Last-Event-ID'))",
+        "expect( chunks .filter((chunk) => chunk.type === EventType.TEXT_MESSAGE_CONTENT) .map((chunk) => chunk.delta), )",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(request.headers['Last-Event-ID'], 'run@1')",
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter retries a reconnect whose fetch() itself rejects (connection-establishment failure)",
+      "upstreamTitle": "retries a reconnect whose fetch() itself rejects (connection-establishment failure)",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter retries a reconnect whose fetch() itself rejects (connection-establishment failure)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( chunks .filter((chunk) => chunk.type === EventType.TEXT_MESSAGE_CONTENT) .map((chunk) => chunk.delta), )",
+        "expect(chunks.at(-1)?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(3))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter surfaces a first-attempt fetch() rejection (no offset held) as a hard failure",
+      "upstreamTitle": "surfaces a first-attempt fetch() rejection (no offset held) as a hard failure",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter surfaces a first-attempt fetch() rejection (no offset held) as a hard failure",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(async () => { for await (const _chunk of adapter.connect( [{ role: 'user', content: 'hi' }], undefined, undefined, { threadId: 't', runId: 'r' }, )) { // drain } })",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!( [ {'role': 'user', 'content': 'hi'}, ], runContext: const RunAgentInputContext(threadId: 't', runId: 'r'), )), throwsA(isA<StreamReadError>()), )",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter retries a transport drop that replayed only the de-duped overlap (no new progress that attempt)",
+      "upstreamTitle": "retries a transport drop that replayed only the de-duped overlap (no new progress that attempt)",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter retries a transport drop that replayed only the de-duped overlap (no new progress that attempt)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( chunks .filter((chunk) => chunk.type === EventType.TEXT_MESSAGE_CONTENT) .map((chunk) => chunk.delta), )",
+        "expect(chunks.at(-1)?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(3))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter bounds reconnection with a consecutive-no-progress ceiling",
+      "upstreamTitle": "bounds reconnection with a consecutive-no-progress ceiling",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter bounds reconnection with a consecutive-no-progress ceiling",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(async () => { for await (const _chunk of adapter.connect( [{ role: 'user', content: 'hi' }], undefined, undefined, { threadId: 't', runId: 'r' }, )) { // drain } })",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!( [ {'role': 'user', 'content': 'hi'}, ], runContext: const RunAgentInputContext(threadId: 't', runId: 'r'), )), throwsA(isA<StreamReconnectLimitError>()), )",
+        "expect(client.requests, hasLength(5))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter does not count progress-making reconnects toward the ceiling",
+      "upstreamTitle": "does not count progress-making reconnects toward the ceiling",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter does not count progress-making reconnects toward the ceiling",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( chunks .filter((chunk) => chunk.type === EventType.TEXT_MESSAGE_CONTENT) .map((chunk) => chunk.delta), )",
+        "expect(chunks.at(-1)?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['1', '2', '3', '4'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(5))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter delivers an empty-id event and does not track \"\" as a durable offset",
+      "upstreamTitle": "delivers an empty-id event and does not track \"\" as a durable offset",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter delivers an empty-id event and does not track \"\" as a durable offset",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( chunks .filter((chunk) => chunk.type === EventType.TEXT_MESSAGE_CONTENT) .map((chunk) => chunk.delta), )",
+        "expect(chunks.at(-1)?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter stops reconnecting promptly when aborted during the throttle delay",
+      "upstreamTitle": "stops reconnecting promptly when aborted during the throttle delay",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter stops reconnecting promptly when aborted during the throttle delay",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter does not reconnect a body reader after the caller aborts",
+      "upstreamTitle": "does not reconnect a body reader after the caller aborts",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter does not reconnect a body reader after the caller aborts",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress",
+      "upstreamTitle": "does not retry HTTP setup failures after earlier progress",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "resumable SSE connection adapter does not retry HTTP setup failures after earlier progress",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(async () => { for await (const _chunk of adapter.connect( [{ role: 'user', content: 'hi' }], undefined, undefined, { threadId: 't', runId: 'r' }, )) { // drain } })",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!( [ {'role': 'user', 'content': 'hi'}, ], runContext: const RunAgentInputContext(threadId: 't', runId: 'r'), )), throwsA( predicate<Object>( (error) => error.toString().contains('503 Unavailable'), ), ), )",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable.test.ts",
+      "upstreamName": "createReconnectTracker de-dupes ids, tracks lastEventId, and resets on empty id",
+      "upstreamTitle": "de-dupes ids, tracks lastEventId, and resets on empty id",
+      "dartFile": "test/connections/connection_adapters_resumable_test.dart",
+      "dartTestName": "createReconnectTracker de-dupes ids, tracks lastEventId, and resets on empty id",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(t.note('a'))",
+        "expect(t.lastEventId)",
+        "expect(t.note('a'))",
+        "expect(t.note(''))",
+        "expect(t.lastEventId)",
+        "expect(t.note('a'))"
+      ],
+      "actualAssertions": [
+        "expect(tracker.note('a'), ReconnectNote.fresh)",
+        "expect(tracker.lastEventId, 'a')",
+        "expect(tracker.note('a'), ReconnectNote.duplicate)",
+        "expect(tracker.note(''), ReconnectNote.reset)",
+        "expect(tracker.lastEventId, isNull)",
+        "expect(tracker.note('a'), ReconnectNote.fresh)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable NDJSON (fetchHttpStream) reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "upstreamTitle": "reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable NDJSON (fetchHttpStream) reconnects with Last-Event-ID and de-dupes already-seen chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(String(url))",
+        "expect(new Headers(init?.headers).get('X-Run-Id'))",
+        "expect(new Headers(init?.headers).get('Last-Event-ID'))",
+        "expect(deltasOf(chunks))",
+        "expect(chunks.at(-1)?.type)",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(request.url.toString(), '/api/chat')",
+        "expect(request.headers['X-Run-Id'], 'r')",
+        "expect(request.headers['Last-Event-ID'], 'run@3')",
+        "expect(deltasOf(chunks), ['1', '2', '3', '4'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable NDJSON (fetchHttpStream) joinRun opens the stream from the start with ?offset=-1",
+      "upstreamTitle": "joinRun opens the stream from the start with ?offset=-1",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable NDJSON (fetchHttpStream) joinRun opens the stream from the start with ?offset=-1",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(calledUrl)",
+        "expect(calledUrl)",
+        "expect(chunks.map((c) => c.type))"
+      ],
+      "actualAssertions": [
+        "expect(url.queryParameters['offset'], '-1')",
+        "expect(url.queryParameters['runId'], 'run-x')",
+        "expect(chunks.map((chunk) => chunk['type']), contains('RUN_FINISHED'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable NDJSON (fetchHttpStream) treats a bare-line (non-durable) stream as a single fetch with no reconnect",
+      "upstreamTitle": "treats a bare-line (non-durable) stream as a single fetch with no reconnect",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable NDJSON (fetchHttpStream) treats a bare-line (non-durable) stream as a single fetch with no reconnect",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(deltasOf(chunks))",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable XHR transports xhrHttpStream reconnects with Last-Event-ID across a fresh XHR (NDJSON envelopes)",
+      "upstreamTitle": "xhrHttpStream reconnects with Last-Event-ID across a fresh XHR (NDJSON envelopes)",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable XHR transports xhrHttpStream reconnects with Last-Event-ID across a fresh XHR (NDJSON envelopes)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(first.url)",
+        "expect(first.requestHeaders['X-Run-Id'])",
+        "expect(second.requestHeaders['Last-Event-ID'])",
+        "expect(deltasOf(chunks))",
+        "expect(chunks.at(-1)?.type)",
+        "expect(queue.xhrs)"
+      ],
+      "actualAssertions": [
+        "expect(request.method, 'POST')",
+        "expect(request.url.toString(), '/api/chat')",
+        "expect(request.headers['X-Run-Id'], 'r')",
+        "expect(request.method, 'POST')",
+        "expect(request.headers['Last-Event-ID'], 'run@2')",
+        "expect(deltasOf(chunks), ['1', '2', '3'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable XHR transports xhrHttpStream reconnects after an onerror socket drop (held offset)",
+      "upstreamTitle": "xhrHttpStream reconnects after an onerror socket drop (held offset)",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable XHR transports xhrHttpStream reconnects after an onerror socket drop (held offset)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(queue.xhrs[1]!.requestHeaders['Last-Event-ID'])",
+        "expect(deltasOf(chunks))",
+        "expect(chunks.at(-1)?.type)",
+        "expect(queue.xhrs)",
+        "expect(queue.xhrs[1]!.requestHeaders['Last-Event-ID'])",
+        "expect(deltasOf(chunks))",
+        "expect(chunks.at(-1)?.type)",
+        "expect(xhr.method)"
+      ],
+      "actualAssertions": [
+        "expect(client.requests.last.headers['Last-Event-ID'], 'run@1')",
+        "expect(deltasOf(chunks), ['1', '2'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')",
+        "expect(client.requests, hasLength(2))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable XHR transports xhrServerSentEvents is resumable too (durable SSE over XHR)",
+      "upstreamTitle": "xhrServerSentEvents is resumable too (durable SSE over XHR)",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable XHR transports xhrServerSentEvents is resumable too (durable SSE over XHR)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(queue.xhrs[1]!.requestHeaders['Last-Event-ID'])",
+        "expect(deltasOf(chunks))",
+        "expect(chunks.at(-1)?.type)"
+      ],
+      "actualAssertions": [
+        "expect(request.headers['Last-Event-ID'], 'run@1')",
+        "expect(deltasOf(chunks), ['1'])",
+        "expect(chunks.last['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-resumable-transports.test.ts",
+      "upstreamName": "resumable XHR transports xhrHttpStream joinRun issues a GET from the start with ?offset=-1",
+      "upstreamTitle": "xhrHttpStream joinRun issues a GET from the start with ?offset=-1",
+      "dartFile": "test/connections/connection_adapters_resumable_transports_test.dart",
+      "dartTestName": "resumable XHR transports xhrHttpStream joinRun issues a GET from the start with ?offset=-1",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(xhr.method)",
+        "expect(xhr.url)",
+        "expect(xhr.url)",
+        "expect(chunks.map((c) => c.type))"
+      ],
+      "actualAssertions": [
+        "expect(request.method, 'GET')",
+        "expect(request.url.queryParameters['offset'], '-1')",
+        "expect(request.url.queryParameters['runId'], 'run-x')",
+        "expect(chunks.map((chunk) => chunk['type']), contains('RUN_FINISHED'))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() subscribe/send sends a RunAgentInput frame and yields inbound chunks",
+      "upstreamTitle": "sends a RunAgentInput frame and yields inbound chunks",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() subscribe/send sends a RunAgentInput frame and yields inbound chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(ws.sent.length)",
+        "expect(JSON.parse(sentFrame).runId)",
+        "expect(received.map((c) => c.type))"
+      ],
+      "actualAssertions": [
+        "expect(ws.sent, hasLength(1))",
+        "expect(jsonDecodeMap(ws.sent.single)['runId'], 'r')",
+        "expect(received.map((chunk) => chunk['type']), ['TEXT_MESSAGE_CONTENT'])"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() subscribe/send delivers a bare chunk (no id envelope) as-is to subscribe()",
+      "upstreamTitle": "delivers a bare chunk (no id envelope) as-is to subscribe()",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() subscribe/send delivers a bare chunk (no id envelope) as-is to subscribe()",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received.map((c) => c.type))",
+        "expect(received[0].delta)"
+      ],
+      "actualAssertions": [
+        "expect(received.map((chunk) => chunk['type']), ['TEXT_MESSAGE_CONTENT'])",
+        "expect(received.single['delta'], 'x')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() subscribe/send joinRun opens a socket with offset=-1 and runId, and yields emitted chunks",
+      "upstreamTitle": "joinRun opens a socket with offset=-1 and runId, and yields emitted chunks",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() subscribe/send joinRun opens a socket with offset=-1 and runId, and yields emitted chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(ws.url)",
+        "expect(ws.url)",
+        "expect(received.map((c) => c.type))",
+        "expect(received[0].delta)"
+      ],
+      "actualAssertions": [
+        "expect(ws.url.queryParameters['offset'], '-1')",
+        "expect(ws.url.queryParameters['runId'], 'run-j')",
+        "expect(received.map((chunk) => chunk['type']), ['TEXT_MESSAGE_CONTENT'])",
+        "expect(received.single['delta'], 'joined')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() subscribe/send does not hang when two send()s race the handshake (waitOpen memoization)",
+      "upstreamTitle": "does not hang when two send()s race the handshake (waitOpen memoization)",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() subscribe/send does not hang when two send()s race the handshake (waitOpen memoization)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(FakeWebSocket.instances.length)",
+        "expect(ws.sent.length)",
+        "expect(JSON.parse(sent0).runId)",
+        "expect(JSON.parse(sent1).runId)"
+      ],
+      "actualAssertions": [
+        "expect(FakeWebSocket.instances, hasLength(1))",
+        "expect(ws.sent, hasLength(2))",
+        "expect(jsonDecodeMap(ws.sent[0])['runId'], 'r1')",
+        "expect(jsonDecodeMap(ws.sent[1])['runId'], 'r2')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() reconnect reopens with ?runId&offset after a drop and de-dupes the overlap",
+      "upstreamTitle": "reopens with ?runId&offset after a drop and de-dupes the overlap",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() reconnect reopens with ?runId&offset after a drop and de-dupes the overlap",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(ws2)",
+        "expect(url2.searchParams.get('runId'))",
+        "expect(url2.searchParams.get('offset'))",
+        "expect(received.map((c) => c.delta ?? c.type))"
+      ],
+      "actualAssertions": [
+        "expect(ws2.url.queryParameters['runId'], 'run-x')",
+        "expect(ws2.url.queryParameters['offset'], 'off-1')",
+        "expect( received.map((chunk) => chunk['delta'] ?? chunk['type']), ['a', 'b', 'RUN_FINISHED'], )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() reconnect a second send() with a new runId resets the run session (fresh offsets, reconnect re-armed)",
+      "upstreamTitle": "a second send() with a new runId resets the run session (fresh offsets, reconnect re-armed)",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() reconnect a second send() with a new runId resets the run session (fresh offsets, reconnect re-armed)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(FakeWebSocket.instances.length)",
+        "expect(url2.searchParams.get('runId'))",
+        "expect(url2.searchParams.get('offset'))",
+        "expect(received.map((c) => c.delta ?? c.type))",
+        "expect(new URL(ws2.url).searchParams.get('offset'))",
+        "expect(ws.sent.length)",
+        "expect(ws.sent.length)",
+        "expect(JSON.parse(ws.sent[1]!))"
+      ],
+      "actualAssertions": [
+        "expect(FakeWebSocket.instances, hasLength(1))",
+        "expect(ws2.url.queryParameters['runId'], 'run-2')",
+        "expect(ws2.url.queryParameters['offset'], 'r2-off-1')",
+        "expect( received.map((chunk) => chunk['delta'] ?? chunk['type']), ['a', 'RUN_FINISHED', 'b', 'RUN_FINISHED'], )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() reconnect a same-runId resubmit clears sawTerminal so a drop during the new turn still reconnects",
+      "upstreamTitle": "a same-runId resubmit clears sawTerminal so a drop during the new turn still reconnects",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() reconnect a same-runId resubmit clears sawTerminal so a drop during the new turn still reconnects",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(new URL(ws2.url).searchParams.get('offset'))"
+      ],
+      "actualAssertions": [
+        "expect(ws2.url.queryParameters['offset'], 'off-2')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() reconnect aborting a send() emits an { type: \"abort\", runId } frame on the conversation socket",
+      "upstreamTitle": "aborting a send() emits an { type: \"abort\", runId } frame on the conversation socket",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() reconnect aborting a send() emits an { type: \"abort\", runId } frame on the conversation socket",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(ws.sent.length)",
+        "expect(ws.sent.length)",
+        "expect(JSON.parse(ws.sent[1]!))"
+      ],
+      "actualAssertions": [
+        "expect(ws.sent, hasLength(1))",
+        "expect(ws.sent, hasLength(2))",
+        "expect(jsonDecodeMap(ws.sent[1]), { 'type': 'abort', 'runId': 'run-stop', })"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() fatal drop surfacing a non-durable drop (no offset ever seen) rejects subscribe() with StreamReadError and does not reconnect",
+      "upstreamTitle": "a non-durable drop (no offset ever seen) rejects subscribe() with StreamReadError and does not reconnect",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() fatal drop surfacing a non-durable drop (no offset ever seen) rejects subscribe() with StreamReadError and does not reconnect",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.error)",
+        "expect((result.error as Error).name)",
+        "expect(FakeWebSocket.instances.length)",
+        "expect(result.error)",
+        "expect(result.error)",
+        "expect(FakeWebSocket.instances.length)",
+        "expect(result.error)",
+        "expect((result.error as Error).name)"
+      ],
+      "actualAssertions": [
+        "expect(result.error, isA<StreamReadError>())",
+        "expect(FakeWebSocket.instances, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() fatal drop surfacing exceeding the reconnect ceiling on a durable run with no forward progress rejects subscribe() with StreamReconnectLimitError",
+      "upstreamTitle": "exceeding the reconnect ceiling on a durable run with no forward progress rejects subscribe() with StreamReconnectLimitError",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() fatal drop surfacing exceeding the reconnect ceiling on a durable run with no forward progress rejects subscribe() with StreamReconnectLimitError",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.error)",
+        "expect(result.error)",
+        "expect(FakeWebSocket.instances.length)"
+      ],
+      "actualAssertions": [
+        "expect(result.error, isA<StreamReconnectLimitError>())",
+        "expect(FakeWebSocket.instances, hasLength(4))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() fatal drop surfacing a malformed inbound frame rejects subscribe() with StreamReadError",
+      "upstreamTitle": "a malformed inbound frame rejects subscribe() with StreamReadError",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() fatal drop surfacing a malformed inbound frame rejects subscribe() with StreamReadError",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.error)",
+        "expect((result.error as Error).name)"
+      ],
+      "actualAssertions": [
+        "expect(result.error, isA<StreamReadError>())"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() fatal drop surfacing a joinRun-only socket drop rejects the iterator instead of hanging",
+      "upstreamTitle": "a joinRun-only socket drop rejects the iterator instead of hanging",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() fatal drop surfacing a joinRun-only socket drop rejects the iterator instead of hanging",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.error)",
+        "expect((result.error as Error).name)",
+        "expect(FakeWebSocket.instances.length)"
+      ],
+      "actualAssertions": [
+        "expect(result.error, isA<StreamReadError>())",
+        "expect(FakeWebSocket.instances, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() fatal drop surfacing a joinRun socket the server closes cleanly (1000, replay complete) ends the iterator without error",
+      "upstreamTitle": "a joinRun socket the server closes cleanly (1000, replay complete) ends the iterator without error",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() fatal drop surfacing a joinRun socket the server closes cleanly (1000, replay complete) ends the iterator without error",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received.map((c) => c.delta))"
+      ],
+      "actualAssertions": [
+        "expect(received.map((chunk) => chunk['delta']), ['replayed'])"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() run/resume socket isolation joinRun during an open conversation socket opens its own replay socket, leaving the conversation socket intact",
+      "upstreamTitle": "joinRun during an open conversation socket opens its own replay socket, leaving the conversation socket intact",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() run/resume socket isolation joinRun during an open conversation socket opens its own replay socket, leaving the conversation socket intact",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(FakeWebSocket.instances.length)",
+        "expect(new URL(join.url).searchParams.get('offset'))",
+        "expect(new URL(join.url).searchParams.get('runId'))",
+        "expect(conversation.readyState)"
+      ],
+      "actualAssertions": [
+        "expect(FakeWebSocket.instances, hasLength(2))",
+        "expect(join.url.queryParameters['offset'], '-1')",
+        "expect(join.url.queryParameters['runId'], 'run-old')",
+        "expect(conversation.readyState, 1)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-websocket.test.ts",
+      "upstreamName": "webSocket() run/resume socket isolation send() after joinRun opens a conversation socket instead of writing the run frame onto the replay socket",
+      "upstreamTitle": "send() after joinRun opens a conversation socket instead of writing the run frame onto the replay socket",
+      "dartFile": "test/connections/connection_adapters_websocket_test.dart",
+      "dartTestName": "webSocket() run/resume socket isolation send() after joinRun opens a conversation socket instead of writing the run frame onto the replay socket",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(FakeWebSocket.instances.length)",
+        "expect(join.sent.length)",
+        "expect(conversation.sent.length)",
+        "expect(JSON.parse(conversation.sent[0]!).runId)",
+        "expect(new URL(conversation.url).searchParams.get('offset'))"
+      ],
+      "actualAssertions": [
+        "expect(FakeWebSocket.instances, hasLength(2))",
+        "expect(join.sent, isEmpty)",
+        "expect(conversation.sent, hasLength(1))",
+        "expect(jsonDecodeMap(conversation.sent.single)['runId'], 'run-new')",
+        "expect(conversation.url.queryParameters['offset'], isNull)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents parses split SSE chunks across multiple progress events and sends AG-UI request body",
+      "upstreamTitle": "parses split SSE chunks across multiple progress events and sends AG-UI request body",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents parses split SSE chunks across multiple progress events and sends AG-UI request body",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(xhr.method)",
+        "expect(xhr.url)",
+        "expect(xhr.withCredentials)",
+        "expect(xhr.requestHeaders)",
+        "expect(body)",
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect(request.method, 'POST')",
+        "expect(request.url.toString(), '/api/chat')",
+        "expect( request.headers, containsPair( 'Content-Type', 'application/json', ))",
+        "expect(request.headers, containsPair('Authorization', 'Bearer token'))",
+        "expect(request.headers, containsPair('X-Run-Id', 'run-1'))",
+        "expect(bodyJson['threadId'], 'thread-1')",
+        "expect(bodyJson['runId'], 'run-1')",
+        "expect(bodyJson['forwardedProps'], { 'model': 'test-model', 'temperature': 0, })"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents sends resume in the AG-UI request body",
+      "upstreamTitle": "sends resume in the AG-UI request body",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents sends resume in the AG-UI request body",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(body.resume)",
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect(jsonBodyOf(client.requests.single)['resume'], resume)",
+        "expect(await nextChunk, isTrue)",
+        "expect(iterator.current['type'], 'RUN_FINISHED')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
+      "upstreamTitle": "synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents synthesizes RUN_FINISHED for [DONE] and ignores later bytes",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)",
+        "expect(iterator.next())"
+      ],
+      "actualAssertions": [
+        "expect(await nextChunk, isTrue)",
+        "expect(iterator.current['type'], 'RUN_FINISHED')",
+        "expect(iterator.current['threadId'], 'thread-1')",
+        "expect(iterator.current['runId'], 'run-1')",
+        "expect( (iterator.current['metadata'] as Map)['tanstack']['finishReason'], 'stop', )",
+        "expect(await iterator.moveNext(), isFalse)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading",
+      "upstreamTitle": "aborts the XHR after [DONE] so late bytes stop downloading",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents aborts the XHR after [DONE] so late bytes stop downloading",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)",
+        "expect(iterator.next())",
+        "expect(xhr.abort)",
+        "expect(nextChunk)",
+        "expect(nextChunk)",
+        "expect(nextChunk)",
+        "expect(nextChunk)",
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect(await nextChunk, isTrue)",
+        "expect(iterator.current['type'], 'RUN_FINISHED')",
+        "expect(await iterator.moveNext(), isFalse)",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents parses SSE data frames without a space after the colon",
+      "upstreamTitle": "parses SSE data frames without a space after the colon",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents parses SSE data frames without a space after the colon",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect(await nextChunk, isTrue)",
+        "expect(iterator.current['delta'], 'Hello')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents throws a SyntaxError on malformed JSON",
+      "upstreamTitle": "throws a SyntaxError on malformed JSON",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents throws a FormatException on malformed JSON",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expectLater(nextChunk, throwsA(isA<FormatException>()))"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"throws a SyntaxError on malformed JSON\" to \"throws a FormatException on malformed JSON\"."
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents throws a meaningful error for non-2xx status",
+      "upstreamTitle": "throws a meaningful error for non-2xx status",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents throws a meaningful error for non-2xx status",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([])), throwsA( predicate<Object>( (error) => error.toString() == 'XHR error! status: 503 Service Unavailable', ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "upstreamTitle": "throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)",
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect( error.toString(), 'XHR error! status: 500 Internal Server Error', )",
+        "expect(error, isNot(isA<FormatException>()))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents does not send when the abort signal is already aborted",
+      "upstreamTitle": "does not send when the abort signal is already aborted",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents does not send when the abort signal is already aborted",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(iterator.next())",
+        "expect(xhr.abort)",
+        "expect(xhr.send)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, isEmpty)",
+        "expect(client.requests, isEmpty)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents maps AbortSignal to xhr.abort, stops output, and cleans up handlers",
+      "upstreamTitle": "maps AbortSignal to xhr.abort, stops output, and cleans up handlers",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents maps AbortSignal to xhr.abort, stops output, and cleans up handlers",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)",
+        "expect(xhr.abort)",
+        "expect(removeEventListener)",
+        "expect(xhr.onprogress)",
+        "expect(xhr.onload)",
+        "expect(xhr.onerror)",
+        "expect(xhr.onabort)",
+        "expect(xhr.onloadend)"
+      ],
+      "actualAssertions": [
+        "expect(await nextChunk, isFalse)",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents cleans up abort listener and xhr handlers after success and error",
+      "upstreamTitle": "cleans up abort listener and xhr handlers after success and error",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents cleans up abort listener and xhr handlers after success and error",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(successRemoveEventListener)",
+        "expect(success.xhr.onprogress)",
+        "expect(success.xhr.onload)",
+        "expect(success.xhr.onerror)",
+        "expect(success.xhr.onabort)",
+        "expect(success.xhr.onloadend)",
+        "expect(failureNext)",
+        "expect(failureRemoveEventListener)"
+      ],
+      "actualAssertions": [
+        "expect(successBody.cancelled, isTrue)",
+        "expectLater( failureNext, throwsA(isA<FormatException>()), )",
+        "expect(failureBody.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrServerSentEvents throws StreamTruncatedError on trailing unterminated SSE data",
+      "upstreamTitle": "throws StreamTruncatedError on trailing unterminated SSE data",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrServerSentEvents throws StreamTruncatedError on trailing unterminated SSE data",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!([])), throwsA(isA<StreamTruncatedError>()), )"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrHttpStream parses split newline-delimited JSON across progress events",
+      "upstreamTitle": "parses split newline-delimited JSON across progress events",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrHttpStream parses split newline-delimited JSON across progress events",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect(await nextChunk, isTrue)",
+        "expect(iterator.current['type'], 'RUN_STARTED')",
+        "expect(iterator.current['runId'], 'run-1')"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrHttpStream throws a SyntaxError for malformed newline-delimited JSON",
+      "upstreamTitle": "throws a SyntaxError for malformed newline-delimited JSON",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrHttpStream throws a FormatException for malformed newline-delimited JSON",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expectLater(nextChunk, throwsA(isA<FormatException>()))"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"throws a SyntaxError for malformed newline-delimited JSON\" to \"throws a FormatException for malformed newline-delimited JSON\"."
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrHttpStream throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "upstreamTitle": "throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrHttpStream throws status error instead of yielding or parsing body chunks when status is non-2xx before progress",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(nextChunk)",
+        "expect(nextChunk)"
+      ],
+      "actualAssertions": [
+        "expect( error.toString(), 'XHR error! status: 500 Internal Server Error', )",
+        "expect(error, isNot(isA<FormatException>()))"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-xhr.test.ts",
+      "upstreamName": "xhr connection adapters xhrHttpStream does not send when the abort signal is already aborted",
+      "upstreamTitle": "does not send when the abort signal is already aborted",
+      "dartFile": "test/connections/connection_adapters_xhr_test.dart",
+      "dartTestName": "xhr connection adapters xhrHttpStream does not send when the abort signal is already aborted",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(iterator.next())",
+        "expect(xhr.abort)",
+        "expect(xhr.send)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, isEmpty)",
+        "expect(client.requests, isEmpty)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-drain.test.ts",
+      "upstreamName": "waits for a slow subscriber before resolving send",
+      "upstreamTitle": "waits for a slow subscriber before resolving send",
+      "dartFile": "test/connections/connection_drain_test.dart",
+      "dartTestName": "waits for a slow subscriber before resolving send",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(settled)",
+        "expect(processed)"
+      ],
+      "actualAssertions": [
+        "expect(settled, isFalse)",
+        "expect(processed, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "connection-drain.test.ts",
+      "upstreamName": "does not wait for a subscriber that has exited",
+      "upstreamTitle": "does not wait for a subscriber that has exited",
+      "dartFile": "test/connections/connection_drain_test.dart",
+      "dartTestName": "does not wait for a subscriber that has exited",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": []
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson POSTs the same body and headers as fetchHttpStream, plus Accept: application/json",
+      "upstreamTitle": "POSTs the same body and headers as fetchHttpStream, plus Accept: application/json",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson POSTs the same body and headers as fetchHttpStream, plus Accept: application/json",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(json.url)",
+        "expect(json.method)",
+        "expect(json.credentials)",
+        "expect(json.body)",
+        "expect(json.body)",
+        "expect(json.headers.get('Accept'))",
+        "expect(json.headers.get('Content-Type'))",
+        "expect(json.headers.get('Authorization'))"
+      ],
+      "actualAssertions": [
+        "expect(json.url, '/api/chat')",
+        "expect(json.method, 'POST')",
+        "expect(json.body, stream.body)",
+        "expect(json.body, containsPair('threadId', 'thread-1'))",
+        "expect(json.body, containsPair('runId', 'run-1'))",
+        "expect(json.body?['forwardedProps'], { 'model': 'gpt-5.5', 'extra': 1, })",
+        "expect(json.headers['Accept'], 'application/json')",
+        "expect(json.headers['Content-Type'], 'application/json')"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson restores usage and extras on each chunk, in order",
+      "upstreamTitle": "restores usage and extras on each chunk, in order",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson restores usage and extras on each chunk, in order",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks.map((c) => c.type))",
+        "expect(chunks[1])"
+      ],
+      "actualAssertions": [
+        "expect(chunks.map((chunk) => chunk['type']), [ 'TEXT_MESSAGE_CONTENT', 'RUN_FINISHED', ])",
+        "expect(finished['finishReason'], 'stop')",
+        "expect(finished['usage'], { 'promptTokens': 3, 'completionTokens': 5, 'totalTokens': 8, })"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson polls GET ?runId&offset until done: true, with no duplicate chunks",
+      "upstreamTitle": "polls GET ?runId&offset until done: true, with no duplicate chunks",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson polls GET ?runId&offset until done: true, with no duplicate chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(deltasOf(chunks))",
+        "expect(chunks)",
+        "expect(requestedUrls(fetchClient))",
+        "expect(requestAt(fetchClient, 1).method)",
+        "expect(requestAt(fetchClient, 1).headers.get('Accept'))"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['a', 'b', 'c'])",
+        "expect(chunks, hasLength(4))",
+        "expect(requestedUrls(client), [ '/api/chat', '/api/chat?runId=run-1&offset=1', '/api/chat?runId=run-1&offset=1', '/api/chat?runId=run-1&offset=2', ])",
+        "expect(requestAt(client, 1).method, 'GET')",
+        "expect(requestAt(client, 1).headers['Accept'], 'application/json')"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson throws the HTTP status on a non-2xx reply",
+      "upstreamTitle": "throws the HTTP status on a non-2xx reply",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson throws the HTTP status on a non-2xx reply",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(collect(connectWith(fetchClient)))"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(connectWith(client)), throwsA( predicate<Object>( (error) => error.toString() == 'HTTP error! status: 502 Bad Gateway', ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson throws a clear error, not a SyntaxError, when the body is not JSON",
+      "upstreamTitle": "throws a clear error, not a SyntaxError, when the body is not JSON",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson throws a clear error, not a FormatException, when the body is not JSON",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(error)",
+        "expect(error)",
+        "expect(error)"
+      ],
+      "actualAssertions": [
+        "expect(error, isA<FetchJsonException>())",
+        "expect(error, isNot(isA<FormatException>()))",
+        "expect( error.toString(), contains('not JSON (content-type: text/html)'), )"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"throws a clear error, not a SyntaxError, when the body is not JSON\" to \"throws a clear error, not a FormatException, when the body is not JSON\"."
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson throws a clear error when the JSON body has the wrong shape",
+      "upstreamTitle": "throws a clear error when the JSON body has the wrong shape",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson throws a clear error when the JSON body has the wrong shape",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(collect(connectWith(fetchClient)))"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(connectWith(client)), throwsA( predicate<Object>( (error) => error.toString().contains('{ chunks, done, offset? }'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson throws when done: false has no offset to resume from",
+      "upstreamTitle": "throws when done: false has no offset to resume from",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson throws when done: false has no offset to resume from",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(collect(connectWith(fetchClient)))"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(connectWith(client)), throwsA( predicate<Object>( (error) => error.toString().contains('done: false without an offset'), ), ), )"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson retries a failed poll",
+      "upstreamTitle": "retries a failed poll",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson retries a failed poll",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(deltasOf(chunks))",
+        "expect(requestedUrls(fetchClient))"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['a', 'b'])",
+        "expect(requestedUrls(client), [ '/api/chat', '/api/chat?runId=run-1&offset=1', '/api/chat?runId=run-1&offset=1', ])"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson gives up on a poll after the reconnect ceiling",
+      "upstreamTitle": "gives up on a poll after the reconnect ceiling",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson gives up on a poll after the reconnect ceiling",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( collect(adapter.connect(messages, undefined, undefined, runContext)), )",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(adapter.connect!( messages, runContext: runContext, )), throwsA(isA<StreamReconnectLimitError>()), )",
+        "expect(client.requests, hasLength(3))"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson does not retry a failed first POST",
+      "upstreamTitle": "does not retry a failed first POST",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson does not retry a failed first POST",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(collect(connectWith(fetchClient)))",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expectLater( collect(connectWith(client)), throwsA( predicate<Object>( (error) => error is StreamReadError && error.cause == networkError, ), ), )",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson ends at once with no further request when stopped during the poll delay",
+      "upstreamTitle": "ends at once with no further request when stopped during the poll delay",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson ends at once with no further request when stopped during the poll delay",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(deltasOf(chunks))",
+        "expect(fetchClient)"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['a'])",
+        "expect(client.requests, hasLength(1))"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson joinRun starts with GET ?runId&offset=-1",
+      "upstreamTitle": "joinRun starts with GET ?runId&offset=-1",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson joinRun starts with GET ?runId&offset=-1",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(deltasOf(chunks))",
+        "expect(requestAt(fetchClient, 0).method)",
+        "expect(requestedUrls(fetchClient))"
+      ],
+      "actualAssertions": [
+        "expect(deltasOf(chunks), ['a', 'b'])",
+        "expect(requestAt(client, 0).method, 'GET')",
+        "expect(requestedUrls(client), [ '/api/chat?runId=run-9&offset=-1', '/api/chat?runId=run-9&offset=1', ])"
+      ]
+    },
+    {
+      "upstreamFile": "fetch-json.test.ts",
+      "upstreamName": "fetchJson hydrate GETs ?threadId",
+      "upstreamTitle": "hydrate GETs ?threadId",
+      "dartFile": "test/connections/fetch_json_test.dart",
+      "dartTestName": "fetchJson hydrate GETs ?threadId",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(result.activeRun)",
+        "expect(requestedUrls(fetchClient))"
+      ],
+      "actualAssertions": [
+        "expect(result.activeRun?.runId, 'run-3')",
+        "expect(requestedUrls(client), ['/api/chat?threadId=thread-1'])"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport runs an in-process AsyncIterable fetcher and streams text",
+      "upstreamTitle": "runs an in-process AsyncIterable fetcher and streams text",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport runs an in-process AsyncIterable fetcher and streams text",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetcher)",
+        "expect(finalMessages)",
+        "expect(assistant.role)",
+        "expect(textPart && 'content' in textPart && textPart.content)"
+      ],
+      "actualAssertions": [
+        "expect(seen, hasLength(1))",
+        "expect(assistant.role, 'assistant')",
+        "expect(assistant.answer, 'Hello world')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
+      "upstreamTitle": "parses an SSE Response returned by the fetcher (server-fn style)",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(fetcher)",
+        "expect(assistant.role)",
+        "expect(textPart && 'content' in textPart && textPart.content)"
+      ],
+      "actualAssertions": [
+        "expect(client.getMessages().last.answer, 'Hi')",
+        "expect(client.getStatus(), isNot('error'))"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
+      "upstreamTitle": "passes the AbortSignal to the fetcher; stop() aborts it",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedSignal)",
+        "expect(observedSignal!.aborted)",
+        "expect(observedSignal!.aborted)"
+      ],
+      "actualAssertions": [
+        "expect(seen, isNotNull)",
+        "expect(seen!.isCancelled, isFalse)",
+        "expect(seen!.isCancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a fetcher error as a ChatClient error",
+      "upstreamTitle": "surfaces a fetcher error as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a fetcher error as a ChatClient error",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedError)",
+        "expect(observedError!.message)",
+        "expect(client.getStatus())"
+      ],
+      "actualAssertions": [
+        "expect(observed, isNotNull)",
+        "expect(observed.toString(), contains('fetcher exploded'))",
+        "expect(client.getStatus(), 'error')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
+      "upstreamTitle": "surfaces a malformed-SSE Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedError)",
+        "expect(observedError!.name)",
+        "expect(client.getStatus())"
+      ],
+      "actualAssertions": [
+        "expect(client.getError(), isNotNull)",
+        "expect(client.getError(), contains('FormatException'))",
+        "expect(client.getStatus(), 'error')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport passes UIMessages and merged body to the fetcher",
+      "upstreamTitle": "passes UIMessages and merged body to the fetcher",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport passes UI messages and merged body to the fetcher",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(fetcher)",
+        "expect(input.messages)",
+        "expect(input.messages[0]!.role)",
+        "expect(input.messages[0]!.parts[0])",
+        "expect(input.data)",
+        "expect(input.threadId)",
+        "expect(input.runId)"
+      ],
+      "actualAssertions": [
+        "expect(seen, isNotNull)",
+        "expect(seen!.messages, hasLength(1))",
+        "expect(seen!.messages.first['role'], 'user')",
+        "expect((seen!.messages.first['parts'] as List).first, <String, dynamic>{ 'type': 'text', 'content': 'hello there', })",
+        "expect(seen!.data, containsPair('provider', 'openai'))",
+        "expect(seen!.threadId, isNotEmpty)",
+        "expect(seen!.runId, isNotEmpty)"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"passes UIMessages and merged body to the fetcher\" to \"passes UI messages and merged body to the fetcher\"."
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport throws when both connection and fetcher are passed",
+      "upstreamTitle": "throws when both connection and fetcher are passed",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport throws when both connection and fetcher are passed",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(() => new ChatClient(both))"
+      ],
+      "actualAssertions": [
+        "expect( () => ChatClient( connection: conn.ConnectionAdapter( connect: (messages, {data, signal, runContext}) async* {}, ), fetcher: (input, {signal, headers}) => const Stream.empty(), ), throwsArgumentError, )"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport throws when neither connection nor fetcher is passed",
+      "upstreamTitle": "throws when neither connection nor fetcher is passed",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport throws when neither connection nor fetcher is passed",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(() => new ChatClient({} as any))"
+      ],
+      "actualAssertions": [
+        "expect(() => ChatClient(), throwsArgumentError)"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a non-OK Response as a ChatClient error",
+      "upstreamTitle": "surfaces a non-OK Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a non-OK Response as a ChatClient error",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedError)",
+        "expect(observedError!.message)",
+        "expect(client.getStatus())"
+      ],
+      "actualAssertions": [
+        "expect(client.getError(), contains('500'))",
+        "expect(client.getStatus(), 'error')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
+      "upstreamTitle": "surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport surfaces a non-stream result from the fetcher as a ChatClient error",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(observedError)",
+        "expect(observedError)",
+        "expect(client.getStatus())"
+      ],
+      "actualAssertions": [
+        "expect(client.getError(), contains('must return'))",
+        "expect(client.getStatus(), 'error')"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error\" to \"surfaces a non-stream result from the fetcher as a ChatClient error\"."
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
+      "upstreamTitle": "surfaces an AsyncIterable that throws after yielding chunks",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedError)",
+        "expect(observedError!.message)",
+        "expect(client.getStatus())"
+      ],
+      "actualAssertions": [
+        "expect(client.getError(), contains('mid-stream boom'))",
+        "expect(client.getStatus(), 'error')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "upstreamTitle": "completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(client.getStatus())",
+        "expect(finalMessages)",
+        "expect(textPart && 'content' in textPart && textPart.content)"
+      ],
+      "actualAssertions": [
+        "expect(client.getStatus(), isNot('error'))",
+        "expect(client.getMessages().last.answer, 'Hello')"
+      ]
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
+      "upstreamTitle": "stops consuming chunks from an AsyncIterable that ignores its signal",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "ChatClient \u2014 fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(observedChunks.length)"
+      ],
+      "actualAssertions": [
+        "expect(beforeStop, greaterThan(0))",
+        "expect(observed.length, beforeStop)",
+        "expect(client.isStreaming, isFalse)"
+      ]
+    },
+    {
+      "upstreamFile": "sse-done-model.test.ts",
+      "upstreamName": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
+      "upstreamTitle": "copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
+      "dartFile": "test/connections/sse_done_model_test.dart",
+      "dartTestName": "SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop",
+      "status": "ported-static-adapted",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(chunks[0]!.type)",
+        "expect(done)",
+        "expect(done)",
+        "expect(done.metadata?.tanstack)"
+      ],
+      "actualAssertions": [
+        "expect(chunks, hasLength(2))",
+        "expect(finished['type'], 'RUN_FINISHED')",
+        "expect(tanstack['model'], 'gpt-test')",
+        "expect(tanstack['finishReason'], 'stop')"
+      ],
+      "dartAdaptation": "Dart test title/symbols adapted from \"copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop\" to \"SSE [DONE] synthetic RUN_FINISHED copies metadata.tanstack.model from RUN_STARTED and sets finishReason stop\"."
+    },
+    {
+      "upstreamFile": "replay-metadata.test.ts",
+      "upstreamName": "saved replay metadata keeps source, failed-turn and response metadata through JSON storage and hydration",
+      "upstreamTitle": "keeps source, failed-turn and response metadata through JSON storage and hydration",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "saved replay metadata keeps source, failed-turn and response metadata through JSON storage and hydration",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(loaded?.messages[0]?.metadata)",
+        "expect(client.getMessages()[0]?.metadata)",
+        "expect(client.getMessages()[0]?.createdAt)",
+        "expect(client.getMessages()[0]?.metadata?.tanstack?.stopReason)"
+      ],
+      "actualAssertions": [
+        "expect(restored.single.metadata!['tanstack'], <String, dynamic>{ 'source': <String, dynamic>{ 'provider': 'openai', 'api': 'responses', 'model': 'test', }, 'finishReason': 'stop', 'stopReason': 'error', 'responseId': 'resp-1', })"
+      ]
+    },
+    {
+      "upstreamFile": "replay-metadata.test.ts",
+      "upstreamName": "saved replay metadata does not invent a server abort when the client stops",
+      "upstreamTitle": "does not invent a server abort when the client stops",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "saved replay metadata does not invent a server abort when the client stops",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect( client.getMessages()[0]?.metadata?.tanstack?.stopReason, )",
+        "expect( client.getMessages()[0]?.metadata?.tanstack?.responseId, )"
+      ],
+      "actualAssertions": [
+        "expect( client.getMessages().last.metadata?['tanstack']?['stopReason'], isNull, )"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata sendMessage object form stamps metadata on the user UIMessage",
+      "upstreamTitle": "sendMessage object form stamps metadata on the user UIMessage",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "ChatClient metadata sendMessage object form stamps metadata on the user UIMessage",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(user?.metadata)",
+        "expect(sentUser)"
+      ],
+      "actualAssertions": [
+        "expect(user.metadata, <String, dynamic>{ 'author': <String, dynamic>{'id': 'user-42', 'name': 'Dana'}, })"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata sendMessage string form has no metadata",
+      "upstreamTitle": "sendMessage string form has no metadata",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "ChatClient metadata sendMessage string form has no metadata",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(user?.metadata)"
+      ],
+      "actualAssertions": [
+        "expect( client.getMessages().firstWhere((m) => m.role == 'user').metadata, isNull, )"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata queued object send keeps metadata on the queue entry content",
+      "upstreamTitle": "queued object send keeps metadata on the queue entry content",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "ChatClient metadata queued object send keeps metadata on the queue entry content",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(client.getIsLoading())",
+        "expect(queued)",
+        "expect(queued[0]?.content)",
+        "expect(users[1]?.metadata)"
+      ],
+      "actualAssertions": [
+        "expect(queued.content, isA<ChatMessageInput>())",
+        "expect((queued.content as ChatMessageInput).metadata, <String, dynamic>{ 'author': <String, dynamic>{'id': 'u2'}, })"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata append copies uiMessage.metadata",
+      "upstreamTitle": "append copies uiMessage.metadata",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "ChatClient metadata append copies uiMessage.metadata",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(client.getMessages()[0]?.metadata)"
+      ],
+      "actualAssertions": [
+        "expect(client.getMessages().first.metadata, <String, dynamic>{ 'author': <String, dynamic>{'id': 'u1'}, })"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata batch drain merges object metadata last-write-wins per key",
+      "upstreamTitle": "batch drain merges object metadata last-write-wins per key",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "ChatClient metadata batch drain merges object metadata last-write-wins per key",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(client.getIsLoading())",
+        "expect(users)",
+        "expect(users[1]?.metadata)"
+      ],
+      "actualAssertions": [
+        "expect(user.metadata, <String, dynamic>{ 'author': <String, dynamic>{'id': 'user-42', 'name': 'Dana'}, 'room': 'ops', })"
+      ]
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup cancels the response when JSON parsing fails",
+      "upstreamTitle": "cancels the response when JSON parsing fails",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup cancels the response when JSON parsing fails",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup cancels the response when JSON parsing fails",
+      "upstreamTitle": "cancels the response when JSON parsing fails",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup cancels the response when JSON parsing fails",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup cancels the response on early return (pending cancellation: false)",
+      "upstreamTitle": "cancels the response on early return (pending cancellation: false)",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup cancels the response on early return (pending cancellation: false)",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup cancels the response on early return (pending cancellation: false)",
+      "upstreamTitle": "cancels the response on early return (pending cancellation: false)",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup cancels the response on early return (pending cancellation: false)",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup cancels the response on early return (pending cancellation: true)",
+      "upstreamTitle": "cancels the response on early return (pending cancellation: true)",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup cancels the response on early return (pending cancellation: true)",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup cancels the response on early return (pending cancellation: true)",
+      "upstreamTitle": "cancels the response on early return (pending cancellation: true)",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup cancels the response on early return (pending cancellation: true)",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup preserves a parse error when cancellation throws",
+      "upstreamTitle": "preserves a parse error when cancellation throws",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup preserves a parse error when cancellation throws",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup preserves a parse error when cancellation throws",
+      "upstreamTitle": "preserves a parse error when cancellation throws",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup preserves a parse error when cancellation throws",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup preserves a parse error when cancellation rejects",
+      "upstreamTitle": "preserves a parse error when cancellation rejects",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup preserves a parse error when cancellation rejects",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup preserves a parse error when cancellation rejects",
+      "upstreamTitle": "preserves a parse error when cancellation rejects",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup preserves a parse error when cancellation rejects",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup preserves a parse error when cancellation never settles",
+      "upstreamTitle": "preserves a parse error when cancellation never settles",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup preserves a parse error when cancellation never settles",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup preserves a parse error when cancellation never settles",
+      "upstreamTitle": "preserves a parse error when cancellation never settles",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup preserves a parse error when cancellation never settles",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "SSE response cleanup drains a normally closed response without canceling its source",
+      "upstreamTitle": "drains a normally closed response without canceling its source",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "SSE response cleanup drains a normally closed response without canceling its source",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "NDJSON response cleanup drains a normally closed response without canceling its source",
+      "upstreamTitle": "drains a normally closed response without canceling its source",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "NDJSON response cleanup drains a normally closed response without canceling its source",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [],
+      "dartAdaptation": "Upstream describe.each over SSE/NDJSON is mirrored by Dart groups over SSE/NDJSON; Dart loops expand the boolean/throw|reject|never-settles variants."
+    },
+    {
+      "upstreamFile": "connection-adapters-cleanup.test.ts",
+      "upstreamName": "cancels an SSE response after the DONE sentinel",
+      "upstreamTitle": "cancels an SSE response after the DONE sentinel",
+      "dartFile": "test/connections/connection_adapters_cleanup_test.dart",
+      "dartTestName": "cancels an SSE response after the DONE sentinel",
+      "status": "implemented",
+      "upstreamAssertions": [],
+      "actualAssertions": [
+        "expect(chunks, hasLength(1))",
+        "expect(chunks.single['type'], 'RUN_FINISHED')",
+        "expect(body.cancelled, isTrue)"
+      ]
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation resolves",
+      "upstreamTitle": "cancels a generation response on early return when cancellation resolves",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation resolves",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received)",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation throws",
+      "upstreamTitle": "cancels a generation response on early return when cancellation throws",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation throws",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received)",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation rejects",
+      "upstreamTitle": "cancels a generation response on early return when cancellation rejects",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation rejects",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received)",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "cancels a generation response on early return when cancellation never settles",
+      "upstreamTitle": "cancels a generation response on early return when cancellation never settles",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup cancels a generation response on early return when cancellation never settles",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(received)",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "reports a generation error without waiting for custom cancellation",
+      "upstreamTitle": "reports a generation error without waiting for custom cancellation",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup reports a generation error without waiting for custom cancellation",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(client.getError()?.message)",
+        "expect(client.getIsLoading())",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [
+        "expect(generationErrorMessage(client.getError()), contains('generation failed'))",
+        "expect(client.getIsLoading(), isFalse)",
+        "expect(body.cancelCalls, 1)",
+        "expect(body.hasListener, isFalse)"
+      ],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "preserves generation reader errors and releases the lock",
+      "upstreamTitle": "preserves generation reader errors and releases the lock",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup preserves generation reader errors and releases the lock",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(parseSSEResponse(new Response(body)).next())",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [
+        "expect(generationErrorMessage(client.getError()), contains('response reader failed'))",
+        "expect(client.getIsLoading(), isFalse)",
+        "expect(body.hasListener, isFalse)"
+      ],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    },
+    {
+      "upstreamFile": "sse-parser-cleanup.test.ts",
+      "upstreamName": "drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "upstreamTitle": "drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "dartFile": "test/interop/client_boundaries_upstream_test.dart",
+      "dartTestName": "GenerationClient SSE response cleanup drains generation EOF and keeps ignoring malformed JSON and DONE markers",
+      "status": "implemented",
+      "upstreamAssertions": [
+        "expect(chunks)",
+        "expect(warn)",
+        "expect(cancel)",
+        "expect(body.locked)"
+      ],
+      "actualAssertions": [
+        "expect(body.listenCalls, 1)",
+        "expect(chunks.map((chunk) => chunk['type']), contains('RUN_FINISHED'))",
+        "expect(client.getStatus(), GenerationClientState.success)",
+        "expect(client.getError(), isNull)",
+        "expect(client.getIsLoading(), isFalse)",
+        "expect(body.cancelCalls, 1)",
+        "expect(body.hasListener, isFalse)"
+      ],
+      "dartAdaptation": "SSE decoder cleanup is exercised through the real GenerationClient using http.StreamedResponse, per task note; the boundary interop suite reports these 7 cases passing."
+    }
+  ]
+}

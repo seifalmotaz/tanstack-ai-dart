@@ -1,0 +1,452 @@
+{
+  "generatedFrom": "tool/upstream_tests.json",
+  "upstreamPackage": "@tanstack/ai-client",
+  "upstreamVersion": "0.40.0",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "assignedFiles": [
+    "devtools.test.ts",
+    "chat-client.test.ts",
+    "chat-client-noop-devtools.test.ts"
+  ],
+  "assignedCases": 49,
+  "mappedCount": 49,
+  "unmappedCount": 0,
+  "mapped": [
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not emit hook lifecycle events before devtools is mounted",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not emit hook lifecycle events before devtools is mounted",
+      "status": "ported-passing",
+      "upstreamLine": 237
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
+      "status": "ported-passing",
+      "upstreamLine": 248
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge can register again after a mount cleanup cycle",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge can register again after a mount cleanup cycle",
+      "status": "ported-passing",
+      "upstreamLine": 282
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge binds hook identity to threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge binds hook identity to threadId",
+      "status": "ported-passing",
+      "upstreamLine": 304
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not unregister a superseded client that shares a threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not unregister a superseded client that shares a threadId",
+      "status": "ported-passing",
+      "upstreamLine": 327
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers the chat hook and emits the initial state snapshot",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers the chat hook and emits the initial state snapshot",
+      "status": "ported-passing",
+      "upstreamLine": 353
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits the configured devtools display name",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits the configured devtools display name",
+      "status": "ported-passing",
+      "upstreamLine": 398
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers client tool metadata for devtools discovery",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers client tool metadata for devtools discovery",
+      "status": "ported-passing",
+      "upstreamLine": 421,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge responds to devtools state requests for its hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge responds to devtools state requests for its hook",
+      "status": "ported-passing",
+      "upstreamLine": 456
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge uses the resilient devtools emitter for hook registration sync",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge uses the resilient devtools emitter for hook registration sync",
+      "status": "ported-passing",
+      "upstreamLine": 499
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not respond to devtools state requests for another hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not respond to devtools state requests for another hook",
+      "status": "ported-passing",
+      "upstreamLine": 540
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge applies a devtools tool fixture as a normal assistant message",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge applies a devtools tool fixture as a normal assistant message",
+      "status": "ported-passing",
+      "upstreamLine": 560
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge generates fresh ids when replaying a fixture from an existing tool call",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge generates fresh ids when replaying a fixture from an existing tool call",
+      "status": "ported-passing",
+      "upstreamLine": 632
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge replays the full source message when a fixture includes one",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge replays the full source message when a fixture includes one",
+      "status": "ported-passing",
+      "upstreamLine": 694
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge executes the registered client tool when firing a fixture",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge executes the registered client tool when firing a fixture",
+      "status": "ported-passing",
+      "upstreamLine": 774
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge routes hook-scoped fixture events to the latest bridge for a hook id",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge routes hook-scoped fixture events to the latest bridge for a hook id",
+      "status": "ported-passing",
+      "upstreamLine": 834
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge keeps superseded duplicate hook bridges silent when they emit later",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge keeps superseded duplicate hook bridges silent when they emit later",
+      "status": "ported-passing",
+      "upstreamLine": 877
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge includes thread and tool call context when applying a fixture without a run id",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge includes thread and tool call context when applying a fixture without a run id",
+      "status": "ported-passing",
+      "upstreamLine": 913
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge marks fixture tool results as errored when devtools provides error text",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge marks fixture tool results as errored when devtools provides error text",
+      "status": "ported-passing",
+      "upstreamLine": 943
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores devtools tool fixtures for another thread",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores devtools tool fixtures for another thread",
+      "status": "ported-passing",
+      "upstreamLine": 981
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores unscoped devtools tool fixtures",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores unscoped devtools tool fixtures",
+      "status": "ported-passing",
+      "upstreamLine": 1005
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores devtools tool fixtures for another hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores devtools tool fixtures for another hook",
+      "status": "ported-passing",
+      "upstreamLine": 1028
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge disposes the hook bridge idempotently",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge disposes the hook bridge idempotently",
+      "status": "ported-passing",
+      "upstreamLine": 1044
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot when messages are set manually",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot when messages are set manually",
+      "status": "ported-passing",
+      "upstreamLine": 1055
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot when messages are cleared",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot when messages are cleared",
+      "status": "ported-passing",
+      "upstreamLine": 1073
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot after reload removes messages after the last user message",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot after reload removes messages after the last user message",
+      "status": "ported-passing",
+      "upstreamLine": 1092,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge sends live snapshots of a child agent, not the live handle",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge sends live snapshots of a child agent, not the live handle",
+      "status": "ported-passing",
+      "upstreamLine": 1115
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits chat run lifecycle events for hook run tracking",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits chat run lifecycle events for hook run tracking",
+      "status": "ported-passing",
+      "upstreamLine": 1215
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge links streamed text and tool events to the current run context",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge links streamed text and tool events to the current run context",
+      "status": "ported-passing",
+      "upstreamLine": 1266
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge uses stream lifecycle run ids when the server emits them",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge uses stream lifecycle run ids when the server emits them",
+      "status": "ported-passing",
+      "upstreamLine": 1315
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits structured output updates and snapshots streamed structured parts",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits structured output updates and snapshots streamed structured parts",
+      "status": "ported-passing",
+      "upstreamLine": 1354,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits memory:* devtools events from a transported memory:state CUSTOM chunk",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits memory:* devtools events from a transported memory:state CUSTOM chunk",
+      "status": "ported-passing",
+      "upstreamLine": 1455
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits compaction started, state, and ended from transported CUSTOM chunks",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits compaction started, state, and ended from transported CUSTOM chunks",
+      "status": "ported-passing",
+      "upstreamLine": 1549
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits skills:snapshot from a transported skills:state CUSTOM chunk",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits skills:snapshot from a transported skills:state CUSTOM chunk",
+      "status": "ported-passing",
+      "upstreamLine": 1669
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge batches structured output update events while preserving final state",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge batches structured output update events while preserving final state",
+      "status": "ported-passing",
+      "upstreamLine": 1732,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits structured output completion without streamed deltas",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits structured output completion without streamed deltas",
+      "status": "ported-passing",
+      "upstreamLine": 1818,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge preserves structured output parts across multiple chat turns",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge preserves structured output parts across multiple chat turns",
+      "status": "ported-passing",
+      "upstreamLine": 1880
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
+      "status": "ported-passing",
+      "upstreamLine": 1961
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
+      "status": "ported-passing",
+      "upstreamLine": 2031
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
+      "status": "ported-passing",
+      "upstreamLine": 2093,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:message:created event when assistant message starts",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:message:created event when assistant message starts",
+      "status": "ported-passing",
+      "upstreamLine": 3558
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:chunk:content events during streaming",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:chunk:content events during streaming",
+      "status": "ported-passing",
+      "upstreamLine": 3582
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit tools:call:updated events for tool calls",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit tools:call:updated events for tool calls",
+      "status": "ported-passing",
+      "upstreamLine": 3602
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:chunk:thinking events for thinking content",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:chunk:thinking events for thinking content",
+      "status": "ported-passing",
+      "upstreamLine": 3624
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV emits no devtools events in production",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "createChatDevtoolsBridge by environment emits no devtools events in production",
+      "status": "ported-passing",
+      "upstreamLine": 33
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV emits devtools events in development",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "createChatDevtoolsBridge by environment emits devtools events in development",
+      "status": "ported-passing",
+      "upstreamLine": 38
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV does not throw when there is no process global",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "createChatDevtoolsBridge by environment does not throw when there is no process global",
+      "status": "ported-passing",
+      "upstreamLine": 43
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "ChatClient with default no-op devtools bridge sends the first message and appends it",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient with default no-op devtools bridge sends the first message and appends it",
+      "status": "ported-passing",
+      "upstreamLine": 60
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "ChatClient with default no-op devtools bridge updates tools without throwing",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient with default no-op devtools bridge updates tools without throwing",
+      "status": "ported-passing",
+      "upstreamLine": 74,
+      "repairedFrom": "ported-failing status was stale; test passes in the mapped devtools suite",
+      "actualAssertions": [
+        "test executes and passes with the upstream-shaped devtools payload assertions"
+      ]
+    }
+  ],
+  "unmapped": [],
+  "scopeNote": "devtools.test.ts: all 40 cases. chat-client.test.ts: only the 4 devtools-events cases (the file has 108 other cases outside this mapping). chat-client-noop-devtools.test.ts: all 5 cases.",
+  "knownFailures": [],
+  "knownFailureCount": 0,
+  "additionalCoverage": [
+    {
+      "dartTestName": "ChatClient devtools bridge emits snapshots for manual messages, hydration and reload",
+      "reason": "Required by the task brief; no single upstream devtools.test.ts case, but exercises real ChatClient hydrate/reload through the devtools bridge."
+    }
+  ],
+  "passingCount": 49,
+  "failingCount": 0,
+  "statusCounts": {
+    "ported-passing": 49,
+    "ported-failing": 0
+  }
+}

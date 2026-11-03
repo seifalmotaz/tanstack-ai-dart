@@ -1,0 +1,320 @@
+{
+  "upstreamPackage": "@tanstack/ai-client",
+  "upstreamVersion": "0.40.0",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "upstreamFiles": [
+    "tests/ui-types.test-d.ts",
+    "tests/infer-chat-messages.test.ts",
+    "tests/activity-types.test.ts"
+  ],
+  "dartFiles": [
+    "lib/src/chat/typed_ui.dart",
+    "lib/ui.dart",
+    "lib/chat.dart",
+    "test/types/ui_types_positive.dart",
+    "test/types/ui_types_negative.dart",
+    "test/interop/typed_ui_contract_test.dart"
+  ],
+  "summary": {
+    "upstreamCompileCases": 28,
+    "portedStatic": 14,
+    "runtimePreserved": 7,
+    "preservedExisting": 3,
+    "notRepresentable": 4,
+    "negativeAnalyzerAssertions": 7
+  },
+  "cases": [
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 17,
+      "upstreamAssertion": "WeatherPart['input'] is {city:string}|undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 40,
+      "dartAssertion": "WeatherInput? input",
+      "status": "ported-static-adapted",
+      "adaptation": "Dart has no schema-inferred object literal type; the explicit tool input model is used."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 20,
+      "upstreamAssertion": "WeatherPart['output'] is {temperature:number}|undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 41,
+      "dartAssertion": "WeatherOutput? output",
+      "status": "ported-static-adapted",
+      "adaptation": "Output is a concrete model instead of an object literal."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 23,
+      "upstreamAssertion": "PlanInterrupt['payload'] is {title:string}|undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 96,
+      "dartAssertion": "Map<String,dynamic>? payload",
+      "status": "ported-static-adapted",
+      "adaptation": "Payload is an explicit map model; the key is still compile-time checked by the helper generic."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 26,
+      "upstreamAssertion": "ChatUIData resolves to {answer:string}",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 64,
+      "dartAssertion": "Map<String,Object?>? data from selectStructuredPart",
+      "status": "not-representable",
+      "adaptation": "No schema-to-Dart data inference. Callers pass an explicit model type to selectStructuredPart<TData>."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 31,
+      "upstreamAssertion": "ChoosePlan['payload'] is {title:string}|undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 96,
+      "dartAssertion": "Map<String,dynamic>? payload on ChatTypedInterrupt",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit payload model bound to the interrupt view."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 36,
+      "upstreamAssertion": "PurchaseApproval['kind'] is 'tool-approval'",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 310,
+      "dartAssertion": "approval.kind == 'tool-approval'",
+      "status": "runtime-preserved",
+      "adaptation": "Dart uses String for kind; the literal union is not representable, so the runtime value is pinned.",
+      "dartTestName": "typed UI interrupts keeps tool-approval kind and toolName readable"
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 37,
+      "upstreamAssertion": "PurchaseApproval['toolName'] is 'purchaseItem'",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 311,
+      "dartAssertion": "approval.toolName == 'purchaseItem'",
+      "status": "runtime-preserved",
+      "adaptation": "Dart toolName is String?; the runtime value is pinned.",
+      "dartTestName": "typed UI interrupts keeps tool-approval kind and toolName readable"
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 40,
+      "upstreamAssertion": "AnyInterrupt is ChatUIInterrupt",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 92,
+      "dartAssertion": "ChatInterrupt accepted by selectRegisteredInterrupt",
+      "status": "ported-static",
+      "adaptation": "Dart exposes one ChatInterrupt type for the interrupt union."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 43,
+      "upstreamAssertion": "TextSelected['part']['type'] is 'text'",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 225,
+      "dartAssertion": "selectTextPart(...) and text.content == 'hello'",
+      "status": "runtime-preserved",
+      "adaptation": "No string-literal part type; the selector checks type at runtime.",
+      "dartTestName": "typed UI results and structured output exposes text and activity fields without dynamic casts"
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 44,
+      "upstreamAssertion": "TextSelected['part']['content'] is string",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 69,
+      "dartAssertion": "String textContent",
+      "status": "ported-static",
+      "adaptation": "ChatTypedTextPart.content is String."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 47,
+      "upstreamAssertion": "ActivitySelected['part']['type'] is 'activity'",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 228,
+      "dartAssertion": "selectActivityPart(...) and activity.activityType == 'SEARCH'",
+      "status": "runtime-preserved",
+      "adaptation": "No string-literal part type; the selector checks type at runtime.",
+      "dartTestName": "typed UI results and structured output exposes text and activity fields without dynamic casts"
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 48,
+      "upstreamAssertion": "ActivitySelected['part']['activityType'] is string",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 77,
+      "dartAssertion": "String activityType",
+      "status": "ported-static",
+      "adaptation": "ChatTypedActivityPart.activityType is String."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 52,
+      "upstreamAssertion": "ToolResult outcome is ToolResultOutcome|undefined",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 52,
+      "dartAssertion": "String? outcome; ChatTypedToolResult.denied/errored",
+      "status": "ported-static-adapted",
+      "adaptation": "Outcome is String?; denied is a real boolean accessor and is unit-tested."
+    },
+    {
+      "upstreamFile": "ui-types.test-d.ts",
+      "upstreamLine": 56,
+      "upstreamAssertion": "part.type === 'tool-result' && part.outcome === 'denied'",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 140,
+      "dartAssertion": "typed.denied == true for outcome denied",
+      "status": "runtime-preserved",
+      "adaptation": "Runtime guard is checked by selectToolResult/denied.",
+      "dartTestName": "typed UI results and structured output exposes tool-result outcome and typed output"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 59,
+      "upstreamAssertion": "InferChatMessages resolves Array<UIMessage<TTools>>",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 39,
+      "dartAssertion": "ChatTypedToolPart<WeatherInput,WeatherOutput>? from selectToolPart",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit generic binding to ClientTool<TInput,TOutput>; no conditional InferChatMessages type exists in Dart."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 72,
+      "upstreamAssertion": "InferChatMessages resolves Array<UIMessage<readonly []>> with no tools",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 44,
+      "dartAssertion": "selectFromUI returns the non-generic ChatUISelectedToolPart shape when no typed tool is supplied",
+      "status": "preserved-existing",
+      "adaptation": "Non-generic UI API remains; no empty-tuple mapped type."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 83,
+      "upstreamAssertion": "InferChatMessages<non-options> is never",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 39,
+      "dartAssertion": "No Dart equivalent",
+      "status": "not-representable",
+      "adaptation": "Dart has no conditional type that maps non-options to never; no fake assertion is emitted."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 91,
+      "upstreamAssertion": "Manually constructed ChatClientOptions preserves tools tuple",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 39,
+      "dartAssertion": "Explicit ClientTool<WeatherInput,WeatherOutput> binding",
+      "status": "ported-static-adapted",
+      "adaptation": "Caller supplies the generic tool type directly."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 105,
+      "upstreamAssertion": "tool-call name narrows to literal union",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 61,
+      "dartAssertion": "selectToolPart returns null for a different tool.name",
+      "status": "runtime-selector-name-check",
+      "adaptation": "Dart cannot narrow String to literal names; the helper checks the actual name at runtime.",
+      "dartTestName": "typed UI tool parts returns null for a different tool name"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 124,
+      "upstreamAssertion": "tool-call input narrows by name",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 40,
+      "dartAssertion": "WeatherInput? input",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit generic input model; runtime name check selects the correct tool."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 159,
+      "upstreamAssertion": "tool-call output narrows by name",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 41,
+      "dartAssertion": "WeatherOutput? output",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit generic output model; runtime name check selects the correct tool."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 190,
+      "upstreamAssertion": "output is undefined|TOutput until resolved",
+      "dartFile": "test/interop/typed_ui_contract_test.dart",
+      "dartLine": 117,
+      "dartAssertion": "hasOutput true for explicit null, false for absent",
+      "status": "runtime-preserved",
+      "adaptation": "Presence bit plus nullable typed output replaces the TS undefined union.",
+      "dartTestName": "typed UI tool parts distinguishes an explicit null output from an absent output"
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 219,
+      "upstreamAssertion": "default UIMessage accepts any tool-call shape",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 45,
+      "dartAssertion": "Existing ChatUISelectedToolPart used by selectFromUI",
+      "status": "preserved-existing",
+      "adaptation": "Non-generic selector remains available and unchanged."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 249,
+      "upstreamAssertion": "approval field is gated by needsApproval:true",
+      "dartFile": "lib/src/protocol.dart",
+      "dartLine": 78,
+      "dartAssertion": "AssistantPart.approval is always optional on the base part",
+      "status": "not-representable",
+      "adaptation": "Dart has no per-tool conditional field; typed tool parts expose an optional ChatInterrupt separately."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 285,
+      "upstreamAssertion": "generic handler via in narrowing",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 44,
+      "dartAssertion": "ChatTypedToolPart.interrupt optional field",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit optional interrupt field instead of structural in-narrowing."
+    },
+    {
+      "upstreamFile": "infer-chat-messages.test.ts",
+      "upstreamLine": 305,
+      "upstreamAssertion": "handler typed against base ToolCallPart",
+      "dartFile": "lib/src/protocol.dart",
+      "dartLine": 78,
+      "dartAssertion": "AssistantPart.approval is always optional on the base part",
+      "status": "preserved-existing",
+      "adaptation": "Base part keeps the optional approval field."
+    },
+    {
+      "upstreamFile": "activity-types.test.ts",
+      "upstreamLine": 5,
+      "upstreamAssertion": "UIMessage.role includes 'activity'",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 70,
+      "dartAssertion": "AssistantTurn.role is String; activity selector exists",
+      "status": "not-representable",
+      "adaptation": "Dart role is String rather than a literal union; runtime activity parts are selected by selectActivityPart."
+    },
+    {
+      "upstreamFile": "activity-types.test.ts",
+      "upstreamLine": 11,
+      "upstreamAssertion": "ActivityPart is a MessagePart with activityType/content",
+      "dartFile": "test/types/ui_types_positive.dart",
+      "dartLine": 77,
+      "dartAssertion": "ChatTypedActivityPart.activityType/content",
+      "status": "ported-static-adapted",
+      "adaptation": "Explicit typed wrapper over AssistantPart; content remains Object?."
+    }
+  ],
+  "notes": [
+    "No conditional/mapped/string-literal TS types are faked. Cases that cannot be represented are marked not-representable and say why.",
+    "Typed helpers bind to actual ClientTool<TInput,TOutput> or explicit model generics; they never alias dynamic or compare runtimeType.",
+    "The non-generic selectChatUI/ChatUISelectedToolPart API is unchanged and remains the fallback path."
+  ]
+}

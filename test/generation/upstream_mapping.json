@@ -1,0 +1,1710 @@
+{
+  "generatedFrom": "tool/upstream_tests.json",
+  "upstreamPackage": "@tanstack/ai-client",
+  "upstreamVersion": "0.40.0",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "assignedFiles": [
+    "byok-generation-client.test.ts",
+    "byok-video-generation-client.test.ts",
+    "generation-client.test.ts",
+    "generation-devtools.test.ts",
+    "generation-persistence-types.test.ts",
+    "generation-resume-state.test.ts",
+    "video-generation-client.test.ts"
+  ],
+  "mappedCount": 186,
+  "unmappedCount": 0,
+  "review": {
+    "method": "Each upstream it() body was compared with the paired Dart test body: callbacks, wire chunks, expected result/error/status, preview payloads and hydration/join behavior. Names were used only to pair candidates, never as proof of parity.",
+    "typeTests": "The five generation-persistence-types tests are TypeScript-only assertions. The Dart equivalents run dart analyze on positive and negative fixtures so a broken required/typed contract fails the suite; no runtime stand-in is accepted.",
+    "realDevtoolsIntegration": "Generation devtools tests drive the narrow GenerationDevtoolsBridgePort through a recording double for payload assertions, plus one test that wires the real devtools adapter. The preview helper delegates to the canonical devtools implementation.",
+    "runIds": "Upstream swaps the no-op devtools factory for the real bridge in its vitest setup. Transport-only Dart tests keep the shipping no-op default, so they assert the typed run context instead of a /^run-/ prefix.",
+    "unmapped": []
+  },
+  "mapped": [
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "upstreamTitle": "passes elevenlabs headers to the fetcher after updateOptions",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stamps headers on the connection runContext",
+      "upstreamTitle": "stamps headers on the connection runContext",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok stamps headers on the connection runContext",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "upstreamTitle": "requests a missing key when the fetcher throws ByokMissingError",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "upstreamTitle": "stops the failed run when the BYOK request subscriber stops",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "upstreamTitle": "does not let a failed BYOK run overwrite a replacement",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "upstreamTitle": "requests a missing key when the fetcher returns a byokMissing Response",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not call the fetcher when the provider key is missing",
+      "upstreamTitle": "does not call the fetcher when the provider key is missing",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok does not call the fetcher when the provider key is missing",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok stamps the only saved key when no provider slug is passed",
+      "upstreamTitle": "stamps the only saved key when no provider slug is passed",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok stamps the only saved key when no provider slug is passed",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-generation-client.test.ts",
+      "upstreamName": "GenerationClient byok does not send every stored key when no provider resolves",
+      "upstreamTitle": "does not send every stored key when no provider resolves",
+      "dartFile": "test/generation/byok_generation_client_test.dart",
+      "dartTestName": "GenerationClient byok does not send every stored key when no provider resolves",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "upstreamTitle": "passes elevenlabs headers to the fetcher after updateOptions",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok passes elevenlabs headers to the fetcher after updateOptions",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok stamps headers on the connection runContext",
+      "upstreamTitle": "stamps headers on the connection runContext",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok stamps headers on the connection runContext",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "upstreamTitle": "requests a missing key when the fetcher throws ByokMissingError",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok requests a missing key when the fetcher throws ByokMissingError",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "upstreamTitle": "stops the failed run when the BYOK request subscriber stops",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok stops the failed run when the BYOK request subscriber stops",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "upstreamTitle": "does not let a failed BYOK run overwrite a replacement",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok does not let a failed BYOK run overwrite a replacement",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "upstreamTitle": "requests a missing key when the fetcher returns a byokMissing Response",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok requests a missing key when the fetcher returns a byokMissing Response",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not call the fetcher when the provider key is missing",
+      "upstreamTitle": "does not call the fetcher when the provider key is missing",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok does not call the fetcher when the provider key is missing",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "byok-video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient byok does not send every stored key when no provider resolves",
+      "upstreamTitle": "does not send every stored key when no provider resolves",
+      "dartFile": "test/generation/byok_video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient byok does not send every stored key when no provider resolves",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should generate a result using fetcher",
+      "upstreamTitle": "should generate a result using fetcher",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher mode should generate a result using fetcher",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should handle fetcher errors",
+      "upstreamTitle": "should handle fetcher errors",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher mode should handle fetcher errors",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should track loading state during fetcher call",
+      "upstreamTitle": "should track loading state during fetcher call",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher mode should track loading state during fetcher call",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should pass abort signal to fetcher",
+      "upstreamTitle": "should pass abort signal to fetcher",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher mode should pass abort signal to fetcher",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher mode should not allow concurrent requests",
+      "upstreamTitle": "should not allow concurrent requests",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher mode should not allow concurrent requests",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode should process stream and extract result from CUSTOM event",
+      "upstreamTitle": "should process stream and extract result from CUSTOM event",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode should process stream and extract result from CUSTOM event",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode keeps the local run id when a stream chunk has no resume pointer",
+      "upstreamTitle": "keeps the local run id when a stream chunk has no resume pointer",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode keeps the local run id when a stream chunk has no resume pointer",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode should handle RUN_ERROR from stream",
+      "upstreamTitle": "should handle RUN_ERROR from stream",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode should handle RUN_ERROR from stream",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode should report progress from CUSTOM progress events",
+      "upstreamTitle": "should report progress from CUSTOM progress events",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode should report progress from CUSTOM progress events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode should call onChunk for each stream chunk",
+      "upstreamTitle": "should call onChunk for each stream chunk",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode should call onChunk for each stream chunk",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient connection mode should pass body and input as data to connection",
+      "upstreamTitle": "should pass body and input as data to connection",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient connection mode should pass body and input as data to connection",
+      "nameMatch": "exact",
+      "dartAdaptation": "Upstream runs the suite with the real devtools bridge, so run ids match /^run-/. This port defaults to the no-op bridge for transport tests (run ids are noop-run-...), so the test asserts the typed RunAgentInputContext carries the same generation-/video- threadId and a non-empty run id.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient stop() should abort in-flight request and reset to idle",
+      "upstreamTitle": "should abort in-flight request and reset to idle",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient stop() should abort in-flight request and reset to idle",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient reset() should clear result, error, and return to idle",
+      "upstreamTitle": "should clear result, error, and return to idle",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient reset() should clear result, error, and return to idle",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient updateOptions() should update body without recreating client",
+      "upstreamTitle": "should update body without recreating client",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient updateOptions() should update body without recreating client",
+      "nameMatch": "exact",
+      "dartAdaptation": "Same run-id adaptation as the body/input test: threadId is checked for the generation-/video- prefix and the run id is checked non-empty instead of /^run-/.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should not set result if aborted mid-stream",
+      "upstreamTitle": "should not set result if aborted mid-stream",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should not set result if aborted mid-stream",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should ignore chunks yielded after stop() by an abort-ignoring connection",
+      "upstreamTitle": "should ignore chunks yielded after stop() by an abort-ignoring connection",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should ignore chunks yielded after stop() by an abort-ignoring connection",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should not let a stopped run clear the controller for a newer generation",
+      "upstreamTitle": "should not let a stopped run clear the controller for a newer generation",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should not let a stopped run clear the controller for a newer generation",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should ignore video chunks yielded after stop() by an abort-ignoring connection",
+      "upstreamTitle": "should ignore video chunks yielded after stop() by an abort-ignoring connection",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should ignore video chunks yielded after stop() by an abort-ignoring connection",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should not let a stopped video run clear the controller for a newer generation",
+      "upstreamTitle": "should not let a stopped video run clear the controller for a newer generation",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should not let a stopped video run clear the controller for a newer generation",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient abort handling should not set result if fetcher resolves after stop()",
+      "upstreamTitle": "should not set result if fetcher resolves after stop()",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient abort handling should not set result if fetcher resolves after stop()",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient error wrapping should wrap non-Error thrown values in Error",
+      "upstreamTitle": "should wrap non-Error thrown values in Error",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient error wrapping should wrap non-Error thrown values in Error",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient error wrapping should throw if neither connection nor fetcher is provided",
+      "upstreamTitle": "should throw if neither connection nor fetcher is provided",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient error wrapping should throw if neither connection nor fetcher is provided",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient stream edge cases should finish with success but null result if stream has no result event",
+      "upstreamTitle": "should finish with success but null result if stream has no result event",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient stream edge cases should finish with success but null result if stream has no result event",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient stream edge cases should ignore unknown CUSTOM event names and still call onChunk",
+      "upstreamTitle": "should ignore unknown CUSTOM event names and still call onChunk",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient stream edge cases should ignore unknown CUSTOM event names and still call onChunk",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient sequential generation should allow a second generation after the first completes",
+      "upstreamTitle": "should allow a second generation after the first completes",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient sequential generation should allow a second generation after the first completes",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should transform result when onResult returns a non-null value (fetcher)",
+      "upstreamTitle": "should transform result when onResult returns a non-null value (fetcher)",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should transform result when onResult returns a non-null value (fetcher)",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should keep previous result when onResult returns null",
+      "upstreamTitle": "should keep previous result when onResult returns null",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should keep previous result when onResult returns null",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should use raw result when onResult returns void",
+      "upstreamTitle": "should use raw result when onResult returns void",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should use raw result when onResult returns void",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should transform result from stream CUSTOM event",
+      "upstreamTitle": "should transform result from stream CUSTOM event",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should transform result from stream CUSTOM event",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should reset transformed result to null on reset()",
+      "upstreamTitle": "should reset transformed result to null on reset()",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should reset transformed result to null on reset()",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient onResult transform should keep previous transformed result on second generation when onResult returns null",
+      "upstreamTitle": "should keep previous transformed result on second generation when onResult returns null",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient onResult transform should keep previous transformed result on second generation when onResult returns null",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should parse SSE Response and extract result from CUSTOM event",
+      "upstreamTitle": "should parse SSE Response and extract result from CUSTOM event",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should parse SSE Response and extract result from CUSTOM event",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should parse SSE Response data frames without a space after the colon",
+      "upstreamTitle": "should parse SSE Response data frames without a space after the colon",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should parse SSE Response data frames without a space after the colon",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should handle RUN_ERROR from SSE Response",
+      "upstreamTitle": "should handle RUN_ERROR from SSE Response",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should handle RUN_ERROR from SSE Response",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should call onChunk for each SSE chunk from Response",
+      "upstreamTitle": "should call onChunk for each SSE chunk from Response",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should call onChunk for each SSE chunk from Response",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should report progress from SSE Response stream",
+      "upstreamTitle": "should report progress from SSE Response stream",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should report progress from SSE Response stream",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should handle HTTP error Response from fetcher",
+      "upstreamTitle": "should handle HTTP error Response from fetcher",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should handle HTTP error Response from fetcher",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should surface unsupported streaming from a fetcher-returned Response",
+      "upstreamTitle": "should surface unsupported streaming from a fetcher-returned Response",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should surface unsupported streaming from a fetcher-returned Response",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient fetcher returning Response (SSE stream) should pass input type-safely (fetcher receives typed input)",
+      "upstreamTitle": "should pass input type-safely (fetcher receives typed input)",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient fetcher returning Response (SSE stream) should pass input type-safely (fetcher receives typed input)",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient state transitions should follow idle -> generating -> success",
+      "upstreamTitle": "should follow idle -> generating -> success",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient state transitions should follow idle -> generating -> success",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient state transitions should follow idle -> generating -> error on failure",
+      "upstreamTitle": "should follow idle -> generating -> error on failure",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient state transitions should follow idle -> generating -> error on failure",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) adopts the server snapshot on mount, keyed by threadId, without a local store",
+      "upstreamTitle": "adopts the server snapshot on mount, keyed by threadId, without a local store",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) adopts the server snapshot on mount, keyed by threadId, without a local store",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) repaints result from the server snapshot via reconstructResult (image)",
+      "upstreamTitle": "repaints result from the server snapshot via reconstructResult (image)",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) repaints result from the server snapshot via reconstructResult (image)",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) rejoins an in-flight run reported by the server and finishes it in place",
+      "upstreamTitle": "rejoins an in-flight run reported by the server and finishes it in place",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) rejoins an in-flight run reported by the server and finishes it in place",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) surfaces an error (never stays stuck generating) when the rejoin throws",
+      "upstreamTitle": "surfaces an error (never stays stuck generating) when the rejoin throws",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) surfaces an error (never stays stuck generating) when the rejoin throws",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) surfaces an error when the rejoin delivers a terminal RUN_ERROR chunk",
+      "upstreamTitle": "surfaces an error when the rejoin delivers a terminal RUN_ERROR chunk",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) surfaces an error when the rejoin delivers a terminal RUN_ERROR chunk",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) does nothing when the connection exposes no hydrateGeneration",
+      "upstreamTitle": "does nothing when the connection exposes no hydrateGeneration",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) does nothing when the connection exposes no hydrateGeneration",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) ignores an invalid server snapshot without throwing",
+      "upstreamTitle": "ignores an invalid server snapshot without throwing",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) ignores an invalid server snapshot without throwing",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) does not stomp a run that a generate() started before hydration resolves",
+      "upstreamTitle": "does not stomp a run that a generate() started before hydration resolves",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) does not stomp a run that a generate() started before hydration resolves",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) adopts the server snapshot for the video client too",
+      "upstreamTitle": "adopts the server snapshot for the video client too",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) adopts the server snapshot for the video client too",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) hydrates via the hydrateGeneration option in fetcher mode (no connection)",
+      "upstreamTitle": "hydrates via the hydrateGeneration option in fetcher mode (no connection)",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) hydrates via the hydrateGeneration option in fetcher mode (no connection)",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) rejoins an in-flight run via the joinRun option when the connection lacks one",
+      "upstreamTitle": "rejoins an in-flight run via the joinRun option when the connection lacks one",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) rejoins an in-flight run via the joinRun option when the connection lacks one",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) warns only when persistence: true has no hydrate source at all",
+      "upstreamTitle": "warns only when persistence: true has no hydrate source at all",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) warns only when persistence: true has no hydrate source at all",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) repaints a running server snapshot with no joinRun available as an interrupted error",
+      "upstreamTitle": "repaints a running server snapshot with no joinRun available as an interrupted error",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) repaints a running server snapshot with no joinRun available as an interrupted error",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) surfaces a hydration transport failure instead of looking like a fresh thread",
+      "upstreamTitle": "surfaces a hydration transport failure instead of looking like a fresh thread",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) surfaces a hydration transport failure instead of looking like a fresh thread",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) stays silent for a genuine hydration miss (no record for the thread)",
+      "upstreamTitle": "stays silent for a genuine hydration miss (no record for the thread)",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) stays silent for a genuine hydration miss (no record for the thread)",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient server-driven persistence (persistence: true) surfaces a hydration failure for the video client too",
+      "upstreamTitle": "surfaces a hydration failure for the video client too",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient server-driven persistence (persistence: true) surfaces a hydration failure for the video client too",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient truncated stream (no terminal chunk) settles generate() to an error when the stream ends without RUN_FINISHED",
+      "upstreamTitle": "settles generate() to an error when the stream ends without RUN_FINISHED",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient truncated stream (no terminal chunk) settles generate() to an error when the stream ends without RUN_FINISHED",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient truncated stream (no terminal chunk) settles a rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "upstreamTitle": "settles a rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient truncated stream (no terminal chunk) settles a rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient truncated stream (no terminal chunk) settles a video generate() to an error when the stream ends without RUN_FINISHED",
+      "upstreamTitle": "settles a video generate() to an error when the stream ends without RUN_FINISHED",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient truncated stream (no terminal chunk) settles a video generate() to an error when the stream ends without RUN_FINISHED",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient truncated stream (no terminal chunk) settles a video rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "upstreamTitle": "settles a video rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient truncated stream (no terminal chunk) settles a video rejoin to an error when the replayed stream ends without RUN_FINISHED",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient truncated stream (no terminal chunk) does not report a truncation when the stream was stopped by the caller",
+      "upstreamTitle": "does not report a truncation when the stream was stopped by the caller",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient truncated stream (no terminal chunk) does not report a truncation when the stream was stopped by the caller",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient declined result reconstruction on restore reports a complete snapshot the activity mapper cannot rebuild",
+      "upstreamTitle": "reports a complete snapshot the activity mapper cannot rebuild",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient declined result reconstruction on restore reports a complete snapshot the activity mapper cannot rebuild",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient declined result reconstruction on restore stays a plain success when no reconstructResult mapper is configured",
+      "upstreamTitle": "stays a plain success when no reconstructResult mapper is configured",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient declined result reconstruction on restore stays a plain success when no reconstructResult mapper is configured",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient declined result reconstruction on restore does not report a decline while a restored run is still in flight",
+      "upstreamTitle": "does not report a decline while a restored run is still in flight",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient declined result reconstruction on restore does not report a decline while a restored run is still in flight",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "GenerationClient declined result reconstruction on restore reports a complete video snapshot with no durable artifact",
+      "upstreamTitle": "reports a complete video snapshot with no durable artifact",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "GenerationClient declined result reconstruction on restore reports a complete video snapshot with no durable artifact",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not overwrite a run started by the stopped loading callback",
+      "upstreamTitle": "should not overwrite a run started by the stopped loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not overwrite a run started by the stopped loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not overwrite a run started by the stopped status callback",
+      "upstreamTitle": "should not overwrite a run started by the stopped status callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not overwrite a run started by the stopped status callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should publish isLoading false when a stop callback throws",
+      "upstreamTitle": "should publish isLoading false when a stop callback throws",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should publish isLoading false when a stop callback throws",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not lock generate() when the loading callback throws",
+      "upstreamTitle": "should not lock generate() when the loading callback throws",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not lock generate() when the loading callback throws",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should stop before transport work when loading callback stops",
+      "upstreamTitle": "should stop before transport work when loading callback stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should stop before transport work when loading callback stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not complete resume state after success callback stops",
+      "upstreamTitle": "should not complete resume state after success callback stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not complete resume state after success callback stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not let initialization continue after loading callback starts a replacement",
+      "upstreamTitle": "should not let initialization continue after loading callback starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not let initialization continue after loading callback starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not let an old result callback complete a replacement run",
+      "upstreamTitle": "should not let an old result callback complete a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not let an old result callback complete a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not let an old error callback overwrite a replacement run",
+      "upstreamTitle": "should not let an old error callback overwrite a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not let an old error callback overwrite a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should remain stopped when the error callback stops, and still report the error once",
+      "upstreamTitle": "should remain stopped when the error callback stops, and still report the error once",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should remain stopped when the error callback stops, and still report the error once",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not let an old error status callback overwrite a replacement run",
+      "upstreamTitle": "should not let an old error status callback overwrite a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not let an old error status callback overwrite a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should stop before transport when the run id subscriber stops",
+      "upstreamTitle": "should stop before transport when the run id subscriber stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should stop before transport when the run id subscriber stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not continue an old run after the run id subscriber starts a replacement",
+      "upstreamTitle": "should not continue an old run after the run id subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not continue an old run after the run id subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not call the loading callback after its snapshot subscriber stops",
+      "upstreamTitle": "should not call the loading callback after its snapshot subscriber stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not call the loading callback after its snapshot subscriber stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not call the old status callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old status callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not call the old status callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not call the old result callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old result callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not call the old result callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not call the old error callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old error callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not call the old error callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not overwrite a run started by the reset loading callback",
+      "upstreamTitle": "should not overwrite a run started by the reset loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not overwrite a run started by the reset loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not overwrite a run started by the dispose loading callback",
+      "upstreamTitle": "should not overwrite a run started by the dispose loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not overwrite a run started by the dispose loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not publish a run id after onChunk stops the run",
+      "upstreamTitle": "should not publish a run id after onChunk stops the run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not publish a run id after onChunk stops the run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'GenerationClient' run ownership should not let an old onChunk continuation overwrite a newer run",
+      "upstreamTitle": "should not let an old onChunk continuation overwrite a newer run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership GenerationClient run ownership should not let an old onChunk continuation overwrite a newer run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not overwrite a run started by the stopped loading callback",
+      "upstreamTitle": "should not overwrite a run started by the stopped loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not overwrite a run started by the stopped loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not overwrite a run started by the stopped status callback",
+      "upstreamTitle": "should not overwrite a run started by the stopped status callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not overwrite a run started by the stopped status callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should publish isLoading false when a stop callback throws",
+      "upstreamTitle": "should publish isLoading false when a stop callback throws",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should publish isLoading false when a stop callback throws",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not lock generate() when the loading callback throws",
+      "upstreamTitle": "should not lock generate() when the loading callback throws",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not lock generate() when the loading callback throws",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should stop before transport work when loading callback stops",
+      "upstreamTitle": "should stop before transport work when loading callback stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should stop before transport work when loading callback stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not complete resume state after success callback stops",
+      "upstreamTitle": "should not complete resume state after success callback stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not complete resume state after success callback stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not let initialization continue after loading callback starts a replacement",
+      "upstreamTitle": "should not let initialization continue after loading callback starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not let initialization continue after loading callback starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not let an old result callback complete a replacement run",
+      "upstreamTitle": "should not let an old result callback complete a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not let an old result callback complete a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not let an old error callback overwrite a replacement run",
+      "upstreamTitle": "should not let an old error callback overwrite a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not let an old error callback overwrite a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should remain stopped when the error callback stops, and still report the error once",
+      "upstreamTitle": "should remain stopped when the error callback stops, and still report the error once",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should remain stopped when the error callback stops, and still report the error once",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not let an old error status callback overwrite a replacement run",
+      "upstreamTitle": "should not let an old error status callback overwrite a replacement run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not let an old error status callback overwrite a replacement run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should stop before transport when the run id subscriber stops",
+      "upstreamTitle": "should stop before transport when the run id subscriber stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should stop before transport when the run id subscriber stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not continue an old run after the run id subscriber starts a replacement",
+      "upstreamTitle": "should not continue an old run after the run id subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not continue an old run after the run id subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not call the loading callback after its snapshot subscriber stops",
+      "upstreamTitle": "should not call the loading callback after its snapshot subscriber stops",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not call the loading callback after its snapshot subscriber stops",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not call the old status callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old status callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not call the old status callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not call the old result callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old result callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not call the old result callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not call the old error callback after its subscriber starts a replacement",
+      "upstreamTitle": "should not call the old error callback after its subscriber starts a replacement",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not call the old error callback after its subscriber starts a replacement",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not overwrite a run started by the reset loading callback",
+      "upstreamTitle": "should not overwrite a run started by the reset loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not overwrite a run started by the reset loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not overwrite a run started by the dispose loading callback",
+      "upstreamTitle": "should not overwrite a run started by the dispose loading callback",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not overwrite a run started by the dispose loading callback",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not publish a run id after onChunk stops the run",
+      "upstreamTitle": "should not publish a run id after onChunk stops the run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not publish a run id after onChunk stops the run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-client.test.ts",
+      "upstreamName": "'VideoGenerationClient' run ownership should not let an old onChunk continuation overwrite a newer run",
+      "upstreamTitle": "should not let an old onChunk continuation overwrite a newer run",
+      "dartFile": "test/generation/generation_client_test.dart",
+      "dartTestName": "run ownership VideoGenerationClient run ownership should not let an old onChunk continuation overwrite a newer run",
+      "nameMatch": "normalized-suffix",
+      "score": 0.95
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge normalizes generation results into renderable devtools previews",
+      "upstreamTitle": "normalizes generation results into renderable devtools previews",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge normalizes generation results into renderable devtools previews",
+      "nameMatch": "exact",
+      "dartAdaptation": "The Dart harness delegates to the canonical createAIDevtoolsGenerationPreview instead of reimplementing the preview builder.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge registers a generation hook and emits run lifecycle for fetcher mode",
+      "upstreamTitle": "registers a generation hook and emits run lifecycle for fetcher mode",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge registers a generation hook and emits run lifecycle for fetcher mode",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'generation' devtools run stopped from a callback finishes the run when a runId subscriber stops it",
+      "upstreamTitle": "finishes the run when a runId subscriber stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge generation devtools run stopped from a callback finishes the run when a runId subscriber stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'generation' devtools run stopped from a callback finishes the run when loading callback stops it",
+      "upstreamTitle": "finishes the run when loading callback stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge generation devtools run stopped from a callback finishes the run when loading callback stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'generation' devtools run stopped from a callback finishes a completed run when success callback stops it",
+      "upstreamTitle": "finishes a completed run when success callback stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge generation devtools run stopped from a callback finishes a completed run when success callback stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'generation' devtools run stopped from a callback records an errored run when onStatusChange stops it",
+      "upstreamTitle": "records an errored run when onStatusChange stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge generation devtools run stopped from a callback records an errored run when onStatusChange stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'generation' devtools run stopped from a callback records an errored run when onErrorChange stops it",
+      "upstreamTitle": "records an errored run when onErrorChange stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge generation devtools run stopped from a callback records an errored run when onErrorChange stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'video' devtools run stopped from a callback finishes the run when a runId subscriber stops it",
+      "upstreamTitle": "finishes the run when a runId subscriber stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge video devtools run stopped from a callback finishes the run when a runId subscriber stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'video' devtools run stopped from a callback finishes the run when loading callback stops it",
+      "upstreamTitle": "finishes the run when loading callback stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge video devtools run stopped from a callback finishes the run when loading callback stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'video' devtools run stopped from a callback finishes a completed run when success callback stops it",
+      "upstreamTitle": "finishes a completed run when success callback stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge video devtools run stopped from a callback finishes a completed run when success callback stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'video' devtools run stopped from a callback records an errored run when onStatusChange stops it",
+      "upstreamTitle": "records an errored run when onStatusChange stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge video devtools run stopped from a callback records an errored run when onStatusChange stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge 'video' devtools run stopped from a callback records an errored run when onErrorChange stops it",
+      "upstreamTitle": "records an errored run when onErrorChange stops it",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge video devtools run stopped from a callback records an errored run when onErrorChange stops it",
+      "nameMatch": "normalized",
+      "score": 0.97
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge includes input, progress, and renderable previews in generation snapshots",
+      "upstreamTitle": "includes input, progress, and renderable previews in generation snapshots",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge includes input, progress, and renderable previews in generation snapshots",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge tracks streamed progress in generation snapshots",
+      "upstreamTitle": "tracks streamed progress in generation snapshots",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge tracks streamed progress in generation snapshots",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge retains grouped generation snapshots for previous runs",
+      "upstreamTitle": "retains grouped generation snapshots for previous runs",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge retains grouped generation snapshots for previous runs",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge responds to devtools state requests for a generation hook",
+      "upstreamTitle": "responds to devtools state requests for a generation hook",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge responds to devtools state requests for a generation hook",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge emits errored run lifecycle for generation failures",
+      "upstreamTitle": "emits errored run lifecycle for generation failures",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge emits errored run lifecycle for generation failures",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge registers a generation hook for streaming connection mode",
+      "upstreamTitle": "registers a generation hook for streaming connection mode",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge registers a generation hook for streaming connection mode",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge does not emit hook updates after disposal",
+      "upstreamTitle": "does not emit hook updates after disposal",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge does not emit hook updates after disposal",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge uses the stream run id for video connection lifecycle events",
+      "upstreamTitle": "uses the stream run id for video connection lifecycle events",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge uses the stream run id for video connection lifecycle events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge registers a video hook and includes job state in snapshots",
+      "upstreamTitle": "registers a video hook and includes job state in snapshots",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge registers a video hook and includes job state in snapshots",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge includes input, progress, and renderable previews in video snapshots",
+      "upstreamTitle": "includes input, progress, and renderable previews in video snapshots",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge includes input, progress, and renderable previews in video snapshots",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-devtools.test.ts",
+      "upstreamName": "generation client devtools bridge retains grouped video generation snapshots for previous runs",
+      "upstreamTitle": "retains grouped video generation snapshots for previous runs",
+      "dartFile": "test/generation/generation_devtools_test.dart",
+      "dartTestName": "generation client devtools bridge retains grouped video generation snapshots for previous runs",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId rejects persistence: true without a threadId",
+      "upstreamTitle": "rejects persistence: true without a threadId",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "GenerationClient persistence requires a threadId rejects persistence: true without a threadId",
+      "nameMatch": "exact",
+      "dartAdaptation": "TypeScript @ts-expect-error on GenerationClient/VideoGenerationClient(persistence: true). Dart adapts this to GenerationPersistenceOptions.persistent(), which requires threadId; a dart analyze fixture asserts missing_required_argument.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId accepts persistence when a threadId is supplied",
+      "upstreamTitle": "accepts persistence when a threadId is supplied",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "GenerationClient persistence requires a threadId accepts persistence when a threadId is supplied",
+      "nameMatch": "exact",
+      "dartAdaptation": "TypeScript only constructs the clients at type level. Dart analyzes a fixture that builds GenerationPersistenceOptions.persistent() for both image and video thread ids.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId leaves threadId optional for ephemeral generations",
+      "upstreamTitle": "leaves threadId optional for ephemeral generations",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "GenerationClient persistence requires a threadId leaves threadId optional for ephemeral generations",
+      "nameMatch": "exact",
+      "dartAdaptation": "TypeScript constructs ephemeral clients. Dart analyzes ephemeral() with and without threadId; GenerationPersistenceOptions.ephemeral keeps threadId optional.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId rejects `id` next to a required `threadId`",
+      "upstreamTitle": "rejects `id` next to a required `threadId`",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "GenerationClient persistence requires a threadId rejects `id` next to a required `threadId`",
+      "nameMatch": "exact",
+      "dartAdaptation": "TypeScript expects an excess-property error for id on both clients. Dart has no id parameter; a dart analyze fixture asserts undefined_named_parameter on GenerationClient and VideoGenerationClient.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-persistence-types.test.ts",
+      "upstreamName": "GenerationClient persistence requires a threadId does not list `id` on generation option types. `threadId` is present",
+      "upstreamTitle": "does not list `id` on generation option types. `threadId` is present",
+      "dartFile": "test/generation/generation_persistence_types_test.dart",
+      "dartTestName": "GenerationClient persistence requires a threadId does not list `id` on generation option types. `threadId` is present",
+      "nameMatch": "exact",
+      "dartAdaptation": "Upstream indexes GenerationClientOptions[\"id\"] (type error) and reads threadId. Dart has no GenerationClientOptions type; a dart analyze fixture asserts GenerationPersistenceOptions has threadId and no id getter (undefined_getter).",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer tracks thread and run from persisted generation events",
+      "upstreamTitle": "tracks thread and run from persisted generation events",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer tracks thread and run from persisted generation events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer stores generation artifacts as persisted refs only",
+      "upstreamTitle": "stores generation artifacts as persisted refs only",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer stores generation artifacts as persisted refs only",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer sanitizes artifact refs before storing them in resume snapshots",
+      "upstreamTitle": "sanitizes artifact refs before storing them in resume snapshots",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer sanitizes artifact refs before storing them in resume snapshots",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer stores terminal result metadata without raw generated bytes",
+      "upstreamTitle": "stores terminal result metadata without raw generated bytes",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer stores terminal result metadata without raw generated bytes",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer keeps a durable artifact sourceUrl and strips non-durable or oversized ones",
+      "upstreamTitle": "keeps a durable artifact sourceUrl and strips non-durable or oversized ones",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer keeps a durable artifact sourceUrl and strips non-durable or oversized ones",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer clears resume state and stores lightweight error metadata on terminal errors",
+      "upstreamTitle": "clears resume state and stores lightweight error metadata on terminal errors",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer clears resume state and stores lightweight error metadata on terminal errors",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer captures the video job id from video:job:created before any result arrives",
+      "upstreamTitle": "captures the video job id from video:job:created before any result arrives",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer captures the video job id from video:job:created before any result arrives",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer merges an initial seed and lets later run events update it",
+      "upstreamTitle": "merges an initial seed and lets later run events update it",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer merges an initial seed and lets later run events update it",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "generation resume state reducer drops stale error, result, and artifacts when a new run starts",
+      "upstreamTitle": "drops stale error, result, and artifacts when a new run starts",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "generation resume state reducer drops stale error, result, and artifacts when a new run starts",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "parseGenerationResumeSnapshot round-trips a reducer-produced snapshot through JSON, dropping lastEvent",
+      "upstreamTitle": "round-trips a reducer-produced snapshot through JSON, dropping lastEvent",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "parseGenerationResumeSnapshot round-trips a reducer-produced snapshot through JSON, dropping lastEvent",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "parseGenerationResumeSnapshot rejects garbage, invalid statuses, malformed resume state, and future schema versions",
+      "upstreamTitle": "rejects garbage, invalid statuses, malformed resume state, and future schema versions",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "parseGenerationResumeSnapshot rejects garbage, invalid statuses, malformed resume state, and future schema versions",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "generation-resume-state.test.ts",
+      "upstreamName": "parseGenerationResumeSnapshot strips unknown fields and re-validates artifact refs from storage",
+      "upstreamTitle": "strips unknown fields and re-validates artifact refs from storage",
+      "dartFile": "test/generation/generation_resume_state_test.dart",
+      "dartTestName": "parseGenerationResumeSnapshot strips unknown fields and re-validates artifact refs from storage",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should generate a result using fetcher",
+      "upstreamTitle": "should generate a result using fetcher",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient fetcher mode should generate a result using fetcher",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should handle fetcher errors",
+      "upstreamTitle": "should handle fetcher errors",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient fetcher mode should handle fetcher errors",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should track loading state during fetcher call",
+      "upstreamTitle": "should track loading state during fetcher call",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient fetcher mode should track loading state during fetcher call",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should pass abort signal to fetcher",
+      "upstreamTitle": "should pass abort signal to fetcher",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient fetcher mode should pass abort signal to fetcher",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient fetcher mode should not allow concurrent requests",
+      "upstreamTitle": "should not allow concurrent requests",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient fetcher mode should not allow concurrent requests",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should process stream with video job lifecycle events",
+      "upstreamTitle": "should process stream with video job lifecycle events",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should process stream with video job lifecycle events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should track video status updates",
+      "upstreamTitle": "should track video status updates",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should track video status updates",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should handle RUN_ERROR from stream",
+      "upstreamTitle": "should handle RUN_ERROR from stream",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should handle RUN_ERROR from stream",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should report progress from video:status events",
+      "upstreamTitle": "should report progress from video:status events",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should report progress from video:status events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should report progress from generation:progress events",
+      "upstreamTitle": "should report progress from generation:progress events",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should report progress from generation:progress events",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should call onChunk for each stream chunk",
+      "upstreamTitle": "should call onChunk for each stream chunk",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should call onChunk for each stream chunk",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient connection mode should pass body and input as data to connection",
+      "upstreamTitle": "should pass body and input as data to connection",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient connection mode should pass body and input as data to connection",
+      "nameMatch": "exact",
+      "dartAdaptation": "Upstream runs the suite with the real devtools bridge, so run ids match /^run-/. This port defaults to the no-op bridge for transport tests (run ids are noop-run-...), so the test asserts the typed RunAgentInputContext carries the same generation-/video- threadId and a non-empty run id.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient stop() should abort in-flight request and reset to idle",
+      "upstreamTitle": "should abort in-flight request and reset to idle",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient stop() should abort in-flight request and reset to idle",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient reset() should clear all state and return to idle",
+      "upstreamTitle": "should clear all state and return to idle",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient reset() should clear all state and return to idle",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient updateOptions() should update body without recreating client",
+      "upstreamTitle": "should update body without recreating client",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient updateOptions() should update body without recreating client",
+      "nameMatch": "exact",
+      "dartAdaptation": "Same run-id adaptation as the body/input test: threadId is checked for the generation-/video- prefix and the run id is checked non-empty instead of /^run-/.",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient abort handling should not set result if aborted mid-stream",
+      "upstreamTitle": "should not set result if aborted mid-stream",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient abort handling should not set result if aborted mid-stream",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient error wrapping should wrap non-Error thrown values in Error",
+      "upstreamTitle": "should wrap non-Error thrown values in Error",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient error wrapping should wrap non-Error thrown values in Error",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient error wrapping should throw if neither connection nor fetcher is provided",
+      "upstreamTitle": "should throw if neither connection nor fetcher is provided",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient error wrapping should throw if neither connection nor fetcher is provided",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient sequential generation should allow a second generation after the first completes",
+      "upstreamTitle": "should allow a second generation after the first completes",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient sequential generation should allow a second generation after the first completes",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient state transitions should follow idle -> generating -> success",
+      "upstreamTitle": "should follow idle -> generating -> success",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient state transitions should follow idle -> generating -> success",
+      "nameMatch": "exact",
+      "score": 1.0
+    },
+    {
+      "upstreamFile": "video-generation-client.test.ts",
+      "upstreamName": "VideoGenerationClient state transitions should follow idle -> generating -> error on failure",
+      "upstreamTitle": "should follow idle -> generating -> error on failure",
+      "dartFile": "test/generation/video_generation_client_test.dart",
+      "dartTestName": "VideoGenerationClient state transitions should follow idle -> generating -> error on failure",
+      "nameMatch": "exact",
+      "score": 1.0
+    }
+  ]
+}

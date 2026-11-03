@@ -1,0 +1,188 @@
+{
+  "cases": [
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatPersistor combined record writes messages and resume snapshot as one record",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatPersistor combined record writes messages and resume snapshot as one record",
+      "status": "implemented",
+      "adaptation": "Uses a real ChatPersistor with a synchronously backed ChatClientPersistence adapter."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatPersistor combined record clears the resume snapshot but keeps messages",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatPersistor combined record clears the resume snapshot but keeps messages",
+      "status": "implemented",
+      "adaptation": "Asserts the combined ChatPersistedState keeps messages and removes resume."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatPersistor combined record normalizes a legacy bare-array record on read",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatPersistor combined record normalizes a legacy bare-array record on read",
+      "status": "implemented",
+      "adaptation": "ChatPersistor.readInitial normalizes a List of message maps to ChatPersistedState with no resume pointer."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "localStoragePersistence ergonomics needs no type arg or codec and round-trips a ChatPersistedState",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "localStoragePersistence ergonomics needs no type arg or codec and round-trips a ChatPersistedState",
+      "status": "implemented",
+      "adaptation": "Dart's adapter is FutureOr rather than Promise-based; the sync WebStorage round-trip is asserted directly through localStoragePersistence."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "normalizeConnectionAdapter joinRun passthrough exposes joinRun when the connection is resumable",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "normalizeConnectionAdapter joinRun passthrough exposes joinRun when the connection is resumable",
+      "status": "implemented",
+      "adaptation": "Normalized SubscribeConnectionAdapter carries the real joinRun callback."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "normalizeConnectionAdapter joinRun passthrough omits joinRun for a plain connect adapter",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "normalizeConnectionAdapter joinRun passthrough omits joinRun for a plain connect adapter",
+      "status": "implemented",
+      "adaptation": "A connect-only adapter normalizes with joinRun == null."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "normalizeConnectionAdapter joinRun passthrough omits joinRun when the property is present but not a function",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "normalizeConnectionAdapter joinRun passthrough omits joinRun when the property is present but not a function",
+      "status": "implemented",
+      "adaptation": "Dart's typed ConnectionAdapter.joinRun cannot hold a non-function value, so the fixture asserts the equivalent explicit null case. No Runtime TypeError path exists."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload rejoins a persisted in-flight run via joinRun",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload rejoins a persisted in-flight run via joinRun",
+      "status": "implemented",
+      "adaptation": "Real ChatClient + connection adapter. Asserts constructor opens no network, attach joins r1, attach is idempotent, and the restored user message survives."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload drops the hydrated assistant when the rejoin stream is chunk events",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload drops the hydrated assistant when the rejoin stream is chunk events",
+      "status": "implemented",
+      "adaptation": "Chunk replay replaces the hydrated partial assistant instead of duplicating it."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload applies a replay in one batch without yielding",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload applies a replay in one batch without yielding",
+      "status": "implemented",
+      "adaptation": "Injects a real StreamProcessingScheduler with a counting yieldToHost; join replay completes with zero scheduler yields."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload persistence:true hydrates history AND tails a live run from the server on mount",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload persistence:true hydrates history AND tails a live run from the server on mount",
+      "status": "implemented",
+      "adaptation": "Uses canonical ConnectionAdapter.hydrate and the real server-authoritative path; paints history-1 and joins r1."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload persistence:true hydrates a transcript with no active run (no tail)",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload persistence:true hydrates a transcript with no active run (no tail)",
+      "status": "implemented",
+      "adaptation": "Hydrated transcript is painted and joinRun is never called."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload persistence:true restores a pending interrupt from the server on mount",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload persistence:true restores a pending interrupt from the server on mount",
+      "status": "implemented",
+      "adaptation": "Canonical hydrate interrupts are classified as generic, resolvable and keyed to run-paused; no tail is opened."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload publishes hydrate once before live client-tool cancellation",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload publishes hydrate once before live client-tool cancellation",
+      "status": "implemented",
+      "adaptation": "Uses a real ClientTool output schema and hashSchemaInput (zod is replaced by raw JSON Schema hashing). Asserts hydrate source ordering, one live continuation run, parentRunId/resume payload, and no client tool execution."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload restores a pending interrupt even when hydrate also reports an activeRun",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload restores a pending interrupt even when hydrate also reports an activeRun",
+      "status": "implemented",
+      "adaptation": "Same run id for activeRun and interrupts: interrupt is restored and joinRun is not called."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload rejoins an active continuation run instead of restoring its parent interrupt",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload rejoins an active continuation run instead of restoring its parent interrupt",
+      "status": "implemented",
+      "adaptation": "Different active run id: joins run-B and leaves the parent interrupt list empty."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload rebuilds a hydrated in-flight partial in place (no duplicate) when tailing on mount",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload rebuilds a hydrated in-flight partial in place (no duplicate) when tailing on mount",
+      "status": "implemented",
+      "adaptation": "Hydrated assistant-1 partial is rebuilt to one assistant message with the full replay text."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload rejoins a live run handed to a fresh client via initialResumeSnapshot",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload rejoins a live run handed to a fresh client via initialResumeSnapshot",
+      "status": "implemented",
+      "adaptation": "Seeded history survives while initialResumeSnapshot tails r1."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload rejoins from an async store (getItem returns a Promise)",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload rejoins from an async store (getItem returns a Promise)",
+      "status": "implemented",
+      "adaptation": "Future-returning ChatClientPersistence adapter hydrates before attach resolves and then joins r1."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload KEEPS the resume pointer when joinRun times out before attaching",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload KEEPS the resume pointer when joinRun times out before attaching",
+      "status": "implemented",
+      "adaptation": "The 2-second rejoin connect deadline frees the input and retains quiet-run in the persisted resume pointer."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload clears a dead resume pointer when joinRun is REFUSED before attaching",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload clears a dead resume pointer when joinRun is REFUSED before attaching",
+      "status": "implemented",
+      "adaptation": "A generator throw before the first yield clears the stored resume pointer while keeping messages."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload with persistence:true a dead server-tail frees the input",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload with persistence:true a dead server-tail frees the input",
+      "status": "implemented",
+      "adaptation": "Server-authoritative hydrate reports gone-run; the rejoin deadline frees isLoading without a client store."
+    },
+    {
+      "upstreamFile": "resume-snapshot.test.ts",
+      "upstreamName": "ChatClient auto-rejoin after reload surfaces post-attach rejoin errors via onError",
+      "dartFile": "test/interop/resume_snapshot_upstream_test.dart",
+      "dartTestName": "ChatClient auto-rejoin after reload surfaces post-attach rejoin errors via onError",
+      "status": "implemented",
+      "adaptation": "Attached replay throws mid-stream; onError receives the transport failure message."
+    }
+  ]
+}

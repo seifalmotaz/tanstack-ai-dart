@@ -1,0 +1,267 @@
+{
+  "generatedFrom": "packages/ai-client/tests/chat-client-interrupts.test.ts (pinned @tanstack/ai 0.40.0)",
+  "upstreamFile": "chat-client-interrupts.test.ts",
+  "upstreamCases": 43,
+  "mappedCount": 43,
+  "mapped": [
+    {
+      "upstreamName": "surfaces an interrupt with no binding as unbound rather than resolvable generic",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "surfaces an interrupt with no binding as unbound rather than resolvable generic",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "rejects a binding written at an unknown protocol version",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "rejects a binding written at an unknown protocol version",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "keeps a raw generic binding resolvable when run id and schema hash match",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "keeps a raw generic binding resolvable when run id and schema hash match",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not let an unbound interrupt block submission of the bound ones",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "does not let an unbound interrupt block submission of the bound ones",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates correlated approval and client-tool bindings into frozen typed snapshots",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "hydrates correlated approval and client-tool bindings into typed snapshots",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates a real core client-tool terminal with distinct schema identity hashes",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "hydrates a real core client-tool terminal with distinct schema identity hashes",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "keeps deprecated approval and client-tool reason aliases compatible",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "keeps deprecated approval and client-tool reason aliases compatible",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "degrades mismatched tool correlation to generic without trusting wire correlation",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "degrades mismatched tool correlation to generic without trusting wire correlation",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "resolves a generic item regardless of its wire response schema",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "resolves a generic item regardless of its wire response schema",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not treat a generic binding as resumable when the schema hash does not match",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "does not treat a generic binding as resumable when the schema hash does not match",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "records a stale error when two first-party items share a batchIndex",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "records a stale error when two first-party items share a batchIndex",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates a first-party item from the producer binding and schema hash",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "hydrates a first-party item from the producer binding and schema hash",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "waits for a complete multi-item batch and submits a singleton immediately",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "waits for a complete multi-item batch and submits a singleton immediately",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "validates async Standard Schema candidates and preserves a prior valid draft",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "validates async Standard Schema candidates and preserves a prior valid draft",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "rolls callback transactions back on thrown, returned, thenable, or incomplete work",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "rolls callback transactions back on thrown, returned, thenable, or incomplete work",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "seals transaction items, invokes the callback once per item, and submits atomically",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "seals transaction items, invokes the callback once per item, and submits atomically",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "permits boolean bulk resolution only for payloadless tool approvals and cancels all payloadlessly",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "permits boolean bulk resolution only for payloadless tool approvals and cancels all payloadlessly",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "retries the exact frozen batch only for retryable failures",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "retries the exact frozen batch only for retryable failures",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "ignores a submission failure after reset",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "ignores a submission failure after reset",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not let a stale submission settle a rehydrated submission",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "does not let a stale submission settle a rehydrated submission",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not enable retry for expired/stale/conflict server failures",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "does not enable retry for expired/stale/conflict server failures",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "surfaces client-tool validation failures on interruptErrors",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "surfaces client-tool validation failures on interruptErrors",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "stages client-tool errors without validating the success schema",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "stages client-tool errors without validating the success schema",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "reports client-tool canonicalization failures as invalid output",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "reports client-tool canonicalization failures as invalid output",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "resolves pre-binding client-tool fallback with raw output",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "resolves pre-binding client-tool fallback with raw output",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "supersedes a server batch error set without dropping local client, transport, or item errors",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "supersedes a server batch error set without dropping local client, transport, or item errors",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "rejects submission errors that do not correlate to the active interrupt batch",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "rejects submission errors that do not correlate to the active interrupt batch",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "publishes the shared immutable interrupt state callback",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "publishes the shared immutable interrupt state callback",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "reports source hydrate when a client-tool interrupt is restored",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "reports source hydrate when a client-tool interrupt is restored",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "reports source hydrate when a first-party generic interrupt is restored",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "reports source hydrate when a first-party generic interrupt is restored",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not continue when a client-tool success lands after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when resolve-after after Stop",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not continue when a client-tool error lands after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when reject-after after Stop",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not continue when a native resume is queued before Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when resolve-before after Stop",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not continue when addToolResult is called after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when add-result-after after Stop",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "owns one immutable interrupt state and resumes with a fresh child run",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "owns one immutable interrupt state and resumes with a fresh child run",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "sends first-party continuation on resume metadata",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "sends first-party continuation on resume metadata",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not auto-send after a completed tool when a generic interrupt is pending",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not auto-send after a completed tool when a generic interrupt is pending",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "does not auto-send after rejecting an afterTools generic interrupt",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not auto-send after rejecting an afterTools generic interrupt",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "resumes a hydrated ephemeral batch with full history in a fresh child run",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "resumes a hydrated ephemeral batch with full history in a fresh child run",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates V2 fallback descriptors when recovery is unavailable",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates V2 fallback descriptors when recovery is unavailable",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates fallback descriptors for malformed V2 null recovery state without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 null recovery state without losing resume state",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates fallback descriptors for malformed V2 array recovery state without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 array recovery state without losing resume state",
+      "status": "implemented"
+    },
+    {
+      "upstreamName": "hydrates fallback descriptors for malformed V2 invalid drafts without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 invalid drafts without losing resume state",
+      "status": "implemented"
+    }
+  ],
+  "unmappedCount": 0
+}

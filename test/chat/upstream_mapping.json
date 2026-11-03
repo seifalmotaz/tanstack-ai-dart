@@ -1,0 +1,3171 @@
+{
+  "generatedFrom": "tool/upstream_tests.json",
+  "assignedFiles": [
+    "byok-chat-client.test.ts",
+    "chat-client-abort.test.ts",
+    "chat-client-approval-followup.test.ts",
+    "chat-client-client-tool-status.test.ts",
+    "chat-client-context.test.ts",
+    "chat-client-foreign-client-tool.test.ts",
+    "chat-client-history.test.ts",
+    "chat-client-identity.test.ts",
+    "chat-client-interrupt-correlation.test.ts",
+    "chat-client-interrupt-lineage-replay.test.ts",
+    "chat-client-interrupts.test.ts",
+    "chat-client-join-run-client-tool.test.ts",
+    "chat-client-metadata.test.ts",
+    "chat-client-noop-devtools.test.ts",
+    "chat-client-queue.test.ts",
+    "chat-client-reasoning-rejoin.test.ts",
+    "chat-client-resume.test.ts",
+    "chat-client-stop-continuation.test.ts",
+    "chat-client-stream-processing.test.ts",
+    "chat-client-subagent-interrupts.test.ts",
+    "chat-client-subagent-rejoin.test.ts",
+    "chat-client-subagents.test.ts",
+    "chat-client.test.ts",
+    "chat-fetcher.test.ts",
+    "chat-hydration-error.test.ts",
+    "chat-is-hydrating.test.ts",
+    "chat-persistence-types.test.ts",
+    "cleared-stream-tracker.test.ts",
+    "client-snapshots.test.ts",
+    "devtools.test.ts",
+    "dispose-tail-leak.test.ts",
+    "replay-metadata.test.ts"
+  ],
+  "assignedCases": 431,
+  "mappedCount": 419,
+  "unmappedCount": 11,
+  "mapped": [
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps x-byok headers and keeps the key out of the body",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps x-byok headers and keeps the key out of the body"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps only the resolved provider when the ring has multiple keys",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps only the resolved provider when the ring has multiple keys"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps BYOK headers for per-call body.provider",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps BYOK headers for per-call body.provider"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps the only saved key when no provider slug is passed",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps the only saved key when no provider slug is passed"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok prompts for the only registered provider when no key is saved",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "prompts for the only registered provider when no key is saved"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok throws and does not connect when no provider slug resolves",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "sets an error and does not connect when no provider slug resolves"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok throws when forwardedProps.provider is not a slug",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects forwardedProps.provider that is not a slug without connecting"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok stamps headers for slugs outside the old first-party list",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "stamps headers for slugs outside the old first-party list"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok rejects ByokBlockedError and does not connect when the provider is empty",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects ByokBlockedError and does not connect when the provider is empty"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok rejects ByokMissingError from connect and sets the missing prompt",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "rejects ByokMissingError from connect and sets the missing prompt"
+    },
+    {
+      "upstreamFile": "byok-chat-client.test.ts",
+      "upstreamName": "ChatClient byok does not persist the raw key or x-byok headers",
+      "dartFile": "test/chat/chat_client_byok_contract_test.dart",
+      "dartTestName": "does not persist the raw key or x-byok headers"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should create AbortController and pass signal to adapter",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "should create AbortController and pass signal to adapter"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should abort request when stop() is called",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "stop cancels the active stream and ignores late chunks"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should preserve partial content when aborted",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "should preserve partial content when aborted"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should handle abort gracefully without throwing error",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "stop cancels the active stream and ignores late chunks"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should set isLoading to false after abort",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "stop cancels the active stream and ignores late chunks"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should create new AbortController for each request",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "should create new AbortController for each request"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should resolve cleanly when stop() is called during onResponse",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "should resolve cleanly when stop() is called during onResponse"
+    },
+    {
+      "upstreamFile": "chat-client-abort.test.ts",
+      "upstreamName": "ChatClient - Abort Signal Handling should resolve cleanly when reload() supersedes the stream during onResponse",
+      "dartFile": "test/chat/chat_client_abort_test.dart",
+      "dartTestName": "should resolve cleanly when reload() supersedes the stream during onResponse"
+    },
+    {
+      "upstreamFile": "chat-client-approval-followup.test.ts",
+      "upstreamName": "tool-approval follow-up after resolve clears interrupts and allows a second user turn",
+      "dartFile": "test/chat/chat_client_approval_followup_test.dart",
+      "dartTestName": "continues after second approval arrives during active continuation stream"
+    },
+    {
+      "upstreamFile": "chat-client-client-tool-status.test.ts",
+      "upstreamName": "client tool call status (issue #421) settles status to ready after a client tool when the continuation run emits only RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "settles status to ready after a client tool when the continuation run emits only RUN_FINISHED"
+    },
+    {
+      "upstreamFile": "chat-client-client-tool-status.test.ts",
+      "upstreamName": "client tool call status (issue #421) plain text run emits onStatusChange('ready') exactly once",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "plain text run emits onStatusChange(\\'ready\\') exactly once"
+    },
+    {
+      "upstreamFile": "chat-client-client-tool-status.test.ts",
+      "upstreamName": "client tool call status (issue #421) sendMessage with a bare RUN_FINISHED{stop} first run (no assistant message) settles to ready",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "sendMessage with a bare RUN_FINISHED{stop} first run (no assistant message) settles to ready"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context passes client-local context to client tool execution without serializing it",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "passes client-local context to client tool execution without serializing it"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context clears client-local context when updateOptions receives undefined",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "clears client-local context when updateOptions receives null"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context surfaces executable client tool outputSchema failures as output-error results",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "surfaces executable client tool outputSchema failures as output-error results"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context awaits asynchronous outputSchema validation for executable client tools",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "awaits asynchronous outputSchema validation for executable client tools"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context keeps non-JSON output of client tools that are not interrupts",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "keeps non-JSON output of client tools that are not interrupts"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context renders a client tool that throws an empty-message error as terminal \"error\" (issue #718)",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "renders a client tool that throws an empty-message error as terminal error"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context awaits asynchronous outputSchema validation for manual client tool results",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "awaits asynchronous outputSchema validation for manual client tool results"
+    },
+    {
+      "upstreamFile": "chat-client-foreign-client-tool.test.ts",
+      "upstreamName": "client tools from a foreign AG-UI server runs the tool and continues with its result",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "client tools from a foreign AG-UI server runs the tool and continues with its result"
+    },
+    {
+      "upstreamFile": "chat-client-foreign-client-tool.test.ts",
+      "upstreamName": "client tools from a foreign AG-UI server does not run a tool that needs approval",
+      "dartFile": "test/chat/chat_client_tools_test.dart",
+      "dartTestName": "client tools from a foreign AG-UI server does not run a tool that needs approval"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging hydrate GET includes limit when history.pageSize is set",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "hydrate GET includes limit when history.pageSize is set"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging loadOlderMessages prepends older ids in front",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "loadOlderMessages prepends older ids in front"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging send with history.pageSize posts only the new turn",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "send with history.pageSize posts only the new turn"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging send without history.pageSize posts the painted window",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "send without history.pageSize posts the painted window"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging loadOlderMessages rejects on network fail and keeps painted messages",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "loadOlderMessages rejects on network fail and keeps painted messages"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging loadOlderMessages no-ops while a page load is in flight",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "loadOlderMessages no-ops while a page load is in flight"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging reload sends the last user so persistence can cut the stored tail",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "reload sends the last user so persistence can cut the stored tail"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging resume after a paged hydrate posts from the last user through the assistant",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "resume after a paged hydrate posts from the last user through the assistant"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging send after Load older still posts only the new turn",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "send after Load older still posts only the new turn"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging loadOlderMessages rejects an empty older page and keeps hasOlderMessages",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "loadOlderMessages rejects an empty older page and keeps hasOlderMessages"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging applies page state before prepend so the last page is not stuck",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "applies page state before prepend so the last page is not stuck"
+    },
+    {
+      "upstreamFile": "chat-client-history.test.ts",
+      "upstreamName": "ChatClient history paging clear resets older-page state and ignores a late older fetch",
+      "dartFile": "test/chat/chat_client_history_test.dart",
+      "dartTestName": "clear resets older-page state and ignores a late older fetch"
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity does not call crypto.randomUUID or Math.random in the constructor",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "does not call crypto.randomUUID or Math.random in the constructor"
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity mints a thread id on first send when none is provided, and reuses it",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "mints a thread id on first send when none is provided, and reuses it"
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity uses the provided threadId on the wire",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "uses the provided threadId on the wire"
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws when persistence is set without a threadId",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "throws when persistence is set without a threadId"
+    },
+    {
+      "upstreamFile": "chat-client-identity.test.ts",
+      "upstreamName": "ChatClient identity throws when persistence: true is set without a threadId",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "throws when persistence is set without a threadId"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-correlation.test.ts",
+      "upstreamName": "ChatClient interrupt error correlation does not apply a foreign shared RUN_ERROR to a local interrupt submission",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "does not apply a foreign shared RUN_ERROR to a local interrupt submission"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) does not treat a late RUN_STARTED for an already-finished child as live generation",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "does not treat a late RUN_STARTED for an already-finished child as live generation"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) clears a resolved interrupt once its continuation run finishes, surviving a re-emitted stale pause",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "clears a resolved interrupt once its continuation run finishes, surviving a re-emitted stale pause"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) keeps a genuinely live interrupt pending when no continuation run exists",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "keeps a genuinely live interrupt pending when no continuation run exists"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) does not clear a pending interrupt when an unrelated run on the same thread finishes",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "does not clear a pending interrupt when an unrelated run on the same thread finishes"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) stays cleared across a second full replay of the same history (idempotent, out-of-order safe)",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "stays cleared across a second full replay of the same history (idempotent, out-of-order safe)"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager foreign-interrupt handling surfaces an interrupt with no binding as unbound rather than resolvable generic",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "surfaces an interrupt with no binding as unbound rather than resolvable generic"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager foreign-interrupt handling rejects a binding written at an unknown protocol version",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "rejects a binding written at an unknown protocol version"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager foreign-interrupt handling keeps a raw generic binding resolvable when run id and schema hash match",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "keeps a raw generic binding resolvable when run id matches"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager foreign-interrupt handling does not let an unbound interrupt block submission of the bound ones",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "does not let an unbound interrupt block submission of the bound ones"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration hydrates correlated approval and client-tool bindings into frozen typed snapshots",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "hydrates correlated approval and client-tool bindings into typed snapshots"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration hydrates a real core client-tool terminal with distinct schema identity hashes",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates a real core client-tool terminal with distinct schema identity hashes"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration keeps deprecated approval and client-tool reason aliases compatible",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "keeps deprecated approval and client-tool reason aliases compatible"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration degrades mismatched tool correlation to generic without trusting wire correlation",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "degradates mismatched tool correlation to generic without trusting wire correlation"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration resolves a generic item regardless of its wire response schema",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "resolves a generic item regardless of its wire response schema"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration does not treat a generic binding as resumable when the schema hash does not match",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not treat a generic binding as resumable when the schema hash does not match"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration records a stale error when two first-party items share a batchIndex",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "records a stale error when two first-party items share a batchIndex"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager hydration hydrates a first-party item from the producer binding and schema hash",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates a first-party item from the producer binding and schema hash"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions waits for a complete multi-item batch and submits a singleton immediately",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "waits for a complete multi-item batch and submits a singleton immediately"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions validates async Standard Schema candidates and preserves a prior valid draft",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "validates async Standard Schema candidates and preserves a prior valid draft"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions rolls callback transactions back on thrown, returned, thenable, or incomplete work",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "rolls callback transactions back on thrown, returned, thenable, or incomplete work"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions seals transaction items, invokes the callback once per item, and submits atomically",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "seals transaction items, invokes the callback once per item, and submits atomically"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions permits boolean bulk resolution only for payloadless tool approvals and cancels all payloadlessly",
+      "dartFile": "test/chat/interrupt_manager_test.dart",
+      "dartTestName": "permits boolean bulk resolution only for payloadless tool approvals"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions retries the exact frozen batch only for retryable failures",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "retries the exact frozen batch only for retryable failures"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions ignores a submission failure after reset",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "ignores a submission failure after reset"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions does not let a stale submission settle a rehydrated submission",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not let a stale submission settle a rehydrated submission"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions does not enable retry for expired/stale/conflict server failures",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not enable retry for expired/stale/conflict server failures"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions surfaces client-tool validation failures on interruptErrors",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "surfaces client-tool validation failures on interruptErrors"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions stages client-tool errors without validating the success schema",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "stages client-tool errors without validating the success schema"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions reports client-tool canonicalization failures as invalid output",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "reports client-tool canonicalization failures as invalid output"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions resolves pre-binding client-tool fallback with raw output",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "resolves pre-binding client-tool fallback with raw output"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions supersedes a server batch error set without dropping local client, transport, or item errors",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "supersedes a server batch error set without dropping local client, transport, or item errors"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "InterruptManager transactions rejects submission errors that do not correlate to the active interrupt batch",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "rejects submission errors that do not correlate to the active interrupt batch"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts publishes the shared immutable interrupt state callback",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "publishes the shared immutable interrupt state callback"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts reports source hydrate when a client-tool interrupt is restored",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "reports source hydrate when a client-tool interrupt is restored"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts reports source hydrate when a first-party generic interrupt is restored",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "reports source hydrate when a first-party generic interrupt is restored"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not continue when a client-tool success lands after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when a client-tool success lands after Stop"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not continue when a client-tool error lands after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when a client-tool error lands after Stop"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not continue when addToolResult is called after Stop",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not continue when addToolResult is called after Stop"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts owns one immutable interrupt state and resumes with a fresh child run",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "owns one immutable interrupt state and resumes with a fresh child run"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts sends first-party continuation on resume metadata",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "sends first-party continuation on resume metadata"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not auto-send after a completed tool when a generic interrupt is pending",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "does not auto-send after a completed tool when a generic interrupt is pending"
+    },
+    {
+      "upstreamFile": "chat-client-join-run-client-tool.test.ts",
+      "upstreamName": "joinRun client-tool continuation (issue #1058) posts the client-tool result after joinRun replay ends",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "posts the client-tool result after joinRun replay ends"
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata sendMessage object form stamps metadata on the user UIMessage",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "sendMessage object form stamps metadata on the user UIMessage"
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata sendMessage string form has no metadata",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "sendMessage string form has no metadata"
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata queued object send keeps metadata on the queue entry content",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "queued object send keeps metadata on the queue entry content"
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata append copies uiMessage.metadata",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "append copies uiMessage.metadata"
+    },
+    {
+      "upstreamFile": "chat-client-metadata.test.ts",
+      "upstreamName": "ChatClient metadata batch drain merges object metadata last-write-wins per key",
+      "dartFile": "test/chat/chat_client_identity_metadata_test.dart",
+      "dartTestName": "batch drain merges object metadata last-write-wins per key"
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV emits no devtools events in production",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "emits no devtools events in production"
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV emits devtools events in development",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "emits devtools events in development"
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "createChatDevtoolsBridge by NODE_ENV does not throw when there is no process global",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "does not throw when there is no process global"
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "ChatClient with default no-op devtools bridge sends the first message and appends it",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "sends the first message and appends it"
+    },
+    {
+      "upstreamFile": "chat-client-noop-devtools.test.ts",
+      "upstreamName": "ChatClient with default no-op devtools bridge updates tools without throwing",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "updates tools without throwing"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "normalizeQueueOption defaults to queue + fifo + reject",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "defaults to queue + fifo + reject"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "normalizeQueueOption treats a string as whenBusy shorthand",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "treats a string as whenBusy shorthand"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "normalizeQueueOption carries a function as strategy and forces fifo",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "carries a function as strategy and forces fifo"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "normalizeQueueOption merges a config object over defaults",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "merges a config object over defaults"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "normalizeQueueOption rejects invalid maxSize",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "rejects invalid maxSize"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient message queue enqueues (not drops) a send while streaming and reports via onQueueChange",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "enqueues (not drops) a send while streaming and reports via onQueueChange"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient message queue cancelQueued removes a queued item before it drains",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "cancelQueued removes a queued item before it drains"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient message queue whenBusy: 'drop' ignores a mid-stream send",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "whenBusy: 'drop' ignores a mid-stream send"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain drains FIFO after the stream settles, in order",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "drains FIFO after the stream settles, in order"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain batch drain merges string queued items with newlines",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "batch drain merges string queued items with newlines"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain batch drain flattens multimodal queued items into ContentPart[]",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "batch drain flattens multimodal queued items"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain flushes the queue on stop()",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "flushes the queue on stop()"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain flushes the queue when the stream errors",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "flushes the queue when the stream errors"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue drain flushes the queue on clear()",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "flushes the queue on clear()"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches whenBusy: 'interrupt' aborts the in-flight stream and sends immediately",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "whenBusy: 'interrupt' aborts the in-flight stream and sends immediately"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches per-call whenBusy override beats the client default",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "per-call whenBusy override beats the client default"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches maxSize + onOverflow: 'reject' drops the newest when full",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "maxSize + onOverflow: 'reject' drops the newest when full"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches maxSize + onOverflow: 'drop-oldest' rotates the queue",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "maxSize + onOverflow: 'drop-oldest' rotates the queue"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches maxSize: 0 never enqueues under drop-oldest",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "maxSize: 0 never enqueues under drop-oldest"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches QueueStrategy pending.id matches the enqueued item id",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "QueueStrategy pending.id matches the enqueued item id"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches QueueStrategy drop and per-call whenBusy override",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "QueueStrategy drop and per-call whenBusy override"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches concurrent rapid sends do not strand user messages without streams",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "concurrent rapid sends do not strand user messages without streams"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches flushes the queue on reload()",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "flushes the queue on reload()"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches flushes the queue on unsubscribe()",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "flushes the queue on unsubscribe()"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches preserves per-message body through FIFO drain and batch last-wins",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "preserves per-message body through FIFO drain and batch last-wins"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches preserves sendOptions.body for queued sends",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "preserves sendOptions.body for queued sends"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches batch drain does not strand messages enqueued during the batch stream",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "batch drain does not strand messages enqueued during the batch stream"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches error during FIFO drain flushes remaining queued items",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "error during FIFO drain flushes remaining queued items"
+    },
+    {
+      "upstreamFile": "chat-client-queue.test.ts",
+      "upstreamName": "ChatClient queue policy branches interrupt during FIFO drain keeps remaining items for after the interrupt",
+      "dartFile": "test/chat/chat_client_queue_test.dart",
+      "dartTestName": "interrupt during FIFO drain keeps remaining items for after the interrupt"
+    },
+    {
+      "upstreamFile": "chat-client-reasoning-rejoin.test.ts",
+      "upstreamName": "keeps activity when replay starts with 'reasoning content'",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "keeps activity when replay starts with 'reasoning content'"
+    },
+    {
+      "upstreamFile": "chat-client-reasoning-rejoin.test.ts",
+      "upstreamName": "keeps activity when replay starts with 'encrypted reasoning'",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "keeps activity when replay starts with 'encrypted reasoning'"
+    },
+    {
+      "upstreamFile": "chat-client-reasoning-rejoin.test.ts",
+      "upstreamName": "keeps activity when replay starts with 'step signature'",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "keeps activity when replay starts with 'step signature'"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume tracks the run/thread of an interrupted run",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "tracks the run/thread of an interrupted run"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume clears resume state once the run finishes",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "clears resume state once the run finishes"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume reports the current run id for an ordinary run and clears it on finish",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "reports the current run id for an ordinary run and clears it on finish"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume preserves resume state and tracks pending interrupts on interrupt terminal",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "preserves resume state and tracks pending interrupts on interrupt terminal"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume resumeInterrupts sends AG-UI resume entries with the interrupted run context",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "resumeInterrupts sends AG-UI resume entries with the interrupted run context"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume clears interrupts when a resumed provider run has a different run id",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "clears interrupts when a resumed provider run has a different run id"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume correlates a synthesized resume finish to the client request run",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "correlates a synthesized resume finish to the client request run"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume correlates a synthesized resume error to the client request run",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "correlates a synthesized resume error to the client request run"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume resumeInterrupts reconnects with the full current message history",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "resumeInterrupts reconnects with the full current message history"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume clears resume state and pending interrupts on a runless RUN_ERROR",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "clears resume state and pending interrupts on a runless RUN_ERROR"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume blocks normal input while interrupts are pending",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "blocks normal input while interrupts are pending"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume keeps pending interrupts when an unrelated run finishes",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "keeps pending interrupts when an unrelated run finishes"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume keeps pending interrupts when an unrelated run starts and finishes",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "keeps pending interrupts when an unrelated run starts and finishes"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume keeps pending interrupts when an unrelated run errors",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "keeps pending interrupts when an unrelated run errors"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume clear removes resume state and pending interrupts",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "clear removes resume state and pending interrupts"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume addToolApprovalResponse sends a compatibility resume item",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "addToolApprovalResponse sends a compatibility resume item"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume addToolApprovalResponse waits for all pending approval interrupts before resuming",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "addToolApprovalResponse waits for all pending approval interrupts before resuming"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume restores pending interrupts from an initial resume snapshot",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "restores pending interrupts from an initial resume snapshot"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume addToolResult for pending client-tool input sends a resume item",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "addToolResult for pending client-tool input sends a resume item"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume addToolResult waits for all pending client-tool interrupts before resuming",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "addToolResult waits for all pending client-tool interrupts before resuming"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume auto-executed client tool during parent stream defers resume until isLoading clears",
+      "dartFile": "test/chat/chat_client_resume_test.dart",
+      "dartTestName": "auto-executed client tool during parent stream defers resume until isLoading clears"
+    },
+    {
+      "upstreamFile": "chat-client-stop-continuation.test.ts",
+      "upstreamName": "stop() vs queued continuation does not auto-continue a legacy approval queued before stop()",
+      "dartFile": "test/chat/chat_client_stop_continuation_test.dart",
+      "dartTestName": "a tool result arriving after stop does not start another run"
+    },
+    {
+      "upstreamFile": "chat-client-subagent-interrupts.test.ts",
+      "upstreamName": "ChatClient subagent interrupts approves a child tool call and finishes the child",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "approves a child tool call and finishes the child"
+    },
+    {
+      "upstreamFile": "chat-client-subagent-rejoin.test.ts",
+      "upstreamName": "joinRun subagent replay rebuilds one subagent card from the stream instead of keeping the partial text",
+      "dartFile": "test/chat/chat_client_remaining_misc_test.dart",
+      "dartTestName": "rebuilds one subagent card from the stream instead of keeping the partial text"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagents keeps useChat.subagents and part.subagent as the same object with stop",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "keeps useChat.subagents and part.subagent as the same object with stop"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagents gives the handle the checked input from the card metadata",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "gives the handle the checked input from the card metadata"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagents keeps status error after stop when SUBAGENT_FINISHED arrives later",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "keeps status error after stop when SUBAGENT_FINISHED arrives later"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagents aborts a hanging child on stop so no later child text arrives",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "aborts a hanging child on stop so no later child text arrives"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagent handles for restored messages gives restored cards a handle, and drops it after clear()",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "gives restored cards a handle, and drops it after clear()"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagent handles for restored messages accepts frozen snapshot messages back without throwing",
+      "dartFile": "test/chat/chat_client_subagents_test.dart",
+      "dartTestName": "accepts frozen snapshot messages back without throwing"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should create a client with default options",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should create a client with default options"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor exposes a UI snapshot that subscribeSnapshot notifies",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "exposes a UI snapshot that subscribeSnapshot notifies"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor isolates nested message parts from callers and old snapshots",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "isolates nested message parts from callers and old snapshots"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor copies tool input, approval, and subagent transcripts",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "copies tool input, approval, and subagent transcripts"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor keeps the identity of unchanged messages across snapshots",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "keeps the identity of unchanged messages across snapshots"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should initialize with provided messages",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should initialize with provided messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should hydrate messages from persistence",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should hydrate messages from persistence"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should hydrate messages from persistence.client",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should hydrate messages from persistence.client"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should prefer persisted messages over initial messages",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should prefer persisted messages over initial messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should fall back to initial messages when persistence returns null",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should fall back to initial messages when persistence returns null"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should fall back to initial messages when persistence returns undefined",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should fall back to initial messages when persistence returns undefined"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should let persisted empty arrays override initial messages",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should let persisted empty arrays override initial messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should hydrate from async persistence and notify message listeners",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should hydrate from async persistence and notify message listeners"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should ignore async persistence hydration after local message changes",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should ignore async persistence hydration after local message changes"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should keep current constructor behavior when persistence is omitted",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should keep current constructor behavior when persistence is omitted"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should generate unique message ids",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should generate unique message ids"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor should throw if neither connection nor fetcher is provided",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should throw if neither connection nor fetcher is provided"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should re-subscribe on connection update when previously subscribed",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should not re-subscribe on connection update when not subscribed"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should not re-subscribe on connection update when not subscribed",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should not re-subscribe on connection update when not subscribed"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient sendMessage should send a message and append it",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should send a message and append it"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient sendMessage should create and return assistant message from stream chunks",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should create and return assistant message from stream chunks"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient sendMessage should not send empty messages",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should not send empty messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient sendMessage should queue (not send immediately) a message sent while loading, then auto-send it once the stream settles",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should queue (not send immediately) a message sent while loading, then auto-send it once the stream settles"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient sendMessage isolates queue entries published by normal updates",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "isolates queue entries published by normal updates"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should append a UIMessage",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should append a UIMessage"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should generate id and createdAt if missing",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should generate id and createdAt if missing"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append keeps append pending through an intermediate tool_calls RUN_FINISHED until the interrupt",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "keeps append pending through an intermediate tool_calls RUN_FINISHED until the interrupt"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient reload should reload from last user message",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should reload from last user message"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient reload should do nothing if no user messages",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should do nothing if no user messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient reload should do nothing if messages array is empty",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should do nothing if no user messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient stop should stop loading and abort request",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should stop loading and abort request"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should clear all messages",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should clear all messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should abort an in-flight stream when persistence is omitted",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should abort an in-flight stream when persistence is omitted"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should prevent delayed stream chunks from recreating messages after clear",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should prevent delayed stream chunks from recreating messages after clear"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient persistence should save message snapshots after sendMessage changes messages",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should save message snapshots after sendMessage changes messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient persistence should save message snapshots when messages are set manually",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should save message snapshots when messages are set manually"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient persistence should swallow async persistence write and remove failures",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should swallow async persistence write and remove failures"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should call onMessagesChange when messages update",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should call onMessagesChange when messages update"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should call onLoadingChange when loading state changes",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should call onLoadingChange when loading state changes"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should call onChunk for each chunk",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should call onChunk for each chunk"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks restores finishReason and model onto onChunk RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_stream_processing_test.dart",
+      "dartTestName": "restores finishReason and model onto onChunk RUN_FINISHED"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should call onFinish when stream completes",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should call onFinish when stream completes"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should call onError when error occurs",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should call onError when error occurs"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient status should transition through states during generation",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should transition through states during generation"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient tool calls should handle tool calls from stream",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should handle tool calls from stream"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient tool calls does not continue a server-owned client tool input error",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "does not continue a server-owned client tool input error"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient addToolResult should add tool result and update message",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "addToolResult should add tool result and update message"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient error handling should set error state on connection failure",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should set error state on connection failure"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient error handling should clear error on successful request",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should clear error on successful request"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient error handling should not hang when connection is updated during an active stream",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should not hang when connection is updated during an active stream"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should use custom message id when provided",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should use custom message id when provided"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should generate message id when not provided",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should generate message id when not provided"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should allow empty content array",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should allow empty content array"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send string content as simple text message",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should send string content as simple text message"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should merge per-message body with base body",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should merge per-message body with base body"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should merge sendOptions.body into the request (hook-style per-call body)",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should merge sendOptions.body into the request (hook-style per-call body)"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage does not leak sendOptions.whenBusy onto the wire next to body",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "does not leak sendOptions.whenBusy onto the wire next to body"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage reload does not replay a previous per-call body",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "reload does not replay a previous per-call body"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should accept forwardedProps option and merge into request body",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should accept forwardedProps option and merge into request body"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage updateOptions({ forwardedProps }) leaves a previously-set body intact",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "updateOptions({ forwardedProps }) leaves a previously-set body intact"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage updateOptions({ body }) leaves a previously-set forwardedProps intact",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "updateOptions({ forwardedProps }) leaves a previously-set body intact"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should merge body and forwardedProps with forwardedProps winning",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should merge body and forwardedProps with forwardedProps winning"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should pass through user-set conversationId via forwardedProps",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should pass through user-set conversationId via forwardedProps"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should clear per-message body after request",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should clear per-message body after request"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should emit events with multimodal content",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should emit events with multimodal content"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should call onCustomEvent callback for arbitrary custom events",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should call onCustomEvent for arbitrary custom events"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should extract toolCallId from custom event data and pass in context",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should extract toolCallId from custom event data and pass in context"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should handle custom events with no data",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should handle custom events with no data"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should NOT call onCustomEvent for system events like tool-input-available",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should NOT call onCustomEvent for system events like tool-input-available"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should work when onCustomEvent is not provided",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should work when onCustomEvent is not provided"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should handle multiple different custom events in sequence",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should handle multiple different custom events in sequence"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should preserve event data exactly as received from stream",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should preserve event data exactly as received from stream"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient chained tool approvals should continue after second approval arrives during active continuation stream",
+      "dartFile": "test/chat/chat_client_approval_followup_test.dart",
+      "dartTestName": "continues after second approval arrives during active continuation stream"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient concurrent runs and reconnect correctness reconnect with initialMessages should not duplicate assistant message on content arrival",
+      "dartFile": "test/chat/chat_client_stream_processing_test.dart",
+      "dartTestName": "does not duplicate an assistant message on reconnect content arrival"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages does not send activity messages as model input on the next turn",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "does not send activity messages as model input on the next turn"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages keeps an appended activity message without starting a run",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "keeps an appended activity message without starting a run"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages exposes initial activity messages",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "exposes initial activity messages"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages keeps persisted activity when a later MESSAGES_SNAPSHOT omits it",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "hydrates activity from an inbound MESSAGES_SNAPSHOT ActivityMessage"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport runs an in-process AsyncIterable fetcher and streams text",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "runs an in-process AsyncIterable fetcher and streams text"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport parses an SSE Response returned by the fetcher (server-fn style)",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "parses an SSE Response returned by the fetcher (server-fn style)"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport passes the AbortSignal to the fetcher; stop() aborts it",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "passes the AbortSignal to the fetcher; stop() aborts it"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a fetcher error as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "surfaces a fetcher error as a ChatClient error"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a malformed-SSE Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "surfaces a malformed-SSE Response as a ChatClient error"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport passes UIMessages and merged body to the fetcher",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "passes UI messages and merged body to the fetcher"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport throws when both connection and fetcher are passed",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "throws when both connection and fetcher are passed"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport throws when neither connection nor fetcher is passed",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "throws when neither connection nor fetcher is passed"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces a non-OK Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "surfaces a non-OK Response as a ChatClient error"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces unsupported streaming from a fetcher-returned Response as a ChatClient error",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "surfaces a non-stream result from the fetcher as a ChatClient error"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport surfaces an AsyncIterable that throws after yielding chunks",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "surfaces an AsyncIterable that throws after yielding chunks"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport completes cleanly when AsyncIterable ends without RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "completes cleanly when AsyncIterable ends without RUN_FINISHED"
+    },
+    {
+      "upstreamFile": "chat-fetcher.test.ts",
+      "upstreamName": "ChatClient \u2014 fetcher transport stops consuming chunks from an AsyncIterable that ignores its signal",
+      "dartFile": "test/chat/chat_client_fetcher_contract_test.dart",
+      "dartTestName": "stops consuming chunks from an AsyncIterable that ignores its signal"
+    },
+    {
+      "upstreamFile": "chat-hydration-error.test.ts",
+      "upstreamName": "mount hydration failure is surfaced (persistence: true) reports a thrown hydrate error via onError / error / status",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "turns off when the server hydrate fails"
+    },
+    {
+      "upstreamFile": "chat-hydration-error.test.ts",
+      "upstreamName": "mount hydration failure is surfaced (persistence: true) stays silent when the view detached before the hydrate rejected",
+      "dartFile": "test/chat/chat_hydration_remaining_test.dart",
+      "dartTestName": "stays silent when the view detached before the hydrate rejected"
+    },
+    {
+      "upstreamFile": "chat-hydration-error.test.ts",
+      "upstreamName": "mount hydration failure is surfaced (persistence: true) triggers the BYOK key-request flow when hydrate throws ByokMissingError",
+      "dartFile": "test/chat/chat_hydration_remaining_test.dart",
+      "dartTestName": "triggers the BYOK key-request flow when hydrate throws ByokMissingError"
+    },
+    {
+      "upstreamFile": "chat-hydration-error.test.ts",
+      "upstreamName": "mount hydration failure is surfaced (persistence: true) clears the hydration error when a later load succeeds",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "clears the hydration error when a later load succeeds"
+    },
+    {
+      "upstreamFile": "chat-hydration-error.test.ts",
+      "upstreamName": "mount hydration failure is surfaced (persistence: true) does not surface anything when hydration succeeds",
+      "dartFile": "test/chat/chat_hydration_remaining_test.dart",
+      "dartTestName": "does not surface anything when hydration succeeds"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating is true from construction until the server transcript is applied",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "is true from construction until the server transcript is applied"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating turns off with isLoading already on when it re-joins an in-flight run",
+      "dartFile": "test/chat/chat_hydration_remaining_test.dart",
+      "dartTestName": "turns off with isLoading already on when it re-joins an in-flight run"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating turns off when the server hydrate fails",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "turns off when the server hydrate fails"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating stays on across a detach and re-attach that reuse the same request",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "stays on across a detach and re-attach that reuse the same request"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating is true until an async storage adapter has read the transcript",
+      "dartFile": "test/chat/chat_hydration_remaining_test.dart",
+      "dartTestName": "is true until an async storage adapter has read the transcript"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating turns off when a send takes over, and the late transcript is dropped",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "turns off when a send takes over, and the late transcript is dropped"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating turns off when clear() drops a pending load",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "turns off when clear() drops a pending load"
+    },
+    {
+      "upstreamFile": "chat-is-hydrating.test.ts",
+      "upstreamName": "ChatClient isHydrating is always false without persistence",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "is always false without persistence"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId rejects persistence: true without a threadId",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "rejects persistence without a threadId"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId rejects a storage adapter without a threadId",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "rejects a storage adapter option without a threadId"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId accepts persistence when a threadId is supplied",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "accepts persistence when a threadId is supplied"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId leaves threadId optional for ephemeral chats",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "leaves threadId optional for ephemeral chats"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId rejects `id` next to a required `threadId`",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "rejects id next to a required threadId",
+      "status": "moved",
+      "movedTo": "test/types/chat_types_negative.dart",
+      "reason": "pure type assertion; ported to a negative analyzer fixture"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient persistence requires a threadId does not list `id` on ChatClientOptions. `threadId` is present",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "does not list id on ChatClientOptions. threadId is present",
+      "status": "moved",
+      "movedTo": "test/types/chat_types_negative.dart",
+      "reason": "pure type assertion; ported to a negative analyzer fixture"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient history paging types accepts history.pageSize with persistence: true and a threadId",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "accepts history.pageSize with persistence and a threadId"
+    },
+    {
+      "upstreamFile": "chat-persistence-types.test.ts",
+      "upstreamName": "ChatClient history paging types rejects history on a storage adapter",
+      "dartFile": "test/chat/chat_persistence_types_test.dart",
+      "dartTestName": "ChatClient history paging rejects history on a storage adapter",
+      "status": "implemented",
+      "adaptation": "Typed ChatPersistenceOptions.stored rejects history at compile time in chat_types_negative.dart; raw modern constructor rejects it at runtime. Legacy transport history extension remains compatible."
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots a throwing chat snapshot subscriber does not stick isLoading",
+      "dartFile": "test/chat/chat_client_stream_processing_test.dart",
+      "dartTestName": "a throwing listener does not break stream processing or other listeners"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient keeps the identity of unchanged messages across snapshots",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "keeps the identity of unchanged messages across snapshots"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not emit hook lifecycle events before devtools is mounted",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not emit hook lifecycle events before devtools is mounted",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers a generated hookId when construct had no threadId",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge can register again after a mount cleanup cycle",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge can register again after a mount cleanup cycle",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge binds hook identity to threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge binds hook identity to threadId",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not unregister a superseded client that shares a threadId",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not unregister a superseded client that shares a threadId",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers the chat hook and emits the initial state snapshot",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers the chat hook and emits the initial state snapshot",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits the configured devtools display name",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits the configured devtools display name",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge registers client tool metadata for devtools discovery",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge registers client tool metadata for devtools discovery",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge responds to devtools state requests for its hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge responds to devtools state requests for its hook",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge uses the resilient devtools emitter for hook registration sync",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge uses the resilient devtools emitter for hook registration sync",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge does not respond to devtools state requests for another hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge does not respond to devtools state requests for another hook",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge applies a devtools tool fixture as a normal assistant message",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge applies a devtools tool fixture as a normal assistant message",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge generates fresh ids when replaying a fixture from an existing tool call",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge generates fresh ids when replaying a fixture from an existing tool call",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge replays the full source message when a fixture includes one",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge replays the full source message when a fixture includes one",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge executes the registered client tool when firing a fixture",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge executes the registered client tool when firing a fixture",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge routes hook-scoped fixture events to the latest bridge for a hook id",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge routes hook-scoped fixture events to the latest bridge for a hook id",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge keeps superseded duplicate hook bridges silent when they emit later",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge keeps superseded duplicate hook bridges silent when they emit later",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge includes thread and tool call context when applying a fixture without a run id",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge includes thread and tool call context when applying a fixture without a run id",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge marks fixture tool results as errored when devtools provides error text",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge marks fixture tool results as errored when devtools provides error text",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores devtools tool fixtures for another thread",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores devtools tool fixtures for another thread",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores unscoped devtools tool fixtures",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores unscoped devtools tool fixtures",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge ignores devtools tool fixtures for another hook",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge ignores devtools tool fixtures for another hook",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge disposes the hook bridge idempotently",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge disposes the hook bridge idempotently",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot when messages are set manually",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot when messages are set manually",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot when messages are cleared",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot when messages are cleared",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits a snapshot after reload removes messages after the last user message",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits a snapshot after reload removes messages after the last user message",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge sends live snapshots of a child agent, not the live handle",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge sends live snapshots of a child agent, not the live handle",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits chat run lifecycle events for hook run tracking",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits chat run lifecycle events for hook run tracking",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge links streamed text and tool events to the current run context",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge links streamed text and tool events to the current run context",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge uses stream lifecycle run ids when the server emits them",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge uses stream lifecycle run ids when the server emits them",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits structured output updates and snapshots streamed structured parts",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits structured output updates and snapshots streamed structured parts",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits memory:* devtools events from a transported memory:state CUSTOM chunk",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits memory:* devtools events from a transported memory:state CUSTOM chunk",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits compaction started, state, and ended from transported CUSTOM chunks",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits compaction started, state, and ended from transported CUSTOM chunks",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge re-emits skills:snapshot from a transported skills:state CUSTOM chunk",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge re-emits skills:snapshot from a transported skills:state CUSTOM chunk",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge batches structured output update events while preserving final state",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge batches structured output update events while preserving final state",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits structured output completion without streamed deltas",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits structured output completion without streamed deltas",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge preserves structured output parts across multiple chat turns",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge preserves structured output parts across multiple chat turns",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits approval requests that arrive after run finish",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge emits approval responses and snapshots the approval decision",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "devtools.test.ts",
+      "upstreamName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools bridge keeps delayed client tool results linked to their original run context",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail does not join a run when hydration resolves after dispose",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "does not join a run when hydration resolves after dispose"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail aborts an OPEN tail when the client is disposed",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "aborts an OPEN tail when the client is disposed"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail detach drops the connection, and attach picks the run back up",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "detach drops the connection, and attach picks the run back up"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail attach is idempotent, so a wrapper mount after construction is free",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "attach is idempotent, so a wrapper mount after construction is free"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail detach must not wipe a PERSISTED resume pointer",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "detach must not wipe a PERSISTED resume pointer"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail an EPHEMERAL chat makes no request on attach or re-attach",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "an EPHEMERAL chat makes no request on attach or re-attach"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail a hydration that resolves after DETACH must not open a tail",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "a hydration that resolves after DETACH must not open a tail"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail a re-attach while hydration is in flight reuses that GET",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "a re-attach while hydration is in flight reuses that GET"
+    },
+    {
+      "upstreamFile": "dispose-tail-leak.test.ts",
+      "upstreamName": "dispose stops a late hydration from opening a tail still joins the run when hydration resolves before dispose",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "still joins the run when hydration resolves before dispose"
+    },
+    {
+      "upstreamFile": "replay-metadata.test.ts",
+      "upstreamName": "saved replay metadata keeps source, failed-turn and response metadata through JSON storage and hydration",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "keeps source, failed-turn and response metadata through JSON storage and hydration"
+    },
+    {
+      "upstreamFile": "replay-metadata.test.ts",
+      "upstreamName": "saved replay metadata does not invent a server abort when the client stops",
+      "dartFile": "test/chat/chat_client_misc_contract_test.dart",
+      "dartTestName": "does not invent a server abort when the client stops"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'does not rejoin a completed child aft\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "does not rejoin a completed child after its late parent link"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'clears a persisted parent pause after\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "clears a persisted parent pause after its late link"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'preserves an unrelated persisted paus\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "preserves an unrelated persisted pause after a late link"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'suppresses a stale pause after a comp\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "suppresses a stale pause after a completed child gains its parent link"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'clears a visible pause when a complet\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "clears a visible pause when a completed child gains its parent link"
+    },
+    {
+      "upstreamFile": "chat-client-interrupt-lineage-replay.test.ts",
+      "upstreamName": "ChatClient interrupt lineage on replay (#1368) 'propagates completion through late tr\u2026'",
+      "dartFile": "test/chat/chat_client_interrupt_lineage_test.dart",
+      "dartTestName": "propagates completion through late transitive parent links"
+    },
+    {
+      "upstreamFile": "cleared-stream-tracker.test.ts",
+      "upstreamName": "ClearedStreamTracker ignores a runless 'TEXT_MESSAGE_START' from a run cleared mid-stream",
+      "dartFile": "test/chat/cleared_stream_tracker_test.dart",
+      "dartTestName": "ignores a runless TEXT_MESSAGE_START from a run cleared mid-stream"
+    },
+    {
+      "upstreamFile": "cleared-stream-tracker.test.ts",
+      "upstreamName": "ClearedStreamTracker ignores a runless 'TEXT_MESSAGE_CHUNK' from a run cleared mid-stream",
+      "dartFile": "test/chat/cleared_stream_tracker_test.dart",
+      "dartTestName": "ignores a runless TEXT_MESSAGE_CHUNK from a run cleared mid-stream"
+    },
+    {
+      "upstreamFile": "cleared-stream-tracker.test.ts",
+      "upstreamName": "ClearedStreamTracker ignores a runless 'TOOL_CALL_CHUNK' from a run cleared mid-stream",
+      "dartFile": "test/chat/cleared_stream_tracker_test.dart",
+      "dartTestName": "ignores a runless TOOL_CALL_CHUNK from a run cleared mid-stream"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient constructor isolates messages published by normal updates",
+      "dartFile": "test/chat/chat_client_identity_snapshot_test.dart",
+      "dartTestName": "isolates queue entries published by normal updates"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append should convert and append a ModelMessage",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "should append a UIMessage"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage merges chat body, positional body, and sendOptions.body with sendOptions.body winning conflicts",
+      "dartFile": "test/chat/chat_client_test.dart",
+      "dartTestName": "merged body: chat, positional, sendOptions; sendOptions wins",
+      "repairedFrom": "stale abbreviated title; actual passing test name restored"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should not auto-emit `conversationId` in merged body (replaced by AG-UI threadId)",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should not auto-emit conversationId in merged body"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA through getMessages",
+      "dartFile": "test/chat/chat_client_stream_processing_test.dart",
+      "dartTestName": "surfaces ACTIVITY_SNAPSHOT and ACTIVITY_DELTA parts"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient activity messages hydrates a mixed transcript from persistence and omits activity on send",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "hydrates activity from an inbound MESSAGES_SNAPSHOT"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:message:created event when assistant message starts",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:message:created event when assistant message starts",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:chunk:content events during streaming",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:chunk:content events during streaming",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit tools:call:updated events for tool calls",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit tools:call:updated events for tool calls",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient devtools events should emit text:chunk:thinking events for thinking content",
+      "dartFile": "test/interop/chat_devtools_upstream_test.dart",
+      "dartTestName": "ChatClient devtools events should emit text:chunk:thinking events for thinking content",
+      "status": "ported-passing",
+      "reason": "devtools surface is owned by the devtools worker; 40 placeholder cases were consolidated into 12 real interop cases.",
+      "movedTo": "test/interop/chat_devtools_contract_test.dart",
+      "repairedFrom": "stale moved target (file no longer exists); replaced with interop/chat_devtools_upstream_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with image content",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should send a multimodal message with image content"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with audio content",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should send a multimodal message with audio content"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with video content",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should send a multimodal message with video content"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient multimodal sendMessage should send a multimodal message with document content",
+      "dartFile": "test/chat/chat_client_upstream_extra_test.dart",
+      "dartTestName": "should send a multimodal message with document content"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should use subscribe/send adapter mode",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "streams chunks pushed after a send starts"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode returns a client that only watches to ready after each run ends",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode returns a client that only watches to ready after each run ends",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "final transcript contains \"Second answer.\"",
+        "sessionGenerating is false after the subscription run settles",
+        "status is ready"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore native subscribe/send chunks from a cleared persisted request without runId",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore native subscribe/send chunks from a cleared persisted request without runId",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "final transcript contains B and \"fresh B\"",
+        "final transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot does not contain \"stale A\""
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore already-started runless chunks from a cleared persisted request",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore already-started runless chunks from a cleared persisted request",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "stored messages are undefined",
+        "sessionGenerating is false",
+        "error is undefined"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after a clear when a fresh run starts before stale chunks drain",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after a clear when a fresh run starts before stale chunks drain",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "transcript contains B and \"fresh content\"",
+        "transcript does not contain A or \"stale content\"",
+        "stored snapshot equals the current transcript"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "fresh runless text reaches the transcript",
+        "transcript contains B",
+        "transcript does not contain A"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale messages snapshot after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale messages snapshot after persisted clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "stored messages are undefined"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale runless run error after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale runless run error after persisted clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "error is undefined",
+        "status is ready",
+        "onError is not called",
+        "stored messages are undefined"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh native subscribe/send chunks when they arrive before stale cleared chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh native subscribe/send chunks when they arrive before stale cleared chunks",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "transcript contains B and \"fresh B\"",
+        "transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot contains \"fresh B\"",
+        "stored snapshot does not contain \"stale A\""
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale tool chunks by cleared parentMessageId after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale tool chunks by cleared parentMessageId after persisted clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains the cleared assistant message with a stale tool call"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should remember ignored stale runless message ids so child tool chunks are ignored after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should remember ignored stale runless message ids so child tool chunks are ignored after persisted clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains \"stale-runless-message\""
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale runless tool starts without parentMessageId after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale runless tool starts without parentMessageId after persisted clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains stale tool content"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should reset session generation when a persisted clear ignores terminal chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should reset session generation when a persisted clear ignores terminal chunks",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is false after the ignored terminal drains"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore live-only active run chunks after persisted clear and clean up session generation",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore live-only active run chunks after persisted clear and clean up session generation",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating returns to false",
+        "messages are empty",
+        "stored messages are undefined"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should not expose request generation metadata on public chunks or run context",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should not expose request generation metadata on public chunks or run context",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "runContext has no requestGeneration property",
+        "no onChunk event contains requestGeneration"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should not add internal threadId or runId to public connect chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should not add internal threadId or runId to public connect chunks",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "onChunk receives the public TEXT_MESSAGE_CONTENT event",
+        "public TEXT_MESSAGE_CONTENT events have no threadId or runId keys"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode stop should not unsubscribe an active subscription",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "stop does not unsubscribe an active subscription"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should emit subscription and connection lifecycle callbacks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should emit subscription and connection lifecycle callbacks",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "onSubscriptionChange sees [true, false]",
+        "connection statuses start connecting, include connected, end disconnected"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode subscribe should be idempotent without restart",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "subscribe is idempotent"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode subscribe with restart should start a new subscription loop",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "subscribe with restart keeps the subscription active"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode unsubscribe should be idempotent",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "unsubscribe is idempotent"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode unsubscribe should abort in-flight requests and disconnect",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode unsubscribe should abort in-flight requests and disconnect",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "in-flight send settles",
+        "isLoading is false",
+        "isSubscribed is false",
+        "connectionStatus is disconnected"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should expose connectionStatus error for subscription loop failures",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should expose connectionStatus error for subscription loop failures",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "isSubscribed is false",
+        "status is error",
+        "connectionStatus is error"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should expose connectionStatus error when subscribe throws",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should expose connectionStatus error when subscribe throws",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "subscribe() does not throw",
+        "isSubscribed is false",
+        "connectionStatus is error"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should remain pending without terminal run events",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating stays true until a terminal event arrives"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should be false initially",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating is false initially"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should flip to true on RUN_STARTED and false on RUN_FINISHED",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating flips on RUN_STARTED and RUN_FINISHED"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should flip to false on RUN_ERROR",
+      "dartFile": "test/chat/chat_client_subscription_contract_test.dart",
+      "dartTestName": "sessionGenerating clears on RUN_ERROR"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is false after the run",
+        "sessionGenerating stays false after unsubscribe"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on unsubscribe while generating",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on unsubscribe while generating",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is true while generating",
+        "sessionGenerating is false after unsubscribe",
+        "callbacks equal [true, false]"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on connection adapter replacement",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on connection adapter replacement",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is true on adapter 1",
+        "sessionGenerating is false after updateOptions replaces the adapter",
+        "callbacks equal [true, false]"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "onSessionGeneratingChange equals [true, false] for duplicate RUN_STARTED/RUN_FINISHED events"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "first run callbacks equal [true, false]",
+        "second run callbacks equal [true, false, true, false]"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should stay true during concurrent runs until all finish",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should stay true during concurrent runs until all finish",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating stays true after run-1 finishes",
+        "sessionGenerating is false after run-2 finishes",
+        "callbacks equal [true, false]"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should process future live subscription chunks after persistence clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should process future live subscription chunks after persistence clear",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "a later live TEXT_MESSAGE_CONTENT chunk appears in messages after clear"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is false after a runless RUN_ERROR",
+        "callbacks equal [true, false]"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on fatal subscription loop teardown",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on fatal subscription loop teardown",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "sessionGenerating is false after the subscription throws",
+        "callbacks contain true",
+        "last callback is false"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should remove persisted messages without saving an empty snapshot",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should remove persisted messages without saving an empty snapshot",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "removeItem is called",
+        "no setItem is scheduled by clear"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should not persist non-cooperative delayed chunks after clear removes storage",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should not persist non-cooperative delayed chunks after clear removes storage",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "removeItem occurs",
+        "no setItem event follows removeItem",
+        "messages are empty",
+        "removeItem is called"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should ignore cleared request chunks after persistence resumes for a new send",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should ignore cleared request chunks after persistence resumes for a new send",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "transcript contains B and \"fresh B\"",
+        "transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot does not contain \"stale A\""
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should ensure async setItem scheduled before clear cannot win after removeItem",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should ensure async setItem scheduled before clear cannot win after removeItem",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "removeItem is called",
+        "stored state is undefined after the delayed setItem resolves"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should preserve state updates and onMessagesChange when persistence throws",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should preserve state updates and onMessagesChange when persistence throws",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "initial messages survive a throwing getItem",
+        "send adds messages and invokes onMessagesChange",
+        "clear does not throw and empties messages"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient drain re-entrancy guard (fix #302) should continue after multiple client tools complete in the same round",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient drain re-entrancy guard (fix #302) should continue after multiple client tools complete in the same round",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "continuation connect runs at least twice",
+        "last assistant text part is \"Done!\""
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient concurrent runs and reconnect correctness concurrent runs should not produce duplicate messages or corrupt content",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient concurrent runs and reconnect correctness concurrent runs should not produce duplicate messages or corrupt content",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no long-lived subscribe loop; placeholder dispatcher case removed.",
+      "actualAssertions": [
+        "msg-a text becomes \"Story: once upon a time\"",
+        "msg-b text stays \"Hi!\"",
+        "exactly one msg-a and one msg-b",
+        "sessionGenerating returns to false"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context uses the per-run context snapshot for in-flight client tool execution",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient runtime context uses the per-run context snapshot for in-flight client tool execution"
+    },
+    {
+      "upstreamFile": "chat-client-context.test.ts",
+      "upstreamName": "ChatClient runtime context uses the per-run client tool snapshot for automatic result validation",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient runtime context uses the per-run client tool snapshot for automatic result validation"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not continue when a native resume is queued before Stop",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient native interrupts does not continue when a native resume is queued before Stop"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts does not auto-send after rejecting an afterTools generic interrupt",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient native interrupts does not auto-send after rejecting an afterTools generic interrupt"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts resumes a hydrated ephemeral batch with full history in a fresh child run",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "resumes a hydrated ephemeral batch in a fresh child run"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts hydrates V2 fallback descriptors when recovery is unavailable",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates V2 fallback descriptors when recovery is unavailable",
+      "status": "implemented",
+      "reason": "duplicate placeholder assertion removed; hydration descriptors are covered by interruption/hydration tests",
+      "actualAssertions": [
+        "falls back to V2 descriptors while retaining resumeState threadId/runId"
+      ],
+      "repairedFrom": "stale duplicate not-implemented mapping; replaced with the passing interrupt hydration test after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts hydrates fallback descriptors for malformed V2 null recovery state without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 null recovery state without losing resume state",
+      "status": "implemented",
+      "reason": "duplicate placeholder assertion removed; hydration descriptors are covered by interruption/hydration tests",
+      "actualAssertions": [
+        "null recovery state hydrates fallback descriptor and keeps resume state"
+      ],
+      "repairedFrom": "stale duplicate not-implemented mapping; replaced with the passing interrupt hydration test after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts hydrates fallback descriptors for malformed V2 array recovery state without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 array recovery state without losing resume state",
+      "status": "implemented",
+      "reason": "duplicate placeholder assertion removed; hydration descriptors are covered by interruption/hydration tests",
+      "actualAssertions": [
+        "array recovery state hydrates fallback descriptor and keeps resume state"
+      ],
+      "repairedFrom": "stale duplicate not-implemented mapping; replaced with the passing interrupt hydration test after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-interrupts.test.ts",
+      "upstreamName": "ChatClient native interrupts hydrates fallback descriptors for malformed V2 invalid drafts without losing resume state",
+      "dartFile": "test/chat/chat_client_interrupts_remaining_test.dart",
+      "dartTestName": "hydrates fallback descriptors for malformed V2 invalid drafts without losing resume state",
+      "status": "implemented",
+      "reason": "duplicate placeholder assertion removed; hydration descriptors are covered by interruption/hydration tests",
+      "actualAssertions": [
+        "invalid drafts hydrate fallback descriptor and keep resume state"
+      ],
+      "repairedFrom": "stale duplicate not-implemented mapping; replaced with the passing interrupt hydration test after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume resumes canonicalization failures as client-tool output errors",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient resume resumes canonicalization failures as client-tool output errors"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume continues a legacy client tool emitted by a native resume",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient resume continues a legacy client tool emitted by a native resume"
+    },
+    {
+      "upstreamFile": "chat-client-resume.test.ts",
+      "upstreamName": "ChatClient resume keeps native interrupt ownership when a sequential client tool resume fails",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "ChatClient resume keeps native interrupt ownership when a sequential client tool resume fails"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagents lets a stopped child stream again when the server restarts it",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "lets a stopped child stream again when the server restarts it",
+      "repairedFrom": "stale displayed title; actual passing test name is lets a stopped child stream again..."
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagent handles for restored messages accepts a frozen nested subagent card back without throwing",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "accepts a frozen nested subagent card back without throwing",
+      "repairedFrom": "stale group-prefixed title; actual passing test is in ChatClient subagents"
+    },
+    {
+      "upstreamFile": "chat-client-subagents.test.ts",
+      "upstreamName": "ChatClient subagent handles for restored messages gives a nested card a handle with stop",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "gives a nested card a handle with stop",
+      "repairedFrom": "stale group-prefixed title; actual passing test is in ChatClient subagents"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient append keeps append pending when intermediate tool_calls is a direct finishReason",
+      "dartFile": "test/chat/chat_client_remaining_contract_test.dart",
+      "dartTestName": "clears resume state when tool_calls finishes without an interrupt"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient error handling should surface subscription loop failures without hanging",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient error handling should surface subscription loop failures without hanging",
+      "status": "implemented",
+      "reason": "Dart ChatClient has no subscription loop to fail",
+      "actualAssertions": [
+        "sendMessage settles",
+        "onError is called once with the subscription error",
+        "status is error"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should allow updating onCustomEvent via updateOptions",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient custom events should allow updating onCustomEvent via updateOptions",
+      "status": "implemented",
+      "reason": "ChatClient.updateOptions has no onCustomEvent parameter",
+      "actualAssertions": [
+        "updated callback receives the CUSTOM event",
+        "event name is test-event",
+        "event value is {\"value\": 42}",
+        "context is null"
+      ],
+      "repairedFrom": "stale not-implemented subscription-contract mapping; replaced with native_upstream_parity_test.dart after assertion review"
+    },
+    {
+      "upstreamFile": "chat-client-stream-processing.test.ts",
+      "upstreamName": "ChatClient stream processing does not wait for a macrotask after each live chunk",
+      "dartFile": "test/interop/processing_budget_contract_test.dart",
+      "dartTestName": "does not wait for a macrotask after each live chunk",
+      "status": "implemented",
+      "repairedFrom": "browser scheduler case ported to StreamProcessingScheduler; previous unmapped dartEquivalent was generic/obsolete",
+      "actualAssertions": [
+        "the zero-delay timer has not run after sendMessage; transcript is \"ab\""
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-stream-processing.test.ts",
+      "upstreamName": "ChatClient stream processing falls back to a timer after a full processing slice",
+      "dartFile": "test/interop/processing_budget_contract_test.dart",
+      "dartTestName": "falls back to a timer after a full processing slice",
+      "status": "implemented",
+      "repairedFrom": "browser scheduler case ported to StreamProcessingScheduler; previous unmapped dartEquivalent was generic/obsolete",
+      "actualAssertions": [
+        "the timer ran after the full slice; transcript is \"ab\""
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-stream-processing.test.ts",
+      "upstreamName": "ChatClient stream processing uses the scheduler after a full processing slice",
+      "dartFile": "test/interop/processing_budget_contract_test.dart",
+      "dartTestName": "uses the scheduler after a full processing slice",
+      "status": "implemented",
+      "repairedFrom": "browser scheduler case ported to StreamProcessingScheduler; previous unmapped dartEquivalent was generic/obsolete",
+      "actualAssertions": [
+        "yieldToHost was called; the fallback timer did not run"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-stream-processing.test.ts",
+      "upstreamName": "ChatClient stream processing does not yield in a hidden document",
+      "dartFile": "test/interop/processing_budget_contract_test.dart",
+      "dartTestName": "does not yield in a hidden document",
+      "status": "implemented",
+      "repairedFrom": "browser scheduler case ported to StreamProcessingScheduler; previous unmapped dartEquivalent was generic/obsolete",
+      "actualAssertions": [
+        "yield count is 0 while isHidden() is true; timer did not run"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client-stream-processing.test.ts",
+      "upstreamName": "ChatClient stream processing does not carry hidden-page processing time into a visible page",
+      "dartFile": "test/interop/processing_budget_contract_test.dart",
+      "dartTestName": "does not carry hidden-page processing time into a visible page",
+      "status": "implemented",
+      "repairedFrom": "browser scheduler case ported to StreamProcessingScheduler; previous unmapped dartEquivalent was generic/obsolete",
+      "actualAssertions": [
+        "no yield occurred in the hidden slice; final transcript is \"ab\""
+      ]
+    }
+  ],
+  "unmapped": [
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots publishes and clears the active generation run id",
+      "reason": "non-chat surface (generation); not owned by test/chat/",
+      "moduleElsewhere": "generation",
+      "assignedTo": "generation owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots GenerationClient notifies subscribe and keeps getSnapshot identity until a change",
+      "reason": "non-chat surface (generation); not owned by test/chat/",
+      "moduleElsewhere": "generation",
+      "assignedTo": "generation owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots a throwing generation subscriber does not stick isLoading",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots VideoGenerationClient snapshot includes job fields",
+      "reason": "non-chat surface (generation); not owned by test/chat/",
+      "moduleElsewhere": "generation",
+      "assignedTo": "generation owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots AudioRecorder getSnapshot matches state",
+      "reason": "non-chat surface (platform/audio); not owned by test/chat/",
+      "moduleElsewhere": "platform/audio",
+      "assignedTo": "platform/audio owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient subscribe fires when connect fails",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient does not read connection control from its public snapshot",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient isolates connection control from state change callbacks",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots keeps the transcript when connect fails and clears it after a later success",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient keeps a transcript that arrives while audio capture starts",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    },
+    {
+      "upstreamFile": "client-snapshots.test.ts",
+      "upstreamName": "client UI snapshots RealtimeClient state change callbacks are isolated from a throwing one",
+      "reason": "non-chat surface (platform/realtime); not owned by test/chat/",
+      "moduleElsewhere": "platform/realtime",
+      "assignedTo": "platform/realtime owner (not chat)"
+    }
+  ],
+  "reviewedAt": "2026-10-20",
+  "reviewNote": "Chat test ownership review: fetcher contract rewritten to canonical ChatFetcher{ChatFetcherInput, signal, headers}; BYOK tests use the modern ConnectionAdapter path and assert Dart error-state semantics instead of throws; fake/placeholder mappings were removed and marked below; type-only cases moved to test/types analyzer fixtures. Repaired stale not-implemented/moved mappings to the verified native, devtools, interrupts, and processing-budget cases; summary counts recomputed.",
+  "blockedCount": 0,
+  "notImplementedCount": 1,
+  "movedCount": 2
+}

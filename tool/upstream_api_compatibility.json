@@ -1,0 +1,2536 @@
+{
+  "schemaVersion": 1,
+  "target": {
+    "aiClient": "0.40.0",
+    "ai": "0.70.0",
+    "commit": "7095ebbf1b59175f0cd339c1c477d6af55b312de"
+  },
+  "publicBarrels": {
+    "index": "lib/tanstack_ai_dart.dart",
+    "byok": "lib/byok.dart",
+    "ui": "lib/ui.dart"
+  },
+  "surfaces": {
+    "index": {
+      "total": 185,
+      "records": [
+        {
+          "name": "AudioRecorder",
+          "source": "./audio-recorder",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "AudioRecorder",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/audio_recorder.dart:94",
+          "public": true
+        },
+        {
+          "name": "AudioRecorderOptions",
+          "source": "./audio-recorder",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AudioRecorderOptions",
+          "reason": "Dart audio constraints are Object? rather than boolean | MediaTrackConstraints.",
+          "evidence": "lib/src/platform/audio_recorder.dart:16",
+          "public": true
+        },
+        {
+          "name": "AudioRecorderState",
+          "source": "./audio-recorder",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AudioRecorderState",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/audio_recorder.dart:14",
+          "public": true
+        },
+        {
+          "name": "AudioRecording",
+          "source": "./audio-recorder",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AudioRecording",
+          "reason": "Dart stores raw bytes/base64 plus the wire part instead of a browser Blob.",
+          "evidence": "lib/src/platform/audio_recorder.dart:26",
+          "public": true
+        },
+        {
+          "name": "InferAudioRecordingOutput",
+          "source": "./audio-recorder",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript conditional return-type inference over a transform callback; Dart has no conditional types. AudioRecorder.stop() returns Future<AudioRecording> directly.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/audio-recorder.ts:31; lib/src/platform/audio_recorder.dart:94",
+          "public": false
+        },
+        {
+          "name": "ChatClient",
+          "source": "./chat-client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "ChatClient",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/client.dart:44",
+          "public": true
+        },
+        {
+          "name": "InterruptManager",
+          "source": "./interrupt-manager",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "InterruptManager",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/interrupt_manager.dart:96",
+          "public": true
+        },
+        {
+          "name": "InterruptManagerHydration",
+          "source": "./interrupt-manager",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatHydrationInterrupts",
+          "reason": "Dart reuses the chat hydration payload accepted by InterruptManager.hydrate instead of a separate hydration interface.",
+          "evidence": "lib/src/chat/interrupt_manager.dart:121; lib/src/chat/types.dart:390",
+          "public": true
+        },
+        {
+          "name": "InterruptManagerOptions",
+          "source": "./interrupt-manager",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "InterruptManager constructor",
+          "reason": "Dart exposes constructor named parameters (tools, interrupts, lineage, onChange, submit, submitSubmission) instead of a standalone options class.",
+          "evidence": "lib/src/chat/interrupt_manager.dart:96",
+          "public": true
+        },
+        {
+          "name": "InterruptManagerSubmission",
+          "source": "./interrupt-manager",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "InterruptManagerSubmission",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/interrupt_manager.dart:43",
+          "public": true
+        },
+        {
+          "name": "createMcpAppBridge",
+          "source": "./mcp-app-bridge",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "createMcpAppBridge",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/mcp_app_bridge.dart:131",
+          "public": true
+        },
+        {
+          "name": "McpAppBridge",
+          "source": "./mcp-app-bridge",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "McpAppBridge",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/mcp_app_bridge.dart:42",
+          "public": true
+        },
+        {
+          "name": "CreateMcpAppBridgeOptions",
+          "source": "./mcp-app-bridge",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "CreateMcpAppBridgeOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/mcp_app_bridge.dart:8",
+          "public": true
+        },
+        {
+          "name": "getWebMCPTools",
+          "source": "./web-mcp-tools",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "getWebMCPTools",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:254",
+          "public": true
+        },
+        {
+          "name": "registerWebMCPTools",
+          "source": "./web-mcp-tools",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "registerWebMCPTools",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:162",
+          "public": true
+        },
+        {
+          "name": "subscribeWebMCPTools",
+          "source": "./web-mcp-tools",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "subscribeWebMCPTools",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:293",
+          "public": true
+        },
+        {
+          "name": "GetWebMCPToolsOptions",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GetWebMCPToolsOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:127",
+          "public": true
+        },
+        {
+          "name": "RegisterWebMCPToolsOptions",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "RegisterWebMCPToolsOptions",
+          "reason": "Dart context is Object? and toolOptions keys are String rather than a mapped literal-tool-name type.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:111",
+          "public": true
+        },
+        {
+          "name": "SubscribeWebMCPToolsOptions",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "SubscribeWebMCPToolsOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:133",
+          "public": true
+        },
+        {
+          "name": "WebMCPPageTool",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "WebMcpPageTool",
+          "reason": "Dart spells the type WebMcpPageTool; same public contract, exported from the root barrel via platform.dart.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart",
+          "public": true
+        },
+        {
+          "name": "WebMCPToolAnnotations",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "WebMcpToolAnnotations",
+          "reason": "Dart spells the type WebMcpToolAnnotations; same public contract, exported from the root barrel via platform.dart.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart",
+          "public": true
+        },
+        {
+          "name": "WebMCPToolOptions",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "WebMcpToolOptions",
+          "reason": "Dart spells the type WebMcpToolOptions; same public contract, exported from the root barrel via platform.dart.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart",
+          "public": true
+        },
+        {
+          "name": "WebMCPToolOptionsByName",
+          "source": "./web-mcp-tools",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String, WebMcpToolOptions>",
+          "reason": "TypeScript mapped type keyed by tool names; Dart cannot constrain map keys by literal tool names, so RegisterWebMCPToolsOptions.toolOptions uses Map<String, WebMcpToolOptions>.",
+          "evidence": "lib/src/platform/web_mcp_tools.dart:111",
+          "public": true
+        },
+        {
+          "name": "RealtimeClient",
+          "source": "./realtime-client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "RealtimeClient",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_client.dart:12",
+          "public": true
+        },
+        {
+          "name": "GenerationClient",
+          "source": "./generation-client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "GenerationClient",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_client.dart:69",
+          "public": true
+        },
+        {
+          "name": "VideoGenerationClient",
+          "source": "./video-generation-client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "VideoGenerationClient",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/video_generation_client.dart:42",
+          "public": true
+        },
+        {
+          "name": "UIMessage",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantTurn",
+          "reason": "Dart models UI messages as AssistantTurn with AssistantPart parts; the upstream generic UIMessage<TTools,TData,TSubagents> is not expressible.",
+          "evidence": "lib/src/protocol.dart:556",
+          "public": true
+        },
+        {
+          "name": "MessagePart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "TextPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "ToolCallPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "ToolResultPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "ThinkingPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "ActivityPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "StructuredOutputPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "SubagentPart",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses one AssistantPart class discriminated by its type field rather than a union of part interfaces.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "SubagentPartOf",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional generic part union over subagent descriptors; Dart uses AssistantPart with a subagent map.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:758; lib/src/protocol.dart:51",
+          "public": false
+        },
+        {
+          "name": "SubagentHandle",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "SubagentHandle",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/client.dart:3238",
+          "public": true
+        },
+        {
+          "name": "SubagentHandleOf",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "SubagentHandle",
+          "reason": "TypeScript Omit/conditional refinement by agent descriptor; Dart exposes the base SubagentHandle only.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:736; lib/src/client.dart:3238",
+          "public": true
+        },
+        {
+          "name": "SubagentHandles",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "List<SubagentHandle>",
+          "reason": "Conditional array element type by registered agents; Dart exposes List<SubagentHandle>.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:746; lib/src/client.dart:462",
+          "public": true
+        },
+        {
+          "name": "SubagentClientAgent",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "Map<String,dynamic> / SubagentHandle",
+          "reason": "Typed server defineAgent descriptor used only for inference; Dart represents subagent cards as maps/SubagentHandle and does not expose the descriptor type.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:688",
+          "public": true
+        },
+        {
+          "name": "SubagentStatus",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String (SubagentHandle.status)",
+          "reason": "Literal union status is represented as String on SubagentHandle and the subagent part map.",
+          "evidence": "lib/src/client.dart:3252",
+          "public": true
+        },
+        {
+          "name": "ChatClientPersistence",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatClientPersistence",
+          "reason": "Dart erases the tools generic and accepts Object? from getItem for legacy message arrays.",
+          "evidence": "lib/src/platform/persistence_types.dart:81",
+          "public": true
+        },
+        {
+          "name": "ChatPersistedState",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatPersistedState",
+          "reason": "Dart stores messages as List<Map<String,dynamic>> rather than List<AssistantTurn>.",
+          "evidence": "lib/src/platform/persistence_types.dart:53",
+          "public": true
+        },
+        {
+          "name": "ChatPersistenceOption",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Object persistence / ChatPersistenceOptions",
+          "reason": "Dart accepts bool, adapter or persistence options through Object plus the ChatPersistenceOptions factory constructors.",
+          "evidence": "lib/src/chat/types.dart:475; lib/src/chat/types.dart:520",
+          "public": true
+        },
+        {
+          "name": "ChatPersistenceOptions",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatPersistenceOptions",
+          "reason": "Dart class holds Object persistence plus threadId/history; upstream is a generic union of ephemeral/server/stored options.",
+          "evidence": "lib/src/chat/types.dart:475",
+          "public": true
+        },
+        {
+          "name": "ChatStorageAdapter",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatStorageAdapter",
+          "reason": "Dart erases the value generic and stores the concrete ChatPersistedState.",
+          "evidence": "lib/src/platform/persistence_types.dart:88",
+          "public": true
+        },
+        {
+          "name": "ChatClientOptions",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatClientOptions",
+          "reason": "Dart exposes concrete nullable fields and Object? context instead of conditional/mapped option types.",
+          "evidence": "lib/src/chat/types.dart:495",
+          "public": true
+        },
+        {
+          "name": "ChatPendingInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart exposes the resolved interrupt class; there is no separate pending alias.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "BoundInterruptBase",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "BoundInterrupts",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Upstream ChatInterrupt is a generic union of bound/generic/approval variants; Dart uses one concrete ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatInterruptState",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterruptState",
+          "reason": "Dart state class is concrete (List<ChatInterrupt>, List<Map> errors) and does not carry tool/interrupt generics.",
+          "evidence": "lib/src/chat/types.dart:353",
+          "public": true
+        },
+        {
+          "name": "GenericAGUIInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "GenericInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "RegisteredGenericInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ResolvableChatInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "UnboundInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "InterruptItemStatus",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterruptStatus",
+          "reason": "Dart uses the ChatInterruptStatus enum with the same lifecycle values.",
+          "evidence": "lib/src/chat/types.dart:350",
+          "public": true
+        },
+        {
+          "name": "ToolApprovalInterrupt",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart collapses the upstream bound/generic/approval interrupt union into one ChatInterrupt class discriminated by kind.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ClientContextOptionFromTools",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "Object? context",
+          "reason": "TypeScript conditionally requires a context argument based on tool schemas; Dart ChatClientOptions.context is Object? and is not inferred from tools.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:963; lib/src/chat/types.dart:509",
+          "public": true
+        },
+        {
+          "name": "ChatResumeState",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatResumeState",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/persistence_types.dart:8",
+          "public": true
+        },
+        {
+          "name": "ChatRequestBody",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "Wire request bodies stay JSON maps; assistantChatBody builds the same shape.",
+          "evidence": "lib/src/protocol.dart:1304",
+          "public": true
+        },
+        {
+          "name": "InferChatMessages",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional type extracting messages from typed options; Dart has no conditional/mapped types.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:1320",
+          "public": false
+        },
+        {
+          "name": "InferredClientContext",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "Object?",
+          "reason": "Context is not inferred from registered tools in Dart; callers pass Object? explicitly.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:963; lib/src/chat/types.dart:509",
+          "public": true
+        },
+        {
+          "name": "ChatClientSnapshot",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatSnapshot",
+          "reason": "Dart publishes ChatSnapshot from ChatClient.getSnapshot(); same fields with String status/connectionStatus.",
+          "evidence": "lib/src/chat/types.dart:414",
+          "public": true
+        },
+        {
+          "name": "ChatClientState",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatClientState",
+          "reason": "Dart uses an enum with the same submitted/streaming/ready/error values.",
+          "evidence": "lib/src/chat/types.dart:21",
+          "public": true
+        },
+        {
+          "name": "ConnectionStatus",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String",
+          "reason": "Literal union is represented as String on ChatSnapshot.connectionStatus and onConnectionStatusChange.",
+          "evidence": "lib/src/chat/types.dart:426; lib/src/chat/types.dart:525",
+          "public": true
+        },
+        {
+          "name": "ChatFetcher",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatFetcher",
+          "reason": "Dart typedef returns FutureOr<Object> (http.StreamedResponse or Stream<StreamChunk>) rather than Response|AsyncIterable.",
+          "evidence": "lib/src/connections/stream_connections.dart:89",
+          "public": true
+        },
+        {
+          "name": "ChatFetcherInput",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatFetcherInput",
+          "reason": "Dart fetcher input carries List<WireMessage> (JSON maps), not List<UIMessage>.",
+          "evidence": "lib/src/connections/stream_connections.dart:70",
+          "public": true
+        },
+        {
+          "name": "ChatFetcherOptions",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatFetcher named parameters",
+          "reason": "Dart passes signal and headers as named parameters on the ChatFetcher typedef rather than a separate options class.",
+          "evidence": "lib/src/connections/stream_connections.dart:89",
+          "public": true
+        },
+        {
+          "name": "ChatTransport",
+          "source": "./types",
+          "kind": "type",
+          "status": "name-collision",
+          "dart": "ChatTransport",
+          "reason": "The exported Dart ChatTransport is the legacy 0.42 stream transport, not the upstream connection/fetcher XOR type. Use ChatClientOptions.connection/fetcher and ConnectionAdapter for the 0.40 contract.",
+          "evidence": "lib/src/transport.dart:76",
+          "public": true
+        },
+        {
+          "name": "DistributedOmit",
+          "source": "./types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript distributive utility type; Dart has no mapped/conditional type machinery.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/types.ts:360",
+          "public": false
+        },
+        {
+          "name": "MultimodalContent",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatMessageInput",
+          "reason": "Dart sendMessage accepts ChatMessageInput with dynamic content (String or content-part list).",
+          "evidence": "lib/src/chat/types.dart:462",
+          "public": true
+        },
+        {
+          "name": "QueuedMessage",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "QueuedMessage",
+          "reason": "Dart content is dynamic (String or content-part list) and createdAt is DateTime.",
+          "evidence": "lib/src/chat/types.dart:116",
+          "public": true
+        },
+        {
+          "name": "WhenBusy",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "QueueWhenBusy",
+          "reason": "Dart uses the QueueWhenBusy enum with the same queue/drop/interrupt values.",
+          "evidence": "lib/src/chat/types.dart:25",
+          "public": true
+        },
+        {
+          "name": "QueueBusyReason",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String busyReason",
+          "reason": "Busy reason is a String on ChatQueueStrategyInput.",
+          "evidence": "lib/src/chat/types.dart:103",
+          "public": true
+        },
+        {
+          "name": "QueueConfig",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatQueueConfig",
+          "reason": "Dart exposes ChatQueueConfig with the same whenBusy/drain/maxSize/onOverflow fields.",
+          "evidence": "lib/src/chat/types.dart:34",
+          "public": true
+        },
+        {
+          "name": "QueueStrategy",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatQueueStrategyInput",
+          "reason": "Dart strategy receives ChatQueueStrategyInput and returns QueueWhenBusy; no {action} wrapper.",
+          "evidence": "lib/src/chat/types.dart:34; lib/src/chat/types.dart:103",
+          "public": true
+        },
+        {
+          "name": "QueueOption",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Object? / ChatQueueConfig.from",
+          "reason": "ChatQueueConfig.from accepts a String, ChatQueueConfig or Map and normalizes it.",
+          "evidence": "lib/src/chat/types.dart:46",
+          "public": true
+        },
+        {
+          "name": "SendMessageOptions",
+          "source": "./types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatSendOptions",
+          "reason": "Dart per-call overrides live on ChatSendOptions (whenBusy, body).",
+          "evidence": "lib/src/chat/types.dart:142",
+          "public": true
+        },
+        {
+          "name": "InferGenerationOutput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional inference of an onResult transform return type; Dart has no conditional types.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/generation-types.ts:55",
+          "public": false
+        },
+        {
+          "name": "InferGenerationOutputFromReturn",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional inference over null/void/undefined returns; Dart uses explicit TOutput and GenerationTransformOutcome.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/generation-types.ts:40; lib/src/generation/generation_types.dart:675",
+          "public": false
+        },
+        {
+          "name": "GenerationClientSnapshot",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GenerationClientSnapshot",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:40",
+          "public": true
+        },
+        {
+          "name": "GenerationClientState",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "GenerationClientState",
+          "reason": "Dart uses an enum with the same idle/generating/success/error values.",
+          "evidence": "lib/src/generation/generation_types.dart:20",
+          "public": true
+        },
+        {
+          "name": "VideoGenerationClientSnapshot",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "VideoGenerationClientSnapshot",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:64",
+          "public": true
+        },
+        {
+          "name": "GenerationPersistenceOptions",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GenerationPersistenceOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:478",
+          "public": true
+        },
+        {
+          "name": "GenerationClientOptions",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "GenerationClient constructor",
+          "reason": "Dart exposes constructor named parameters instead of a standalone options interface.",
+          "evidence": "lib/src/generation/generation_client.dart:106",
+          "public": true
+        },
+        {
+          "name": "GenerationFetcher",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "GenerationFetcher",
+          "reason": "Dart typedef returns Future<Object?>; callers may return a result, GenerationResponse, or http.StreamedResponse.",
+          "evidence": "lib/src/generation/generation_types.dart:509",
+          "public": true
+        },
+        {
+          "name": "GenerationFetcherOptions",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GenerationFetcherOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:497",
+          "public": true
+        },
+        {
+          "name": "GenerationTransport",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript XOR union of connection/fetcher; Dart GenerationClient takes nullable connection and fetcher fields and validates at runtime.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/generation-types.ts:325; lib/src/generation/generation_client.dart:106",
+          "public": false
+        },
+        {
+          "name": "VideoGenerationClientOptions",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "VideoGenerationClient constructor",
+          "reason": "Dart exposes constructor named parameters instead of a standalone options interface.",
+          "evidence": "lib/src/generation/video_generation_client.dart:80",
+          "public": true
+        },
+        {
+          "name": "VideoStatusInfo",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "VideoStatusInfo",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:541",
+          "public": true
+        },
+        {
+          "name": "VideoGenerateResult",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "VideoGenerateResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:589",
+          "public": true
+        },
+        {
+          "name": "ImageGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ImageGenerateInput",
+          "reason": "Dart prompt is Object? (String or content-part list) rather than the MediaPrompt alias.",
+          "evidence": "lib/src/generation/generation_types.dart:652",
+          "public": true
+        },
+        {
+          "name": "AudioGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "No named Dart model is exported; GenerationClient<TInput> accepts a Map<String,dynamic> with the upstream {prompt,duration,modelOptions} wire fields or any object exposing toJson().",
+          "evidence": "lib/src/generation/generation_client.dart:1103",
+          "public": true
+        },
+        {
+          "name": "SpeechGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "No named Dart model is exported; GenerationClient<TInput> accepts a Map<String,dynamic> with the upstream {text|turns,voice,format,speed,modelOptions} wire fields or any object exposing toJson().",
+          "evidence": "lib/src/generation/generation_client.dart:1103",
+          "public": true
+        },
+        {
+          "name": "TranscriptionGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "No named Dart model is exported; GenerationClient<TInput> accepts a Map<String,dynamic> with the upstream {audio,language,prompt,responseFormat,modelOptions} wire fields or any object exposing toJson().",
+          "evidence": "lib/src/generation/generation_client.dart:1103",
+          "public": true
+        },
+        {
+          "name": "SummarizeGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "No named Dart model is exported; GenerationClient<TInput> accepts a Map<String,dynamic> with the upstream {text,maxLength,style,focus,modelOptions} wire fields or any object exposing toJson().",
+          "evidence": "lib/src/generation/generation_client.dart:1103",
+          "public": true
+        },
+        {
+          "name": "VideoGenerateInput",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "VideoGenerateInput",
+          "reason": "Dart prompt is Object? (String or content-part list) rather than the MediaPrompt alias.",
+          "evidence": "lib/src/generation/generation_types.dart:629",
+          "public": true
+        },
+        {
+          "name": "GenerationRestoredResult",
+          "source": "./generation-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GenerationRestoredResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:434",
+          "public": true
+        },
+        {
+          "name": "GENERATION_EVENTS",
+          "source": "./generation-types",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "GENERATION_EVENTS",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_types.dart:469",
+          "public": true
+        },
+        {
+          "name": "reconstructImageResult",
+          "source": "./generation-reconstruct",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "reconstructImageResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_reconstruct.dart:23",
+          "public": true
+        },
+        {
+          "name": "reconstructAudioResult",
+          "source": "./generation-reconstruct",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "reconstructAudioResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_reconstruct.dart:70",
+          "public": true
+        },
+        {
+          "name": "reconstructSpeechResult",
+          "source": "./generation-reconstruct",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "reconstructSpeechResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_reconstruct.dart:42",
+          "public": true
+        },
+        {
+          "name": "reconstructTranscriptionResult",
+          "source": "./generation-reconstruct",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "reconstructTranscriptionResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_reconstruct.dart:87",
+          "public": true
+        },
+        {
+          "name": "reconstructSummarizeResult",
+          "source": "./generation-reconstruct",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "reconstructSummarizeResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/generation/generation_reconstruct.dart:103",
+          "public": true
+        },
+        {
+          "name": "UnsupportedResponseStreamError",
+          "source": "./response-stream",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "UnsupportedResponseStreamError",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/errors.dart:90",
+          "public": true
+        },
+        {
+          "name": "clientTools",
+          "source": "./types",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "clientTools",
+          "reason": "Exported from the root barrel via chat.dart -> src/chat/types.dart -> platform/tool_types.dart; the generic function is public.",
+          "evidence": "lib/src/platform/tool_types.dart:184",
+          "public": true
+        },
+        {
+          "name": "createChatClientOptions",
+          "source": "./types",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "createChatClientOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/types.dart:577",
+          "public": true
+        },
+        {
+          "name": "localStoragePersistence",
+          "source": "./storage-adapters",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "localStoragePersistence",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/storage_adapters.dart:173",
+          "public": true
+        },
+        {
+          "name": "sessionStoragePersistence",
+          "source": "./storage-adapters",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "sessionStoragePersistence",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/storage_adapters.dart:183",
+          "public": true
+        },
+        {
+          "name": "indexedDBPersistence",
+          "source": "./storage-adapters",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "indexedDBPersistence",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/storage_adapters.dart:193",
+          "public": true
+        },
+        {
+          "name": "StorageUnavailableError",
+          "source": "./storage-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "StorageUnavailableError",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/storage_adapters.dart:15",
+          "public": true
+        },
+        {
+          "name": "WebStoragePersistenceOptions",
+          "source": "./storage-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "WebStoragePersistenceOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/storage_adapters.dart:26",
+          "public": true
+        },
+        {
+          "name": "IndexedDBPersistenceOptions",
+          "source": "./storage-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "IndexedDBPersistenceOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/storage_adapters.dart:38",
+          "public": true
+        },
+        {
+          "name": "createAIDevtoolsGenerationPreview",
+          "source": "./devtools",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "createAIDevtoolsGenerationPreview",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:850",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsClientMetadata",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsClientMetadata",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:23",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsDisplayOptions",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsDisplayOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:17",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationMediaItem",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsGenerationMediaItem",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:59",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationPreview",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsGenerationPreview",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:129",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationProgress",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsGenerationProgress",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:38",
+          "public": true
+        },
+        {
+          "name": "AIDevtoolsGenerationVideoJob",
+          "source": "./devtools",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "AIDevtoolsGenerationVideoJob",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/devtools/devtools_types.dart:97",
+          "public": true
+        },
+        {
+          "name": "ExtractToolNames",
+          "source": "./tool-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript utility type over a tool tuple; Dart has no tuple/literal type extraction.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/tool-types.ts:10",
+          "public": false
+        },
+        {
+          "name": "ExtractToolInput",
+          "source": "./tool-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript conditional type selecting a tool input by literal name; Dart callers use ClientTool<TInput,TOutput> directly.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/tool-types.ts:21",
+          "public": false
+        },
+        {
+          "name": "ExtractToolOutput",
+          "source": "./tool-types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "TypeScript conditional type selecting a tool output by literal name; Dart callers use ClientTool<TInput,TOutput> directly.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/tool-types.ts:33",
+          "public": false
+        },
+        {
+          "name": "AnyClientTool",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ClientTool",
+          "reason": "Dart exposes the ClientTool<TInput,TOutput> base class; the untyped upstream alias maps to ClientTool<dynamic,dynamic> at use sites.",
+          "evidence": "lib/src/platform/tool_types.dart:122",
+          "public": true
+        },
+        {
+          "name": "Interrupt",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart models the @tanstack/ai/client interrupt descriptor as ChatInterrupt (plus raw JSON maps in wire payloads).",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "PersistedArtifactActivity",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String (PersistedArtifactSource.activity)",
+          "reason": "Literal union activity kind is represented as String on PersistedArtifactSource.",
+          "evidence": "lib/src/generation/generation_types.dart:142",
+          "public": true
+        },
+        {
+          "name": "PersistedArtifactRef",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "PersistedArtifactRef",
+          "reason": "Dart role is String rather than a literal union and source is the PersistedArtifactSource class.",
+          "evidence": "lib/src/generation/generation_types.dart:195",
+          "public": true
+        },
+        {
+          "name": "PersistedArtifactRole",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String (PersistedArtifactRef.role)",
+          "reason": "Literal union role is represented as String on PersistedArtifactRef.",
+          "evidence": "lib/src/generation/generation_types.dart:195",
+          "public": true
+        },
+        {
+          "name": "RunAgentResumeItem",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "Map<String,dynamic>",
+          "reason": "Resume entries stay JSON maps on ChatResumeState/run context and InterruptManagerSubmission.resolutions.",
+          "evidence": "lib/src/connections/types.dart:41; lib/src/chat/interrupt_manager.dart:43",
+          "public": true
+        },
+        {
+          "name": "RunFinishedOutcome",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String? outcome / Map",
+          "reason": "Outcome discriminator is a String on AssistantPart.outcome and raw maps in stream reducers.",
+          "evidence": "lib/src/protocol.dart:123",
+          "public": true
+        },
+        {
+          "name": "RealtimeAdapter",
+          "source": "./realtime-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RealtimeAdapter",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_types.dart:459",
+          "public": true
+        },
+        {
+          "name": "RealtimeConnection",
+          "source": "./realtime-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RealtimeConnection",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_types.dart:467",
+          "public": true
+        },
+        {
+          "name": "RealtimeClientOptions",
+          "source": "./realtime-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RealtimeClientOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_types.dart:366",
+          "public": true
+        },
+        {
+          "name": "RealtimeClientState",
+          "source": "./realtime-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RealtimeClientState",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_types.dart:417",
+          "public": true
+        },
+        {
+          "name": "RealtimeStateChangeCallback",
+          "source": "./realtime-types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RealtimeStateChangeCallback",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/realtime_types.dart:457",
+          "public": true
+        },
+        {
+          "name": "fetchServerSentEvents",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "fetchServerSentEvents",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/fetch_connections.dart:44",
+          "public": true
+        },
+        {
+          "name": "fetchHttpStream",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "fetchHttpStream",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/fetch_connections.dart:51",
+          "public": true
+        },
+        {
+          "name": "fetchJson",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "fetchJson",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/json_connection.dart:85",
+          "public": true
+        },
+        {
+          "name": "xhrServerSentEvents",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "xhrServerSentEvents",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/xhr_connections.dart:11",
+          "public": true
+        },
+        {
+          "name": "xhrHttpStream",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "xhrHttpStream",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/xhr_connections.dart:18",
+          "public": true
+        },
+        {
+          "name": "stream",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "stream",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/stream_connections.dart:40",
+          "public": true
+        },
+        {
+          "name": "rpcStream",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "rpcStream",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/stream_connections.dart:55",
+          "public": true
+        },
+        {
+          "name": "webSocket",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "webSocket",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/web_socket.dart:113",
+          "public": true
+        },
+        {
+          "name": "StreamTruncatedError",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "StreamTruncatedError",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/errors.dart:7",
+          "public": true
+        },
+        {
+          "name": "DurableStreamIncompleteError",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "DurableStreamIncompleteError",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/errors.dart:28",
+          "public": true
+        },
+        {
+          "name": "StreamReconnectLimitError",
+          "source": "./connection-adapters",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "StreamReconnectLimitError",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/errors.dart:37",
+          "public": true
+        },
+        {
+          "name": "ConnectConnectionAdapter",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ConnectionAdapter",
+          "reason": "Upstream ConnectConnectionAdapter is an alias of the connect-mode ConnectionAdapter; Dart uses the single ConnectionAdapter class.",
+          "evidence": "lib/src/connections/connection_adapter.dart:50",
+          "public": true
+        },
+        {
+          "name": "ConnectionAdapter",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ConnectionAdapter",
+          "reason": "Dart class holds nullable connect/subscribe/send/joinRun/hydrate fields and validates the union at runtime.",
+          "evidence": "lib/src/connections/connection_adapter.dart:50",
+          "public": true
+        },
+        {
+          "name": "GenerationHydrationResult",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "GenerationHydrationResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/hydration.dart:62",
+          "public": true
+        },
+        {
+          "name": "FetchConnectionOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "FetchConnectionOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/types.dart:75",
+          "public": true
+        },
+        {
+          "name": "FetchJsonOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "FetchJsonOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/json_connection.dart:18",
+          "public": true
+        },
+        {
+          "name": "ReconnectOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ReconnectOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/types.dart:61",
+          "public": true
+        },
+        {
+          "name": "ResumableConnectConnectionAdapter",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ConnectionAdapter + ReconnectOptions/resumableStream",
+          "reason": "Dart has no distinct resumable adapter type; resumability is expressed by ReconnectOptions and the resumableStream helper.",
+          "evidence": "lib/src/connections/resumable_stream.dart:133; lib/src/connections/types.dart:61",
+          "public": true
+        },
+        {
+          "name": "RunAgentInputContext",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "RunAgentInputContext",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/types.dart:32",
+          "public": true
+        },
+        {
+          "name": "StreamConnectionHandlers",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "StreamConnectionHandlers",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/stream_connections.dart:27",
+          "public": true
+        },
+        {
+          "name": "SubscribeConnectionAdapter",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "SubscribeConnectionAdapter",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/connection_adapter.dart:69",
+          "public": true
+        },
+        {
+          "name": "WebSocketConnectionOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "WebSocketConnectionOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/web_socket.dart:16",
+          "public": true
+        },
+        {
+          "name": "XhrConnectionOptions",
+          "source": "./connection-adapters",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "XhrConnectionOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/connections/types.dart:114",
+          "public": true
+        },
+        {
+          "name": "uiMessageToModelMessages",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "uiMessageToModelMessages",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:1073",
+          "public": true
+        },
+        {
+          "name": "modelMessageToUIMessage",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "modelMessageToUIMessage",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:1139",
+          "public": true
+        },
+        {
+          "name": "modelMessagesToUIMessages",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "modelMessagesToUIMessages",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:1460",
+          "public": true
+        },
+        {
+          "name": "convertMessagesToModelMessages",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "convertMessagesToModelMessages",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:449",
+          "public": true
+        },
+        {
+          "name": "normalizeToUIMessage",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "normalizeToUIMessage",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:1539",
+          "public": true
+        },
+        {
+          "name": "generateMessageId",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "generateMessageId",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/message_converters.dart:30",
+          "public": true
+        },
+        {
+          "name": "StreamProcessor",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "StreamProcessor",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/processor.dart:13",
+          "public": true
+        },
+        {
+          "name": "ImmediateStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "ImmediateStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:7",
+          "public": true
+        },
+        {
+          "name": "PunctuationStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "PunctuationStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:12",
+          "public": true
+        },
+        {
+          "name": "BatchStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "BatchStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:20",
+          "public": true
+        },
+        {
+          "name": "WordBoundaryStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "WordBoundaryStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:39",
+          "public": true
+        },
+        {
+          "name": "CompositeStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "CompositeStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:47",
+          "public": true
+        },
+        {
+          "name": "parsePartialJSON",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "parsePartialJSON",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/json_parser.dart:25",
+          "public": true
+        },
+        {
+          "name": "PartialJSONParser",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "PartialJSONParser",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/json_parser.dart:9",
+          "public": true
+        },
+        {
+          "name": "defaultJSONParser",
+          "source": "@tanstack/ai/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "defaultJSONParser",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/json_parser.dart:23",
+          "public": true
+        },
+        {
+          "name": "ChunkStrategy",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChunkStrategy",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/strategies.dart:2",
+          "public": true
+        },
+        {
+          "name": "StreamProcessorOptions",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "StreamProcessorOptions",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:207",
+          "public": true
+        },
+        {
+          "name": "StreamProcessorEvents",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "StreamProcessorEvents",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:165",
+          "public": true
+        },
+        {
+          "name": "InternalToolCallState",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "InternalToolCallState",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:22",
+          "public": true
+        },
+        {
+          "name": "ToolCallState",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ToolCallState",
+          "reason": "Dart represents the string union as static const String values on an abstract final class.",
+          "evidence": "lib/src/processing/types.dart:4",
+          "public": true
+        },
+        {
+          "name": "ToolResultState",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ToolResultState",
+          "reason": "Dart represents the string union as static const String values on an abstract final class.",
+          "evidence": "lib/src/processing/types.dart:15",
+          "public": true
+        },
+        {
+          "name": "JSONParser",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "JSONParser",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/json_parser.dart:3",
+          "public": true
+        },
+        {
+          "name": "ChunkRecording",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChunkRecording",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:137",
+          "public": true
+        },
+        {
+          "name": "ProcessorResult",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ProcessorResult",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:77",
+          "public": true
+        },
+        {
+          "name": "ProcessorState",
+          "source": "@tanstack/ai/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ProcessorState",
+          "reason": "Exported from lib/tanstack_ai_dart.dart and declared at the evidence location.",
+          "evidence": "lib/src/processing/types.dart:99",
+          "public": true
+        }
+      ],
+      "counts": {
+        "platform-interface": 7,
+        "dart-adapted": 74,
+        "dart-equivalent": 88,
+        "language-limitation": 15,
+        "name-collision": 1
+      }
+    },
+    "byok": {
+      "total": 21,
+      "records": [
+        {
+          "name": "defineByok",
+          "source": "./byok/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "defineByok",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:429",
+          "public": true
+        },
+        {
+          "name": "ByokClient",
+          "source": "./byok/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "ByokClient",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:117",
+          "public": true
+        },
+        {
+          "name": "EMPTY_BYOK_SNAPSHOT",
+          "source": "./byok/client",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "EMPTY_BYOK_SNAPSHOT",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:54",
+          "public": true
+        },
+        {
+          "name": "ByokPrompt",
+          "source": "./byok/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ByokPrompt",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:26",
+          "public": true
+        },
+        {
+          "name": "ByokSnapshot",
+          "source": "./byok/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ByokSnapshot",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:33",
+          "public": true
+        },
+        {
+          "name": "DefineByokOptions",
+          "source": "./byok/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "DefineByokOptions",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:56",
+          "public": true
+        },
+        {
+          "name": "KeyStatus",
+          "source": "./byok/client",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "KeyStatus",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/client.dart:12",
+          "public": true
+        },
+        {
+          "name": "defineByokProvider",
+          "source": "@tanstack/ai/byok",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "defineByokProvider",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/providers.dart:37",
+          "public": true
+        },
+        {
+          "name": "ByokProvider",
+          "source": "@tanstack/ai/byok",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ByokProvider",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/providers.dart:21",
+          "public": true
+        },
+        {
+          "name": "ByokProviderInit",
+          "source": "@tanstack/ai/byok",
+          "kind": "type",
+          "status": "server-out-of-scope",
+          "dart": null,
+          "reason": "Declared by the @tanstack/ai/byok server package (ai 0.70.0); the pinned client snapshot does not vendor its definition. The client port implements the ByokProvider descriptor and defineByokProvider only.",
+          "evidence": ".dart_tool/resume-2026-11-03/upstream-src/byok.ts:9",
+          "public": false
+        },
+        {
+          "name": "memoryStorage",
+          "source": "./byok/storage",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "memoryStorage",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/storage.dart:50",
+          "public": true
+        },
+        {
+          "name": "KeyPreview",
+          "source": "./byok/storage",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "KeyPreview",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/storage.dart:6",
+          "public": true
+        },
+        {
+          "name": "Keyring",
+          "source": "./byok/storage",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "Keyring",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/storage.dart:5",
+          "public": true
+        },
+        {
+          "name": "KeyringStorage",
+          "source": "./byok/storage",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "KeyringStorage",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/storage.dart:8",
+          "public": true
+        },
+        {
+          "name": "defaultByokStorage",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "defaultByokStorage",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/byok/passkey.dart:364",
+          "public": true
+        },
+        {
+          "name": "decryptKeyring",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "decryptKeyring",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/passkey.dart:175",
+          "public": true
+        },
+        {
+          "name": "deriveAesKey",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "deriveAesKey",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/passkey.dart:161",
+          "public": true
+        },
+        {
+          "name": "encryptKeyring",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "encryptKeyring",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/passkey.dart:168",
+          "public": true
+        },
+        {
+          "name": "isPasskeyStorageSupported",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "isPasskeyStorageSupported",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/byok/passkey.dart:147",
+          "public": true
+        },
+        {
+          "name": "passkeyStorage",
+          "source": "./byok/passkey",
+          "kind": "runtime",
+          "status": "platform-interface",
+          "dart": "passkeyStorage",
+          "reason": "Public runtime symbol is exported, but the capability requires an injected host/platform implementation; without one it reports unavailable rather than emulating hardware.",
+          "evidence": "lib/src/platform/byok/passkey.dart:354",
+          "public": true
+        },
+        {
+          "name": "PasskeyStorageOptions",
+          "source": "./byok/passkey",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "PasskeyStorageOptions",
+          "reason": "Exported from lib/byok.dart and declared at the evidence location.",
+          "evidence": "lib/src/platform/byok/passkey.dart:111",
+          "public": true
+        }
+      ],
+      "counts": {
+        "dart-equivalent": 17,
+        "server-out-of-scope": 1,
+        "platform-interface": 3
+      }
+    },
+    "ui": {
+      "total": 41,
+      "records": [
+        {
+          "name": "partTypeToKey",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "partTypeToKey",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:19",
+          "public": true
+        },
+        {
+          "name": "selectChatUI",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "selectChatUI",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:130",
+          "public": true
+        },
+        {
+          "name": "automaticPartsForMessage",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "automaticPartsForMessage",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:211",
+          "public": true
+        },
+        {
+          "name": "collectInlineToolNames",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "collectInlineToolNames",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:28",
+          "public": true
+        },
+        {
+          "name": "resolveInterruptComponent",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "resolveInterruptComponent",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:39",
+          "public": true
+        },
+        {
+          "name": "selectMessageUI",
+          "source": "./ui/selectors",
+          "kind": "runtime",
+          "status": "dart-equivalent",
+          "dart": "selectMessageUI",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:219",
+          "public": true
+        },
+        {
+          "name": "ChatUIApprovalToolName",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional literal-union of approval tool names; Dart has no literal union or conditional types.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIApprovalToolsOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional type selecting tools that support approval; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIData",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "dynamic",
+          "reason": "Schema-derived output data; Dart keeps structured output data dynamic.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIHasNamedInterrupts",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Boolean conditional type; Dart has no type-level boolean.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIHasNamedSubagents",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Boolean conditional type; Dart has no type-level boolean.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIHasNamedTools",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Boolean conditional type; Dart has no type-level boolean.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIInterrupt",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart uses the concrete ChatInterrupt class for both approval and generic interrupts.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIInterruptName",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "String",
+          "reason": "Conditional literal union of interrupt names; Dart uses String.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIInterruptOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "ChatInterrupt",
+          "reason": "Conditional type selecting an interrupt variant by name; Dart callers narrow the concrete ChatInterrupt at runtime.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIInterruptsOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional aggregation of root/child interrupt definitions; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUINamedInterruptId",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "String",
+          "reason": "Conditional literal union of registered interrupt ids; Dart uses String.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIMessages",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "List<AssistantTurn>",
+          "reason": "Dart exposes the concrete message list type instead of the schema-parameterized alias.",
+          "evidence": "lib/src/protocol.dart:556",
+          "public": true
+        },
+        {
+          "name": "ChatUIPartKey",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "String",
+          "reason": "Dart part keys are Strings returned by partTypeToKey; no literal union.",
+          "evidence": "lib/src/chat/ui_selectors.dart:19",
+          "public": true
+        },
+        {
+          "name": "ChatUIPartOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "AssistantPart",
+          "reason": "Conditional part extraction by key; Dart uses the single AssistantPart class.",
+          "evidence": "lib/src/chat/ui_selectors.dart:61",
+          "public": true
+        },
+        {
+          "name": "ChatUIPartTypeByKey",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "partTypeToKey / Map<String,String>",
+          "reason": "Dart exposes the runtime part-key mapping function rather than a type-level map.",
+          "evidence": "lib/src/chat/ui_selectors.dart:4",
+          "public": true
+        },
+        {
+          "name": "ChatUIRegisteredInterruptId",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "String",
+          "reason": "Conditional literal union of registered interrupt ids; Dart uses String.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUISchemaOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "Object?",
+          "reason": "Conditional schema extraction; Dart keeps schemas as Object?.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectInput",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectInput",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:118",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedGenericPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectedGenericPart",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:92",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedMessage",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectedMessage",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:104",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectedPart",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:102",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedPartOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "ChatUISelectedPart / ChatTyped* helpers",
+          "reason": "Conditional selected-part type by key; Dart exposes Object plus explicit typed_ui helpers.",
+          "evidence": "lib/src/chat/ui_selectors.dart:61",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedResultPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectedResultPart",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:81",
+          "public": true
+        },
+        {
+          "name": "ChatUISelectedToolPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelectedToolPart",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:61",
+          "public": true
+        },
+        {
+          "name": "ChatUISelection",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-equivalent",
+          "dart": "ChatUISelection",
+          "reason": "Exported from lib/ui.dart and declared at the evidence location.",
+          "evidence": "lib/src/chat/ui_selectors.dart:111",
+          "public": true
+        },
+        {
+          "name": "ChatUISubagentName",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "String",
+          "reason": "Conditional literal union of subagent names; Dart uses String.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUISubagentOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional subagent type selection by name; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUISubagentOptions",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional option extraction from subagent descriptors; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUISubagentsOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional extraction of subagent descriptors from options; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "ChatUIStructuredPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "AssistantPart",
+          "reason": "Dart uses AssistantPart with type structured-output.",
+          "evidence": "lib/src/protocol.dart:51",
+          "public": true
+        },
+        {
+          "name": "ChatUIToolApproval",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart uses ChatInterrupt with kind tool-approval.",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIToolName",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": "String",
+          "reason": "Conditional literal union of tool names; Dart uses String.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": true
+        },
+        {
+          "name": "ChatUIToolPart",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatUISelectedToolPart",
+          "reason": "Dart selected tool part is the concrete ChatUISelectedToolPart class.",
+          "evidence": "lib/src/chat/ui_selectors.dart:61",
+          "public": true
+        },
+        {
+          "name": "ChatUIToolsOf",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "language-limitation",
+          "dart": null,
+          "reason": "Conditional extraction of tools from options; not expressible in Dart.",
+          "evidence": "lib/src/chat/ui_selectors.dart; lib/src/chat/types.dart:212",
+          "public": false
+        },
+        {
+          "name": "RegisteredUIInterrupt",
+          "source": "./ui/types",
+          "kind": "type",
+          "status": "dart-adapted",
+          "dart": "ChatInterrupt",
+          "reason": "Dart represents registered generic interrupts with ChatInterrupt (definitionId/key fields).",
+          "evidence": "lib/src/chat/types.dart:212",
+          "public": true
+        }
+      ],
+      "counts": {
+        "dart-equivalent": 13,
+        "language-limitation": 20,
+        "dart-adapted": 8
+      }
+    }
+  },
+  "summary": {
+    "index": {
+      "platform-interface": 7,
+      "dart-adapted": 74,
+      "dart-equivalent": 88,
+      "language-limitation": 15,
+      "name-collision": 1
+    },
+    "byok": {
+      "dart-equivalent": 17,
+      "server-out-of-scope": 1,
+      "platform-interface": 3
+    },
+    "ui": {
+      "dart-equivalent": 13,
+      "language-limitation": 20,
+      "dart-adapted": 8
+    }
+  }
+}

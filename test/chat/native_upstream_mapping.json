@@ -1,0 +1,555 @@
+{
+  "generatedFrom": "test/chat/upstream_mapping.json",
+  "upstreamSource": "packages/ai-client/tests/chat-client.test.ts",
+  "upstreamCommit": "7095ebbf1b59175f0cd339c1c477d6af55b312de",
+  "ownedFiles": [
+    "test/chat/native_upstream_parity_test.dart",
+    "test/chat/native_upstream_mapping.json"
+  ],
+  "portCount": 37,
+  "implementedCount": 37,
+  "failingCount": 0,
+  "review": {
+    "method": "Each upstream it() body was read from the pinned chat-client.test.ts and compared line by line with the Dart test body: connection mode, push ordering, clear timing, persistence callbacks, callback lists, and exact expected values. Names were used only to pair candidates.",
+    "nativeMode": "Cases that upstream drives through subscribe/send use a real ConnectionAdapter(subscribe + send) with a pushable broadcast stream. Gated / non-cooperative cases use ConnectionAdapter(connect), as upstream does.",
+    "persistence": "Upstream ChatPersistence keys are adaptation-only in Dart: the adapter is constructed with the thread id and getItem/setItem/removeItem take no key. Assertions compare transcript rows instead of object identity.",
+    "failingPolicy": "All 37 ported cases pass in the final verified run. Earlier failures were implementation gaps and were kept as failing evidence until Codex closed them; no case was deleted, skipped, or weakened."
+  },
+  "cases": [
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode returns a client that only watches to ready after each run ends",
+      "upstreamTitle": "ChatClient subscribe/send connection mode returns a client that only watches to ready after each run ends",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode returns a client that only watches to ready after each run ends",
+      "status": "implemented",
+      "actualAssertions": [
+        "final transcript contains \"Second answer.\"",
+        "sessionGenerating is false after the subscription run settles",
+        "status is ready"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore native subscribe/send chunks from a cleared persisted request without runId",
+      "upstreamTitle": "ignore native subscribe/send chunks from a cleared persisted request without runId",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore native subscribe/send chunks from a cleared persisted request without runId",
+      "status": "implemented",
+      "actualAssertions": [
+        "final transcript contains B and \"fresh B\"",
+        "final transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot does not contain \"stale A\""
+      ],
+      "dartAdaptation": "Stale chunks are emitted with the RUN_STARTED/runId captured from the cleared request RunAgentInputContext, matching the upstream send handler."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore already-started runless chunks from a cleared persisted request",
+      "upstreamTitle": "ignore already-started runless chunks from a cleared persisted request",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore already-started runless chunks from a cleared persisted request",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "stored messages are undefined",
+        "sessionGenerating is false",
+        "error is undefined"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after a clear when a fresh run starts before stale chunks drain",
+      "upstreamTitle": "keep fresh runless chunks after a clear when a fresh run starts before stale chunks drain",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after a clear when a fresh run starts before stale chunks drain",
+      "status": "implemented",
+      "actualAssertions": [
+        "transcript contains B and \"fresh content\"",
+        "transcript does not contain A or \"stale content\"",
+        "stored snapshot equals the current transcript"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "upstreamTitle": "keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "status": "implemented",
+      "actualAssertions": [
+        "fresh runless text reaches the transcript",
+        "transcript contains B",
+        "transcript does not contain A"
+      ],
+      "dartAdaptation": "Faithfully removes runId from the fresh RUN_FINISHED chunk, as upstream does."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale messages snapshot after persisted clear",
+      "upstreamTitle": "ignore stale messages snapshot after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale messages snapshot after persisted clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "stored messages are undefined"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale runless run error after persisted clear",
+      "upstreamTitle": "ignore stale runless run error after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale runless run error after persisted clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "error is undefined",
+        "status is ready",
+        "onError is not called",
+        "stored messages are undefined"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should keep fresh native subscribe/send chunks when they arrive before stale cleared chunks",
+      "upstreamTitle": "keep fresh native subscribe/send chunks when they arrive before stale cleared chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should keep fresh native subscribe/send chunks when they arrive before stale cleared chunks",
+      "status": "implemented",
+      "actualAssertions": [
+        "transcript contains B and \"fresh B\"",
+        "transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot contains \"fresh B\"",
+        "stored snapshot does not contain \"stale A\""
+      ],
+      "dartAdaptation": "Stale chunks use the cleared request RunAgentInputContext ids, matching upstream."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale tool chunks by cleared parentMessageId after persisted clear",
+      "upstreamTitle": "ignore stale tool chunks by cleared parentMessageId after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale tool chunks by cleared parentMessageId after persisted clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains the cleared assistant message with a stale tool call"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should remember ignored stale runless message ids so child tool chunks are ignored after persisted clear",
+      "upstreamTitle": "remember ignored stale runless message ids so child tool chunks are ignored after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should remember ignored stale runless message ids so child tool chunks are ignored after persisted clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains \"stale-runless-message\""
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore stale runless tool starts without parentMessageId after persisted clear",
+      "upstreamTitle": "ignore stale runless tool starts without parentMessageId after persisted clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore stale runless tool starts without parentMessageId after persisted clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "messages are empty",
+        "no stored write contains stale tool content"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should reset session generation when a persisted clear ignores terminal chunks",
+      "upstreamTitle": "reset session generation when a persisted clear ignores terminal chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should reset session generation when a persisted clear ignores terminal chunks",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is false after the ignored terminal drains"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should ignore live-only active run chunks after persisted clear and clean up session generation",
+      "upstreamTitle": "ignore live-only active run chunks after persisted clear and clean up session generation",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should ignore live-only active run chunks after persisted clear and clean up session generation",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating returns to false",
+        "messages are empty",
+        "stored messages are undefined"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should not expose request generation metadata on public chunks or run context",
+      "upstreamTitle": "not expose request generation metadata on public chunks or run context",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should not expose request generation metadata on public chunks or run context",
+      "status": "implemented",
+      "actualAssertions": [
+        "runContext has no requestGeneration property",
+        "no onChunk event contains requestGeneration"
+      ],
+      "dartAdaptation": "Dart exposes a typed RunAgentInputContext; the absence check is a dynamic NoSuchMethodError assertion on the typed object."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should not add internal threadId or runId to public connect chunks",
+      "upstreamTitle": "not add internal threadId or runId to public connect chunks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should not add internal threadId or runId to public connect chunks",
+      "status": "implemented",
+      "actualAssertions": [
+        "onChunk receives the public TEXT_MESSAGE_CONTENT event",
+        "public TEXT_MESSAGE_CONTENT events have no threadId or runId keys"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should emit subscription and connection lifecycle callbacks",
+      "upstreamTitle": "emit subscription and connection lifecycle callbacks",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should emit subscription and connection lifecycle callbacks",
+      "status": "implemented",
+      "actualAssertions": [
+        "onSubscriptionChange sees [true, false]",
+        "connection statuses start connecting, include connected, end disconnected"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode unsubscribe should abort in-flight requests and disconnect",
+      "upstreamTitle": "abort in-flight requests and disconnect",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode unsubscribe should abort in-flight requests and disconnect",
+      "status": "implemented",
+      "actualAssertions": [
+        "in-flight send settles",
+        "isLoading is false",
+        "isSubscribed is false",
+        "connectionStatus is disconnected"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should expose connectionStatus error for subscription loop failures",
+      "upstreamTitle": "expose connectionStatus error for subscription loop failures",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should expose connectionStatus error for subscription loop failures",
+      "status": "implemented",
+      "actualAssertions": [
+        "isSubscribed is false",
+        "status is error",
+        "connectionStatus is error"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode should expose connectionStatus error when subscribe throws",
+      "upstreamTitle": "expose connectionStatus error when subscribe throws",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send connection mode should expose connectionStatus error when subscribe throws",
+      "status": "implemented",
+      "actualAssertions": [
+        "subscribe() does not throw",
+        "isSubscribed is false",
+        "connectionStatus is error"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "upstreamTitle": "remain correct through subscribe/unsubscribe cycles",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should remain correct through subscribe/unsubscribe cycles",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is false after the run",
+        "sessionGenerating stays false after unsubscribe"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on unsubscribe while generating",
+      "upstreamTitle": "reset on unsubscribe while generating",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on unsubscribe while generating",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is true while generating",
+        "sessionGenerating is false after unsubscribe",
+        "callbacks equal [true, false]"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on connection adapter replacement",
+      "upstreamTitle": "reset on connection adapter replacement",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on connection adapter replacement",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is true on adapter 1",
+        "sessionGenerating is false after updateOptions replaces the adapter",
+        "callbacks equal [true, false]"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "upstreamTitle": "not emit duplicate callbacks on repeated same-state events",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should not emit duplicate callbacks on repeated same-state events",
+      "status": "implemented",
+      "actualAssertions": [
+        "onSessionGeneratingChange equals [true, false] for duplicate RUN_STARTED/RUN_FINISHED events"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "upstreamTitle": "handle interleaved multi-run events from durable subscription",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should handle interleaved multi-run events from durable subscription",
+      "status": "implemented",
+      "actualAssertions": [
+        "first run callbacks equal [true, false]",
+        "second run callbacks equal [true, false, true, false]"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should stay true during concurrent runs until all finish",
+      "upstreamTitle": "stay true during concurrent runs until all finish",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should stay true during concurrent runs until all finish",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating stays true after run-1 finishes",
+        "sessionGenerating is false after run-2 finishes",
+        "callbacks equal [true, false]"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should process future live subscription chunks after persistence clear",
+      "upstreamTitle": "process future live subscription chunks after persistence clear",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should process future live subscription chunks after persistence clear",
+      "status": "implemented",
+      "actualAssertions": [
+        "a later live TEXT_MESSAGE_CONTENT chunk appears in messages after clear"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "upstreamTitle": "clear all runs on RUN_ERROR without runId",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should clear all runs on RUN_ERROR without runId",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is false after a runless RUN_ERROR",
+        "callbacks equal [true, false]"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient subscribe/send connection mode sessionGenerating should reset on fatal subscription loop teardown",
+      "upstreamTitle": "reset on fatal subscription loop teardown",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient subscribe/send sessionGenerating should reset on fatal subscription loop teardown",
+      "status": "implemented",
+      "actualAssertions": [
+        "sessionGenerating is false after the subscription throws",
+        "callbacks contain true",
+        "last callback is false"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should remove persisted messages without saving an empty snapshot",
+      "upstreamTitle": "remove persisted messages without saving an empty snapshot",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should remove persisted messages without saving an empty snapshot",
+      "status": "implemented",
+      "actualAssertions": [
+        "removeItem is called",
+        "no setItem is scheduled by clear"
+      ],
+      "dartAdaptation": "Dart persistence adapters are keyed at construction; removeItem takes no key. removeItem may already have been called for empty intermediate states, so the assertion is count >= 1 plus no new write after clear."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should not persist non-cooperative delayed chunks after clear removes storage",
+      "upstreamTitle": "not persist non-cooperative delayed chunks after clear removes storage",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should not persist non-cooperative delayed chunks after clear removes storage",
+      "status": "implemented",
+      "actualAssertions": [
+        "removeItem occurs",
+        "no setItem event follows removeItem",
+        "messages are empty",
+        "removeItem is called"
+      ],
+      "dartAdaptation": "removeItem count is asserted >= 1 because empty-state writes can also remove; ordering of remove before any later set is preserved."
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should ignore cleared request chunks after persistence resumes for a new send",
+      "upstreamTitle": "ignore cleared request chunks after persistence resumes for a new send",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should ignore cleared request chunks after persistence resumes for a new send",
+      "status": "implemented",
+      "actualAssertions": [
+        "transcript contains B and \"fresh B\"",
+        "transcript does not contain A or \"stale A\"",
+        "stored snapshot equals the current transcript",
+        "stored snapshot does not contain \"stale A\""
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient clear should ensure async setItem scheduled before clear cannot win after removeItem",
+      "upstreamTitle": "ensure async setItem scheduled before clear cannot win after removeItem",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should ensure async setItem scheduled before clear cannot win after removeItem",
+      "status": "implemented",
+      "actualAssertions": [
+        "removeItem is called",
+        "stored state is undefined after the delayed setItem resolves"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient callbacks should preserve state updates and onMessagesChange when persistence throws",
+      "upstreamTitle": "preserve state updates and onMessagesChange when persistence throws",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient clear should preserve state updates and onMessagesChange when persistence throws",
+      "status": "implemented",
+      "actualAssertions": [
+        "initial messages survive a throwing getItem",
+        "send adds messages and invokes onMessagesChange",
+        "clear does not throw and empties messages"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient drain re-entrancy guard (fix #302) should continue after multiple client tools complete in the same round",
+      "upstreamTitle": "continue after multiple client tools complete in the same round",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient drain re-entrancy guard (fix #302) should continue after multiple client tools complete in the same round",
+      "status": "implemented",
+      "actualAssertions": [
+        "continuation connect runs at least twice",
+        "last assistant text part is \"Done!\""
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient concurrent runs and reconnect correctness concurrent runs should not produce duplicate messages or corrupt content",
+      "upstreamTitle": "not produce duplicate messages or corrupt content",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient concurrent runs and reconnect correctness concurrent runs should not produce duplicate messages or corrupt content",
+      "status": "implemented",
+      "actualAssertions": [
+        "msg-a text becomes \"Story: once upon a time\"",
+        "msg-b text stays \"Hi!\"",
+        "exactly one msg-a and one msg-b",
+        "sessionGenerating returns to false"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient error handling should surface subscription loop failures without hanging",
+      "upstreamTitle": "surface subscription loop failures without hanging",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient error handling should surface subscription loop failures without hanging",
+      "status": "implemented",
+      "actualAssertions": [
+        "sendMessage settles",
+        "onError is called once with the subscription error",
+        "status is error"
+      ]
+    },
+    {
+      "upstreamFile": "chat-client.test.ts",
+      "upstreamName": "ChatClient custom events should allow updating onCustomEvent via updateOptions",
+      "upstreamTitle": "allow updating onCustomEvent via updateOptions",
+      "dartFile": "test/chat/native_upstream_parity_test.dart",
+      "dartTestName": "ChatClient custom events should allow updating onCustomEvent via updateOptions",
+      "status": "implemented",
+      "actualAssertions": [
+        "updated callback receives the CUSTOM event",
+        "event name is test-event",
+        "event value is {\"value\": 42}",
+        "context is null"
+      ],
+      "dartAdaptation": "Dart onCustomEvent is (Map event, Object? context); it does not pass the upstream third {toolCallId} argument separately."
+    }
+  ],
+  "verification": {
+    "command": "dart test test/chat/native_upstream_parity_test.dart --reporter expanded",
+    "result": "37 tests passed, 0 failed",
+    "analyze": "dart analyze test/chat/native_upstream_parity_test.dart: no issues found"
+  },
+  "transientFailuresObservedDuringPort": [
+    {
+      "case": "should keep fresh runless chunks after server-only clear drains an ignored terminal chunk",
+      "evidence": "type 'Null' is not a subtype of type 'String' in type cast at processing/processor.dart:1932 (_handleRunFinished); fresh runless text was dropped"
+    },
+    {
+      "case": "should emit subscription and connection lifecycle callbacks",
+      "evidence": "ChatClient constructor had no onSubscriptionChange/onConnectionStatusChange options (NoSuchMethodError)"
+    },
+    {
+      "case": "unsubscribe should abort in-flight requests and disconnect",
+      "evidence": "ChatClient.getConnectionStatus() missing (NoSuchMethodError)"
+    },
+    {
+      "case": "should expose connectionStatus error for subscription loop failures",
+      "evidence": "ChatClient.getConnectionStatus() missing (NoSuchMethodError)"
+    },
+    {
+      "case": "should expose connectionStatus error when subscribe throws",
+      "evidence": "subscribe() rethrew Bad state: subscription failed instead of surfacing connectionStatus error"
+    },
+    {
+      "case": "should reset on unsubscribe while generating",
+      "evidence": "onSessionGeneratingChange was [true]; no false emitted on unsubscribe"
+    },
+    {
+      "case": "should reset on connection adapter replacement",
+      "evidence": "ChatClient.updateOptions had no connection parameter (NoSuchMethodError)"
+    },
+    {
+      "case": "should not emit duplicate callbacks on repeated same-state events",
+      "evidence": "onSessionGeneratingChange was [true, true, false, false]"
+    },
+    {
+      "case": "should stay true during concurrent runs until all finish",
+      "evidence": "onSessionGeneratingChange was [true, true, true, false]"
+    },
+    {
+      "case": "should clear all runs on RUN_ERROR without runId",
+      "evidence": "onSessionGeneratingChange was [true, true, false]"
+    },
+    {
+      "case": "should reset on fatal subscription loop teardown",
+      "evidence": "getSessionGenerating() was false but onSessionGeneratingChange ended with true"
+    },
+    {
+      "case": "should ensure async setItem scheduled before clear cannot win after removeItem",
+      "evidence": "a non-null stale transcript was stored after removeItem"
+    }
+  ]
+}

@@ -1,0 +1,2332 @@
+[
+  {
+    "input": "",
+    "expected": null
+  },
+  {
+    "input": "{",
+    "expected": {}
+  },
+  {
+    "input": "{\"",
+    "expected": {}
+  },
+  {
+    "input": "{\"c",
+    "expected": {}
+  },
+  {
+    "input": "{\"ci",
+    "expected": {}
+  },
+  {
+    "input": "{\"cit",
+    "expected": {}
+  },
+  {
+    "input": "{\"city",
+    "expected": {}
+  },
+  {
+    "input": "{\"city\"",
+    "expected": {}
+  },
+  {
+    "input": "{\"city\":",
+    "expected": {}
+  },
+  {
+    "input": "{\"city\":\"",
+    "expected": {
+      "city": ""
+    }
+  },
+  {
+    "input": "{\"city\":\"ا",
+    "expected": {
+      "city": "ا"
+    }
+  },
+  {
+    "input": "{\"city\":\"ال",
+    "expected": {
+      "city": "ال"
+    }
+  },
+  {
+    "input": "{\"city\":\"الق",
+    "expected": {
+      "city": "الق"
+    }
+  },
+  {
+    "input": "{\"city\":\"القا",
+    "expected": {
+      "city": "القا"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاه",
+    "expected": {
+      "city": "القاه"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهر",
+    "expected": {
+      "city": "القاهر"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\"",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"o",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"op",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"opt",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"opti",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"optio",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"option",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\"",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":",
+    "expected": {
+      "city": "القاهرة"
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"l",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"li",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"lim",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limi",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":",
+    "expected": {
+      "city": "القاهرة",
+      "options": {}
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":1",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 1
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"e",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"en",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"ena",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enab",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabl",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enable",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":t",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":tr",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":tru",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true}",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"t",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"ta",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tag",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      }
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": []
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        ""
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"ب",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "ب"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بي",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بي"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        ""
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"r",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "r"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"re",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "re"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"ren",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "ren"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"]",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"e",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"em",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"emp",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empt",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\"",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ]
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":n",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ],
+      "empty": null
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":nu",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ],
+      "empty": null
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":nul",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ],
+      "empty": null
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":null",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ],
+      "empty": null
+    }
+  },
+  {
+    "input": "{\"city\":\"القاهرة\",\"options\":{\"limit\":12,\"enabled\":true},\"tags\":[\"بيع\",\"rent\"],\"empty\":null}",
+    "expected": {
+      "city": "القاهرة",
+      "options": {
+        "limit": 12,
+        "enabled": true
+      },
+      "tags": [
+        "بيع",
+        "rent"
+      ],
+      "empty": null
+    }
+  },
+  {
+    "input": "{\"t",
+    "expected": {}
+  },
+  {
+    "input": "{\"te",
+    "expected": {}
+  },
+  {
+    "input": "{\"tex",
+    "expected": {}
+  },
+  {
+    "input": "{\"text",
+    "expected": {}
+  },
+  {
+    "input": "{\"text\"",
+    "expected": {}
+  },
+  {
+    "input": "{\"text\":",
+    "expected": {}
+  },
+  {
+    "input": "{\"text\":\"",
+    "expected": {
+      "text": ""
+    }
+  },
+  {
+    "input": "{\"text\":\"e",
+    "expected": {
+      "text": "e"
+    }
+  },
+  {
+    "input": "{\"text\":\"es",
+    "expected": {
+      "text": "es"
+    }
+  },
+  {
+    "input": "{\"text\":\"esc",
+    "expected": {
+      "text": "esc"
+    }
+  },
+  {
+    "input": "{\"text\":\"esca",
+    "expected": {
+      "text": "esca"
+    }
+  },
+  {
+    "input": "{\"text\":\"escap",
+    "expected": {
+      "text": "escap"
+    }
+  },
+  {
+    "input": "{\"text\":\"escape",
+    "expected": {
+      "text": "escape"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped",
+    "expected": {
+      "text": "escaped"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped ",
+    "expected": {
+      "text": "escaped"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\",
+    "expected": {
+      "text": "escaped "
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"",
+    "expected": {
+      "text": "escaped \""
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"q",
+    "expected": {
+      "text": "escaped \"q"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"qu",
+    "expected": {
+      "text": "escaped \"qu"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quo",
+    "expected": {
+      "text": "escaped \"quo"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quot",
+    "expected": {
+      "text": "escaped \"quot"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote",
+    "expected": {
+      "text": "escaped \"quote"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\",
+    "expected": {
+      "text": "escaped \"quote"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\"",
+    "expected": {
+      "text": "escaped \"quote\""
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" ",
+    "expected": {
+      "text": "escaped \"quote\""
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\",
+    "expected": {
+      "text": "escaped \"quote\" "
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\",
+    "expected": {
+      "text": "escaped \"quote\" \\"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\s",
+    "expected": {
+      "text": "escaped \"quote\" \\s"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\sl",
+    "expected": {
+      "text": "escaped \"quote\" \\sl"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\sla",
+    "expected": {
+      "text": "escaped \"quote\" \\sla"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slas",
+    "expected": {
+      "text": "escaped \"quote\" \\slas"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash",
+    "expected": {
+      "text": "escaped \"quote\" \\slash"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\",
+    "expected": {
+      "text": "escaped \"quote\" \\slash"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\n",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\n"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nn",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nn"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nne",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nne"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\t",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\t"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tl",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tl"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tli",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tli"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tlin",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tlin"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"n",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"nu",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.2",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.2
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.23",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.23
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-1",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -0.1234
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"u",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"un",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"uni",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unic",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unico",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicod",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": ""
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"\ud83d",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "\ud83d"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"😀",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "😀"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"😀世",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "😀世"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"😀世界",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "😀世界"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"😀世界\"",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "😀世界"
+    }
+  },
+  {
+    "input": "{\"text\":\"escaped \\\"quote\\\" \\\\slash\\nnew\\tline\",\"num\":-1.234e-14,\"unicode\":\"😀世界\"}",
+    "expected": {
+      "text": "escaped \"quote\" \\slash\nnew\tline",
+      "num": -1.234e-14,
+      "unicode": "😀世界"
+    }
+  },
+  {
+    "input": "[",
+    "expected": []
+  },
+  {
+    "input": "[t",
+    "expected": [
+      true
+    ]
+  },
+  {
+    "input": "[tr",
+    "expected": [
+      true
+    ]
+  },
+  {
+    "input": "[tru",
+    "expected": [
+      true
+    ]
+  },
+  {
+    "input": "[true",
+    "expected": [
+      true
+    ]
+  },
+  {
+    "input": "[true,",
+    "expected": [
+      true
+    ]
+  },
+  {
+    "input": "[true,f",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,fa",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,fal",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,fals",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,false",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,false,",
+    "expected": [
+      true,
+      false
+    ]
+  },
+  {
+    "input": "[true,false,n",
+    "expected": [
+      true,
+      false,
+      null
+    ]
+  },
+  {
+    "input": "[true,false,nu",
+    "expected": [
+      true,
+      false,
+      null
+    ]
+  },
+  {
+    "input": "[true,false,nul",
+    "expected": [
+      true,
+      false,
+      null
+    ]
+  },
+  {
+    "input": "[true,false,null",
+    "expected": [
+      true,
+      false,
+      null
+    ]
+  },
+  {
+    "input": "[true,false,null,",
+    "expected": [
+      true,
+      false,
+      null
+    ]
+  },
+  {
+    "input": "[true,false,null,0",
+    "expected": [
+      true,
+      false,
+      null,
+      0
+    ]
+  },
+  {
+    "input": "[true,false,null,0,",
+    "expected": [
+      true,
+      false,
+      null,
+      0
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-",
+    "expected": [
+      true,
+      false,
+      null,
+      0
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      1
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"n",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"ne",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nes",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nest",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"neste",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\"",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {}
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": []
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1,",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1,2",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1,2]",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1,2]}",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "input": "[true,false,null,0,-1,1.3,1e-3,{\"nested\":[1,2]}]",
+    "expected": [
+      true,
+      false,
+      null,
+      0,
+      -1,
+      1.3,
+      0.001,
+      {
+        "nested": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "input": "t",
+    "expected": true
+  },
+  {
+    "input": "tr",
+    "expected": true
+  },
+  {
+    "input": "tru",
+    "expected": true
+  },
+  {
+    "input": "true",
+    "expected": true
+  },
+  {
+    "input": "f",
+    "expected": false
+  },
+  {
+    "input": "fa",
+    "expected": false
+  },
+  {
+    "input": "fal",
+    "expected": false
+  },
+  {
+    "input": "fals",
+    "expected": false
+  },
+  {
+    "input": "false",
+    "expected": false
+  },
+  {
+    "input": "n",
+    "expected": null
+  },
+  {
+    "input": "nu",
+    "expected": null
+  },
+  {
+    "input": "nul",
+    "expected": null
+  },
+  {
+    "input": "null",
+    "expected": null
+  },
+  {
+    "input": "\"",
+    "expected": ""
+  },
+  {
+    "input": "\"h",
+    "expected": "h"
+  },
+  {
+    "input": "\"he",
+    "expected": "he"
+  },
+  {
+    "input": "\"hel",
+    "expected": "hel"
+  },
+  {
+    "input": "\"hell",
+    "expected": "hell"
+  },
+  {
+    "input": "\"hello",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\u",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\u1",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\u12",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\u123",
+    "expected": "hello"
+  },
+  {
+    "input": "\"hello\\u1234",
+    "expected": "helloሴ"
+  },
+  {
+    "input": "\"hello\\u1234w",
+    "expected": "helloሴw"
+  },
+  {
+    "input": "\"hello\\u1234wo",
+    "expected": "helloሴwo"
+  },
+  {
+    "input": "\"hello\\u1234wor",
+    "expected": "helloሴwor"
+  },
+  {
+    "input": "\"hello\\u1234worl",
+    "expected": "helloሴworl"
+  },
+  {
+    "input": "\"hello\\u1234world",
+    "expected": "helloሴworld"
+  },
+  {
+    "input": "\"hello\\u1234world\"",
+    "expected": "helloሴworld"
+  },
+  {
+    "input": "{\"a",
+    "expected": {}
+  },
+  {
+    "input": "{\"a\"",
+    "expected": {}
+  },
+  {
+    "input": "{\"a\":",
+    "expected": {}
+  },
+  {
+    "input": "{\"a\":1",
+    "expected": {
+      "a": 1
+    }
+  },
+  {
+    "input": "{\"a\":1e",
+    "expected": {
+      "a": 1
+    }
+  },
+  {
+    "input": "{\"a\":-",
+    "expected": {}
+  },
+  {
+    "input": "[1",
+    "expected": [
+      1
+    ]
+  },
+  {
+    "input": "[1,",
+    "expected": [
+      1
+    ]
+  },
+  {
+    "input": "[1,2",
+    "expected": [
+      1,
+      2
+    ]
+  },
+  {
+    "input": "[1,2,",
+    "expected": [
+      1,
+      2
+    ]
+  },
+  {
+    "input": "{\"i",
+    "expected": {}
+  },
+  {
+    "input": "{\"in",
+    "expected": {}
+  },
+  {
+    "input": "{\"inc",
+    "expected": {}
+  },
+  {
+    "input": "{\"inco",
+    "expected": {}
+  },
+  {
+    "input": "{\"incom",
+    "expected": {}
+  },
+  {
+    "input": "{\"incomp",
+    "expected": {}
+  },
+  {
+    "input": "{\"incompl",
+    "expected": {}
+  },
+  {
+    "input": "{\"incomple",
+    "expected": {}
+  },
+  {
+    "input": "{\"incomplet",
+    "expected": {}
+  },
+  {
+    "input": "{\"incomplete",
+    "expected": {}
+  },
+  {
+    "input": "{\"a\":\"",
+    "expected": {
+      "a": ""
+    }
+  },
+  {
+    "input": "{\"a\":\"b",
+    "expected": {
+      "a": "b"
+    }
+  },
+  {
+    "input": "{\"a\":\"ba",
+    "expected": {
+      "a": "ba"
+    }
+  },
+  {
+    "input": "{\"a\":\"bad",
+    "expected": {
+      "a": "bad"
+    }
+  },
+  {
+    "input": "{\"a\":\"bad\\",
+    "expected": {
+      "a": "bad"
+    }
+  },
+  {
+    "input": "{\"a\":\"bad\\x",
+    "expected": {
+      "a": "bad"
+    }
+  },
+  {
+    "input": "{b",
+    "expected": {}
+  },
+  {
+    "input": "{ba",
+    "expected": {}
+  },
+  {
+    "input": "{bad",
+    "expected": {}
+  },
+  {
+    "input": "{bad}",
+    "expected": {}
+  },
+  {
+    "input": "false ",
+    "expected": false
+  },
+  {
+    "input": "false g",
+    "expected": false
+  },
+  {
+    "input": "false ga",
+    "expected": false
+  },
+  {
+    "input": "false gar",
+    "expected": false
+  },
+  {
+    "input": "false garb",
+    "expected": false
+  },
+  {
+    "input": "false garba",
+    "expected": false
+  },
+  {
+    "input": "false garbag",
+    "expected": false
+  },
+  {
+    "input": "false garbage",
+    "expected": false
+  },
+  {
+    "input": "2",
+    "expected": 2
+  },
+  {
+    "input": "2e",
+    "expected": 2
+  },
+  {
+    "input": "2.",
+    "expected": null
+  },
+  {
+    "input": "-",
+    "expected": null
+  },
+  {
+    "input": "--",
+    "expected": null
+  },
+  {
+    "input": "--1",
+    "expected": null
+  },
+  {
+    "input": "null ",
+    "expected": null
+  },
+  {
+    "input": "null t",
+    "expected": null
+  },
+  {
+    "input": "null tr",
+    "expected": null
+  },
+  {
+    "input": "null tra",
+    "expected": null
+  },
+  {
+    "input": "null trai",
+    "expected": null
+  },
+  {
+    "input": "null trail",
+    "expected": null
+  },
+  {
+    "input": "null traili",
+    "expected": null
+  },
+  {
+    "input": "null trailin",
+    "expected": null
+  },
+  {
+    "input": "null trailing",
+    "expected": null
+  },
+  {
+    "input": "{\"x",
+    "expected": {}
+  },
+  {
+    "input": "{\"x\"",
+    "expected": {}
+  },
+  {
+    "input": "{\"x\":",
+    "expected": {}
+  },
+  {
+    "input": "{\"x\":t",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":tr",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":tru",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,\"",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\"",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":",
+    "expected": {
+      "x": true
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":f",
+    "expected": {
+      "x": false
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":fa",
+    "expected": {
+      "x": false
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":fal",
+    "expected": {
+      "x": false
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":fals",
+    "expected": {
+      "x": false
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":false",
+    "expected": {
+      "x": false
+    }
+  },
+  {
+    "input": "{\"x\":true,\"x\":false}",
+    "expected": {
+      "x": false
+    }
+  }
+]
